@@ -21,9 +21,6 @@
 
 #include <ast/ASTNode.hpp>
 
-#include <iostream>
-#include <memory>
-
 class RenderExpression : public ASTNode {
 private:
     std::unique_ptr<ASTNode> expression;

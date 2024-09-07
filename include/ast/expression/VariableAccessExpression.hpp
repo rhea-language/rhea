@@ -36,6 +36,7 @@ public:
         this->address = std::move(_name);
     }
 
+    Token getName() const;
     [[nodiscard]] DynamicObject visit(SymbolTable& symbols) override;
 };
 

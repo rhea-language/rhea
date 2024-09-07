@@ -18,6 +18,10 @@
 
 #include <ast/expression/VariableAccessExpression.hpp>
 
+Token VariableAccessExpression::getName() const {
+    return *this->name;
+}
+
 DynamicObject VariableAccessExpression::visit(SymbolTable& symbols) {
     return symbols.getSymbol(this->name->getImage());
 }

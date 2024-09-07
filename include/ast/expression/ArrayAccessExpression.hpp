@@ -40,6 +40,9 @@ public:
         this->address = std::move(_address);
     }
 
+    ASTNode* getArrayExpression() const;
+    ASTNode* getIndexExpression() const;
+
     [[nodiscard]] DynamicObject visit(SymbolTable& symbols) override;
 };
 

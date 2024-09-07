@@ -24,6 +24,21 @@
 
 DynamicObject& DynamicObject::operator=(const DynamicObject& other) {
     if(this != &other) {
+        this->type = other.type;
+        this->numberValue = other.numberValue;
+        this->boolValue = other.boolValue;
+        this->stringValue = other.stringValue; 
+
+        this->arrayValue.reset(other.arrayValue.get());
+        this->functionValue.reset(other.functionValue.get());
+        this->regexValue.reset(other.regexValue.get());
+    }
+
+    return *this;
+}
+
+DynamicObject& DynamicObject::operator=(DynamicObject&& other) {
+    if(this != &other) {
         this->type = std::move(other.type);
         this->arrayValue = std::move(other.arrayValue);
         this->numberValue = std::move(other.numberValue);
@@ -143,6 +158,16 @@ bool DynamicObject::booleanEquivalent() {
         (this->isString() && !this->getString().empty()) ||
         (this->isArray() && this->getArray()->size()) ||
         this->isFunction() || this->isRegex();
+}
+
+void DynamicObject::setArrayElement(size_t index, std::unique_ptr<DynamicObject> object) {
+    if(!this->isArray())
+        throw std::runtime_error("Object not an array.");
+
+    if(index >= this->arrayValue->size())
+        throw std::out_of_range("Index is out of bounds.");
+
+    (*this->arrayValue)[index] = std::move(*object);
 }
 
 std::string DynamicObject::toString() {

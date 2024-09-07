@@ -117,6 +117,7 @@ public:
         boolValue(other.boolValue) {}
 
     DynamicObject& operator=(const DynamicObject& other);
+    DynamicObject& operator=(DynamicObject&& other);
     bool operator==(const DynamicObject& other);
     bool booleanEquivalent();
 
@@ -134,6 +135,8 @@ public:
     const std::string& getString() const;
     double getNumber() const;
     bool getBool() const;
+
+    void setArrayElement(size_t index, std::unique_ptr<DynamicObject> object);
 
     std::string toString();
 };

@@ -19,6 +19,14 @@
 #include <ast/expression/ArrayAccessExpression.hpp>
 #include <memory>
 
+ASTNode* ArrayAccessExpression::getArrayExpression() const {
+    return std::move(this->array.get());
+}
+
+ASTNode* ArrayAccessExpression::getIndexExpression() const {
+    return std::move(this->index.get());
+}
+
 DynamicObject ArrayAccessExpression::visit(SymbolTable& symbols) {
     DynamicObject origin = this->array->visit(symbols);
     if(!origin.isArray() && !origin.isString())

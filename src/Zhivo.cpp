@@ -34,7 +34,6 @@
 #include <parser/Tokenizer.hpp>
 
 #include <memory>
-#include <stacktrace>
 #include <stdexcept>
 #include <string>
 #include <vector>

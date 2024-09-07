@@ -1,0 +1,31 @@
+name: Build CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get build dependencies
+        run: sudo apt install build-essential make -y
+
+      - name: Build Zhivo
+        run: |
+          chmod +x build.sh
+          ./build.sh
+
+      - name: Build verification
+        run: |
+          ls dist -ral
+          find dist | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
+
+      - name: Build test
+        run: |
+          ./dist/zhivo

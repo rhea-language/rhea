@@ -45,14 +45,18 @@ DynamicObject BinaryExpression::applyNumOp(DynamicObject& lValue, DynamicObject&
         return DynamicObject(lValue.getNumber() / rValue.getNumber());
     else if(this->op == "%")
         return DynamicObject((float) ((int) lValue.getNumber() % (int) rValue.getNumber()));
+    else if(this->op == "&")
+        return DynamicObject((float) ((int) lValue.getNumber() & (int) rValue.getNumber()));
+    else if(this->op == "|")
+        return DynamicObject((float) ((int) lValue.getNumber() | (int) rValue.getNumber()));
     else if(this->op == ">")
         return DynamicObject(lValue.getNumber() > rValue.getNumber());
     else if(this->op == "<")
-            return DynamicObject(lValue.getNumber() < rValue.getNumber());
+        return DynamicObject(lValue.getNumber() < rValue.getNumber());
     else if(this->op == ">=")
         return DynamicObject(lValue.getNumber() >= rValue.getNumber());
     else if(this->op == "<=")
-            return DynamicObject(lValue.getNumber() <= rValue.getNumber());
+        return DynamicObject(lValue.getNumber() <= rValue.getNumber());
     else if(this->op == "==")
         return DynamicObject(std::fabs(lValue.getNumber() - rValue.getNumber()) < __DBL_EPSILON__);
 
@@ -62,17 +66,21 @@ DynamicObject BinaryExpression::applyNumOp(DynamicObject& lValue, DynamicObject&
 DynamicObject BinaryExpression::applyStringOp(DynamicObject& lValue, DynamicObject& rValue) {
     if(this->op == "+")
         return DynamicObject(lValue.toString() + rValue.toString());
+    else if(this->op == "-")
+        return DynamicObject(std::regex_replace(
+            lValue.toString(),
+            std::regex(rValue.toString()),
+            ""
+        ));
 
     throw std::runtime_error("Unknown operator for string");
 }
 
 DynamicObject BinaryExpression::applyBoolOp(DynamicObject& lValue, DynamicObject& rValue) {
-    if(this->op == "+") {
-        if(lValue.isBool() && rValue.isNumber())
-            return DynamicObject((lValue.getBool() ? 1 : 0) + rValue.getNumber());
-        else if(lValue.isNumber() && rValue.isBool())
-            return DynamicObject(lValue.getNumber() + (rValue.getBool() ? 1 : 0));
-    }
+    if(this->op == "||")
+        return DynamicObject(lValue.getBool() || rValue.getBool());
+    else if(this->op == "&&")
+        return DynamicObject(lValue.getBool() && rValue.getBool());
 
     throw std::runtime_error("Unsupported operation for boolean");
 }

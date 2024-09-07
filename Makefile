@@ -18,9 +18,9 @@ CXXFLAGS := \
     -Wunused -Wunused-function -Wunused-label \
     -Wunused-parameter -Wunused-value -Wunused-variable \
     -Wvariadic-macros -Wvolatile-register-var -Wwrite-strings \
-    -pipe -static -Os -g -s -std=c++17 \
+    -pipe -static -Ofast -g -s -std=c++17 \
     -fopenmp -msse -msse2 -msse3 -mfpmath=sse \
-    -flto -march=native -funroll-loops -ffast-math
+    -flto=auto -march=native -funroll-loops -ffast-math
 
 INCLUDES := -Iinclude
 

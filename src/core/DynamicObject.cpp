@@ -25,6 +25,7 @@
 DynamicObject& DynamicObject::operator=(const DynamicObject& other) {
     if(this != &other) {
         this->type = std::move(other.type);
+        this->arrayValue = std::move(other.arrayValue);
         this->numberValue = std::move(other.numberValue);
         this->stringValue = std::move(other.stringValue);
         this->boolValue = std::move(other.boolValue);
@@ -49,6 +50,19 @@ bool DynamicObject::operator==(const DynamicObject& other) {
     else if(this->isFunction() && other.isFunction())
         return this->getCallable()->getFunctionImage() ==
             other.getCallable()->getFunctionImage();
+    else if(this->isArray() && other.isArray()) {
+        size_t len = this->getArray()->size();
+        if(len != other.getArray()->size())
+            return false;
+
+        auto left = this->getArray(),
+            right = other.getArray();
+        for(size_t i = 0; i < len; i++)
+            if(!(left->at(i) == right->at(i)))
+                return false;
+
+        return true;
+    }
 
     return false;
 }
@@ -63,6 +77,10 @@ bool DynamicObject::isString() const {
 
 bool DynamicObject::isBool() const {
     return this->type == DynamicObjectType::BOOL;
+}
+
+bool DynamicObject::isArray() const {
+    return this->type == DynamicObjectType::ARRAY;
 }
 
 bool DynamicObject::isFunction() const {
@@ -112,11 +130,19 @@ std::shared_ptr<RegexWrapper> DynamicObject::getRegex() const {
     return this->regexValue;
 }
 
+std::shared_ptr<std::vector<DynamicObject>> DynamicObject::getArray() const {
+    if(!this->isArray())
+        throw std::runtime_error("Not an array");
+
+    return this->arrayValue;
+}
+
 bool DynamicObject::booleanEquivalent() {
     return (this->isBool() && this->getBool()) ||
         (this->isNumber() && this->getNumber() < 0.0) ||
         (this->isString() && !this->getString().empty()) ||
-        this->isFunction();
+        (this->isArray() && this->getArray()->size()) ||
+        this->isFunction() || this->isRegex();
 }
 
 std::string DynamicObject::toString() {
@@ -137,6 +163,20 @@ std::string DynamicObject::toString() {
             "]: " + functionImage.getFileName() +
             ">";
     }
+    else if(this->isArray()) {
+        std::shared_ptr<std::vector<DynamicObject>> array = this->getArray();
+        std::string result = "[";
 
-    throw std::runtime_error("Unknown type in render statement");
+        for(size_t i = 0; i < array->size(); i++) {
+            result += array->at(i).toString();
+
+            if(i < array->size() - 1)
+                result += ", ";
+        }
+
+        result += "]";
+        return result;
+    }
+
+    throw std::runtime_error("Unknown dynamic object data.");
 }

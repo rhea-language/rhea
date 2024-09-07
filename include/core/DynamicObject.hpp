@@ -28,6 +28,7 @@
 #include <stdexcept>
 #include <string>
 
+class DynamicObject;
 class SymbolTable;
 class FunctionDeclarationExpression;
 
@@ -36,6 +37,7 @@ private:
     DynamicObjectType type;
 
     std::shared_ptr<FunctionDeclarationExpression> functionValue;
+    std::shared_ptr<std::vector<DynamicObject>> arrayValue;
     std::shared_ptr<RegexWrapper> regexValue;
     std::string stringValue;
     double numberValue;
@@ -45,6 +47,7 @@ public:
     DynamicObject(std::shared_ptr<FunctionDeclarationExpression> value) :
         type(DynamicObjectType::FUNCTION),
         functionValue(std::move(value)),
+        arrayValue(nullptr),
         regexValue(nullptr),
         stringValue(std::move("")),
         numberValue(0.0),
@@ -53,7 +56,17 @@ public:
     DynamicObject(std::shared_ptr<RegexWrapper> value) :
         type(DynamicObjectType::REGEX),
         functionValue(nullptr),
+        arrayValue(nullptr),
         regexValue(std::move(value)),
+        stringValue(std::move("")),
+        numberValue(0.0),
+        boolValue(false) {}
+
+    DynamicObject(std::shared_ptr<std::vector<DynamicObject>> value) :
+        type(DynamicObjectType::ARRAY),
+        functionValue(nullptr),
+        arrayValue(std::move(value)),
+        regexValue(nullptr),
         stringValue(std::move("")),
         numberValue(0.0),
         boolValue(false) {}
@@ -61,6 +74,7 @@ public:
     DynamicObject(std::string value) :
         type(DynamicObjectType::STRING),
         functionValue(nullptr),
+        arrayValue(nullptr),
         regexValue(nullptr),
         stringValue(std::move(value)),
         numberValue(0.0),
@@ -69,6 +83,7 @@ public:
     DynamicObject(double value) :
         type(DynamicObjectType::NUMBER),
         functionValue(nullptr),
+        arrayValue(nullptr),
         regexValue(nullptr),
         stringValue(std::move("")),
         numberValue(value),
@@ -77,6 +92,7 @@ public:
     DynamicObject(bool value) :
         type(DynamicObjectType::BOOL),
         functionValue(nullptr),
+        arrayValue(nullptr),
         regexValue(nullptr),
         stringValue(std::move("")),
         numberValue(0.0),
@@ -85,6 +101,7 @@ public:
     DynamicObject() :
         type(DynamicObjectType::NIL),
         functionValue(nullptr),
+        arrayValue(nullptr),
         regexValue(nullptr),
         stringValue(std::move("")),
         numberValue(0.0),
@@ -93,6 +110,7 @@ public:
     DynamicObject(const DynamicObject& other) :
         type(other.type),
         functionValue(other.functionValue),
+        arrayValue(other.arrayValue),
         regexValue(other.regexValue),
         stringValue(other.stringValue),
         numberValue(other.numberValue),
@@ -105,11 +123,13 @@ public:
     bool isFunction() const;
     bool isNumber() const;
     bool isString() const;
+    bool isArray() const;
     bool isRegex() const;
     bool isBool() const;
     bool isNil() const;
 
     std::shared_ptr<FunctionDeclarationExpression> getCallable() const;
+    std::shared_ptr<std::vector<DynamicObject>> getArray() const;
     std::shared_ptr<RegexWrapper> getRegex() const;
     const std::string& getString() const;
     double getNumber() const;

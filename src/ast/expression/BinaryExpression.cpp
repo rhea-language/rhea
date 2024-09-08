@@ -16,10 +16,37 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <ast/expression/ArrayAccessExpression.hpp>
 #include <ast/expression/BinaryExpression.hpp>
+#include <ast/expression/VariableAccessExpression.hpp>
 #include <memory>
 
 DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
+    if(auto* varAccess = dynamic_cast<VariableAccessExpression*>(this->left.get())) {
+        DynamicObject rValue = this->right->visit(symbols);
+        symbols.setSymbol(varAccess->getName().getImage(), rValue);
+
+        return rValue;
+    }
+    else if(auto* arrayAccess = dynamic_cast<ArrayAccessExpression*>(this->left.get())) {
+        auto arrayExpr = arrayAccess->getArrayExpression();
+        auto arrayIdx = arrayAccess->getIndexExpression();
+
+        DynamicObject arrayVal = arrayExpr->visit(symbols);
+        if(!arrayVal.isArray())
+            throw std::runtime_error("Error updating array element (1)");
+
+        DynamicObject indexVal = arrayIdx->visit(symbols);
+        if(!indexVal.isNumber())
+            throw std::runtime_error("Error updating array element (2)");
+
+        DynamicObject rValue = this->right->visit(symbols);
+        std::unique_ptr<DynamicObject> rValuePtr = std::make_unique<DynamicObject>(rValue);
+
+        arrayVal.setArrayElement((int) indexVal.getNumber(), std::move(rValuePtr));
+        return arrayVal;
+    }
+
     DynamicObject lValue = this->left->visit(symbols);
     DynamicObject rValue = this->right->visit(symbols);
 

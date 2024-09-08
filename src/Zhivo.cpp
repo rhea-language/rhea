@@ -16,6 +16,8 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <ast/expression/ArrayAccessExpression.hpp>
+#include <ast/expression/ArrayExpression.hpp>
 #include <ast/expression/BinaryExpression.hpp>
 #include <ast/expression/BlockExpression.hpp>
 #include <ast/expression/FunctionCallExpression.hpp>
@@ -23,7 +25,6 @@
 #include <ast/expression/RenderExpression.hpp>
 #include <ast/expression/StringLiteralExpression.hpp>
 #include <ast/expression/VariableAccessExpression.hpp>
-#include <ast/expression/VariableDeclarationExpression.hpp>
 
 #include <ast/statement/ReturnStatement.hpp>
 
@@ -33,6 +34,7 @@
 #include <parser/Token.hpp>
 #include <parser/Tokenizer.hpp>
 
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -60,10 +62,18 @@ auto interpreter() -> int {
 
     // Create and visit a variable declaration
     auto varDecl1Tok = std::make_unique<Token>("x", "test.jnt", 1, 1, TokenType::IDENTIFIER);
-    auto varDecl = std::make_unique<VariableDeclarationExpression>(
-        std::move(varDecl1Tok),
+    auto varDecl = std::make_unique<BinaryExpression>(
+        std::move(std::make_unique<Token>(
+            "",
+            "test.jnt",
+            1,
+            1,
+            TokenType::IDENTIFIER
+        )),
+        std::move(std::make_unique<VariableAccessExpression>(std::move(varDecl1Tok))),
+        "=",
         std::make_unique<NumberLiteralExpression>(
-            std::move(nil),
+            std::make_unique<Token>(*nil),
             3.1416
         )
     );
@@ -77,7 +87,7 @@ auto interpreter() -> int {
     auto funcBodyStmts = std::vector<std::unique_ptr<ASTNode>>();
     funcBodyStmts.push_back(
         std::make_unique<ReturnStatement>(
-            std::move(nil),
+            std::make_unique<Token>(*nil),
             std::make_unique<VariableAccessExpression>(
                 std::move(std::make_unique<Token>("x", "test.jnt", 1, 1, TokenType::IDENTIFIER))
             )
@@ -85,7 +95,7 @@ auto interpreter() -> int {
     );
 
     auto funcBody = std::make_unique<BlockExpression>(
-        std::move(nil),
+        std::make_unique<Token>(*nil),
         std::move(funcBodyStmts)
     );
     auto funcDecl = std::make_unique<FunctionDeclarationExpression>(
@@ -96,8 +106,16 @@ auto interpreter() -> int {
 
     // Store the function declaration directly
     auto varDecl2Tok = std::make_unique<Token>("myFunc", "test.jnt", 1, 1, TokenType::IDENTIFIER);
-    auto myFuncDecl = std::make_unique<VariableDeclarationExpression>(
-        std::move(varDecl2Tok),
+    auto myFuncDecl = std::make_unique<BinaryExpression>(
+        std::move(std::make_unique<Token>(
+            "",
+            "test.jnt",
+            1,
+            1,
+            TokenType::IDENTIFIER
+        )),
+        std::move(std::make_unique<VariableAccessExpression>(std::move(varDecl2Tok))),
+        "=",
         std::move(funcDecl)
     );
     myFuncDecl->visit(globalSymbols);
@@ -106,12 +124,12 @@ auto interpreter() -> int {
         // Create and visit a function call
         auto funcCallArgs = std::vector<std::unique_ptr<ASTNode>>{};
         auto funcCall = std::make_unique<FunctionCallExpression>(
-            std::move(nil),
+            std::make_unique<Token>(*nil),
             "myFunc",
             std::move(funcCallArgs)
         );
         auto funcCallPrint = std::make_unique<RenderExpression>(
-            std::move(nil),
+            std::make_unique<Token>(*nil),
             std::move(funcCall)
         );
         funcCallPrint->visit(globalSymbols);
@@ -122,12 +140,12 @@ auto interpreter() -> int {
         // Create and visit a function call
         auto funcCallArgs = std::vector<std::unique_ptr<ASTNode>>{};
         auto funcCall = std::make_unique<FunctionCallExpression>(
-            std::move(nil),
+            std::make_unique<Token>(*nil),
             "myFunc",
             std::move(funcCallArgs)
         );
         auto funcCallPrint = std::make_unique<RenderExpression>(
-            std::move(nil),
+            std::make_unique<Token>(*nil),
             std::move(funcCall)
         );
         funcCallPrint->visit(globalSymbols);
@@ -136,20 +154,36 @@ auto interpreter() -> int {
 
     // Create and visit string and number variables
     auto varDecl3Tok = std::make_unique<Token>("message", "test.jnt", 1, 1, TokenType::IDENTIFIER);
-    auto strDecl = std::make_unique<VariableDeclarationExpression>(
-        std::move(varDecl3Tok),
+    auto strDecl = std::make_unique<BinaryExpression>(
+        std::move(std::make_unique<Token>(
+            "",
+            "test.jnt",
+            1,
+            1,
+            TokenType::IDENTIFIER
+        )),
+        std::move(std::make_unique<VariableAccessExpression>(std::move(varDecl3Tok))),
+        "=",
         std::make_unique<StringLiteralExpression>(
-            std::move(nil),
+            std::make_unique<Token>(*nil),
             "The number is: "
         )
     );
     strDecl->visit(globalSymbols);
 
     auto varDecl4Tok = std::make_unique<Token>("number", "test.jnt", 1, 1, TokenType::IDENTIFIER);
-    auto numDecl = std::make_unique<VariableDeclarationExpression>(
-        std::move(varDecl4Tok),
+    auto numDecl = std::make_unique<BinaryExpression>(
+        std::move(std::make_unique<Token>(
+            "",
+            "test.jnt",
+            1,
+            1,
+            TokenType::IDENTIFIER
+        )),
+        std::move(std::make_unique<VariableAccessExpression>(std::move(varDecl4Tok))),
+        "=",
         std::make_unique<NumberLiteralExpression>(
-            std::move(nil),
+            std::make_unique<Token>(*nil),
             42
         )
     );
@@ -166,11 +200,71 @@ auto interpreter() -> int {
     );
 
     auto addExpr = std::make_unique<BinaryExpression>(
-        std::move(nil),
+        std::make_unique<Token>(*nil),
         std::move(strAccess),
         "+",
         std::move(numAccess)
     );
+
+    std::vector<std::unique_ptr<ASTNode>> elements;
+    elements.push_back(std::make_unique<StringLiteralExpression>(std::make_unique<Token>(*nil), std::move("Hello")));
+    elements.push_back(std::make_unique<StringLiteralExpression>(std::make_unique<Token>(*nil), std::move("Kamusta")));
+    elements.push_back(std::make_unique<StringLiteralExpression>(std::make_unique<Token>(*nil), std::move("Marhaba")));
+
+    auto arrayExpr = std::make_unique<ArrayExpression>(
+        std::make_unique<Token>(*nil),
+        std::move(elements)
+    );
+
+    auto varDecl_2Tok = std::make_unique<Token>("array", "test.jnt", 1, 1, TokenType::IDENTIFIER);
+    auto varDecl2 = std::make_unique<BinaryExpression>(
+        std::move(std::make_unique<Token>(
+            "",
+            "test.jnt",
+            1,
+            1,
+            TokenType::IDENTIFIER
+        )),
+        std::move(std::make_unique<VariableAccessExpression>(std::move(varDecl_2Tok))),
+        "=",
+        std::move(arrayExpr)
+    );
+    varDecl2->visit(globalSymbols);
+
+    // Create ArrayAccessExpression for use in both assignments and printing
+    auto arrayAccessVar1 = std::make_unique<ArrayAccessExpression>(
+        std::make_unique<Token>(*nil),
+        std::make_unique<VariableAccessExpression>(
+            std::make_unique<Token>("array", "test.jnt", 1, 1, TokenType::IDENTIFIER)
+        ),
+        std::make_unique<NumberLiteralExpression>(std::make_unique<Token>(*nil), 2.0)
+    );
+
+    auto arrayAccessVar2 = std::make_unique<ArrayAccessExpression>(
+        std::make_unique<Token>(*nil),
+        std::make_unique<VariableAccessExpression>(
+            std::make_unique<Token>("array", "test.jnt", 1, 1, TokenType::IDENTIFIER)
+        ),
+        std::make_unique<NumberLiteralExpression>(std::make_unique<Token>(*nil), 2.0)
+    );
+
+    // Create BinaryExpression to set value of array at index 2
+    auto setValExpr = std::make_unique<BinaryExpression>(
+        std::make_unique<Token>(*nil),
+        std::move(arrayAccessVar1),
+        "=",
+        std::make_unique<NumberLiteralExpression>(std::make_unique<Token>(*nil), 3.14)
+    );
+    setValExpr->visit(globalSymbols);
+
+    // Print the array element at index 2
+    auto varDecl_3Tok = std::make_unique<Token>("array", "test.jnt", 1, 1, TokenType::IDENTIFIER);
+    auto print1Stmt = std::make_unique<RenderExpression>(
+        std::make_unique<Token>(*nil),
+        std::move(std::make_unique<VariableAccessExpression>(std::move(varDecl_3Tok)))
+    );
+    print1Stmt->visit(globalSymbols);
+    std::cout << std::endl;
 
     // Print the function declaration
     auto varAcces4Tok = std::make_unique<Token>("myFunc", "test.jnt", 1, 1, TokenType::IDENTIFIER);
@@ -178,7 +272,7 @@ auto interpreter() -> int {
         std::move(varAcces4Tok)
     );
     auto printStmt = std::make_unique<RenderExpression>(
-        std::move(nil),
+        std::make_unique<Token>(*nil),
         std::move(addExpr)
     );
 

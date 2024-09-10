@@ -43,6 +43,7 @@ public:
 
     DynamicObject getSymbol(const std::string& name);
     void setSymbol(const std::string& name, DynamicObject value);
+    bool hasSymbol(const std::string& name);
 };
 
 #endif

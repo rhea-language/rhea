@@ -28,6 +28,7 @@ DynamicObject LoopExpression::visit(SymbolTable& symbols) {
             break;
         }
         catch(const TerminativeContinueSignal& continueSig) {
+            this->postexpr->visit(symbols);
             continue;
         }
 

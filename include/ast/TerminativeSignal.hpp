@@ -20,6 +20,7 @@
 #define ZHIVO_AST_TERMINATIVE_SIGNAL_HPP
 
 #include <core/DynamicObject.hpp>
+#include <parser/Token.hpp>
 
 #include <stdexcept>
 
@@ -39,12 +40,15 @@ public:
 
 class TerminativeThrowSignal : public std::exception {
 private:
+    std::unique_ptr<Token> address;
     DynamicObject value;
 
 public:
-    TerminativeThrowSignal(DynamicObject _value) :
+    TerminativeThrowSignal(std::unique_ptr<Token> _address, DynamicObject _value) :
+        address(std::move(_address)),
         value(std::move(_value)) {}
 
+    Token* getAddress() const;
     DynamicObject getObject() const;
 };
 

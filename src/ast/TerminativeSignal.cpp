@@ -25,3 +25,7 @@ DynamicObject TerminativeReturnSignal::getObject() const {
 DynamicObject TerminativeThrowSignal::getObject() const {
     return this->value;
 }
+
+Token* TerminativeThrowSignal::getAddress() const {
+    return this->address.get();
+}

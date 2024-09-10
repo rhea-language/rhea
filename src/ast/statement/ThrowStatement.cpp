@@ -19,5 +19,8 @@
 #include <ast/statement/ThrowStatement.hpp>
 
 DynamicObject ThrowStatement::visit(SymbolTable& symbols) {
-    throw TerminativeThrowSignal(this->expression->visit(symbols));
+    throw TerminativeThrowSignal(
+        std::move(this->address),
+        this->expression->visit(symbols)
+    );
 }

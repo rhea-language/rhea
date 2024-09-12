@@ -19,6 +19,8 @@
 #ifndef ZHIVO_PARSER_TOKEN_TYPE_HPP
 #define ZHIVO_PARSER_TOKEN_TYPE_HPP
 
+#include <string>
+
 enum class TokenType {
     DIGIT,
     STRING,
@@ -26,5 +28,22 @@ enum class TokenType {
     IDENTIFIER,
     OPERATOR
 };
+
+inline std::string tokenTypeToString(TokenType type) {
+    switch (type) {
+        case TokenType::DIGIT:
+            return "digit";
+        case TokenType::STRING:
+            return "string";
+        case TokenType::KEYWORD:
+            return "keyword";
+        case TokenType::IDENTIFIER:
+            return "identifier";
+        case TokenType::OPERATOR:
+            return "operator";
+        default:
+            return "unknown";
+    }
+}
 
 #endif

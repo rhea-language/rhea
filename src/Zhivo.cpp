@@ -31,6 +31,7 @@
 #include <core/SymbolTable.hpp>
 
 #include <parser/LexicalAnalysisException.hpp>
+#include <parser/Parser.hpp>
 #include <parser/Token.hpp>
 #include <parser/Tokenizer.hpp>
 
@@ -307,6 +308,16 @@ auto interpreter() -> int {
 }
 
 decltype(interpreter()) main() {
+    SymbolTable symbols;
+
+    Parser parser = Parser::fromFile("test.zhv");
+    parser.parse();
+
+    for(const auto& statement : parser.getGlobalStatements()) {
+        DynamicObject object = statement->visit(symbols);
+        std::cout << "Result: " << object.toString() << std::endl;
+    }
+
     try {
         return interpreter();
     }

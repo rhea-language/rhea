@@ -142,7 +142,7 @@ public:
             Token digitToken = this->consume(TokenType::DIGIT);
             expr = std::make_unique<NumberLiteralExpression>(
                 std::make_unique<Token>(digitToken),
-                Convert::translateDigit(digitToken.getImage())
+                ZhivoUtil::Convert::translateDigit(digitToken.getImage())
             );
         }
 

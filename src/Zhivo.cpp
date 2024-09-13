@@ -101,7 +101,7 @@ auto interpreter() -> int {
     );
     auto funcDecl = std::make_unique<FunctionDeclarationExpression>(
         std::move(myFunc),
-        std::vector<std::string>{},
+        std::vector<std::unique_ptr<Token>>{},
         std::move(funcBody)
     );
 
@@ -308,17 +308,16 @@ auto interpreter() -> int {
 }
 
 decltype(interpreter()) main() {
-    SymbolTable symbols;
-
-    Parser parser = Parser::fromFile("test.zhv");
-    parser.parse();
-
-    for(const auto& statement : parser.getGlobalStatements()) {
-        DynamicObject object = statement->visit(symbols);
-        std::cout << "Result: " << object.toString() << std::endl;
-    }
-
     try {
+        SymbolTable symbols;
+        Parser parser = Parser::fromFile("test.zhv");
+        parser.parse();
+
+        for(const auto& statement : parser.getGlobalStatements()) {
+            DynamicObject object = statement->visit(symbols);
+            std::cout << "Result: " << object.toString() << std::endl;
+        }
+
         return interpreter();
     }
     catch (const std::exception& exc) {

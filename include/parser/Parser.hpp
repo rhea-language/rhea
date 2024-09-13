@@ -22,15 +22,17 @@
 #include <ast/ASTNode.hpp>
 #include <ast/expression/ArrayAccessExpression.hpp>
 #include <ast/expression/ArrayExpression.hpp>
+#include <ast/expression/BinaryExpression.hpp>
 #include <ast/expression/BlockExpression.hpp>
 #include <ast/expression/BooleanLiteralExpression.hpp>
 #include <ast/expression/CatchHandleExpression.hpp>
 #include <ast/expression/DoWhileExpression.hpp>
-#include <ast/expression/FunctionDeclarationExpression.hpp>
+#include <ast/expression/FunctionCallExpression.hpp>
 #include <ast/expression/GroupedExpression.hpp>
 #include <ast/expression/IfElseExpression.hpp>
 #include <ast/expression/LoopExpression.hpp>
 #include <ast/expression/MaybeExpression.hpp>
+#include <ast/expression/NilCoalescingExpression.hpp>
 #include <ast/expression/NilLiteralExpression.hpp>
 #include <ast/expression/NumberLiteralExpression.hpp>
 #include <ast/expression/RandomExpression.hpp>
@@ -42,6 +44,11 @@
 #include <ast/expression/VariableAccessExpression.hpp>
 #include <ast/expression/WhenExpression.hpp>
 #include <ast/expression/WhileExpression.hpp>
+#include <ast/statement/BreakStatement.hpp>
+#include <ast/statement/ContinueStatement.hpp>
+#include <ast/statement/ReturnStatement.hpp>
+#include <ast/statement/ThrowStatement.hpp>
+
 #include <core/SymbolTable.hpp>
 #include <parser/Token.hpp>
 #include <parser/Tokenizer.hpp>
@@ -508,18 +515,277 @@ public:
         }
         else expression = this->exprLiteral();
 
+        while(this->isNext("(") || this->isNext("[")) {
+            while(this->isNext("(")) {
+                Token address = this->consume("(");
+                std::vector<std::unique_ptr<ASTNode>> arguments;
+
+                while(!this->isNext(")")) {
+                    if(!arguments.empty())
+                        this->consume(",");
+
+                    arguments.emplace_back(
+                        std::move(this->expression())
+                    );
+                }
+
+                this->consume(")");
+                expression = std::make_unique<FunctionCallExpression>(
+                    std::make_unique<Token>(address),
+                    std::move(expression),
+                    std::move(arguments)
+                );
+            }
+
+            while(this->isNext("[")) {
+                Token address = this->consume("[");
+                std::unique_ptr<ASTNode> indexExpr = this->expression();
+
+                this->consume("]");
+                expression = std::make_unique<ArrayAccessExpression>(
+                    std::make_unique<Token>(address),
+                    std::move(expression),
+                    std::move(indexExpr)
+                );
+            }
+        }
+
+        return expression;
+    }
+
+    std::unique_ptr<ASTNode> exprLogicOr() {
+        std::unique_ptr<ASTNode> expression = this->exprLogicAnd();
+
+        while(this->isNext("||"))
+            expression = std::make_unique<BinaryExpression>(
+                std::make_unique<Token>(
+                    this->consume(TokenType::OPERATOR)
+                ),
+                std::move(expression),
+                "||",
+                std::move(this->exprLogicAnd())
+            );
+
+        return expression;
+    }
+
+    std::unique_ptr<ASTNode> exprLogicAnd() {
+        std::unique_ptr<ASTNode> expression = this->exprBitwiseOr();
+
+        while(this->isNext("&&"))
+            expression = std::make_unique<BinaryExpression>(
+                std::make_unique<Token>(
+                    this->consume(TokenType::OPERATOR)
+                ),
+                std::move(expression),
+                "&&",
+                std::move(this->exprBitwiseOr())
+            );
+
+        return expression;
+    }
+
+    std::unique_ptr<ASTNode> exprBitwiseOr() {
+        std::unique_ptr<ASTNode> expression = this->exprBitwiseXor();
+
+        while(this->isNext("|"))
+            expression = std::make_unique<BinaryExpression>(
+                std::make_unique<Token>(
+                    this->consume(TokenType::OPERATOR)
+                ),
+                std::move(expression),
+                "|",
+                std::move(this->exprBitwiseXor())
+            );
+
+        return expression;
+    }
+
+
+    std::unique_ptr<ASTNode> exprBitwiseXor() {
+        std::unique_ptr<ASTNode> expression = this->exprBitwiseAnd();
+
+        while(this->isNext("^"))
+            expression = std::make_unique<BinaryExpression>(
+                std::make_unique<Token>(
+                    this->consume(TokenType::OPERATOR)
+                ),
+                std::move(expression),
+                "^",
+                std::move(this->exprBitwiseAnd())
+            );
+
+        return expression;
+    }
+
+    std::unique_ptr<ASTNode> exprBitwiseAnd() {
+        std::unique_ptr<ASTNode> expression = this->exprNilCoalescing();
+
+        while(this->isNext("&"))
+            expression = std::make_unique<BinaryExpression>(
+                std::make_unique<Token>(
+                    this->consume(TokenType::OPERATOR)
+                ),
+                std::move(expression),
+                "&",
+                std::move(this->exprNilCoalescing())
+            );
+
+        return expression;
+    }
+
+    std::unique_ptr<ASTNode> exprNilCoalescing() {
+        std::unique_ptr<ASTNode> expression = this->exprEquality();
+
+        while(this->isNext("?"))
+            expression = std::make_unique<NilCoalescingExpression>(
+                std::make_unique<Token>(
+                    this->consume(TokenType::OPERATOR)
+                ),
+                std::move(expression),
+                std::move(this->exprEquality())
+            );
+
+        return expression;
+    }
+
+    std::unique_ptr<ASTNode> exprEquality() {
+        std::unique_ptr<ASTNode> expression = this->exprComparison();
+
+        while(this->isNext("==") || this->isNext("!=") || this->isNext("=")) {
+            Token op = this->consume(TokenType::OPERATOR);
+            expression = std::make_unique<BinaryExpression>(
+                std::make_unique<Token>(op),
+                std::move(expression),
+                op.getImage(),
+                std::move(this->exprComparison())
+            );
+        }
+
+        return expression;
+    }
+
+    std::unique_ptr<ASTNode> exprComparison() {
+        std::unique_ptr<ASTNode> expression = this->exprShift();
+
+        while(this->isNext("<") ||
+            this->isNext("<=") ||
+            this->isNext(">") ||
+            this->isNext(">=")
+        ) {
+            Token op = this->consume(TokenType::OPERATOR);
+            expression = std::make_unique<BinaryExpression>(
+                std::make_unique<Token>(op),
+                std::move(expression),
+                op.getImage(),
+                std::move(this->exprShift())
+            );
+        }
+
+        return expression;
+    }
+
+    std::unique_ptr<ASTNode> exprShift() {
+        std::unique_ptr<ASTNode> expression = this->exprTerm();
+
+        while(this->isNext("<<") || this->isNext(">>")) {
+            Token op = this->consume(TokenType::OPERATOR);
+            expression = std::make_unique<BinaryExpression>(
+                std::make_unique<Token>(op),
+                std::move(expression),
+                op.getImage(),
+                std::move(this->exprTerm())
+            );
+        }
+
+        return expression;
+    }
+
+    std::unique_ptr<ASTNode> exprTerm() {
+        std::unique_ptr<ASTNode> expression = this->exprFactor();
+
+        while(this->isNext("+") || this->isNext("-")) {
+            Token op = this->consume(TokenType::OPERATOR);
+            expression = std::make_unique<BinaryExpression>(
+                std::make_unique<Token>(op),
+                std::move(expression),
+                op.getImage(),
+                std::move(this->exprFactor())
+            );
+        }
+
+        return expression;
+    }
+
+    std::unique_ptr<ASTNode> exprFactor() {
+        std::unique_ptr<ASTNode> expression = this->exprPrimary();
+
+        while(this->isNext("*") || this->isNext("/") || this->isNext("%")) {
+            Token op = this->consume(TokenType::OPERATOR);
+            expression = std::make_unique<BinaryExpression>(
+                std::make_unique<Token>(op),
+                std::move(expression),
+                op.getImage(),
+                std::move(this->exprPrimary())
+            );
+        }
+
         return expression;
     }
 
     std::unique_ptr<ASTNode> expression() {
-        return this->exprPrimary();
+        return this->exprLogicOr();
+    }
+
+    std::unique_ptr<ASTNode> stmtBreak() {
+        Token address = this->consume("break");
+        this->consume(";");
+
+        return std::make_unique<BreakStatement>(
+            std::make_unique<Token>(address)
+        );
+    }
+
+    std::unique_ptr<ASTNode> stmtContinue() {
+        Token address = this->consume("continue");
+        this->consume(";");
+
+        return std::make_unique<ContinueStatement>(
+            std::make_unique<Token>(address)
+        );
+    }
+
+    std::unique_ptr<ASTNode> stmtRet() {
+        Token address = this->consume("ret");
+        std::unique_ptr<ASTNode> expression = this->expression();
+
+        this->consume(";");
+        return std::make_unique<ReturnStatement>(
+            std::make_unique<Token>(address),
+            std::move(expression)
+        );        
+    }
+
+    std::unique_ptr<ASTNode> stmtThrow() {
+        Token address = this->consume("throw");
+        std::unique_ptr<ASTNode> expression = this->expression();
+
+        this->consume(";");
+        return std::make_unique<ThrowStatement>(
+            std::make_unique<Token>(address),
+            std::move(expression)
+        );
     }
 
     std::unique_ptr<ASTNode> statement() {
-        if(this->isNext("if"))
-            return this->exprIf();
-        else if(this->isNext("while"))
-            return this->exprWhile();
+        if(this->isNext("break"))
+            return this->stmtBreak();
+        else if(this->isNext("continue"))
+            return this->stmtContinue();
+        else if(this->isNext("ret"))
+            return this->stmtRet();
+        else if(this->isNext("throw"))
+            return this->stmtThrow();
 
         std::unique_ptr<ASTNode> expr = this->expression();
         this->consume(";");

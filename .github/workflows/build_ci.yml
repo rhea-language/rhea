@@ -28,4 +28,5 @@ jobs:
 
       - name: Build test
         run: |
+          echo "maybe;" > test.zhv
           ./dist/zhivo

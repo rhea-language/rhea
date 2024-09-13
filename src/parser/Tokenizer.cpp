@@ -17,6 +17,7 @@
  */
 
 #include <parser/Tokenizer.hpp>
+#include <util/StringUnescape.hpp>
 
 std::unique_ptr<Tokenizer> Tokenizer::loadFile(const std::string& filePath) {
     std::ifstream file(filePath);
@@ -79,6 +80,7 @@ void Tokenizer::scan() {
                 index++;
                 column++;
 
+                str = ZhivoUtil::replaceEscapeSequences(std::move(str));
                 this->tokens.emplace_back(
                     str,
                     fileName,

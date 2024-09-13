@@ -30,15 +30,15 @@
 
 class FunctionCallExpression : public ASTNode {
 private:
-    std::string functionName;
+    std::unique_ptr<ASTNode> callable;
     std::vector<std::unique_ptr<ASTNode>> arguments;
 
 public:
     explicit FunctionCallExpression(
         std::unique_ptr<Token> _address,
-        std::string _functionName,
+        std::unique_ptr<ASTNode> _callable,
         std::vector<std::unique_ptr<ASTNode>> _arguments
-    ) : functionName(std::move(_functionName)),
+    ) : callable(std::move(_callable)),
         arguments(std::move(_arguments)) {
         this->address = std::move(_address);
     }

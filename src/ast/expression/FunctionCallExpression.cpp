@@ -19,15 +19,15 @@
 #include <ast/expression/FunctionCallExpression.hpp>
 
 DynamicObject FunctionCallExpression::visit(SymbolTable& symbols) {
-    auto func = symbols.getSymbol(this->functionName);
+    auto func = this->callable->visit(symbols);
     if(!func.isFunction())
-        throw std::runtime_error("Symbol '" + this->functionName + "' is not a function.");
+        throw std::runtime_error("Expression is not a function.");
 
-    auto callable = func.getCallable();
+    auto caller = func.getCallable();
     std::vector<DynamicObject> args;
 
     for(auto& arg : this->arguments)
         args.push_back(arg->visit(symbols));
 
-    return callable->call(symbols, args);
+    return caller->call(symbols, args);
 }

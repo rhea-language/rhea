@@ -44,7 +44,7 @@ DynamicObject FunctionDeclarationExpression::call(SymbolTable& symbols, const st
     SymbolTable localSymbols(&symbols);
     for(size_t i = 0; i < args.size(); ++i) {
         auto obj = std::move(&std::move(args).at(i));
-        localSymbols.setSymbol(this->parameters[i], obj);
+        localSymbols.setSymbol(this->parameters[i]->getImage(), obj);
     }
 
     return std::move(this->body->visit(localSymbols));

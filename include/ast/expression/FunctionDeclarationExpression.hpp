@@ -21,6 +21,7 @@
 
 #include <ast/ASTNode.hpp>
 #include <ast/TerminativeSignal.hpp>
+#include <parser/Token.hpp>
 
 #include <memory>
 #include <string>
@@ -28,13 +29,13 @@
 
 class FunctionDeclarationExpression : public ASTNode {
 private:
-    std::vector<std::string> parameters;
+    std::vector<std::unique_ptr<Token>> parameters;
     std::unique_ptr<ASTNode> body;
 
 public:
     explicit FunctionDeclarationExpression(
         std::unique_ptr<Token> _address,
-        std::vector<std::string> _parameters,
+        std::vector<std::unique_ptr<Token>> _parameters,
         std::unique_ptr<ASTNode> _body
     ) : parameters(std::move(_parameters)),
         body(std::move(_body)) {

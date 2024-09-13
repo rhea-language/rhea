@@ -21,9 +21,11 @@
 
 #include <ast/ASTNode.hpp>
 #include <ast/expression/ArrayExpression.hpp>
+#include <ast/expression/BlockExpression.hpp>
 #include <ast/expression/BooleanLiteralExpression.hpp>
 #include <ast/expression/CatchHandleExpression.hpp>
 #include <ast/expression/DoWhileExpression.hpp>
+#include <ast/expression/FunctionDeclarationExpression.hpp>
 #include <ast/expression/IfElseExpression.hpp>
 #include <ast/expression/LoopExpression.hpp>
 #include <ast/expression/MaybeExpression.hpp>

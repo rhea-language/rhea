@@ -24,16 +24,13 @@
 
 auto interpreter() -> int {
     SymbolTable symbols;
-    DynamicObject result;
 
     try {
         Parser parser = Parser::fromFile("test.zhv");
         parser.parse();
 
         for(const auto& statement : parser.getGlobalStatements())
-            result = statement->visit(symbols);
-
-        std::cout << result.toString() << std::endl;
+            statement->visit(symbols);
         return 0;
     }
     catch(const std::exception& exc) {

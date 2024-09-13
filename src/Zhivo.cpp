@@ -32,6 +32,8 @@ auto interpreter() -> int {
 
         for(const auto& statement : parser.getGlobalStatements())
             result = statement->visit(symbols);
+
+        std::cout << result.toString() << std::endl;
         return 0;
     }
     catch(const std::exception& exc) {

@@ -20,18 +20,27 @@
 #define ZHIVO_PARSER_HPP
 
 #include <ast/ASTNode.hpp>
+#include <ast/expression/ArrayAccessExpression.hpp>
 #include <ast/expression/ArrayExpression.hpp>
 #include <ast/expression/BlockExpression.hpp>
 #include <ast/expression/BooleanLiteralExpression.hpp>
 #include <ast/expression/CatchHandleExpression.hpp>
 #include <ast/expression/DoWhileExpression.hpp>
 #include <ast/expression/FunctionDeclarationExpression.hpp>
+#include <ast/expression/GroupedExpression.hpp>
 #include <ast/expression/IfElseExpression.hpp>
 #include <ast/expression/LoopExpression.hpp>
 #include <ast/expression/MaybeExpression.hpp>
 #include <ast/expression/NilLiteralExpression.hpp>
 #include <ast/expression/NumberLiteralExpression.hpp>
+#include <ast/expression/RandomExpression.hpp>
+#include <ast/expression/RenderExpression.hpp>
 #include <ast/expression/StringLiteralExpression.hpp>
+#include <ast/expression/TypeExpression.hpp>
+#include <ast/expression/UnaryExpression.hpp>
+#include <ast/expression/UnlessExpression.hpp>
+#include <ast/expression/VariableAccessExpression.hpp>
+#include <ast/expression/WhenExpression.hpp>
 #include <ast/expression/WhileExpression.hpp>
 #include <core/SymbolTable.hpp>
 #include <parser/Token.hpp>
@@ -243,10 +252,10 @@ public:
         Token address = this->consume("if");
         this->consume("(");
 
-        auto condition = this->expression();
+        std::unique_ptr<ASTNode> condition = this->expression();
         this->consume(")");
 
-        auto thenExpr = this->expression();
+        std::unique_ptr<ASTNode> thenExpr = this->expression();
         std::unique_ptr<ASTNode> elseExpr = nullptr;
 
         if(this->isNext("else")) {
@@ -307,11 +316,116 @@ public:
         return expr;
     }
 
+    std::unique_ptr<ASTNode> exprRandom() {
+        Token address = this->consume("random");
+        std::unique_ptr<ASTNode> thenExpr = this->expression();
+        std::unique_ptr<ASTNode> elseExpr = nullptr;
+
+        if(this->isNext("else")) {
+            this->consume("else");
+            elseExpr = this->expression();
+        }
+
+        return std::make_unique<RandomExpression>(
+            std::make_unique<Token>(address),
+            std::move(thenExpr),
+            std::move(elseExpr)
+        );
+    }
+
+    std::unique_ptr<ASTNode> exprRender() {
+        Token address = this->consume("render");
+        std::unique_ptr<ASTNode> expression = this->expression();
+
+        return std::make_unique<RenderExpression>(
+            std::make_unique<Token>(address),
+            std::move(expression)
+        );
+    }
+
+    std::unique_ptr<ASTNode> exprType() {
+        Token address = this->consume("type");
+        std::unique_ptr<ASTNode> expression = this->expression();
+
+        return std::make_unique<TypeExpression>(
+            std::make_unique<Token>(address),
+            std::move(expression)
+        );
+    }
+
+    std::unique_ptr<ASTNode> exprUnless() {
+        Token address = this->consume("unless");
+        this->consume("(");
+
+        std::unique_ptr<ASTNode> condition = this->expression();
+        this->consume(")");
+
+        std::unique_ptr<ASTNode> thenExpr = this->expression();
+        std::unique_ptr<ASTNode> elseExpr = nullptr;
+
+        if(this->isNext("else")) {
+            this->consume("else");
+            elseExpr = this->expression();
+        }
+
+        return std::make_unique<UnlessExpression>(
+            std::make_unique<Token>(address),
+            std::move(condition),
+            std::move(thenExpr),
+            std::move(elseExpr)
+        );
+    }
+
+    std::unique_ptr<ASTNode> exprWhen() {
+        Token address = this->consume("when");
+        this->consume("(");
+
+        std::unique_ptr<ASTNode> expression = this->expression();
+        this->consume(")");
+        this->consume("{");
+
+        std::vector<std::pair<std::unique_ptr<ASTNode>, std::unique_ptr<ASTNode>>> cases;
+        std::unique_ptr<ASTNode> defaultCase = nullptr;
+
+        while(!this->isNext("}")) {
+            if(!cases.empty())
+                this->consume(",");
+            
+            if(this->isNext("if")) {
+                this->consume("if");
+                this->consume("(");
+
+                std::unique_ptr<ASTNode> caseExpr = this->expression();
+                this->consume(")");
+
+                std::unique_ptr<ASTNode> thenBlock = this->expression();
+                cases.emplace_back(std::make_pair(
+                    std::move(caseExpr),
+                    std::move(thenBlock)
+                ));
+            }
+            else if(this->isNext("else")) {
+                if(defaultCase)
+                    throw std::runtime_error("Cannot have more than one (1) else for when expression.");
+
+                this->consume("else");
+                defaultCase = this->expression();
+            }
+        }
+
+        return std::make_unique<WhenExpression>(
+            std::make_unique<Token>(address),
+            std::move(expression),
+            std::move(cases),
+            std::move(defaultCase)
+        );
+    }
+
     std::unique_ptr<ASTNode> exprWhile() {
         Token address = this->consume("while");
         this->consume("(");
 
-        auto condition = this->expression();
+        std::unique_ptr<ASTNode> condition = this->expression();
         this->consume(")");
 
         return std::make_unique<WhileExpression>(
@@ -321,8 +435,84 @@ public:
         );
     }
 
+    std::unique_ptr<ASTNode> exprPrimary() {
+        std::unique_ptr<ASTNode> expression = nullptr;
+
+        if(this->isNext("+") || this->isNext("-") || this->isNext("~")) {
+            Token address = this->consume(TokenType::OPERATOR);
+            expression = std::make_unique<UnaryExpression>(
+                std::make_unique<Token>(address),
+                std::move(std::string(address.getImage())),
+                this->expression()
+            );
+        }
+        else if(this->isNext("(")) {
+            Token address = this->consume("(");
+            std::unique_ptr<ASTNode> innerExpr = this->expression();
+
+            expression = std::make_unique<GroupedExpression>(
+                std::make_unique<Token>(address),
+                std::move(innerExpr)
+            );
+            this->consume(")");
+        }
+        else if(this->isNext("{")) {
+            Token address = this->consume(TokenType::IDENTIFIER);
+            std::vector<std::unique_ptr<ASTNode>> statements;
+
+            while(!this->isNext("}")) {
+                std::unique_ptr<ASTNode> stmt = this->statement();
+                statements.emplace_back(std::move(stmt));
+            }
+            this->consume("}");
+
+            expression = std::make_unique<BlockExpression>(
+                std::make_unique<Token>(address),
+                std::move(statements)
+            );
+        }
+        else if(this->isNext("render"))
+            expression = this->exprRender();
+        else if(this->isNext("catch"))
+            expression = this->exprCatchHandle();
+        else if(this->isNext("do"))
+            expression = this->exprDoWhile();
+        else if(this->isNext("while"))
+            expression = this->exprWhile();
+        else if(this->isNext("loop"))
+            expression = this->exprLoop();
+        else if(this->isNext("unless"))
+            expression = this->exprUnless();
+        else if(this->isNext("when"))
+            expression = this->exprWhen();
+        else if(this->isNext("func"))
+            expression = this->exprFunctionDecl();
+        else if(this->isNext("["))
+            expression = this->exprArray();
+        else if(this->peek().getType() == TokenType::IDENTIFIER) {
+            expression = std::make_unique<VariableAccessExpression>(
+                std::make_unique<Token>(this->consume(TokenType::IDENTIFIER))
+            );
+
+            while(this->isNext("[")) {
+                Token address = this->consume("[");
+                std::unique_ptr<ASTNode> indexExpr = this->expression();
+
+                this->consume("]");
+                expression = std::make_unique<ArrayAccessExpression>(
+                    std::make_unique<Token>(address),
+                    std::move(expression),
+                    std::move(indexExpr)
+                );
+            }
+        }
+        else expression = this->exprLiteral();
+
+        return expression;
+    }
+
     std::unique_ptr<ASTNode> expression() {
-        return this->exprLiteral();
+        return this->exprPrimary();
     }
 
     std::unique_ptr<ASTNode> statement() {
@@ -331,7 +521,7 @@ public:
         else if(this->isNext("while"))
             return this->exprWhile();
 
-        auto expr = this->expression();
+        std::unique_ptr<ASTNode> expr = this->expression();
         this->consume(";");
 
         return expr;

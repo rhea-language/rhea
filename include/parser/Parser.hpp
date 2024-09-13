@@ -25,6 +25,8 @@
 #include <ast/expression/CatchHandleExpression.hpp>
 #include <ast/expression/DoWhileExpression.hpp>
 #include <ast/expression/IfElseExpression.hpp>
+#include <ast/expression/LoopExpression.hpp>
+#include <ast/expression/MaybeExpression.hpp>
 #include <ast/expression/NilLiteralExpression.hpp>
 #include <ast/expression/NumberLiteralExpression.hpp>
 #include <ast/expression/StringLiteralExpression.hpp>
@@ -212,6 +214,29 @@ public:
         );
     }
 
+    std::unique_ptr<ASTNode> exprLoop() {
+        Token address = this->consume("loop");
+        this->consume("(");
+
+        std::unique_ptr<ASTNode> initial = this->expression();
+        this->consume(";");
+
+        std::unique_ptr<ASTNode> condition = this->expression();
+        this->consume(";");
+
+        std::unique_ptr<ASTNode> postexpr = this->expression();
+        this->consume(")");
+
+        std::unique_ptr<ASTNode> body = this->expression();
+        return std::make_unique<LoopExpression>(
+            std::make_unique<Token>(address),
+            std::move(initial),
+            std::move(condition),
+            std::move(postexpr),
+            std::move(body)
+        );
+    }
+
     std::unique_ptr<ASTNode> exprIf() {
         Token address = this->consume("if");
         this->consume("(");
@@ -247,6 +272,10 @@ public:
             expr = std::make_unique<BooleanLiteralExpression>(
                 std::make_unique<Token>(this->consume("false")),
                 false
+            );
+        else if(this->isNext("maybe"))
+            expr = std::make_unique<MaybeExpression>(
+                std::make_unique<Token>(this->consume("maybe"))
             );
         else if(this->isNext("nil"))
             expr = std::make_unique<NilLiteralExpression>(

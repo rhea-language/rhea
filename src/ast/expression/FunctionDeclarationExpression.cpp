@@ -42,10 +42,11 @@ DynamicObject FunctionDeclarationExpression::call(SymbolTable& symbols, const st
         throw std::runtime_error("Argument count mismatch");
 
     SymbolTable localSymbols(&symbols);
-    for(size_t i = 0; i < args.size(); ++i) {
-        auto obj = std::move(&std::move(args).at(i));
-        localSymbols.setSymbol(this->parameters[i]->getImage(), obj);
-    }
+    for(size_t i = 0; i < args.size(); ++i)
+        localSymbols.setSymbol(
+            this->parameters[i]->getImage(),
+            std::move(args).at(i)
+        );
 
     return std::move(this->body->visit(localSymbols));
 }

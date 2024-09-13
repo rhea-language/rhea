@@ -44,9 +44,11 @@
 #include <ast/expression/VariableAccessExpression.hpp>
 #include <ast/expression/WhenExpression.hpp>
 #include <ast/expression/WhileExpression.hpp>
+
 #include <ast/statement/BreakStatement.hpp>
 #include <ast/statement/ContinueStatement.hpp>
 #include <ast/statement/ReturnStatement.hpp>
+#include <ast/statement/TestStatement.hpp>
 #include <ast/statement/ThrowStatement.hpp>
 
 #include <core/SymbolTable.hpp>
@@ -601,7 +603,6 @@ public:
         return expression;
     }
 
-
     std::unique_ptr<ASTNode> exprBitwiseXor() {
         std::unique_ptr<ASTNode> expression = this->exprBitwiseAnd();
 
@@ -777,6 +778,23 @@ public:
         );
     }
 
+    std::unique_ptr<ASTNode> stmtTest() {
+        Token address = this->consume("test");
+        this->consume("(");
+
+        std::unique_ptr<ASTNode> testName = this->expression();
+        this->consume(")");
+
+        std::unique_ptr<ASTNode> testBody = this->expression();
+        this->consume(";");
+
+        return std::make_unique<TestStatement>(
+            std::make_unique<Token>(address),
+            std::move(testName),
+            std::move(testBody)
+        );
+    }
+
     std::unique_ptr<ASTNode> statement() {
         if(this->isNext("break"))
             return this->stmtBreak();
@@ -786,6 +804,8 @@ public:
             return this->stmtRet();
         else if(this->isNext("throw"))
             return this->stmtThrow();
+        else if(this->isNext("test"))
+            return this->stmtTest();
 
         std::unique_ptr<ASTNode> expr = this->expression();
         this->consume(";");

@@ -16,7 +16,10 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <ast/ASTNodeException.hpp>
 #include <ast/expression/UnaryExpression.hpp>
+
+#include <parser/Token.hpp>
 
 DynamicObject UnaryExpression::visit(SymbolTable& symbols) {
     DynamicObject value = this->expression->visit(symbols);
@@ -41,5 +44,8 @@ DynamicObject UnaryExpression::visit(SymbolTable& symbols) {
     else if(value.isBool() && this->op == "!")
         return DynamicObject(!value.getBool());
 
-    throw std::runtime_error("Invalid unary expression operation");
+    throw ASTNodeException(
+        std::move(this->address),
+        "Invalid unary expression operation"
+    );
 }

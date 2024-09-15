@@ -17,7 +17,9 @@
  */
 
 #include <ast/expression/CatchHandleExpression.hpp>
+#include <ast/ASTNodeException.hpp>
 #include <core/SymbolTable.hpp>
+#include <parser/Token.hpp>
 
 DynamicObject CatchHandleExpression::visit(SymbolTable& symbols) {
     DynamicObject object = {};
@@ -27,7 +29,10 @@ DynamicObject CatchHandleExpression::visit(SymbolTable& symbols) {
     catch(const TerminativeThrowSignal& throwSig) {
         std::string handleName = this->handler->getImage();
         if(symbols.hasSymbol(handleName))
-            throw std::runtime_error("Handle name for catch-handle is already in-use.");
+            throw ASTNodeException(
+                std::move(this->address),
+                "Handle name for catch-handle is already in-use."
+            );
 
         symbols.setSymbol(handleName, throwSig.getObject());
         object = this->handleBlock->visit(symbols);

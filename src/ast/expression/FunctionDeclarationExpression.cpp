@@ -16,8 +16,10 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <ast/ASTNodeException.hpp>
 #include <ast/expression/FunctionDeclarationExpression.hpp>
 #include <core/SymbolTable.hpp>
+#include <parser/Token.hpp>
 
 FunctionDeclarationExpression& FunctionDeclarationExpression::operator=(FunctionDeclarationExpression&& other) noexcept {
     if(this != &other) {
@@ -39,7 +41,10 @@ Token FunctionDeclarationExpression::getFunctionImage() const {
 
 DynamicObject FunctionDeclarationExpression::call(SymbolTable& symbols, const std::vector<DynamicObject>& args) {
     if(args.size() != this->parameters.size())
-        throw std::runtime_error("Argument count mismatch");
+        throw ASTNodeException(
+            std::move(this->address),
+            "Argument count mismatch"
+        );
 
     SymbolTable localSymbols(&symbols);
     for(size_t i = 0; i < args.size(); ++i)

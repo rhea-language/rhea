@@ -16,18 +16,22 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <ast/ASTNodeException.hpp>
 #include <ast/expression/FunctionCallExpression.hpp>
+#include <parser/Parser.hpp>
 
 DynamicObject FunctionCallExpression::visit(SymbolTable& symbols) {
     auto func = this->callable->visit(symbols);
     if(!func.isFunction())
-        throw std::runtime_error("Expression is not a function.");
+        throw ASTNodeException(
+            std::move(this->address),
+            "Expression is not a function."
+        );
 
     auto caller = func.getCallable();
     std::vector<DynamicObject> args;
 
     for(auto& arg : this->arguments)
         args.push_back(arg->visit(symbols));
-
     return caller->call(symbols, args);
 }

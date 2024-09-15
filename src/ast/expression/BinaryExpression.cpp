@@ -16,9 +16,13 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <ast/ASTNodeException.hpp>
 #include <ast/expression/ArrayAccessExpression.hpp>
 #include <ast/expression/BinaryExpression.hpp>
 #include <ast/expression/VariableAccessExpression.hpp>
+
+#include <parser/Token.hpp>
+
 #include <memory>
 
 DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
@@ -34,11 +38,17 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
 
         DynamicObject arrayVal = arrayExpr->visit(symbols);
         if(!arrayVal.isArray())
-            throw std::runtime_error("Error updating array element (1)");
+            throw ASTNodeException(
+                std::move(this->address),
+                "Error updating array element."
+            );
 
         DynamicObject indexVal = arrayIdx->visit(symbols);
         if(!indexVal.isNumber())
-            throw std::runtime_error("Error updating array element (2)");
+            throw ASTNodeException(
+                std::move(this->address),
+                "Error updating array element."
+            );
 
         DynamicObject rValue = this->right->visit(symbols);
         std::unique_ptr<DynamicObject> rValuePtr = std::make_unique<DynamicObject>(rValue);
@@ -57,7 +67,11 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
     else if(lValue.isBool() || rValue.isBool())
         return applyBoolOp(lValue, rValue);
 
-    throw std::runtime_error("Unsupported operation for these types");
+    throw ASTNodeException(
+        std::move(this->address),
+        "Unsupported operation for these types"
+    );
+
     return {};
 }
 
@@ -87,7 +101,10 @@ DynamicObject BinaryExpression::applyNumOp(DynamicObject& lValue, DynamicObject&
     else if(this->op == "==")
         return DynamicObject(std::fabs(lValue.getNumber() - rValue.getNumber()) < __DBL_EPSILON__);
 
-    throw std::runtime_error("Unknown operator");
+    throw ASTNodeException(
+        std::move(this->address),
+        "Unknown operator"
+    );
 }
 
 DynamicObject BinaryExpression::applyStringOp(DynamicObject& lValue, DynamicObject& rValue) {
@@ -100,7 +117,10 @@ DynamicObject BinaryExpression::applyStringOp(DynamicObject& lValue, DynamicObje
             ""
         ));
 
-    throw std::runtime_error("Unknown operator for string");
+    throw ASTNodeException(
+        std::move(this->address),
+        "Unknown operator for string"
+    );
 }
 
 DynamicObject BinaryExpression::applyBoolOp(DynamicObject& lValue, DynamicObject& rValue) {
@@ -109,5 +129,8 @@ DynamicObject BinaryExpression::applyBoolOp(DynamicObject& lValue, DynamicObject
     else if(this->op == "&&")
         return DynamicObject(lValue.getBool() && rValue.getBool());
 
-    throw std::runtime_error("Unsupported operation for boolean");
+    throw ASTNodeException(
+        std::move(this->address),
+        "Unsupported operation for boolean"
+    );
 }

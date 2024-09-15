@@ -16,7 +16,10 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <ast/ASTNodeException.hpp>
 #include <ast/expression/ArrayAccessExpression.hpp>
+#include <parser/Token.hpp>
+
 #include <memory>
 
 ASTNode* ArrayAccessExpression::getArrayExpression() const {
@@ -30,12 +33,18 @@ ASTNode* ArrayAccessExpression::getIndexExpression() const {
 DynamicObject ArrayAccessExpression::visit(SymbolTable& symbols) {
     DynamicObject origin = this->array->visit(symbols);
     if(!origin.isArray() && !origin.isString())
-        throw std::runtime_error("Accessing non-array and non-string object is invalid.");
+        throw ASTNodeException(
+            std::move(this->address),
+            "Accessing non-array and non-string object is invalid."
+        );
 
     DynamicObject idx = this->index->visit(symbols);
     if(origin.isString()) {
         if(!idx.isNumber())
-            throw std::runtime_error("Accessing string with non-number index is not allowed.");
+            throw ASTNodeException(
+                std::move(this->address),
+                "Accessing string with non-number index is not allowed."
+            );
 
         return DynamicObject(std::move(
             std::string(1, origin.getString().at((int) idx.getNumber()))
@@ -43,10 +52,16 @@ DynamicObject ArrayAccessExpression::visit(SymbolTable& symbols) {
     }
     else if(origin.isArray()) {
         if(!idx.isNumber())
-            throw std::runtime_error("Accessing array with non-number index is not allowed.");
+            throw ASTNodeException(
+                std::move(this->address),
+                "Accessing array with non-number index is not allowed."
+            );
 
         return DynamicObject(std::move(origin.getArray()->at((int) idx.getNumber())));
     }
 
-    throw std::runtime_error("Dynamic object is not of array type.");
+    throw ASTNodeException(
+        std::move(this->address),
+        "Dynamic object is not of array type."
+    );
 }

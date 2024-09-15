@@ -111,44 +111,26 @@ bool DynamicObject::isRegex() const {
 }
 
 double DynamicObject::getNumber() const {
-    if(!this->isNumber())
-        throw std::runtime_error("Not a number");
-
     return this->numberValue;
 }
 
 const std::string& DynamicObject::getString() const {
-    if(!this->isString())
-        throw std::runtime_error("Not a string");
-
     return this->stringValue;
 }
 
 bool DynamicObject::getBool() const {
-    if(!this->isBool())
-        throw std::runtime_error("Not a boolean");
-
     return this->boolValue;
 }
 
 std::shared_ptr<FunctionDeclarationExpression> DynamicObject::getCallable() const {
-    if(!this->isFunction())
-        throw std::runtime_error("Not a function");
-
     return this->functionValue;
 }
 
 std::shared_ptr<RegexWrapper> DynamicObject::getRegex() const {
-    if(!this->isRegex())
-        throw std::runtime_error("Not a regex");
-
     return this->regexValue;
 }
 
 std::shared_ptr<std::vector<DynamicObject>> DynamicObject::getArray() const {
-    if(!this->isArray())
-        throw std::runtime_error("Not an array");
-
     return this->arrayValue;
 }
 

@@ -20,50 +20,11 @@
 #define ZHIVO_PARSER_HPP
 
 #include <ast/ASTNode.hpp>
-#include <ast/expression/ArrayAccessExpression.hpp>
-#include <ast/expression/ArrayExpression.hpp>
-#include <ast/expression/BinaryExpression.hpp>
-#include <ast/expression/BlockExpression.hpp>
-#include <ast/expression/BooleanLiteralExpression.hpp>
-#include <ast/expression/CatchHandleExpression.hpp>
-#include <ast/expression/DoWhileExpression.hpp>
-#include <ast/expression/FunctionCallExpression.hpp>
-#include <ast/expression/GroupedExpression.hpp>
-#include <ast/expression/IfElseExpression.hpp>
-#include <ast/expression/LoopExpression.hpp>
-#include <ast/expression/MaybeExpression.hpp>
-#include <ast/expression/NilCoalescingExpression.hpp>
-#include <ast/expression/NilLiteralExpression.hpp>
-#include <ast/expression/NumberLiteralExpression.hpp>
-#include <ast/expression/RandomExpression.hpp>
-#include <ast/expression/RenderExpression.hpp>
-#include <ast/expression/StringLiteralExpression.hpp>
-#include <ast/expression/TypeExpression.hpp>
-#include <ast/expression/UnaryExpression.hpp>
-#include <ast/expression/UnlessExpression.hpp>
-#include <ast/expression/VariableAccessExpression.hpp>
-#include <ast/expression/WhenExpression.hpp>
-#include <ast/expression/WhileExpression.hpp>
-
-#include <ast/statement/BreakStatement.hpp>
-#include <ast/statement/ContinueStatement.hpp>
-#include <ast/statement/ReturnStatement.hpp>
-#include <ast/statement/TestStatement.hpp>
-#include <ast/statement/ThrowStatement.hpp>
-
 #include <core/SymbolTable.hpp>
 #include <parser/Token.hpp>
-#include <parser/Tokenizer.hpp>
-#include <util/Convert.hpp>
 
 #include <memory>
-#include <stdexcept>
 #include <vector>
-
-class ParserException : public std::runtime_error {
-public:
-    explicit ParserException(const std::string& message) : std::runtime_error(message) {}
-};
 
 class Parser {
 private:
@@ -108,13 +69,15 @@ private:
     std::unique_ptr<ASTNode> expression();
     std::unique_ptr<ASTNode> statement();
 
-    Token peek() const;
+    Token previous();
+    Token peek();
+
     Token consume(const std::string& image);
     Token consume(TokenType type);
 
     void advance();
-    bool isNext(const std::string& image) const;
     bool isAtEnd() const;
+    bool isNext(const std::string& image);
 
 public:
     Parser(const std::vector<Token>& _tokens) :

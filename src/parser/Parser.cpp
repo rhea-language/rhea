@@ -51,6 +51,7 @@
 #include <core/SymbolTable.hpp>
 
 #include <parser/Parser.hpp>
+#include <parser/ParserException.hpp>
 #include <parser/Token.hpp>
 #include <parser/Tokenizer.hpp>
 
@@ -75,14 +76,24 @@ void Parser::advance() {
     this->index++;
 }
 
-Token Parser::peek() const {
+Token Parser::previous() {
+    if(this->index > 1)
+        return this->tokens[this->index - 1];
+
+    return this->tokens[0];
+}
+
+Token Parser::peek() {
     if(this->isAtEnd())
-        throw ParserException("Encountered end-of-file.");
+        throw ParserException(
+            std::make_unique<Token>(this->previous()),
+            "Encountered end-of-file."
+        );
 
     return this->tokens[this->index];
 }
 
-bool Parser::isNext(const std::string& image) const {
+bool Parser::isNext(const std::string& image) {
     if(this->isAtEnd())
         return false;
 
@@ -91,11 +102,19 @@ bool Parser::isNext(const std::string& image) const {
 
 Token Parser::consume(const std::string& image) {
     if(this->isAtEnd())
-        throw ParserException("Expecting \"" + image + "\", encountered end-of-code.");
+        throw ParserException(
+            std::make_unique<Token>(this->previous()),
+            "Expecting \"" + image +
+                "\", encountered end-of-code."
+        );
 
     Token token = this->peek();
     if(token.getImage() != image)
-        throw ParserException("Expecting \"" + image + "\", encountered " + token.getImage());
+        throw ParserException(
+            std::make_unique<Token>(this->previous()),
+            "Expecting \"" + image +
+                "\", encountered \"" + token.getImage() + "\""
+        );
 
     this->advance();
     return token;
@@ -103,13 +122,17 @@ Token Parser::consume(const std::string& image) {
 
 Token Parser::consume(TokenType type) {
     if(this->isAtEnd())
-        throw ParserException("Expecting token type, encountered end-of-code.");
+        throw ParserException(
+            std::make_unique<Token>(this->previous()),
+            "Expecting token type, encountered end-of-code."
+        );
 
     Token token = this->peek();
     if(token.getType() != type)
         throw ParserException(
+            std::make_unique<Token>(this->previous()),
             "Expecting " + tokenTypeToString(type) +
-            ", encountered " + tokenTypeToString(token.getType())
+                ", encountered " + tokenTypeToString(token.getType())
         );
 
     this->advance();
@@ -300,8 +323,9 @@ std::unique_ptr<ASTNode> Parser::exprLiteral() {
 
     if(!expr)
         throw ParserException(
+            std::make_unique<Token>(this->previous()),
             "Expecting expression, encountered " +
-            this->peek().getImage()
+                this->peek().getImage()
         );
 
     return expr;
@@ -397,7 +421,10 @@ std::unique_ptr<ASTNode> Parser::exprWhen() {
         }
         else if(this->isNext("else")) {
             if(defaultCase)
-                throw std::runtime_error("Cannot have more than one (1) else for when expression.");
+                throw ParserException(
+                    std::make_unique<Token>(address),
+                    "Cannot have more than one (1) else for when expression."
+                );
 
             this->consume("else");
             defaultCase = this->expression();

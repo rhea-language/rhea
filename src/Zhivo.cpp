@@ -16,8 +16,11 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <ast/TerminativeSignal.hpp>
 #include <core/SymbolTable.hpp>
+#include <parser/LexicalAnalysisException.hpp>
 #include <parser/Parser.hpp>
+#include <parser/ParserException.hpp>
 
 #include <iostream>
 #include <stdexcept>
@@ -33,8 +36,28 @@ auto interpreter() -> int {
             statement->visit(symbols);
         return 0;
     }
+    catch(const LexicalAnalysisException& lexAnlExc) {
+        std::cerr << "[LEXANL]:  " << lexAnlExc.what() << std::endl;
+    }
+    catch(const ParserException& parserExc) {
+        std::cerr << "[PARSER]:  " << parserExc.what() << std::endl;
+        std::cerr << "           " <<
+            parserExc.getAddress()->toString() << std::endl;
+    }
+    catch(const TerminativeReturnSignal& retExc) {
+        std::cerr << "[OBJECT]:  " <<
+            retExc.getObject().toString() << std::endl;
+    }
+    catch(const TerminativeBreakSignal& breakExc) {
+        std::cerr << "[RUNTIME]: " <<
+            "Invalid break statement signal caught." << std::endl;
+    }
+    catch(const TerminativeContinueSignal& continueExc) {
+        std::cerr << "[RUNTIME]: " <<
+            "Invalid break statement signal caught." << std::endl;
+    }
     catch(const std::exception& exc) {
-        std::cerr << "Caught exception: " << exc.what() << std::endl;
+        std::cerr << "[RUNTIME]: " << exc.what() << std::endl;
     }
 
     return 1;

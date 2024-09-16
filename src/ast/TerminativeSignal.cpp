@@ -18,6 +18,14 @@
 
 #include <ast/TerminativeSignal.hpp>
 
+Token TerminativeBreakSignal::getAddress() const {
+    return this->origin;
+}
+
+Token TerminativeContinueSignal::getAddress() const {
+    return this->origin;
+}
+
 DynamicObject TerminativeReturnSignal::getObject() const {
     return this->value;
 }

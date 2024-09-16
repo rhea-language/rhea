@@ -24,8 +24,27 @@
 
 #include <stdexcept>
 
-class TerminativeBreakSignal : public std::exception {};
-class TerminativeContinueSignal : public std::exception {};
+class TerminativeBreakSignal : public std::exception {
+private:
+    Token origin;
+
+public:
+    TerminativeBreakSignal(Token _origin) :
+        origin(std::move(_origin)) {}
+
+    Token getAddress() const;
+};
+
+class TerminativeContinueSignal : public std::exception {
+private:
+    Token origin;
+
+public:
+    TerminativeContinueSignal(Token _origin) :
+        origin(std::move(_origin)) {}
+
+    Token getAddress() const;
+};
 
 class TerminativeReturnSignal : public std::exception {
 private:

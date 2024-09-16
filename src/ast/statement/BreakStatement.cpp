@@ -19,5 +19,5 @@
 #include <ast/statement/BreakStatement.hpp>
 
 DynamicObject BreakStatement::visit(SymbolTable& symbols __attribute__((unused))) {
-    throw TerminativeBreakSignal();
+    throw TerminativeBreakSignal(*this->address);
 }

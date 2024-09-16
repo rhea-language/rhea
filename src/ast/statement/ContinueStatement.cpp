@@ -19,5 +19,5 @@
 #include <ast/statement/ContinueStatement.hpp>
 
 DynamicObject ContinueStatement::visit(SymbolTable& symbols __attribute__((unused))) {
-    throw TerminativeContinueSignal();
+    throw TerminativeContinueSignal(*this->address);
 }

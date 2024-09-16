@@ -47,9 +47,9 @@ TokenType Token::getType() const {
 }
 
 std::string Token::toString() const {
-    return this->image + " [line " +
+    return "\u001b[1;32m" + this->image + "\u001b[0m [line " +
         std::to_string(this->line) + ", column " +
-        std::to_string(this->column) + "] (" +
+        std::to_string(this->column) + "] (\u001b[4;97m" +
         this->fileName +
-        ")";
+        "\u001b[0m)";
 }

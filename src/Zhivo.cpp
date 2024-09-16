@@ -37,27 +37,35 @@ auto interpreter() -> int {
         return 0;
     }
     catch(const LexicalAnalysisException& lexAnlExc) {
-        std::cerr << "[LEXANL]:  " << lexAnlExc.what() << std::endl;
+        std::cerr << "[\u001b[1;31mLexical Error\u001b[0m]:" << std::endl
+            << "\t" << lexAnlExc.what() << std::endl;
     }
     catch(const ParserException& parserExc) {
-        std::cerr << "[PARSER]:  " << parserExc.what() << std::endl;
-        std::cerr << "           " <<
+        std::cerr << "[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m"
+            << parserExc.what() << "\u001b[0m" << std::endl;
+        std::cerr << "                 " <<
             parserExc.getAddress()->toString() << std::endl;
     }
-    catch(const TerminativeReturnSignal& retExc) {
-        std::cerr << "[OBJECT]:  " <<
-            retExc.getObject().toString() << std::endl;
-    }
     catch(const TerminativeBreakSignal& breakExc) {
-        std::cerr << "[RUNTIME]: " <<
-            "Invalid break statement signal caught." << std::endl;
+        std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
+            << "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
+            << std::endl << "                 "
+            << breakExc.getAddress().toString() << std::endl;
     }
     catch(const TerminativeContinueSignal& continueExc) {
-        std::cerr << "[RUNTIME]: " <<
-            "Invalid break statement signal caught." << std::endl;
+        std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
+            << "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
+            << std::endl << "                 "
+            << continueExc.getAddress().toString() << std::endl;
+    }
+    catch(const TerminativeReturnSignal& retExc) {
+        std::cerr << "\u001b[0;93m"
+            << retExc.getObject().toString()
+            << "\u001b[0m" << std::endl;
     }
     catch(const std::exception& exc) {
-        std::cerr << "[RUNTIME]: " << exc.what() << std::endl;
+        std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m"
+            << exc.what() << "\u001b[0m" << std::endl;
     }
 
     return 1;

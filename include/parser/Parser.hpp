@@ -65,6 +65,7 @@ private:
     std::unique_ptr<ASTNode> stmtRet();
     std::unique_ptr<ASTNode> stmtThrow();
     std::unique_ptr<ASTNode> stmtTest();
+    std::unique_ptr<ASTNode> stmtVal();
 
     std::unique_ptr<ASTNode> expression();
     std::unique_ptr<ASTNode> statement();

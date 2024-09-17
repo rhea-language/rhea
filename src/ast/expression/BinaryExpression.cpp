@@ -24,15 +24,10 @@
 #include <parser/Token.hpp>
 
 #include <memory>
+#include <regex>
 
 DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
-    if(auto* varAccess = dynamic_cast<VariableAccessExpression*>(this->left.get())) {
-        DynamicObject rValue = this->right->visit(symbols);
-        symbols.setSymbol(varAccess->getName().getImage(), rValue);
-
-        return rValue;
-    }
-    else if(auto* arrayAccess = dynamic_cast<ArrayAccessExpression*>(this->left.get())) {
+    if(auto* arrayAccess = dynamic_cast<ArrayAccessExpression*>(this->left.get())) {
         auto arrayExpr = arrayAccess->getArrayExpression();
         auto arrayIdx = arrayAccess->getIndexExpression();
 
@@ -61,15 +56,21 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
     DynamicObject rValue = this->right->visit(symbols);
 
     if(lValue.isNumber() && rValue.isNumber())
-        return applyNumOp(lValue, rValue);
-    else if(lValue.isString() || rValue.isString())
-        return applyStringOp(lValue, rValue);
-    else if(lValue.isBool() || rValue.isBool())
-        return applyBoolOp(lValue, rValue);
+        return this->applyNumOp(lValue, rValue);
+    else if((lValue.isString() || rValue.isString()) &&
+        ((!lValue.isRegex() && !rValue.isRegex()) ||
+            !(this->op == "==" || this->op == "!=")))
+        return this->applyStringOp(lValue, rValue);
+    else if((lValue.isBool() || rValue.isBool()) &&
+        ((!lValue.isRegex() && !rValue.isRegex()) ||
+            !(this->op == "==" || this->op == "!=")))
+        return this->applyBoolOp(lValue, rValue);
+    else if(lValue.isRegex() || rValue.isRegex())
+        return this->applyRegexOp(lValue, rValue);
 
     throw ASTNodeException(
         std::move(this->address),
-        "Unsupported operation for these types"
+        "Unsupported operation for these types."
     );
 
     return {};
@@ -103,7 +104,7 @@ DynamicObject BinaryExpression::applyNumOp(DynamicObject& lValue, DynamicObject&
 
     throw ASTNodeException(
         std::move(this->address),
-        "Unknown operator"
+        "Unknown operator."
     );
 }
 
@@ -119,7 +120,7 @@ DynamicObject BinaryExpression::applyStringOp(DynamicObject& lValue, DynamicObje
 
     throw ASTNodeException(
         std::move(this->address),
-        "Unknown operator for string"
+        "Unknown operator for string."
     );
 }
 
@@ -131,6 +132,62 @@ DynamicObject BinaryExpression::applyBoolOp(DynamicObject& lValue, DynamicObject
 
     throw ASTNodeException(
         std::move(this->address),
-        "Unsupported operation for boolean"
+        "Unsupported operation for boolean."
+    );
+}
+
+DynamicObject BinaryExpression::applyRegexOp(DynamicObject& lValue, DynamicObject& rValue) {
+    if(this->op == "==") {
+        if(lValue.isRegex() && rValue.isString()) {
+            std::smatch matches;
+            auto recipientString = rValue.toString();
+
+            if(std::regex_search(
+                recipientString,
+                matches,
+                lValue.getRegex()->getRegex()
+            )) return DynamicObject(true);
+            else return DynamicObject(false);
+        }
+        else if(lValue.isString() && rValue.isRegex()) {
+            std::smatch matches;
+            auto recipientString = lValue.toString();
+
+            if(std::regex_search(
+                recipientString,
+                matches,
+                rValue.getRegex()->getRegex()
+            )) return DynamicObject(true);
+            else return DynamicObject(false);
+        }
+    }
+    else if(this->op == "!=") {
+        if(lValue.isRegex() && rValue.isString()) {
+            std::smatch matches;
+            auto recipientString = rValue.toString();
+
+            if(!std::regex_search(
+                recipientString,
+                matches,
+                lValue.getRegex()->getRegex()
+            )) return DynamicObject(true);
+            else return DynamicObject(false);
+        }
+        else if(lValue.isString() && rValue.isRegex()) {
+            std::smatch matches;
+            auto recipientString = lValue.toString();
+
+            if(!std::regex_search(
+                recipientString,
+                matches,
+                rValue.getRegex()->getRegex()
+            )) return DynamicObject(true);
+            else return DynamicObject(false);
+        }
+    }
+
+    throw ASTNodeException(
+        std::move(this->address),
+        "Unsupported operation for regular expression matching."
     );
 }

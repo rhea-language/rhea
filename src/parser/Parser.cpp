@@ -33,6 +33,7 @@
 #include <ast/expression/NilLiteralExpression.hpp>
 #include <ast/expression/NumberLiteralExpression.hpp>
 #include <ast/expression/RandomExpression.hpp>
+#include <ast/expression/RegexExpression.hpp>
 #include <ast/expression/RenderExpression.hpp>
 #include <ast/expression/StringLiteralExpression.hpp>
 #include <ast/expression/TypeExpression.hpp>
@@ -47,6 +48,7 @@
 #include <ast/statement/ReturnStatement.hpp>
 #include <ast/statement/TestStatement.hpp>
 #include <ast/statement/ThrowStatement.hpp>
+#include <ast/statement/VariableDeclarationStatement.hpp>
 
 #include <core/SymbolTable.hpp>
 
@@ -318,6 +320,15 @@ std::unique_ptr<ASTNode> Parser::exprLiteral() {
         expr = std::make_unique<NumberLiteralExpression>(
             std::make_unique<Token>(digitToken),
             ZhivoUtil::Convert::translateDigit(digitToken.getImage())
+        );
+    }
+    else if(this->peek().getType() == TokenType::REGEX) {
+        Token regexToken = this->consume(TokenType::REGEX);
+        std::string regExpression(std::move(regexToken.getImage()));
+
+        expr = std::make_unique<RegexExpression>(
+            std::make_unique<Token>(regexToken),
+            regExpression
         );
     }
 
@@ -662,7 +673,7 @@ std::unique_ptr<ASTNode> Parser::exprNilCoalescing() {
 std::unique_ptr<ASTNode> Parser::exprEquality() {
     std::unique_ptr<ASTNode> expression = this->exprComparison();
 
-    while(this->isNext("==") || this->isNext("!=") || this->isNext("=")) {
+    while(this->isNext("==") || this->isNext("!=")) {
         Token op = this->consume(TokenType::OPERATOR);
         expression = std::make_unique<BinaryExpression>(
             std::make_unique<Token>(op),
@@ -804,6 +815,21 @@ std::unique_ptr<ASTNode> Parser::stmtTest() {
     );
 }
 
+std::unique_ptr<ASTNode> Parser::stmtVal() {
+    this->consume("val");
+
+    Token address = this->consume(TokenType::IDENTIFIER);
+    this->consume("=");
+
+    std::unique_ptr<ASTNode> value = this->expression();
+    this->consume(";");
+
+    return std::make_unique<VariableDeclarationStatement>(
+        std::make_unique<Token>(address),
+        std::move(value)
+    );
+}
+
 std::unique_ptr<ASTNode> Parser::statement() {
     if(this->isNext("break"))
         return this->stmtBreak();
@@ -815,6 +841,8 @@ std::unique_ptr<ASTNode> Parser::statement() {
         return this->stmtThrow();
     else if(this->isNext("test"))
         return this->stmtTest();
+    else if(this->isNext("val"))
+        return this->stmtVal();
 
     std::unique_ptr<ASTNode> expr = this->expression();
     this->consume(";");

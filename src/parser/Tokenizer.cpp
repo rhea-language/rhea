@@ -89,6 +89,41 @@ void Tokenizer::scan() {
                     TokenType::STRING
                 );
             }
+            else if(currentChar == '`') {
+                std::string str;
+                int startColumn = column;
+
+                while(!this->isAtEnd() && this->source[this->index] != '`') {
+                    char ch = this->source[this->index++];
+
+                    if(ch == '\n')
+                        throw LexicalAnalysisException("Found new line inside regular expression literal. (line " + std::to_string(line) + ", column " + std::to_string(column) + ")");
+                    else if(ch == '\\') {
+                        str += ch;
+                        column++;
+
+                        if(isAtEnd())
+                            throw LexicalAnalysisException("Expecting escape character, encountered end-of-file. (line " + std::to_string(line) + ", column " + std::to_string(column) + ")");
+
+                        char escape = this->source[this->index++];
+                        str += escape;
+                        column++;
+                    }
+                    else str += ch;
+                }
+
+                index++;
+                column++;
+
+                str = ZhivoUtil::replaceEscapeSequences(std::move(str));
+                this->tokens.emplace_back(
+                    str,
+                    fileName,
+                    line,
+                    startColumn,
+                    TokenType::REGEX
+                );
+            }
             else {
                 std::string op(1, currentChar);
                 int startColumn = column;

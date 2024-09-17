@@ -24,6 +24,7 @@
 enum class TokenType {
     DIGIT,
     STRING,
+    REGEX,
     KEYWORD,
     IDENTIFIER,
     OPERATOR
@@ -41,6 +42,8 @@ inline std::string tokenTypeToString(TokenType type) {
             return "identifier";
         case TokenType::OPERATOR:
             return "operator";
+        case TokenType::REGEX:
+            return "regular expression";
         default:
             return "unknown";
     }

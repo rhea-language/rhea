@@ -25,15 +25,22 @@
 #include <iostream>
 #include <stdexcept>
 
-auto interpreter() -> int {
-    SymbolTable symbols;
+auto printBanner() -> void {
+    std::cout << "Zhivo Programming Language" << std::endl;
+}
 
+auto interpreter(int argc, char** argv) -> int {
     try {
-        Parser parser = Parser::fromFile("test.zhv");
-        parser.parse();
+        SymbolTable symbols;
 
-        for(const auto& statement : parser.getGlobalStatements())
-            statement->visit(symbols);
+        for(int i = 1; i < argc; i++) {
+            Parser parser = Parser::fromFile(argv[i]);
+            parser.parse();
+
+            for(const auto& statement : parser.getGlobalStatements())
+                statement->visit(symbols);
+        }
+
         return 0;
     }
     catch(const LexicalAnalysisException& lexAnlExc) {
@@ -71,6 +78,10 @@ auto interpreter() -> int {
     return 1;
 }
 
-decltype(interpreter()) main() {
-    return interpreter();
+auto main(int argc, char** argv) -> int {
+    if(argc > 1)
+        return interpreter(argc, argv);
+
+    printBanner();
+    return 1;
 }

@@ -29,4 +29,4 @@ jobs:
       - name: Build test
         run: |
           echo "render ([[+1, -2, 3.1416, ~~~~(\"Hello\")], [\"damn\", 10e-3, \"world!\"], nil]);" > test.zhv
-          ./dist/zhivo
+          ./dist/zhivo test.zhv

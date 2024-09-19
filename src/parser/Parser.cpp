@@ -486,7 +486,7 @@ std::unique_ptr<ASTNode> Parser::exprPrimary() {
         this->consume(")");
     }
     else if(this->isNext("{")) {
-        Token address = this->consume(TokenType::IDENTIFIER);
+        Token address = this->consume(TokenType::OPERATOR);
         std::vector<std::unique_ptr<ASTNode>> statements;
 
         while(!this->isNext("}")) {

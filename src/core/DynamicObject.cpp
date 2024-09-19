@@ -155,8 +155,19 @@ void DynamicObject::setArrayElement(size_t index, std::unique_ptr<DynamicObject>
 std::string DynamicObject::toString() {
     if(this->isNil())
         return "nil";
-    else if(this->isNumber())
-        return std::to_string(this->getNumber());
+    else if(this->isNumber()) {
+        std::string numstr = std::to_string(this->getNumber());
+        size_t dotPos = numstr.find('.');
+
+        if(dotPos != std::string::npos) {
+            numstr.erase(numstr.find_last_not_of('0') + 1);
+
+            if(numstr.back() == '.')
+                numstr.pop_back();
+        }
+
+        return numstr;
+    }
     else if(this->isString())
         return this->getString();
     else if(this->isBool())

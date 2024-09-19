@@ -1,0 +1,5 @@
+#!/bin/zhivo
+
+val greet = func(name)
+    render "Hello, " + name + "!\r\n";
+greet("world");

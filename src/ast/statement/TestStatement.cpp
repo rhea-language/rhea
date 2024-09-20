@@ -29,10 +29,13 @@ DynamicObject TestStatement::visit(SymbolTable& symbols) {
     double elapsedTimeMs = std::chrono::duration<double, std::milli>(elapsedTime).count();
 
     if(value.booleanEquivalent())
-        std::cout << "[\u001b[32m SUCCESS \u001b[0m] ";
-    else std::cout << "[\u001b[33m FAILED \u001b[0m]  ";
+        std::cout << "[\u001b[1;32m SUCCESS \u001b[0m]";
+    else std::cout << "[\u001b[1;31m FAILED  \u001b[0m]";
 
     DynamicObject name = this->testName->visit(symbols);
-    std::cout << elapsedTimeMs << " ms: " << name.toString() << std::endl;
+    std::cout << " " << elapsedTimeMs
+        << " ms\t\u001b[3;97m" << name.toString()
+        << "\u001b[4;0m" << std::endl;
+
     return {};
 }

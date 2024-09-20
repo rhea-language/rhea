@@ -531,6 +531,8 @@ std::unique_ptr<ASTNode> Parser::exprPrimary() {
         expression = this->exprLoop();
     else if(this->isNext("unless"))
         expression = this->exprUnless();
+    else if(this->isNext("random"))
+        expression = this->exprRandom();
     else if(this->isNext("when"))
         expression = this->exprWhen();
     else if(this->isNext("func"))

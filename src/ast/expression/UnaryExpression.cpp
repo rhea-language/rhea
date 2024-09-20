@@ -23,7 +23,10 @@
 
 DynamicObject UnaryExpression::visit(SymbolTable& symbols) {
     DynamicObject value = this->expression->visit(symbols);
-    if(value.isNumber()) {
+
+    if(this->op == "!")
+        return DynamicObject(!value.booleanEquivalent());
+    else if(value.isNumber()) {
         if(this->op == "+")
             return DynamicObject(+value.getNumber());
         else if(this->op == "-")
@@ -41,8 +44,6 @@ DynamicObject UnaryExpression::visit(SymbolTable& symbols) {
             return DynamicObject(std::move(str));
         }
     }
-    else if(value.isBool() && this->op == "!")
-        return DynamicObject(!value.getBool());
 
     throw ASTNodeException(
         std::move(this->address),

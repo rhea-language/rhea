@@ -16,6 +16,7 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <ast/ASTNodeException.hpp>
 #include <ast/expression/FunctionDeclarationExpression.hpp>
 #include <core/DynamicObject.hpp>
 #include <core/RegexWrapper.hpp>
@@ -142,12 +143,22 @@ bool DynamicObject::booleanEquivalent() {
         this->isFunction() || this->isRegex();
 }
 
-void DynamicObject::setArrayElement(size_t index, std::unique_ptr<DynamicObject> object) {
+void DynamicObject::setArrayElement(
+    std::unique_ptr<Token> reference,
+    size_t index,
+    std::unique_ptr<DynamicObject> object
+) {
     if(!this->isArray())
-        throw std::runtime_error("Object not an array.");
+        throw ASTNodeException(
+            std::move(reference),
+            "Subject value not an array."
+        );
 
     if(index >= this->arrayValue->size())
-        throw std::out_of_range("Index is out of bounds.");
+        throw ASTNodeException(
+            std::move(reference),
+            "Index is out of bounds."
+        );
 
     (*this->arrayValue)[index] = std::move(*object);
 }
@@ -196,5 +207,5 @@ std::string DynamicObject::toString() {
         return result;
     }
 
-    throw std::runtime_error("Unknown dynamic object data.");
+    return "{untyped}";
 }

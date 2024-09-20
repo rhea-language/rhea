@@ -106,10 +106,16 @@ DynamicObject BinaryExpression::applyNumOp(DynamicObject& lValue, DynamicObject&
         return DynamicObject(lValue.getNumber() <= rValue.getNumber());
     else if(this->op == "==")
         return DynamicObject(std::fabs(lValue.getNumber() - rValue.getNumber()) < __DBL_EPSILON__);
+    else if(this->op == "!=")
+        return DynamicObject(std::fabs(lValue.getNumber() - rValue.getNumber()) >= __DBL_EPSILON__);
+    else if(this->op == "<<")
+        return DynamicObject((float) ((unsigned long) lValue.getNumber() << (unsigned long) rValue.getNumber()));
+    else if(this->op == ">>")
+        return DynamicObject((float) ((unsigned long) lValue.getNumber() >> (unsigned long) rValue.getNumber()));
 
     throw ASTNodeException(
         std::move(this->address),
-        "Unknown operator."
+        "Unknown operator: " + this->address->getImage()
     );
 }
 
@@ -122,10 +128,32 @@ DynamicObject BinaryExpression::applyStringOp(DynamicObject& lValue, DynamicObje
             std::regex(rValue.toString()),
             ""
         ));
+    else if(this->op == "*") {
+        unsigned long count = 0;
+        std::string output = "";
+        std::string str;
+
+        if(lValue.isNumber() && rValue.isString()) {
+            count = (unsigned long) lValue.getNumber();
+            str = rValue.getString();
+        }
+        else if(lValue.isString() && rValue.isNumber()) {
+            count = (unsigned long) rValue.getNumber();
+            str = lValue.getString();
+        }
+
+        for(unsigned long i = 0; i < count; i++)
+            output += str;
+        return DynamicObject(output);
+    }
+    else if(this->op == "==")
+        return DynamicObject(lValue.getString() == rValue.getString());
+    else if(this->op == "!=")
+        return DynamicObject(lValue.getString() != rValue.getString());
 
     throw ASTNodeException(
         std::move(this->address),
-        "Unknown operator for string."
+        "Unknown operator for string: " + this->address->getImage()
     );
 }
 
@@ -137,7 +165,7 @@ DynamicObject BinaryExpression::applyBoolOp(DynamicObject& lValue, DynamicObject
 
     throw ASTNodeException(
         std::move(this->address),
-        "Unsupported operation for boolean."
+        "Unsupported operation for boolean: " + this->address->getImage()
     );
 }
 

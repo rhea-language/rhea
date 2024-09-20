@@ -19,10 +19,12 @@
 #include <ast/expression/LoopExpression.hpp>
 
 DynamicObject LoopExpression::visit(SymbolTable& symbols) {
+    DynamicObject value;
     this->initial->visit(symbols);
+
     while(this->condition->visit(symbols).booleanEquivalent()) {
         try {
-            this->body->visit(symbols);
+            value = this->body->visit(symbols);
         }
         catch(const TerminativeBreakSignal& breakSig) {
             break;
@@ -35,5 +37,5 @@ DynamicObject LoopExpression::visit(SymbolTable& symbols) {
         this->postexpr->visit(symbols);
     }
 
-    return {};
+    return value;
 }

@@ -19,9 +19,11 @@
 #include <ast/expression/WhileExpression.hpp>
 
 DynamicObject WhileExpression::visit(SymbolTable& symbols) {
+    DynamicObject value;
+
     while(this->expression->visit(symbols).booleanEquivalent())
         try {
-            this->body->visit(symbols);
+            value = this->body->visit(symbols);
         }
         catch(const TerminativeBreakSignal& breakSig) {
             break;
@@ -30,5 +32,5 @@ DynamicObject WhileExpression::visit(SymbolTable& symbols) {
             continue;
         }
 
-    return {};
+    return value;
 }

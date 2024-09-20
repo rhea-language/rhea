@@ -26,7 +26,7 @@ namespace ZhivoUtil {
 
 inline static std::string replaceEscapeSequences(const std::string& input) {
     std::string::const_iterator searchStart(input.cbegin());
-    std::regex escapeRegex(R"(\\(n|r|t|a|b|v|f))");
+    std::regex escapeRegex(R"(\\(n|r|t|a|b|v|f|e))");
     std::string result;
     std::smatch match;
 
@@ -47,6 +47,8 @@ inline static std::string replaceEscapeSequences(const std::string& input) {
             result.append("\v");
         else if(match[1] == "f")
             result.append("\f");
+        else if(match[1] == "e")
+            result.append("\u001b");
 
         searchStart = match[0].second;
     }

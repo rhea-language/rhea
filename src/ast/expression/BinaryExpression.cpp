@@ -54,7 +54,16 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
             (int) indexVal.getNumber(),
             std::move(rValuePtr)
         );
+
         return arrayVal;
+    }
+
+    auto* varAccess = dynamic_cast<VariableAccessExpression*>(this->left.get());
+    if(varAccess && this->op == "=") {
+        DynamicObject value = this->right->visit(symbols);
+        symbols.setSymbol(varAccess->getName().getImage(), value);        
+
+        return value;
     }
 
     DynamicObject lValue = this->left->visit(symbols);

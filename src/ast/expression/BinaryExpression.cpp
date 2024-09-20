@@ -63,12 +63,9 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
     if(lValue.isNumber() && rValue.isNumber())
         return this->applyNumOp(lValue, rValue);
     else if((lValue.isString() || rValue.isString()) &&
-        ((!lValue.isRegex() && !rValue.isRegex()) ||
-            !(this->op == "==" || this->op == "!=")))
+        !(this->op == "::" || this->op == "!:"))
         return this->applyStringOp(lValue, rValue);
-    else if((lValue.isBool() || rValue.isBool()) &&
-        ((!lValue.isRegex() && !rValue.isRegex()) ||
-            !(this->op == "==" || this->op == "!=")))
+    else if(lValue.isBool() || rValue.isBool())
         return this->applyBoolOp(lValue, rValue);
     else if(lValue.isRegex() || rValue.isRegex())
         return this->applyRegexOp(lValue, rValue);
@@ -159,9 +156,13 @@ DynamicObject BinaryExpression::applyStringOp(DynamicObject& lValue, DynamicObje
 
 DynamicObject BinaryExpression::applyBoolOp(DynamicObject& lValue, DynamicObject& rValue) {
     if(this->op == "||")
-        return DynamicObject(lValue.getBool() || rValue.getBool());
+        return DynamicObject(lValue.booleanEquivalent() || rValue.booleanEquivalent());
     else if(this->op == "&&")
-        return DynamicObject(lValue.getBool() && rValue.getBool());
+        return DynamicObject(lValue.booleanEquivalent() && rValue.booleanEquivalent());
+    else if(this->op == "==")
+        return DynamicObject(lValue == rValue);
+    else if(this->op == "!=")
+        return DynamicObject(lValue != rValue);
 
     throw ASTNodeException(
         std::move(this->address),
@@ -170,7 +171,7 @@ DynamicObject BinaryExpression::applyBoolOp(DynamicObject& lValue, DynamicObject
 }
 
 DynamicObject BinaryExpression::applyRegexOp(DynamicObject& lValue, DynamicObject& rValue) {
-    if(this->op == "==") {
+    if(this->op == "::") {
         if(lValue.isRegex() && rValue.isString()) {
             std::smatch matches;
             auto recipientString = rValue.toString();
@@ -194,7 +195,7 @@ DynamicObject BinaryExpression::applyRegexOp(DynamicObject& lValue, DynamicObjec
             else return DynamicObject(false);
         }
     }
-    else if(this->op == "!=") {
+    else if(this->op == "!:") {
         if(lValue.isRegex() && rValue.isString()) {
             std::smatch matches;
             auto recipientString = rValue.toString();

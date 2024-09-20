@@ -23,7 +23,6 @@
 #include <ast/expression/BlockExpression.hpp>
 #include <ast/expression/BooleanLiteralExpression.hpp>
 #include <ast/expression/CatchHandleExpression.hpp>
-#include <ast/expression/DoWhileExpression.hpp>
 #include <ast/expression/FunctionCallExpression.hpp>
 #include <ast/expression/GroupedExpression.hpp>
 #include <ast/expression/IfElseExpression.hpp>
@@ -100,6 +99,13 @@ bool Parser::isNext(const std::string& image) {
         return false;
 
     return this->peek().getImage() == image;
+}
+
+Token Parser::current() {
+    if(this->index >= (int) this->tokens.size())
+        return this->previous();
+
+    return this->tokens[this->index];
 }
 
 Token Parser::consume(const std::string& image) {
@@ -196,23 +202,6 @@ std::unique_ptr<ASTNode> Parser::exprCatchHandle() {
         std::move(handleExpr),
         std::make_unique<Token>(handler),
         std::move(finalExpr)
-    );
-}
-
-std::unique_ptr<ASTNode> Parser::exprDoWhile() {
-    Token address = this->consume("do");
-    std::unique_ptr<ASTNode> body = this->expression();
-
-    this->consume("while");
-    this->consume("(");
-
-    std::unique_ptr<ASTNode> condition = this->expression();
-    this->consume(")");
-
-    return std::make_unique<DoWhileExpression>(
-        std::make_unique<Token>(address),
-        std::move(body),
-        std::move(condition)
     );
 }
 
@@ -331,13 +320,33 @@ std::unique_ptr<ASTNode> Parser::exprLiteral() {
             regExpression
         );
     }
-
-    if(!expr)
-        throw ParserException(
-            std::make_unique<Token>(this->previous()),
-            "Expecting expression, encountered " +
-                this->previous().getImage()
+    else if(this->peek().getType() == TokenType::IDENTIFIER) {
+        expr = std::make_unique<VariableAccessExpression>(
+            std::make_unique<Token>(this->consume(TokenType::IDENTIFIER))
         );
+
+        while(this->isNext("[")) {
+            Token address = this->consume("[");
+            std::unique_ptr<ASTNode> indexExpr = this->expression();
+
+            this->consume("]");
+            expr = std::make_unique<ArrayAccessExpression>(
+                std::make_unique<Token>(address),
+                std::move(expr),
+                std::move(indexExpr)
+            );
+        }
+    }
+
+    if(!expr) {
+        auto address = this->current();
+
+        throw ParserException(
+            std::make_unique<Token>(address),
+            "Expecting expression, encountered " +
+                address.getImage()
+        );
+    }
 
     return expr;
 }
@@ -474,7 +483,9 @@ std::unique_ptr<ASTNode> Parser::exprWhile() {
 std::unique_ptr<ASTNode> Parser::exprPrimary() {
     std::unique_ptr<ASTNode> expression = nullptr;
 
-    if(this->isNext("+") || this->isNext("-") || this->isNext("~")) {
+    if(this->isNext("+") || this->isNext("-") ||
+        this->isNext("~") || this->isNext("!")
+    ) {
         Token address = this->consume(TokenType::OPERATOR);
         expression = std::make_unique<UnaryExpression>(
             std::make_unique<Token>(address),
@@ -511,8 +522,8 @@ std::unique_ptr<ASTNode> Parser::exprPrimary() {
         expression = this->exprRender();
     else if(this->isNext("catch"))
         expression = this->exprCatchHandle();
-    else if(this->isNext("do"))
-        expression = this->exprDoWhile();
+    else if(this->isNext("if"))
+        expression = this->exprIf();
     else if(this->isNext("while"))
         expression = this->exprWhile();
     else if(this->isNext("loop"))

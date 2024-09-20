@@ -20,13 +20,15 @@
 #include <memory>
 
 DynamicObject BlockExpression::visit(SymbolTable& symbols) {
+    DynamicObject value;
+
     try {
         for(auto& stmt : this->statements)
-            stmt->visit(symbols);
+            value = stmt->visit(symbols);
     }
-    catch(TerminativeReturnSignal& rs) {
+    catch(const TerminativeReturnSignal& rs) {
         return std::move(rs.getObject());
     }
 
-    return {};
+    return value;
 }

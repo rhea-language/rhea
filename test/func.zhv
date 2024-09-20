@@ -4,6 +4,6 @@ val add = func(x, y) {
     ret x + y;
 };
 
-render add(1, 2) + "\r\n";
-render add("This is regex: ", `[]`) + "\r\n";
-render add("Hello ", "world!") + "\r\n";
+render! add(1, 2);
+render! add("This is regex: ", `[]`);
+render! add("Hello ", "world!");

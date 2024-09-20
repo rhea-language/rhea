@@ -1,11 +1,11 @@
 #!/bin/zhivo
 
 val nums = [1, 2, 3];
-render nums + "\r\n";
+render! nums;
 
 nums[1] = [2.25, 2.5, 2.75];
-render nums + "\r\n";
+render! nums;
 
 nums[1][1] = "Test";
-render nums + "\r\n";
-render nums[1][2] + "\r\n";
+render! nums;
+render! nums[1][2];

@@ -48,7 +48,11 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
         DynamicObject rValue = this->right->visit(symbols);
         std::unique_ptr<DynamicObject> rValuePtr = std::make_unique<DynamicObject>(rValue);
 
-        arrayVal.setArrayElement((int) indexVal.getNumber(), std::move(rValuePtr));
+        arrayVal.setArrayElement(
+            std::move(this->address),
+            (int) indexVal.getNumber(),
+            std::move(rValuePtr)
+        );
         return arrayVal;
     }
 

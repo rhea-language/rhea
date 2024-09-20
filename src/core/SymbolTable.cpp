@@ -16,6 +16,7 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <ast/ASTNodeException.hpp>
 #include <core/SymbolTable.hpp>
 
 SymbolTable& SymbolTable::operator=(const SymbolTable& other) {
@@ -27,13 +28,22 @@ SymbolTable& SymbolTable::operator=(const SymbolTable& other) {
     return *this;
 }
 
-DynamicObject SymbolTable::getSymbol(const std::string& name) {
+DynamicObject SymbolTable::getSymbol(
+    std::unique_ptr<Token> reference,
+    const std::string& name
+) {
     if(this->table.find(name) != table.end())
         return std::move(this->table[name]);
     else if(this->parent)
-        return this->parent->getSymbol(name);
+        return this->parent->getSymbol(
+            std::move(reference),
+            name
+        );
 
-    throw std::runtime_error("Cannot resolve symbol: " + name);
+    throw ASTNodeException(
+        std::move(reference),
+        "Cannot resolve symbol: " + name
+    );
 }
 
 void SymbolTable::setSymbol(const std::string& name, DynamicObject value) {

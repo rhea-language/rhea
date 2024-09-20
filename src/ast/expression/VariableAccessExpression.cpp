@@ -23,5 +23,8 @@ Token VariableAccessExpression::getName() const {
 }
 
 DynamicObject VariableAccessExpression::visit(SymbolTable& symbols) {
-    return symbols.getSymbol(this->name->getImage());
+    return symbols.getSymbol(
+        std::move(this->address),
+        this->name->getImage()
+    );
 }

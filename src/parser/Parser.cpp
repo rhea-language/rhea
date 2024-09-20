@@ -361,10 +361,17 @@ std::unique_ptr<ASTNode> Parser::exprRandom() {
 
 std::unique_ptr<ASTNode> Parser::exprRender() {
     Token address = this->consume("render");
-    std::unique_ptr<ASTNode> expression = this->expression();
+    bool newLine = false;
 
+    if(this->isNext("!")) {
+        this->consume("!");
+        newLine = true;
+    }
+
+    std::unique_ptr<ASTNode> expression = this->expression();
     return std::make_unique<RenderExpression>(
         std::make_unique<Token>(address),
+        newLine,
         std::move(expression)
     );
 }

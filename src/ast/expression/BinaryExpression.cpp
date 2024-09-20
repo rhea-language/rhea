@@ -27,7 +27,8 @@
 #include <regex>
 
 DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
-    if(auto* arrayAccess = dynamic_cast<ArrayAccessExpression*>(this->left.get())) {
+    auto* arrayAccess = dynamic_cast<ArrayAccessExpression*>(this->left.get());
+    if(arrayAccess && this->op == "=") {
         auto arrayExpr = arrayAccess->getArrayExpression();
         auto arrayIdx = arrayAccess->getIndexExpression();
 
@@ -35,14 +36,14 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
         if(!arrayVal.isArray())
             throw ASTNodeException(
                 std::move(this->address),
-                "Error updating array element."
+                "Object is not an array, cannot update value in specified index."
             );
 
         DynamicObject indexVal = arrayIdx->visit(symbols);
         if(!indexVal.isNumber())
             throw ASTNodeException(
                 std::move(this->address),
-                "Error updating array element."
+                "Specified index is not a number."
             );
 
         DynamicObject rValue = this->right->visit(symbols);

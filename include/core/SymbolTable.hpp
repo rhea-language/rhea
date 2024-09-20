@@ -41,7 +41,11 @@ public:
 
     SymbolTable& operator=(const SymbolTable& other);
 
-    DynamicObject getSymbol(const std::string& name);
+    DynamicObject getSymbol(
+        std::unique_ptr<Token> reference,
+        const std::string& name
+    );
+
     void setSymbol(const std::string& name, DynamicObject value);
     bool hasSymbol(const std::string& name);
 };

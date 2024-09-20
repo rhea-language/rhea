@@ -32,3 +32,5 @@ jobs:
           ./dist/zhivo ./test/array.zhv
           ./dist/zhivo ./test/digits.zhv
           ./dist/zhivo ./test/func.zhv
+          ./dist/zhivo ./test/regex.zhv
+          ./dist/zhivo ./test/test.zhv

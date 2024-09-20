@@ -32,7 +32,7 @@ DynamicObject SymbolTable::getSymbol(
     std::unique_ptr<Token> reference,
     const std::string& name
 ) {
-    if(this->table.find(name) != table.end())
+    if(this->hasSymbol(name))
         return std::move(this->table[name]);
     else if(this->parent)
         return this->parent->getSymbol(
@@ -47,9 +47,13 @@ DynamicObject SymbolTable::getSymbol(
 }
 
 void SymbolTable::setSymbol(const std::string& name, DynamicObject value) {
+    if(this->parent && this->parent->hasSymbol(name))
+        this->parent->setSymbol(name, std::move(value));
+
     this->table[name] = std::move(value);
 }
 
 bool SymbolTable::hasSymbol(const std::string& name) {
-    return this->table.find(name) != this->table.end();
+    return this->table.find(name) != this->table.end() ||
+        (this->parent && this->parent->hasSymbol(name));
 }

@@ -9,3 +9,10 @@ when(i) {
     if(3.14) render! "Yeah, this is a Pi.",
     else render! "Yup, this is not a Pi."
 };
+
+unless(false)
+    render! "Hey, this is inside unless"
+else render! "Well...";
+
+random render! "What a probability!"
+else render! "Did not execute";

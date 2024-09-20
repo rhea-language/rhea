@@ -336,7 +336,7 @@ std::unique_ptr<ASTNode> Parser::exprLiteral() {
         throw ParserException(
             std::make_unique<Token>(this->previous()),
             "Expecting expression, encountered " +
-                this->peek().getImage()
+                this->previous().getImage()
         );
 
     return expr;
@@ -585,15 +585,15 @@ std::unique_ptr<ASTNode> Parser::exprPrimary() {
 std::unique_ptr<ASTNode> Parser::exprLogicOr() {
     std::unique_ptr<ASTNode> expression = this->exprLogicAnd();
 
-    while(this->isNext("||"))
+    while(this->isNext("||")) {
+        Token address = this->consume("||");
         expression = std::make_unique<BinaryExpression>(
-            std::make_unique<Token>(
-                this->consume(TokenType::OPERATOR)
-            ),
+            std::make_unique<Token>(address),
             std::move(expression),
             "||",
             std::move(this->exprLogicAnd())
         );
+    }
 
     return expression;
 }
@@ -601,15 +601,15 @@ std::unique_ptr<ASTNode> Parser::exprLogicOr() {
 std::unique_ptr<ASTNode> Parser::exprLogicAnd() {
     std::unique_ptr<ASTNode> expression = this->exprBitwiseOr();
 
-    while(this->isNext("&&"))
+    while(this->isNext("&&")) {
+        Token address = this->consume("&&");
         expression = std::make_unique<BinaryExpression>(
-            std::make_unique<Token>(
-                this->consume(TokenType::OPERATOR)
-            ),
+            std::make_unique<Token>(address),
             std::move(expression),
             "&&",
             std::move(this->exprBitwiseOr())
         );
+    }
 
     return expression;
 }
@@ -617,15 +617,15 @@ std::unique_ptr<ASTNode> Parser::exprLogicAnd() {
 std::unique_ptr<ASTNode> Parser::exprBitwiseOr() {
     std::unique_ptr<ASTNode> expression = this->exprBitwiseXor();
 
-    while(this->isNext("|"))
+    while(this->isNext("|")) {
+        Token address = this->consume("|");
         expression = std::make_unique<BinaryExpression>(
-            std::make_unique<Token>(
-                this->consume(TokenType::OPERATOR)
-            ),
+            std::make_unique<Token>(address),
             std::move(expression),
             "|",
             std::move(this->exprBitwiseXor())
         );
+    }
 
     return expression;
 }
@@ -633,15 +633,15 @@ std::unique_ptr<ASTNode> Parser::exprBitwiseOr() {
 std::unique_ptr<ASTNode> Parser::exprBitwiseXor() {
     std::unique_ptr<ASTNode> expression = this->exprBitwiseAnd();
 
-    while(this->isNext("^"))
+    while(this->isNext("^")) {
+        Token address = this->consume("^");
         expression = std::make_unique<BinaryExpression>(
-            std::make_unique<Token>(
-                this->consume(TokenType::OPERATOR)
-            ),
+            std::make_unique<Token>(address),
             std::move(expression),
             "^",
             std::move(this->exprBitwiseAnd())
         );
+    }
 
     return expression;
 }
@@ -649,15 +649,15 @@ std::unique_ptr<ASTNode> Parser::exprBitwiseXor() {
 std::unique_ptr<ASTNode> Parser::exprBitwiseAnd() {
     std::unique_ptr<ASTNode> expression = this->exprNilCoalescing();
 
-    while(this->isNext("&"))
+    while(this->isNext("&")) {
+        Token address = this->consume("&");
         expression = std::make_unique<BinaryExpression>(
-            std::make_unique<Token>(
-                this->consume(TokenType::OPERATOR)
-            ),
+            std::make_unique<Token>(address),
             std::move(expression),
             "&",
             std::move(this->exprNilCoalescing())
         );
+    }
 
     return expression;
 }
@@ -665,14 +665,14 @@ std::unique_ptr<ASTNode> Parser::exprBitwiseAnd() {
 std::unique_ptr<ASTNode> Parser::exprNilCoalescing() {
     std::unique_ptr<ASTNode> expression = this->exprEquality();
 
-    while(this->isNext("?"))
+    while(this->isNext("?")) {
+        Token address = this->consume("?");
         expression = std::make_unique<NilCoalescingExpression>(
-            std::make_unique<Token>(
-                this->consume(TokenType::OPERATOR)
-            ),
+            std::make_unique<Token>(address),
             std::move(expression),
             std::move(this->exprEquality())
         );
+    }
 
     return expression;
 }

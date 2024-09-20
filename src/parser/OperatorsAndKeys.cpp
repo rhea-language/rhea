@@ -28,7 +28,7 @@ const std::vector<std::string> OperatorsAndKeys::operators = {
 };
 
 const std::unordered_set<std::string> OperatorsAndKeys::keywords = {
-    "while", "do", "loop", "render",
+    "while", "loop", "render",
     "unless", "if", "else", "when",
     "break", "continue", "random",
     "func", "ret", "true", "false",

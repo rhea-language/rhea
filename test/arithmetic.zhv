@@ -1,0 +1,35 @@
+#!/bin/zhivo
+
+render! 1.1 + 2.2;
+render! 1.1 - 2.2;
+render! 1.1 * 2.2;
+render! 1.1 / 2.2;
+render! 1.1 % 2.2;
+render! 1.1 << 2.2;
+render! 1.1 >> 2.2;
+
+render! 1.1 | 2.2;
+render! 1.1 & 2.2;
+
+render! "Hello! " * 3;
+render! 3 * "Hello! ";
+render! "Hello, world!" - ", world";
+render! "Hello, " + "world!";
+render! "The pi is " + 3.14;
+
+render! true || true;
+render! true || false;
+render! false || false;
+render! true && true;
+render! true && false;
+render! false && false;
+
+render! 1 == 1;
+render! 1 != 1;
+render! 1 == 0;
+render! 1 != 0;
+
+render! "Hello" == "Hello";
+render! "Hello" != "Hello";
+render! "Hello" == "world!";
+render! "Hello" != "world!";

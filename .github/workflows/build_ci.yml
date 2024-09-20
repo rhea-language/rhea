@@ -28,4 +28,5 @@ jobs:
 
       - name: Build test
         run: |
-          ./dist/zhivo ./examples/hello.zhv
+          ./dist/zhivo ./test/digits.zhv
+          ./dist/zhivo ./test/func.zhv

@@ -28,5 +28,6 @@ jobs:
 
       - name: Build test
         run: |
+          ./dist/zhivo ./test/array.zhv
           ./dist/zhivo ./test/digits.zhv
           ./dist/zhivo ./test/func.zhv

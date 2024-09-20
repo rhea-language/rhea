@@ -21,6 +21,7 @@
 
 #include <core/DynamicObjectType.hpp>
 #include <core/RegexWrapper.hpp>
+#include <parser/Token.hpp>
 
 #include <functional>
 #include <memory>
@@ -136,7 +137,11 @@ public:
     double getNumber() const;
     bool getBool() const;
 
-    void setArrayElement(size_t index, std::unique_ptr<DynamicObject> object);
+    void setArrayElement(
+        std::unique_ptr<Token> reference,
+        size_t index,
+        std::unique_ptr<DynamicObject> object
+    );
 
     std::string toString();
 };

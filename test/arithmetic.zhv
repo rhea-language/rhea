@@ -37,3 +37,5 @@ render! "Hello" != "world!";
 render! 3.14 ? nil;
 render! nil ? 3.14;
 render! nil ? nil;
+
+render! "Maybe: " + (maybe == maybe);

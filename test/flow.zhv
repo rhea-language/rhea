@@ -1,0 +1,11 @@
+#!/bin/zhivo
+
+val i = 3.14;
+if(i == 3.14)
+    render! "This is a Pi!"
+else render! "This is not a Pi.";
+
+when(i) {
+    if(3.14) render! "Yeah, this is a Pi.",
+    else render! "Yup, this is not a Pi."
+};

@@ -83,6 +83,10 @@ bool DynamicObject::operator==(const DynamicObject& other) {
     return false;
 }
 
+bool DynamicObject::operator!=(const DynamicObject& other) {
+    return !(*this == other);
+}
+
 bool DynamicObject::isNumber() const {
     return this->type == DynamicObjectType::NUMBER;
 }

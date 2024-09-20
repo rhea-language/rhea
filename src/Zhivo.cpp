@@ -68,7 +68,7 @@ auto interpreter(int argc, char** argv) -> int {
     }
     catch(const TerminativeContinueSignal& continueExc) {
         std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
-            << "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
+            << "\u001b[3;37mInvalid continue statement signal caught.\u001b[0m"
             << std::endl << "                 "
             << continueExc.getAddress().toString() << std::endl;
     }

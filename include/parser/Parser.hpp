@@ -36,7 +36,6 @@ private:
     std::unique_ptr<ASTNode> exprArray();
     std::unique_ptr<ASTNode> exprBlock();
     std::unique_ptr<ASTNode> exprCatchHandle();
-    std::unique_ptr<ASTNode> exprDoWhile();
     std::unique_ptr<ASTNode> exprFunctionDecl();
     std::unique_ptr<ASTNode> exprLoop();
     std::unique_ptr<ASTNode> exprIf();
@@ -73,6 +72,7 @@ private:
     Token previous();
     Token peek();
 
+    Token current();
     Token consume(const std::string& image);
     Token consume(TokenType type);
 

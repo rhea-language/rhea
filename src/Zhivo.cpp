@@ -16,6 +16,7 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <ast/ASTNodeException.hpp>
 #include <ast/TerminativeSignal.hpp>
 #include <core/SymbolTable.hpp>
 #include <parser/LexicalAnalysisException.hpp>
@@ -42,6 +43,12 @@ auto interpreter(int argc, char** argv) -> int {
         }
 
         return 0;
+    }
+    catch(const ASTNodeException& nodeExc) {
+        std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
+            << "\u001b[3;37m" << nodeExc.what() << "\u001b[0m"
+            << std::endl << "                 "
+            << nodeExc.getAddress()->toString() << std::endl;
     }
     catch(const LexicalAnalysisException& lexAnlExc) {
         std::cerr << "[\u001b[1;31mLexical Error\u001b[0m]:" << std::endl

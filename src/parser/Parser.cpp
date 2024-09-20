@@ -673,7 +673,7 @@ std::unique_ptr<ASTNode> Parser::exprNilCoalescing() {
 std::unique_ptr<ASTNode> Parser::exprEquality() {
     std::unique_ptr<ASTNode> expression = this->exprComparison();
 
-    while(this->isNext("==") || this->isNext("!=")) {
+    while(this->isNext("==") || this->isNext("!=") || this->isNext("=")) {
         Token op = this->consume(TokenType::OPERATOR);
         expression = std::make_unique<BinaryExpression>(
             std::make_unique<Token>(op),

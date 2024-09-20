@@ -24,12 +24,15 @@
 class RenderExpression : public ASTNode {
 private:
     std::unique_ptr<ASTNode> expression;
+    bool newLine;
 
 public:
     explicit RenderExpression(
         std::unique_ptr<Token> _address,
+        bool _newLine,
         std::unique_ptr<ASTNode> _expression
-    ) : expression(std::move(_expression)) {
+    ) : expression(std::move(_expression)),
+        newLine(_newLine) {
         this->address = std::move(_address);
     }
 

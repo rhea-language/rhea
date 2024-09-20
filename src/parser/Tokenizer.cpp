@@ -60,6 +60,7 @@ void Tokenizer::scan() {
 
                 while(!this->isAtEnd() && this->source[this->index] != '"') {
                     char ch = this->source[this->index++];
+                    column++;
 
                     if(ch == '\n')
                         throw LexicalAnalysisException("Found new line inside string literal. (line " + std::to_string(line) + ", column " + std::to_string(column) + ")");
@@ -77,7 +78,7 @@ void Tokenizer::scan() {
                     else str += ch;
                 }
 
-                index++;
+                this->index++;
                 column++;
 
                 str = ZhivoUtil::replaceEscapeSequences(std::move(str));
@@ -112,7 +113,7 @@ void Tokenizer::scan() {
                     else str += ch;
                 }
 
-                index++;
+                this->index++;
                 column++;
 
                 str = ZhivoUtil::replaceEscapeSequences(std::move(str));
@@ -250,6 +251,8 @@ void Tokenizer::scan() {
                     column++;
 
                     char sign = this->source[this->index++];
+                    column++;
+
                     if(this->isAtEnd() || (sign != '+' && sign != '-'))
                         throw LexicalAnalysisException("Expecting 'e' followed by decimal digits. (line " + std::to_string(line) + ", column " + std::to_string(column) + ")");
 

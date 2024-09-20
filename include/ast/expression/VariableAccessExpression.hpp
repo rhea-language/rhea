@@ -33,7 +33,7 @@ public:
     explicit VariableAccessExpression(
         std::unique_ptr<Token> _name
     ) : name(std::move(_name)) {
-        this->address = std::move(_name);
+        this->address = std::make_unique<Token>(*this->name);
     }
 
     Token getName() const;

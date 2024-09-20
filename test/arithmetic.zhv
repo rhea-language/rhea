@@ -33,3 +33,7 @@ render! "Hello" == "Hello";
 render! "Hello" != "Hello";
 render! "Hello" == "world!";
 render! "Hello" != "world!";
+
+render! 3.14 ? nil;
+render! nil ? 3.14;
+render! nil ? nil;

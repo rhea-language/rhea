@@ -432,7 +432,7 @@ std::unique_ptr<ASTNode> Parser::exprWhen() {
     while(!this->isNext("}")) {
         if(!cases.empty())
             this->consume(",");
-        
+
         if(this->isNext("if")) {
             this->consume("if");
             this->consume("(");
@@ -458,6 +458,7 @@ std::unique_ptr<ASTNode> Parser::exprWhen() {
         }
     }
 
+    this->consume("}");
     return std::make_unique<WhenExpression>(
         std::make_unique<Token>(address),
         std::move(expression),

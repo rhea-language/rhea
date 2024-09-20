@@ -1,0 +1,13 @@
+#!/bin/zhivo
+
+val bin = 0b001000;
+val tri = 0t22;
+val oct = 0c10;
+val dec = 8.0;
+val hex = 0x08;
+
+render "Binary: " + bin + "\r\n";
+render "Trinary: " + tri + "\r\n";
+render "Octaldecimal: " + oct + "\r\n";
+render "Decimal: " + dec + "\r\n";
+render "Hexadecimal: " + hex + "\r\n";

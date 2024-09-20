@@ -120,6 +120,7 @@ public:
     DynamicObject& operator=(const DynamicObject& other);
     DynamicObject& operator=(DynamicObject&& other);
     bool operator==(const DynamicObject& other);
+    bool operator!=(const DynamicObject& other);
     bool booleanEquivalent();
 
     bool isFunction() const;

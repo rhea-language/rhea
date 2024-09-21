@@ -144,6 +144,7 @@ public:
         std::unique_ptr<DynamicObject> object
     );
 
+    std::string objectType();
     std::string toString();
 };
 

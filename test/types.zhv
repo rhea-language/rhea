@@ -1,0 +1,8 @@
+#!/bin/zhivo
+
+render! type "hello";
+render! type 3.14;
+render! type `[]`;
+render! type func() {};
+render! type nil;
+render! type [0, 0, 0];

@@ -1,0 +1,14 @@
+#!/bin/zhivo
+
+catch {
+    render! "This is inside the handle-clause";
+    throw "A message";
+
+    render! "This won't be rendered";
+}
+handle err {
+    render! "Error caught: " + err;
+}
+then {
+    render! "End of catch-handle clause.";
+};

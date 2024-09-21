@@ -167,6 +167,25 @@ void DynamicObject::setArrayElement(
     (*this->arrayValue)[index] = std::move(*object);
 }
 
+std::string DynamicObject::objectType() {
+    if(this->isArray())
+        return "array";
+    else if(this->isBool())
+        return "bool";
+    else if(this->isString())
+        return "string";
+    else if(this->isNumber())
+        return "number";
+    else if(this->isNil())
+        return "nil";
+    else if(this->isFunction())
+        return "function";
+    else if(this->isRegex())
+        return "regex";
+
+    return "unknown";
+}
+
 std::string DynamicObject::toString() {
     if(this->isNil())
         return "nil";

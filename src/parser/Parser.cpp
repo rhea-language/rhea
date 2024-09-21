@@ -191,8 +191,8 @@ std::unique_ptr<ASTNode> Parser::exprCatchHandle() {
     std::unique_ptr<ASTNode> handleExpr = this->expression();
 
     std::unique_ptr<ASTNode> finalExpr = nullptr;
-    if(this->isNext("handle")) {
-        this->consume("handle");
+    if(this->isNext("then")) {
+        this->consume("then");
         finalExpr = this->expression();
     }
 
@@ -537,6 +537,8 @@ std::unique_ptr<ASTNode> Parser::exprPrimary() {
         expression = this->exprWhen();
     else if(this->isNext("func"))
         expression = this->exprFunctionDecl();
+    else if(this->isNext("type"))
+        expression = this->exprType();
     else if(this->isNext("["))
         expression = this->exprArray();
     else if(this->peek().getType() == TokenType::IDENTIFIER) {

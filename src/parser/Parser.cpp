@@ -31,6 +31,7 @@
 #include <ast/expression/NilCoalescingExpression.hpp>
 #include <ast/expression/NilLiteralExpression.hpp>
 #include <ast/expression/NumberLiteralExpression.hpp>
+#include <ast/expression/ParallelExpression.hpp>
 #include <ast/expression/RandomExpression.hpp>
 #include <ast/expression/RegexExpression.hpp>
 #include <ast/expression/RenderExpression.hpp>
@@ -368,6 +369,16 @@ std::unique_ptr<ASTNode> Parser::exprRandom() {
     );
 }
 
+std::unique_ptr<ASTNode> Parser::exprParallel() {
+    Token address = this->consume("parallel");
+    std::unique_ptr<ASTNode> expression = this->expression();
+
+    return std::make_unique<ParallelExpression>(
+        std::make_unique<Token>(address),
+        std::move(expression)
+    );
+}
+
 std::unique_ptr<ASTNode> Parser::exprRender() {
     Token address = this->consume("render");
     bool newLine = false;
@@ -539,6 +550,8 @@ std::unique_ptr<ASTNode> Parser::exprPrimary() {
         expression = this->exprFunctionDecl();
     else if(this->isNext("type"))
         expression = this->exprType();
+    else if(this->isNext("parallel"))
+        expression = this->exprParallel();
     else if(this->isNext("["))
         expression = this->exprArray();
     else if(this->peek().getType() == TokenType::IDENTIFIER) {

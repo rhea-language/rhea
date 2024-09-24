@@ -22,22 +22,28 @@
 #include <ast/ASTNode.hpp>
 #include <core/DynamicObject.hpp>
 
+#include <functional>
 #include <memory>
+#include <thread>
 #include <unordered_map>
+#include <vector>
 
 class SymbolTable {
 private:
     SymbolTable* parent;
     std::unordered_map<std::string, DynamicObject> table;
+    std::vector<std::thread> threads;
 
 public:
     explicit SymbolTable(SymbolTable* _parent = nullptr) :
         parent(_parent),
-        table({}) {}
+        table({}),
+        threads() {}
 
     explicit SymbolTable(const SymbolTable& other) :
         parent(other.parent),
-        table(other.table) {}
+        table(other.table),
+        threads() {}
 
     SymbolTable& operator=(const SymbolTable& other);
 
@@ -48,6 +54,9 @@ public:
 
     void setSymbol(const std::string& name, DynamicObject value);
     bool hasSymbol(const std::string& name);
+
+    void addParallelism(std::thread par);
+    void waitForThreads();
 };
 
 #endif

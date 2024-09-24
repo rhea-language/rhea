@@ -17,18 +17,22 @@
  */
 
 #include <ast/expression/BlockExpression.hpp>
+#include <core/SymbolTable.hpp>
 #include <memory>
 
 DynamicObject BlockExpression::visit(SymbolTable& symbols) {
+    SymbolTable table(&symbols);
     DynamicObject value;
 
     try {
         for(auto& stmt : this->statements)
-            value = stmt->visit(symbols);
+            value = stmt->visit(table);
     }
     catch(const TerminativeReturnSignal& rs) {
+        table.waitForThreads();
         return std::move(rs.getObject());
     }
 
+    table.waitForThreads();
     return value;
 }

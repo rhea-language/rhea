@@ -47,8 +47,10 @@ DynamicObject SymbolTable::getSymbol(
 }
 
 void SymbolTable::setSymbol(const std::string& name, DynamicObject value) {
-    if(this->parent && this->parent->hasSymbol(name))
-        this->parent->setSymbol(name, std::move(value));
+    if(this->hasSymbol(name))
+        this->table[name] = value;
+    else if(this->parent && this->parent->hasSymbol(name))
+        this->parent->setSymbol(name, value);
 
     this->table[name] = std::move(value);
 }

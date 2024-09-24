@@ -57,3 +57,18 @@ bool SymbolTable::hasSymbol(const std::string& name) {
     return this->table.find(name) != this->table.end() ||
         (this->parent && this->parent->hasSymbol(name));
 }
+
+void SymbolTable::addParallelism(std::thread par) {
+    this->threads.emplace_back(std::move(par));
+}
+
+void SymbolTable::waitForThreads() {
+    if(this->threads.empty())
+        return;
+
+    for(auto& thread : this->threads)
+        if(thread.joinable())
+            thread.join();
+
+    this->threads.clear();
+}

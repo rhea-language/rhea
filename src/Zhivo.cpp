@@ -18,6 +18,7 @@
 
 #include <ast/ASTNodeException.hpp>
 #include <ast/TerminativeSignal.hpp>
+#include <core/Runtime.hpp>
 #include <core/SymbolTable.hpp>
 #include <parser/LexicalAnalysisException.hpp>
 #include <parser/Parser.hpp>
@@ -31,9 +32,8 @@ auto printBanner() -> void {
 }
 
 auto interpreter(int argc, char** argv) -> int {
+    SymbolTable symbols;
     try {
-        SymbolTable symbols;
-
         for(int i = 1; i < argc; i++) {
             Parser parser = Parser::fromFile(argv[i]);
             parser.parse();
@@ -42,42 +42,50 @@ auto interpreter(int argc, char** argv) -> int {
                 statement->visit(symbols);
         }
 
+        symbols.waitForThreads();
         return 0;
     }
     catch(const ASTNodeException& nodeExc) {
+        symbols.waitForThreads();
         std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
             << "\u001b[3;37m" << nodeExc.what() << "\u001b[0m"
             << std::endl << "                 "
             << nodeExc.getAddress()->toString() << std::endl;
     }
     catch(const LexicalAnalysisException& lexAnlExc) {
+        symbols.waitForThreads();
         std::cerr << "[\u001b[1;31mLexical Error\u001b[0m]:" << std::endl
             << "\t" << lexAnlExc.what() << std::endl;
     }
     catch(const ParserException& parserExc) {
+        symbols.waitForThreads();
         std::cerr << "[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m"
             << parserExc.what() << "\u001b[0m" << std::endl;
         std::cerr << "                 " <<
             parserExc.getAddress()->toString() << std::endl;
     }
     catch(const TerminativeBreakSignal& breakExc) {
+        symbols.waitForThreads();
         std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
             << "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
             << std::endl << "                 "
             << breakExc.getAddress().toString() << std::endl;
     }
     catch(const TerminativeContinueSignal& continueExc) {
+        symbols.waitForThreads();
         std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
             << "\u001b[3;37mInvalid continue statement signal caught.\u001b[0m"
             << std::endl << "                 "
             << continueExc.getAddress().toString() << std::endl;
     }
     catch(const TerminativeReturnSignal& retExc) {
+        symbols.waitForThreads();
         std::cerr << "\u001b[0;93m"
             << retExc.getObject().toString()
             << "\u001b[0m" << std::endl;
     }
     catch(const std::exception& exc) {
+        symbols.waitForThreads();
         std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m"
             << exc.what() << "\u001b[0m" << std::endl;
     }

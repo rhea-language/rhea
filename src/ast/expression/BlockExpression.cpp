@@ -21,7 +21,7 @@
 #include <memory>
 
 DynamicObject BlockExpression::visit(SymbolTable& symbols) {
-    SymbolTable table(std::move(symbols));
+    SymbolTable& table(symbols);
     DynamicObject value;
 
     try {

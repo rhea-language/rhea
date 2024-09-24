@@ -58,6 +58,7 @@ private:
     std::unique_ptr<ASTNode> exprShift();
     std::unique_ptr<ASTNode> exprTerm();
     std::unique_ptr<ASTNode> exprFactor();
+    std::unique_ptr<ASTNode> exprParallel();
 
     std::unique_ptr<ASTNode> stmtBreak();
     std::unique_ptr<ASTNode> stmtContinue();

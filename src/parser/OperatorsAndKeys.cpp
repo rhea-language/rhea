@@ -34,5 +34,5 @@ const std::unordered_set<std::string> OperatorsAndKeys::keywords = {
     "func", "ret", "true", "false",
     "nil", "catch", "handle", "throw",
     "maybe", "then", "type", "use",
-    "test", "val"
+    "test", "val", "parallel"
 };

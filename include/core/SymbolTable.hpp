@@ -41,8 +41,8 @@ public:
         threads() {}
 
     explicit SymbolTable(const SymbolTable& other) :
-        parent(other.parent),
-        table(other.table),
+        parent(std::move(other.parent)),
+        table(std::move(other.table)),
         threads() {}
 
     SymbolTable& operator=(const SymbolTable& other);

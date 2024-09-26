@@ -20,5 +20,5 @@
 #include <memory>
 
 DynamicObject GroupedExpression::visit(SymbolTable& symbols) {
-    return std::move(this->expression->visit(symbols));
+    return this->expression->visit(symbols);
 }

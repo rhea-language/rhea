@@ -22,13 +22,21 @@
 
 #include <functional>
 #include <memory>
+#include <mutex>
 #include <thread>
 
 DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
     std::thread task(
-        [this, expr = std::move(this->expression), sym = &symbols]() mutable {
+        std::bind([
+            this,
+            expr = std::move(this->expression),
+            sym = &symbols
+        ]() mutable {
+            std::mutex mtx;
+            std::scoped_lock<std::mutex> lock(mtx);
+
             expr->visit(*sym);
-        }
+        })
     );
 
     symbols.addParallelism(std::move(task));

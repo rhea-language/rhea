@@ -30,7 +30,7 @@ DynamicObject BlockExpression::visit(SymbolTable& symbols) {
     }
     catch(const TerminativeReturnSignal& rs) {
         table.waitForThreads();
-        return std::move(rs.getObject());
+        return rs.getObject();
     }
 
     table.waitForThreads();

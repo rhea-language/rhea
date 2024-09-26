@@ -314,7 +314,7 @@ std::unique_ptr<ASTNode> Parser::exprLiteral() {
     }
     else if(this->peek().getType() == TokenType::REGEX) {
         Token regexToken = this->consume(TokenType::REGEX);
-        std::string regExpression(std::move(regexToken.getImage()));
+        std::string regExpression(regexToken.getImage());
 
         expr = std::make_unique<RegexExpression>(
             std::make_unique<Token>(regexToken),

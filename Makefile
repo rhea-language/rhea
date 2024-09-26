@@ -20,7 +20,8 @@ CXXFLAGS := \
     -Wvariadic-macros -Wvolatile-register-var -Wwrite-strings \
     -pipe -static -Ofast -g -s -std=c++17 \
     -fopenmp -msse -msse2 -msse3 -mfpmath=sse \
-    -flto=auto -march=native -funroll-loops -ffast-math
+    -flto=auto -march=native -funroll-loops -ffast-math \
+    -DNDEBUG
 
 INCLUDES := -Iinclude
 

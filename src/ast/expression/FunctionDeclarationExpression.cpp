@@ -53,5 +53,5 @@ DynamicObject FunctionDeclarationExpression::call(SymbolTable& symbols, const st
             std::move(args).at(i)
         );
 
-    return std::move(this->body->visit(localSymbols));
+    return this->body->visit(localSymbols);
 }

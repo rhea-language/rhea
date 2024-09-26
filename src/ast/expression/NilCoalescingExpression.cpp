@@ -23,5 +23,5 @@ DynamicObject NilCoalescingExpression::visit(SymbolTable& symbols) {
     if(!leftValue.isNil())
         return leftValue;
 
-    return std::move(this->right->visit(symbols));
+    return this->right->visit(symbols);
 }

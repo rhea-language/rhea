@@ -57,6 +57,7 @@ public:
 
     void addParallelism(std::thread par);
     void waitForThreads();
+    void detachParallelNodes();
 };
 
 #endif

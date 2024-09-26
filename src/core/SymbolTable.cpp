@@ -74,3 +74,13 @@ void SymbolTable::waitForThreads() {
 
     this->threads.clear();
 }
+
+void SymbolTable::detachParallelNodes() {
+    if(this->threads.empty())
+        return;
+
+    for(auto& thread : this->threads)
+        thread.detach();
+
+    this->threads.clear();
+}

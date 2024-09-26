@@ -46,9 +46,9 @@ DynamicObject ArrayAccessExpression::visit(SymbolTable& symbols) {
                 "Accessing string with non-number index is not allowed."
             );
 
-        return DynamicObject(std::move(
+        return DynamicObject(
             std::string(1, origin.getString().at((int) idx.getNumber()))
-        ));
+        );
     }
     else if(origin.isArray()) {
         if(!idx.isNumber())

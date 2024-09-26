@@ -29,10 +29,8 @@ DynamicObject BlockExpression::visit(SymbolTable& symbols) {
             value = stmt->visit(table);
     }
     catch(const TerminativeReturnSignal& rs) {
-        table.waitForThreads();
         return rs.getObject();
     }
 
-    table.waitForThreads();
     return value;
 }

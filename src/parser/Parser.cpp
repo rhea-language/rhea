@@ -49,6 +49,7 @@
 #include <ast/statement/TestStatement.hpp>
 #include <ast/statement/ThrowStatement.hpp>
 #include <ast/statement/VariableDeclarationStatement.hpp>
+#include <ast/statement/WaitStatement.hpp>
 
 #include <core/SymbolTable.hpp>
 
@@ -867,6 +868,15 @@ std::unique_ptr<ASTNode> Parser::stmtVal() {
     );
 }
 
+std::unique_ptr<ASTNode> Parser::stmtWait() {
+    Token address = this->consume("wait");
+    this->consume(";");
+
+    return std::make_unique<WaitStatement>(
+        std::make_unique<Token>(address)
+    );
+}
+
 std::unique_ptr<ASTNode> Parser::statement() {
     if(this->isNext("break"))
         return this->stmtBreak();
@@ -880,6 +890,8 @@ std::unique_ptr<ASTNode> Parser::statement() {
         return this->stmtTest();
     else if(this->isNext("val"))
         return this->stmtVal();
+    else if(this->isNext("wait"))
+        return this->stmtWait();
 
     std::unique_ptr<ASTNode> expr = this->expression();
     this->consume(";");

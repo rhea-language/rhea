@@ -1,0 +1,17 @@
+#!/bin/zhivo
+
+val count = 99;
+
+while(count > 0) {
+    val bottle = if(count == 1) "bottle" else "bottles";
+
+    render! count + " " + bottle + " of beer on the wall";
+    render! count + " " + bottle + " of beer,";
+    render! "Take one down, pass it around,";
+
+    count = count - 1;
+
+    if(count > 0)
+        render! count + " " + bottle + " of the beer on the wall.\r\n"
+    else render! "\r\nNo more " + bottle + " of beer on the wall.";
+};

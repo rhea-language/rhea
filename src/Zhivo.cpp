@@ -42,8 +42,12 @@ auto interpreter(int argc, char** argv) -> int {
                 statement->visit(symbols);
         }
 
-        symbols.waitForThreads();
+        symbols.detachParallelNodes();
         return 0;
+    }
+    catch(const std::system_error& exc) {
+        std::cerr << "[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m"
+            << exc.what() << "\u001b[0m" << std::endl;
     }
     catch(const ASTNodeException& nodeExc) {
         symbols.waitForThreads();

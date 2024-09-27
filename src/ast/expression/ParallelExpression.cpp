@@ -23,6 +23,7 @@
 #include <core/SymbolTable.hpp>
 #include <parser/LexicalAnalysisException.hpp>
 #include <parser/ParserException.hpp>
+#include <util/ThreadId.hpp>
 
 #include <exception>
 #include <functional>
@@ -39,15 +40,16 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
             sym = &symbols
         ]() mutable {
             std::mutex mtx;
-            std::scoped_lock<std::mutex> lock(mtx);
 
             try {
+                mtx.lock();
                 expr->visit(*sym);
             }
             catch(const std::system_error& exc) {
                 std::cerr << "[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m"
                     << exc.what() << "\u001b[0m" << std::endl
-                    << "                from thread: " << std::this_thread::get_id()
+                    << "                from thread: "
+                    << ZhivoUtil::getThreadId(std::this_thread::get_id())
                     << std::endl;
             }
             catch(const ASTNodeException& nodeExc) {
@@ -56,14 +58,16 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
                     << "\u001b[3;37m" << nodeExc.what() << "\u001b[0m"
                     << std::endl << "                 "
                     << nodeExc.getAddress()->toString() << std::endl
-                    << "                 from thread: " << std::this_thread::get_id()
+                    << "                 from thread: "
+                    << ZhivoUtil::getThreadId(std::this_thread::get_id())
                     << std::endl;
             }
             catch(const LexicalAnalysisException& lexAnlExc) {
                 sym->waitForThreads();
                 std::cerr << "[\u001b[1;31mLexical Error\u001b[0m]:" << std::endl
                     << "\t" << lexAnlExc.what() << std::endl
-                    << "                 from thread: " << std::this_thread::get_id()
+                    << "                 from thread: "
+                    << ZhivoUtil::getThreadId(std::this_thread::get_id())
                     << std::endl;
             }
             catch(const ParserException& parserExc) {
@@ -72,7 +76,8 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
                     << parserExc.what() << "\u001b[0m" << std::endl;
                 std::cerr << "                 "
                     << parserExc.getAddress()->toString() << std::endl
-                    << "                from thread: " << std::this_thread::get_id()
+                    << "                from thread: "
+                    << ZhivoUtil::getThreadId(std::this_thread::get_id())
                     << std::endl;
             }
             catch(const TerminativeBreakSignal& breakExc) {
@@ -81,7 +86,8 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
                     << "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
                     << std::endl << "                 "
                     << breakExc.getAddress().toString() << std::endl
-                    << "                 from thread: " << std::this_thread::get_id()
+                    << "                 from thread: "
+                    << ZhivoUtil::getThreadId(std::this_thread::get_id())
                     << std::endl;
             }
             catch(const TerminativeContinueSignal& continueExc) {
@@ -90,7 +96,8 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
                     << "\u001b[3;37mInvalid continue statement signal caught.\u001b[0m"
                     << std::endl << "                 "
                     << continueExc.getAddress().toString() << std::endl
-                    << "                 from thread: " << std::this_thread::get_id()
+                    << "                 from thread: "
+                    << ZhivoUtil::getThreadId(std::this_thread::get_id())
                     << std::endl;
             }
             catch(const TerminativeReturnSignal& retExc) {
@@ -103,9 +110,12 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
                 sym->waitForThreads();
                 std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m"
                     << exc.what() << "\u001b[0m" << std::endl
-                    << "                 from thread: " << std::this_thread::get_id()
+                    << "                 from thread: "
+                    << ZhivoUtil::getThreadId(std::this_thread::get_id())
                     << std::endl;
             }
+
+            mtx.unlock();
         })
     );
 

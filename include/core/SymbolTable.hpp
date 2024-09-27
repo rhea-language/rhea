@@ -24,6 +24,7 @@
 
 #include <functional>
 #include <memory>
+#include <mutex>
 #include <thread>
 #include <unordered_map>
 #include <vector>
@@ -33,17 +34,20 @@ private:
     SymbolTable* parent;
     std::unordered_map<std::string, DynamicObject> table;
     std::vector<std::thread> threads;
+    mutable std::mutex mtx;
 
 public:
     explicit SymbolTable(SymbolTable* _parent = nullptr) :
         parent(_parent),
         table({}),
-        threads() {}
+        threads(),
+        mtx() {}
 
     explicit SymbolTable(const SymbolTable& other) :
         parent(std::move(other.parent)),
         table(std::move(other.table)),
-        threads() {}
+        threads(),
+        mtx() {}
 
     SymbolTable& operator=(const SymbolTable& other);
 

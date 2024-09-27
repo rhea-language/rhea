@@ -71,6 +71,8 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
 
     if(lValue.isNumber() && rValue.isNumber())
         return this->applyNumOp(lValue, rValue);
+    else if(lValue.isArray() && rValue.isArray())
+        return this->applyArrayOp(lValue, rValue);
     else if((lValue.isString() || rValue.isString()) &&
         !(this->op == "::" || this->op == "!:"))
         return this->applyStringOp(lValue, rValue);
@@ -232,5 +234,28 @@ DynamicObject BinaryExpression::applyRegexOp(DynamicObject& lValue, DynamicObjec
     throw ASTNodeException(
         std::move(this->address),
         "Unsupported operation for regular expression matching."
+    );
+}
+
+DynamicObject BinaryExpression::applyArrayOp(DynamicObject& lValue, DynamicObject& rValue) {
+    if(this->op == "+") {
+        for(auto& object : *lValue.getArray())
+            if(!object.isNumber())
+                throw ASTNodeException(
+                    std::move(this->address),
+                    "Unsupported binary operation for array that contains non-numbers."
+                );
+
+        for(auto& object : *rValue.getArray())
+            if(!object.isNumber())
+                throw ASTNodeException(
+                    std::move(this->address),
+                    "Unsupported binary operation for array that contains non-numbers."
+                );
+    }
+
+    throw ASTNodeException(
+        std::move(this->address),
+        "Unsupported operation for array objects."
     );
 }

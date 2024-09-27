@@ -35,6 +35,7 @@ private:
     DynamicObject applyNumOp(DynamicObject& lValue, DynamicObject& rValue);
     DynamicObject applyBoolOp(DynamicObject& lValue, DynamicObject& rValue);
     DynamicObject applyRegexOp(DynamicObject& lValue, DynamicObject& rValue);
+    DynamicObject applyArrayOp(DynamicObject& lValue, DynamicObject& rValue);
 
 public:
     explicit BinaryExpression(

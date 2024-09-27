@@ -1,0 +1,3 @@
+[submodule "lib/c3e"]
+	path = lib/c3e
+	url = https://github.com/nthnn/c3e

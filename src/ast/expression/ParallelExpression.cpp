@@ -16,11 +16,17 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <ast/ASTNodeException.hpp>
+#include <ast/TerminativeSignal.hpp>
 #include <ast/expression/ParallelExpression.hpp>
 #include <core/Runtime.hpp>
 #include <core/SymbolTable.hpp>
+#include <parser/LexicalAnalysisException.hpp>
+#include <parser/ParserException.hpp>
 
+#include <exception>
 #include <functional>
+#include <iostream>
 #include <memory>
 #include <mutex>
 #include <thread>
@@ -35,7 +41,71 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
             std::mutex mtx;
             std::scoped_lock<std::mutex> lock(mtx);
 
-            expr->visit(*sym);
+            try {
+                expr->visit(*sym);
+            }
+            catch(const std::system_error& exc) {
+                std::cerr << "[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m"
+                    << exc.what() << "\u001b[0m" << std::endl
+                    << "                from thread: " << std::this_thread::get_id()
+                    << std::endl;
+            }
+            catch(const ASTNodeException& nodeExc) {
+                sym->waitForThreads();
+                std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
+                    << "\u001b[3;37m" << nodeExc.what() << "\u001b[0m"
+                    << std::endl << "                 "
+                    << nodeExc.getAddress()->toString() << std::endl
+                    << "                 from thread: " << std::this_thread::get_id()
+                    << std::endl;
+            }
+            catch(const LexicalAnalysisException& lexAnlExc) {
+                sym->waitForThreads();
+                std::cerr << "[\u001b[1;31mLexical Error\u001b[0m]:" << std::endl
+                    << "\t" << lexAnlExc.what() << std::endl
+                    << "                 from thread: " << std::this_thread::get_id()
+                    << std::endl;
+            }
+            catch(const ParserException& parserExc) {
+                sym->waitForThreads();
+                std::cerr << "[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m"
+                    << parserExc.what() << "\u001b[0m" << std::endl;
+                std::cerr << "                 "
+                    << parserExc.getAddress()->toString() << std::endl
+                    << "                from thread: " << std::this_thread::get_id()
+                    << std::endl;
+            }
+            catch(const TerminativeBreakSignal& breakExc) {
+                sym->waitForThreads();
+                std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
+                    << "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
+                    << std::endl << "                 "
+                    << breakExc.getAddress().toString() << std::endl
+                    << "                 from thread: " << std::this_thread::get_id()
+                    << std::endl;
+            }
+            catch(const TerminativeContinueSignal& continueExc) {
+                sym->waitForThreads();
+                std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
+                    << "\u001b[3;37mInvalid continue statement signal caught.\u001b[0m"
+                    << std::endl << "                 "
+                    << continueExc.getAddress().toString() << std::endl
+                    << "                 from thread: " << std::this_thread::get_id()
+                    << std::endl;
+            }
+            catch(const TerminativeReturnSignal& retExc) {
+                sym->waitForThreads();
+                std::cerr << "\u001b[0;93m"
+                    << retExc.getObject().toString()
+                    << "\u001b[0m" << std::endl;
+            }
+            catch(const std::exception& exc) {
+                sym->waitForThreads();
+                std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m"
+                    << exc.what() << "\u001b[0m" << std::endl
+                    << "                 from thread: " << std::this_thread::get_id()
+                    << std::endl;
+            }
         })
     );
 

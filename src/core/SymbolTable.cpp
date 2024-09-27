@@ -47,6 +47,8 @@ DynamicObject SymbolTable::getSymbol(
 }
 
 void SymbolTable::setSymbol(const std::string& name, DynamicObject value) {
+    std::lock_guard<std::mutex> lock(this->mtx);
+
     if(this->hasSymbol(name))
         this->table[name] = value;
     else if(this->parent && this->parent->hasSymbol(name))
@@ -56,6 +58,7 @@ void SymbolTable::setSymbol(const std::string& name, DynamicObject value) {
 }
 
 bool SymbolTable::hasSymbol(const std::string& name) {
+    std::lock_guard<std::mutex> lock(this->mtx);
     return this->table.find(name) != this->table.end() ||
         (this->parent && this->parent->hasSymbol(name));
 }
@@ -73,6 +76,7 @@ void SymbolTable::waitForThreads() {
             thread.join();
 
     this->threads.clear();
+    this->mtx.unlock();
 }
 
 void SymbolTable::detachParallelNodes() {
@@ -83,4 +87,5 @@ void SymbolTable::detachParallelNodes() {
         thread.detach();
 
     this->threads.clear();
+    this->mtx.unlock();
 }

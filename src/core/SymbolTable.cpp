@@ -58,7 +58,6 @@ void SymbolTable::setSymbol(const std::string& name, DynamicObject value) {
 }
 
 bool SymbolTable::hasSymbol(const std::string& name) {
-    std::lock_guard<std::mutex> lock(this->mtx);
     return this->table.find(name) != this->table.end() ||
         (this->parent && this->parent->hasSymbol(name));
 }

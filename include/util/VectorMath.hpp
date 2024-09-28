@@ -33,6 +33,51 @@ public:
         std::vector<double> left,
         std::vector<double> right
     );
+
+    static std::vector<double> sub(
+        std::vector<double> left,
+        std::vector<double> right
+    );
+
+    static std::vector<double> div(
+        std::vector<double> left,
+        std::vector<double> right
+    );
+
+    static std::vector<double> mul(
+        std::vector<double> left,
+        std::vector<double> right
+    );
+
+    static std::vector<double> rem(
+        std::vector<double> left,
+        std::vector<double> right
+    );
+
+    static std::vector<double> bitwiseAnd(
+        std::vector<double> left,
+        std::vector<double> right
+    );
+
+    static std::vector<double> bitwiseOr(
+        std::vector<double> left,
+        std::vector<double> right
+    );
+
+    static std::vector<double> bitwiseXor(
+        std::vector<double> left,
+        std::vector<double> right
+    );
+
+    static std::vector<double> shiftLeft(
+        std::vector<double> left,
+        std::vector<double> right
+    );
+
+    static std::vector<double> shiftRight(
+        std::vector<double> left,
+        std::vector<double> right
+    );
 };
 
 };

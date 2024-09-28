@@ -22,9 +22,17 @@
 
 DynamicObject RenderExpression::visit(SymbolTable& symbols) {
     DynamicObject value = this->expression->visit(symbols);
-    std::cout << value.toString();
+    std::string str = value.toString();
 
-    if(this->newLine)
-        std::cout << std::endl;
+    if(this->errorStream)
+        std::cerr << str;
+    else std::cout << str;
+
+    if(this->newLine) {
+        if(this->errorStream)
+            std::cerr << std::endl;
+        else std::cerr << std::endl;
+    }
+
     return value;
 }

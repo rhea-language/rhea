@@ -80,7 +80,7 @@ private:
 
     void advance();
     bool isAtEnd() const;
-    bool isNext(const std::string& image);
+    bool isNext(const std::string& image, TokenType type);
 
 public:
     Parser(const std::vector<Token>& _tokens) :

@@ -13,12 +13,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: CUDA Toolkit
+        uses: Jimver/cuda-toolkit@v0.2.17
+        id: cuda-toolkit
+        with:
+          cuda: '12.5.0'
+
       - name: Get build dependencies
         run: sudo apt install build-essential make -y
 
       - name: Build Zhivo
         run: |
-          chmod +x build.sh
+          chmod +x ./build.sh
           ./build.sh
 
       - name: Build verification
@@ -26,16 +32,30 @@ jobs:
           ls dist -ral
           find dist | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
 
-      - name: Build test
+      - name: Run test scripts (x86)
         run: |
-          ./dist/zhivo ./test/arithmetic.zhv
-          ./dist/zhivo ./test/array.zhv
-          ./dist/zhivo ./test/digits.zhv
-          ./dist/zhivo ./test/error_handling.zhv
-          ./dist/zhivo ./test/flow.zhv
-          ./dist/zhivo ./test/func.zhv
-          ./dist/zhivo ./test/loop.zhv
-          ./dist/zhivo ./test/parallel.zhv
-          ./dist/zhivo ./test/regex.zhv
-          ./dist/zhivo ./test/test.zhv
-          ./dist/zhivo ./test/types.zhv
+          ./dist/zhivo-x86 ./test/arithmetic.zhv
+          ./dist/zhivo-x86 ./test/array.zhv
+          ./dist/zhivo-x86 ./test/digits.zhv
+          ./dist/zhivo-x86 ./test/error_handling.zhv
+          ./dist/zhivo-x86 ./test/flow.zhv
+          ./dist/zhivo-x86 ./test/func.zhv
+          ./dist/zhivo-x86 ./test/loop.zhv
+          ./dist/zhivo-x86 ./test/parallel.zhv
+          ./dist/zhivo-x86 ./test/regex.zhv
+          ./dist/zhivo-x86 ./test/test.zhv
+          ./dist/zhivo-x86 ./test/types.zhv
+
+      - name: Run test scripts (CUDA)
+        run: |
+          ./dist/zhivo-cuda ./test/arithmetic.zhv
+          ./dist/zhivo-cuda ./test/array.zhv
+          ./dist/zhivo-cuda ./test/digits.zhv
+          ./dist/zhivo-cuda ./test/error_handling.zhv
+          ./dist/zhivo-cuda ./test/flow.zhv
+          ./dist/zhivo-cuda ./test/func.zhv
+          ./dist/zhivo-cuda ./test/loop.zhv
+          ./dist/zhivo-cuda ./test/parallel.zhv
+          ./dist/zhivo-cuda ./test/regex.zhv
+          ./dist/zhivo-cuda ./test/test.zhv
+          ./dist/zhivo-cuda ./test/types.zhv

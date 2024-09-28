@@ -18,14 +18,23 @@
 
 #include <ast/ASTNodeException.hpp>
 #include <ast/expression/UnaryExpression.hpp>
-
 #include <parser/Token.hpp>
+
+#include <algorithm>
 
 DynamicObject UnaryExpression::visit(SymbolTable& symbols) {
     DynamicObject value = this->expression->visit(symbols);
 
     if(this->op == "!")
         return DynamicObject(!value.booleanEquivalent());
+    else if(value.isArray() && this->op == "~") {
+        std::vector<DynamicObject> objects = *value.getArray();
+        std::reverse(objects.begin(), objects.end());
+
+        return DynamicObject(
+            std::make_shared<std::vector<DynamicObject>>(objects)
+        );
+    }
     else if(value.isNumber()) {
         if(this->op == "+")
             return DynamicObject(+value.getNumber());

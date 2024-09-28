@@ -34,6 +34,7 @@ jobs:
 
       - name: Run test scripts (x86)
         run: |
+          start=$(date +%s%3N)
           ./dist/zhivo-x86 ./test/arithmetic.zhv
           ./dist/zhivo-x86 ./test/array.zhv
           ./dist/zhivo-x86 ./test/digits.zhv
@@ -45,9 +46,12 @@ jobs:
           ./dist/zhivo-x86 ./test/regex.zhv
           ./dist/zhivo-x86 ./test/test.zhv
           ./dist/zhivo-x86 ./test/types.zhv
+          end=$(date +%s%3N)
+          echo "Elapsed time: $((end - start)) ms"
 
       - name: Run test scripts (CUDA)
         run: |
+          start=$(date +%s%3N)
           ./dist/zhivo-cuda ./test/arithmetic.zhv
           ./dist/zhivo-cuda ./test/array.zhv
           ./dist/zhivo-cuda ./test/digits.zhv
@@ -59,3 +63,5 @@ jobs:
           ./dist/zhivo-cuda ./test/regex.zhv
           ./dist/zhivo-cuda ./test/test.zhv
           ./dist/zhivo-cuda ./test/types.zhv
+          end=$(date +%s%3N)
+          echo "Elapsed time: $((end - start)) ms"

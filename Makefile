@@ -1,4 +1,6 @@
 CXX := g++
+NVCC := nvcc
+
 CXXFLAGS := \
     -Wall -pedantic -Wdisabled-optimization \
     -pedantic-errors -Wextra -Wcast-align \
@@ -18,30 +20,36 @@ CXXFLAGS := \
     -Wunused -Wunused-function -Wunused-label \
     -Wunused-parameter -Wunused-value -Wunused-variable \
     -Wvariadic-macros -Wvolatile-register-var -Wwrite-strings \
-    -pipe -static -Ofast -g -s -std=c++17 \
-    -fopenmp -msse -msse2 -msse3 -mfpmath=sse \
-    -flto=auto -march=native -funroll-loops -ffast-math \
+    -pipe -Ofast -g -s -std=c++17 -fopenmp \
+    -msse -msse2 -msse3 -mfpmath=sse -flto=auto \
+    -march=native -funroll-loops -ffast-math \
     -DNDEBUG
 
 INCLUDES := -Iinclude
-
 OUT_DIR := dist
 OBJ_DIR := $(OUT_DIR)/obj
-OUT_EXE := $(OUT_DIR)/zhivo
 
 SRC_DIR := src
 SRCS := $(shell find $(SRC_DIR) -name "*.cpp")
 OBJS := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS))
 
-$(OUT_EXE): $(OBJS)
+zhivo-x86: $(OBJ_DIR)/zhivo-x86
+
+$(OBJ_DIR)/zhivo-x86: $(OBJS)
 	@mkdir -p $(OUT_DIR)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o $(OUT_EXE)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(OUT_DIR)/zhivo-x86
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
+zhivo-cuda: $(OBJ_DIR)/zhivo-cuda
+
+$(OBJ_DIR)/zhivo-cuda: $(SRCS)
+	@mkdir -p $(OUT_DIR)
+	$(NVCC) $(INCLUDES) $(SRCS) -o $(OUT_DIR)/zhivo-cuda
+
 clean:
 	rm -rf $(OUT_DIR)
 
-.PHONY: clean
+.PHONY: clean zhivo-x86 zhivo-cuda

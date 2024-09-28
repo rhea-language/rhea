@@ -65,3 +65,13 @@ jobs:
           ./dist/zhivo-cuda ./test/types.zhv
           end=$(date +%s%3N)
           echo "Elapsed time: $((end - start)) ms"
+
+      - name: Run examples (x86)
+        run: |
+          /usr/bin/time -v ./dist/zhivo-x86 ./examples/hello.zhv
+          /usr/bin/time -v ./dist/zhivo-x86 ./examples/99-beers.zhv
+
+      - name: Run examples (CUDA)
+        run: |
+          /usr/bin/time -v ./dist/zhivo-cuda ./examples/hello.zhv
+          /usr/bin/time -v ./dist/zhivo-cuda ./examples/99-beers.zhv

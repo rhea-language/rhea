@@ -259,16 +259,69 @@ DynamicObject BinaryExpression::applyArrayOp(DynamicObject& lValue, DynamicObjec
                 ZhivoUtil::object2Vector(rValue.getArray())
             )
         );
-    else if(this->op == "-") {
-    }
-    else if(this->op == "*") {
-    }
-    else if(this->op == "/") {
-    }
-    else if(this->op == "%") {
-    }
-    else if(this->op == "^") {
-    }
+    else if(this->op == "-")
+        return ZhivoUtil::vector2Object(
+            ZhivoUtil::VectorMath::sub(
+                ZhivoUtil::object2Vector(lValue.getArray()),
+                ZhivoUtil::object2Vector(rValue.getArray())
+            )
+        );
+    else if(this->op == "*")
+        return ZhivoUtil::vector2Object(
+            ZhivoUtil::VectorMath::mul(
+                ZhivoUtil::object2Vector(lValue.getArray()),
+                ZhivoUtil::object2Vector(rValue.getArray())
+            )
+        );
+    else if(this->op == "/")
+        return ZhivoUtil::vector2Object(
+            ZhivoUtil::VectorMath::div(
+                ZhivoUtil::object2Vector(lValue.getArray()),
+                ZhivoUtil::object2Vector(rValue.getArray())
+            )
+        );
+    else if(this->op == "%")
+        return ZhivoUtil::vector2Object(
+            ZhivoUtil::VectorMath::rem(
+                ZhivoUtil::object2Vector(lValue.getArray()),
+                ZhivoUtil::object2Vector(rValue.getArray())
+            )
+        );
+    else if(this->op == "|")
+        return ZhivoUtil::vector2Object(
+            ZhivoUtil::VectorMath::bitwiseOr(
+                ZhivoUtil::object2Vector(lValue.getArray()),
+                ZhivoUtil::object2Vector(rValue.getArray())
+            )
+        );
+    else if(this->op == "&")
+        return ZhivoUtil::vector2Object(
+            ZhivoUtil::VectorMath::bitwiseAnd(
+                ZhivoUtil::object2Vector(lValue.getArray()),
+                ZhivoUtil::object2Vector(rValue.getArray())
+            )
+        );
+    else if(this->op == "<<")
+        return ZhivoUtil::vector2Object(
+            ZhivoUtil::VectorMath::shiftLeft(
+                ZhivoUtil::object2Vector(lValue.getArray()),
+                ZhivoUtil::object2Vector(rValue.getArray())
+            )
+        );
+    else if(this->op == ">>")
+        return ZhivoUtil::vector2Object(
+            ZhivoUtil::VectorMath::shiftRight(
+                ZhivoUtil::object2Vector(lValue.getArray()),
+                ZhivoUtil::object2Vector(rValue.getArray())
+            )
+        );
+    else if(this->op == "^")
+        return ZhivoUtil::vector2Object(
+            ZhivoUtil::VectorMath::bitwiseXor(
+                ZhivoUtil::object2Vector(lValue.getArray()),
+                ZhivoUtil::object2Vector(rValue.getArray())
+            )
+        );
 
     throw ASTNodeException(
         std::move(this->address),

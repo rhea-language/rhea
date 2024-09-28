@@ -96,11 +96,13 @@ Token Parser::peek() {
     return this->tokens[this->index];
 }
 
-bool Parser::isNext(const std::string& image) {
+bool Parser::isNext(const std::string& image, TokenType type) {
     if(this->isAtEnd())
         return false;
 
-    return this->peek().getImage() == image;
+    Token next = this->peek();
+    return next.getImage() == image &&
+        next.getType() == type;
 }
 
 Token Parser::current() {
@@ -140,7 +142,7 @@ Token Parser::consume(TokenType type) {
     Token token = this->peek();
     if(token.getType() != type)
         throw ParserException(
-            std::make_unique<Token>(this->previous()),
+            std::make_unique<Token>(this->current()),
             "Expecting " + tokenTypeToString(type) +
                 ", encountered " + tokenTypeToString(token.getType())
         );
@@ -157,7 +159,7 @@ std::unique_ptr<ASTNode> Parser::exprArray() {
     Token address = this->consume("[");
     std::vector<std::unique_ptr<ASTNode>> expressions;
 
-    while(!this->isNext("]")) {
+    while(!this->isNext("]", TokenType::OPERATOR)) {
         if(!expressions.empty())
             this->consume(",");
 
@@ -175,7 +177,7 @@ std::unique_ptr<ASTNode> Parser::exprBlock() {
     Token address = this->consume("{");
     std::vector<std::unique_ptr<ASTNode>> body;
 
-    while(!this->isNext("}"))
+    while(!this->isNext("}", TokenType::OPERATOR))
         body.emplace_back(this->expression());
 
     return std::make_unique<BlockExpression>(
@@ -193,7 +195,7 @@ std::unique_ptr<ASTNode> Parser::exprCatchHandle() {
     std::unique_ptr<ASTNode> handleExpr = this->expression();
 
     std::unique_ptr<ASTNode> finalExpr = nullptr;
-    if(this->isNext("then")) {
+    if(this->isNext("then", TokenType::KEYWORD)) {
         this->consume("then");
         finalExpr = this->expression();
     }
@@ -212,7 +214,7 @@ std::unique_ptr<ASTNode> Parser::exprFunctionDecl() {
     this->consume("(");
 
     std::vector<std::unique_ptr<Token>> parameters;
-    while(!this->isNext(")")) {
+    while(!this->isNext(")", TokenType::OPERATOR)) {
         if(!parameters.empty())
             this->consume(",");
 
@@ -265,7 +267,7 @@ std::unique_ptr<ASTNode> Parser::exprIf() {
     std::unique_ptr<ASTNode> thenExpr = this->expression();
     std::unique_ptr<ASTNode> elseExpr = nullptr;
 
-    if(this->isNext("else")) {
+    if(this->isNext("else", TokenType::KEYWORD)) {
         this->consume("else");
         elseExpr = this->expression();
     }
@@ -281,21 +283,21 @@ std::unique_ptr<ASTNode> Parser::exprIf() {
 std::unique_ptr<ASTNode> Parser::exprLiteral() {
     std::unique_ptr<ASTNode> expr = nullptr;
 
-    if(this->isNext("true"))
+    if(this->isNext("true", TokenType::KEYWORD))
         expr = std::make_unique<BooleanLiteralExpression>(
             std::make_unique<Token>(this->consume("true")),
             true
         );
-    else if(this->isNext("false"))
+    else if(this->isNext("false", TokenType::KEYWORD))
         expr = std::make_unique<BooleanLiteralExpression>(
             std::make_unique<Token>(this->consume("false")),
             false
         );
-    else if(this->isNext("maybe"))
+    else if(this->isNext("maybe", TokenType::KEYWORD))
         expr = std::make_unique<MaybeExpression>(
             std::make_unique<Token>(this->consume("maybe"))
         );
-    else if(this->isNext("nil"))
+    else if(this->isNext("nil", TokenType::KEYWORD))
         expr = std::make_unique<NilLiteralExpression>(
             std::make_unique<Token>(this->consume("nil"))
         );
@@ -327,7 +329,7 @@ std::unique_ptr<ASTNode> Parser::exprLiteral() {
             std::make_unique<Token>(this->consume(TokenType::IDENTIFIER))
         );
 
-        while(this->isNext("[")) {
+        while(this->isNext("[", TokenType::OPERATOR)) {
             Token address = this->consume("[");
             std::unique_ptr<ASTNode> indexExpr = this->expression();
 
@@ -358,7 +360,7 @@ std::unique_ptr<ASTNode> Parser::exprRandom() {
     std::unique_ptr<ASTNode> thenExpr = this->expression();
     std::unique_ptr<ASTNode> elseExpr = nullptr;
 
-    if(this->isNext("else")) {
+    if(this->isNext("else", TokenType::KEYWORD)) {
         this->consume("else");
         elseExpr = this->expression();
     }
@@ -382,17 +384,23 @@ std::unique_ptr<ASTNode> Parser::exprParallel() {
 
 std::unique_ptr<ASTNode> Parser::exprRender() {
     Token address = this->consume("render");
-    bool newLine = false;
+    bool newLine = false, errorStream = false;
 
-    if(this->isNext("!")) {
+    if(this->isNext("!", TokenType::OPERATOR)) {
         this->consume("!");
         newLine = true;
+    }
+
+    if(this->isNext("%", TokenType::OPERATOR)) {
+        this->consume("%");
+        errorStream = true;
     }
 
     std::unique_ptr<ASTNode> expression = this->expression();
     return std::make_unique<RenderExpression>(
         std::make_unique<Token>(address),
         newLine,
+        errorStream,
         std::move(expression)
     );
 }
@@ -417,7 +425,7 @@ std::unique_ptr<ASTNode> Parser::exprUnless() {
     std::unique_ptr<ASTNode> thenExpr = this->expression();
     std::unique_ptr<ASTNode> elseExpr = nullptr;
 
-    if(this->isNext("else")) {
+    if(this->isNext("else", TokenType::KEYWORD)) {
         this->consume("else");
         elseExpr = this->expression();
     }
@@ -441,11 +449,11 @@ std::unique_ptr<ASTNode> Parser::exprWhen() {
     std::vector<std::pair<std::unique_ptr<ASTNode>, std::unique_ptr<ASTNode>>> cases;
     std::unique_ptr<ASTNode> defaultCase = nullptr;
 
-    while(!this->isNext("}")) {
+    while(!this->isNext("}", TokenType::OPERATOR)) {
         if(!cases.empty())
             this->consume(",");
 
-        if(this->isNext("if")) {
+        if(this->isNext("if", TokenType::KEYWORD)) {
             this->consume("if");
             this->consume("(");
 
@@ -458,7 +466,7 @@ std::unique_ptr<ASTNode> Parser::exprWhen() {
                 std::move(thenBlock)
             ));
         }
-        else if(this->isNext("else")) {
+        else if(this->isNext("else", TokenType::KEYWORD)) {
             if(defaultCase)
                 throw ParserException(
                     std::make_unique<Token>(address),
@@ -496,8 +504,10 @@ std::unique_ptr<ASTNode> Parser::exprWhile() {
 std::unique_ptr<ASTNode> Parser::exprPrimary() {
     std::unique_ptr<ASTNode> expression = nullptr;
 
-    if(this->isNext("+") || this->isNext("-") ||
-        this->isNext("~") || this->isNext("!")
+    if(this->isNext("+", TokenType::OPERATOR) ||
+        this->isNext("-", TokenType::OPERATOR) ||
+        this->isNext("~", TokenType::OPERATOR) ||
+        this->isNext("!", TokenType::OPERATOR)
     ) {
         Token address = this->consume(TokenType::OPERATOR);
         expression = std::make_unique<UnaryExpression>(
@@ -506,7 +516,7 @@ std::unique_ptr<ASTNode> Parser::exprPrimary() {
             this->expression()
         );
     }
-    else if(this->isNext("(")) {
+    else if(this->isNext("(", TokenType::OPERATOR)) {
         Token address = this->consume("(");
         std::unique_ptr<ASTNode> innerExpr = this->expression();
 
@@ -516,11 +526,11 @@ std::unique_ptr<ASTNode> Parser::exprPrimary() {
         );
         this->consume(")");
     }
-    else if(this->isNext("{")) {
+    else if(this->isNext("{", TokenType::OPERATOR)) {
         Token address = this->consume(TokenType::OPERATOR);
         std::vector<std::unique_ptr<ASTNode>> statements;
 
-        while(!this->isNext("}")) {
+        while(!this->isNext("}", TokenType::OPERATOR)) {
             std::unique_ptr<ASTNode> stmt = this->statement();
             statements.emplace_back(std::move(stmt));
         }
@@ -531,36 +541,36 @@ std::unique_ptr<ASTNode> Parser::exprPrimary() {
             std::move(statements)
         );
     }
-    else if(this->isNext("render"))
+    else if(this->isNext("render", TokenType::KEYWORD))
         expression = this->exprRender();
-    else if(this->isNext("catch"))
+    else if(this->isNext("catch", TokenType::KEYWORD))
         expression = this->exprCatchHandle();
-    else if(this->isNext("if"))
+    else if(this->isNext("if", TokenType::KEYWORD))
         expression = this->exprIf();
-    else if(this->isNext("while"))
+    else if(this->isNext("while", TokenType::KEYWORD))
         expression = this->exprWhile();
-    else if(this->isNext("loop"))
+    else if(this->isNext("loop", TokenType::KEYWORD))
         expression = this->exprLoop();
-    else if(this->isNext("unless"))
+    else if(this->isNext("unless", TokenType::KEYWORD))
         expression = this->exprUnless();
-    else if(this->isNext("random"))
+    else if(this->isNext("random", TokenType::KEYWORD))
         expression = this->exprRandom();
-    else if(this->isNext("when"))
+    else if(this->isNext("when", TokenType::KEYWORD))
         expression = this->exprWhen();
-    else if(this->isNext("func"))
+    else if(this->isNext("func", TokenType::KEYWORD))
         expression = this->exprFunctionDecl();
-    else if(this->isNext("type"))
+    else if(this->isNext("type", TokenType::KEYWORD))
         expression = this->exprType();
-    else if(this->isNext("parallel"))
+    else if(this->isNext("parallel", TokenType::KEYWORD))
         expression = this->exprParallel();
-    else if(this->isNext("["))
+    else if(this->isNext("[", TokenType::OPERATOR))
         expression = this->exprArray();
     else if(this->peek().getType() == TokenType::IDENTIFIER) {
         expression = std::make_unique<VariableAccessExpression>(
             std::make_unique<Token>(this->consume(TokenType::IDENTIFIER))
         );
 
-        while(this->isNext("[")) {
+        while(this->isNext("[", TokenType::OPERATOR)) {
             Token address = this->consume("[");
             std::unique_ptr<ASTNode> indexExpr = this->expression();
 
@@ -574,12 +584,13 @@ std::unique_ptr<ASTNode> Parser::exprPrimary() {
     }
     else expression = this->exprLiteral();
 
-    while(this->isNext("(") || this->isNext("[")) {
-        while(this->isNext("(")) {
+    while(this->isNext("(", TokenType::OPERATOR) ||
+        this->isNext("[", TokenType::OPERATOR)) {
+        while(this->isNext("(", TokenType::OPERATOR)) {
             Token address = this->consume("(");
             std::vector<std::unique_ptr<ASTNode>> arguments;
 
-            while(!this->isNext(")")) {
+            while(!this->isNext(")", TokenType::OPERATOR)) {
                 if(!arguments.empty())
                     this->consume(",");
 
@@ -596,7 +607,7 @@ std::unique_ptr<ASTNode> Parser::exprPrimary() {
             );
         }
 
-        while(this->isNext("[")) {
+        while(this->isNext("[", TokenType::OPERATOR)) {
             Token address = this->consume("[");
             std::unique_ptr<ASTNode> indexExpr = this->expression();
 
@@ -615,7 +626,7 @@ std::unique_ptr<ASTNode> Parser::exprPrimary() {
 std::unique_ptr<ASTNode> Parser::exprLogicOr() {
     std::unique_ptr<ASTNode> expression = this->exprLogicAnd();
 
-    while(this->isNext("||")) {
+    while(this->isNext("||", TokenType::OPERATOR)) {
         Token address = this->consume("||");
         expression = std::make_unique<BinaryExpression>(
             std::make_unique<Token>(address),
@@ -631,7 +642,7 @@ std::unique_ptr<ASTNode> Parser::exprLogicOr() {
 std::unique_ptr<ASTNode> Parser::exprLogicAnd() {
     std::unique_ptr<ASTNode> expression = this->exprBitwiseOr();
 
-    while(this->isNext("&&")) {
+    while(this->isNext("&&", TokenType::OPERATOR)) {
         Token address = this->consume("&&");
         expression = std::make_unique<BinaryExpression>(
             std::make_unique<Token>(address),
@@ -647,7 +658,7 @@ std::unique_ptr<ASTNode> Parser::exprLogicAnd() {
 std::unique_ptr<ASTNode> Parser::exprBitwiseOr() {
     std::unique_ptr<ASTNode> expression = this->exprBitwiseXor();
 
-    while(this->isNext("|")) {
+    while(this->isNext("|", TokenType::OPERATOR)) {
         Token address = this->consume("|");
         expression = std::make_unique<BinaryExpression>(
             std::make_unique<Token>(address),
@@ -663,7 +674,7 @@ std::unique_ptr<ASTNode> Parser::exprBitwiseOr() {
 std::unique_ptr<ASTNode> Parser::exprBitwiseXor() {
     std::unique_ptr<ASTNode> expression = this->exprBitwiseAnd();
 
-    while(this->isNext("^")) {
+    while(this->isNext("^", TokenType::OPERATOR)) {
         Token address = this->consume("^");
         expression = std::make_unique<BinaryExpression>(
             std::make_unique<Token>(address),
@@ -679,7 +690,7 @@ std::unique_ptr<ASTNode> Parser::exprBitwiseXor() {
 std::unique_ptr<ASTNode> Parser::exprBitwiseAnd() {
     std::unique_ptr<ASTNode> expression = this->exprNilCoalescing();
 
-    while(this->isNext("&")) {
+    while(this->isNext("&", TokenType::OPERATOR)) {
         Token address = this->consume("&");
         expression = std::make_unique<BinaryExpression>(
             std::make_unique<Token>(address),
@@ -695,7 +706,7 @@ std::unique_ptr<ASTNode> Parser::exprBitwiseAnd() {
 std::unique_ptr<ASTNode> Parser::exprNilCoalescing() {
     std::unique_ptr<ASTNode> expression = this->exprEquality();
 
-    while(this->isNext("?")) {
+    while(this->isNext("?", TokenType::OPERATOR)) {
         Token address = this->consume("?");
         expression = std::make_unique<NilCoalescingExpression>(
             std::make_unique<Token>(address),
@@ -710,8 +721,11 @@ std::unique_ptr<ASTNode> Parser::exprNilCoalescing() {
 std::unique_ptr<ASTNode> Parser::exprEquality() {
     std::unique_ptr<ASTNode> expression = this->exprComparison();
 
-    while(this->isNext("==") || this->isNext("!=") || this->isNext("=") ||
-        this->isNext("::") || this->isNext("!:")) {
+    while(this->isNext("==", TokenType::OPERATOR) ||
+        this->isNext("!=", TokenType::OPERATOR) ||
+        this->isNext("=", TokenType::OPERATOR) ||
+        this->isNext("::", TokenType::OPERATOR) ||
+        this->isNext("!:", TokenType::OPERATOR)) {
         Token op = this->consume(TokenType::OPERATOR);
         expression = std::make_unique<BinaryExpression>(
             std::make_unique<Token>(op),
@@ -727,10 +741,10 @@ std::unique_ptr<ASTNode> Parser::exprEquality() {
 std::unique_ptr<ASTNode> Parser::exprComparison() {
     std::unique_ptr<ASTNode> expression = this->exprShift();
 
-    while(this->isNext("<") ||
-        this->isNext("<=") ||
-        this->isNext(">") ||
-        this->isNext(">=")
+    while(this->isNext("<", TokenType::OPERATOR) ||
+        this->isNext("<=", TokenType::OPERATOR) ||
+        this->isNext(">", TokenType::OPERATOR) ||
+        this->isNext(">=", TokenType::OPERATOR)
     ) {
         Token op = this->consume(TokenType::OPERATOR);
         expression = std::make_unique<BinaryExpression>(
@@ -747,7 +761,8 @@ std::unique_ptr<ASTNode> Parser::exprComparison() {
 std::unique_ptr<ASTNode> Parser::exprShift() {
     std::unique_ptr<ASTNode> expression = this->exprTerm();
 
-    while(this->isNext("<<") || this->isNext(">>")) {
+    while(this->isNext("<<", TokenType::OPERATOR) ||
+        this->isNext(">>", TokenType::OPERATOR)) {
         Token op = this->consume(TokenType::OPERATOR);
         expression = std::make_unique<BinaryExpression>(
             std::make_unique<Token>(op),
@@ -763,7 +778,8 @@ std::unique_ptr<ASTNode> Parser::exprShift() {
 std::unique_ptr<ASTNode> Parser::exprTerm() {
     std::unique_ptr<ASTNode> expression = this->exprFactor();
 
-    while(this->isNext("+") || this->isNext("-")) {
+    while(this->isNext("+", TokenType::OPERATOR) ||
+        this->isNext("-", TokenType::OPERATOR)) {
         Token op = this->consume(TokenType::OPERATOR);
         expression = std::make_unique<BinaryExpression>(
             std::make_unique<Token>(op),
@@ -779,7 +795,9 @@ std::unique_ptr<ASTNode> Parser::exprTerm() {
 std::unique_ptr<ASTNode> Parser::exprFactor() {
     std::unique_ptr<ASTNode> expression = this->exprPrimary();
 
-    while(this->isNext("*") || this->isNext("/") || this->isNext("%")) {
+    while(this->isNext("*", TokenType::OPERATOR) ||
+        this->isNext("/", TokenType::OPERATOR) ||
+        this->isNext("%", TokenType::OPERATOR)) {
         Token op = this->consume(TokenType::OPERATOR);
         expression = std::make_unique<BinaryExpression>(
             std::make_unique<Token>(op),
@@ -878,19 +896,19 @@ std::unique_ptr<ASTNode> Parser::stmtWait() {
 }
 
 std::unique_ptr<ASTNode> Parser::statement() {
-    if(this->isNext("break"))
+    if(this->isNext("break", TokenType::KEYWORD))
         return this->stmtBreak();
-    else if(this->isNext("continue"))
+    else if(this->isNext("continue", TokenType::KEYWORD))
         return this->stmtContinue();
-    else if(this->isNext("ret"))
+    else if(this->isNext("ret", TokenType::KEYWORD))
         return this->stmtRet();
-    else if(this->isNext("throw"))
+    else if(this->isNext("throw", TokenType::KEYWORD))
         return this->stmtThrow();
-    else if(this->isNext("test"))
+    else if(this->isNext("test", TokenType::KEYWORD))
         return this->stmtTest();
-    else if(this->isNext("val"))
+    else if(this->isNext("val", TokenType::KEYWORD))
         return this->stmtVal();
-    else if(this->isNext("wait"))
+    else if(this->isNext("wait", TokenType::KEYWORD))
         return this->stmtWait();
 
     std::unique_ptr<ASTNode> expr = this->expression();

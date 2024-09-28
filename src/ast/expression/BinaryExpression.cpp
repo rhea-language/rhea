@@ -20,8 +20,8 @@
 #include <ast/expression/ArrayAccessExpression.hpp>
 #include <ast/expression/BinaryExpression.hpp>
 #include <ast/expression/VariableAccessExpression.hpp>
-
 #include <parser/Token.hpp>
+#include <util/VectorMath.hpp>
 
 #include <memory>
 #include <regex>
@@ -238,20 +238,36 @@ DynamicObject BinaryExpression::applyRegexOp(DynamicObject& lValue, DynamicObjec
 }
 
 DynamicObject BinaryExpression::applyArrayOp(DynamicObject& lValue, DynamicObject& rValue) {
-    if(this->op == "+") {
-        for(auto& object : *lValue.getArray())
-            if(!object.isNumber())
-                throw ASTNodeException(
-                    std::move(this->address),
-                    "Unsupported binary operation for array that contains non-numbers."
-                );
+    for(auto& object : *lValue.getArray())
+        if(!object.isNumber())
+            throw ASTNodeException(
+                std::move(this->address),
+                "Unsupported binary operation for array that contains non-numbers."
+            );
 
-        for(auto& object : *rValue.getArray())
-            if(!object.isNumber())
-                throw ASTNodeException(
-                    std::move(this->address),
-                    "Unsupported binary operation for array that contains non-numbers."
-                );
+    for(auto& object : *rValue.getArray())
+        if(!object.isNumber())
+            throw ASTNodeException(
+                std::move(this->address),
+                "Unsupported binary operation for array that contains non-numbers."
+            );
+
+    if(this->op == "+")
+        return ZhivoUtil::vector2Object(
+            ZhivoUtil::VectorMath::add(
+                ZhivoUtil::object2Vector(lValue.getArray()),
+                ZhivoUtil::object2Vector(rValue.getArray())
+            )
+        );
+    else if(this->op == "-") {
+    }
+    else if(this->op == "*") {
+    }
+    else if(this->op == "/") {
+    }
+    else if(this->op == "%") {
+    }
+    else if(this->op == "^") {
     }
 
     throw ASTNodeException(

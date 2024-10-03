@@ -1,2 +1,11 @@
-val("./libtest.so") greet;
-greet();
+#!/bin/zhivo
+
+{
+    val("./libtest.so") greet;
+    greet();
+};
+
+{
+    val("./libtest.so") greet;
+    greet();
+};

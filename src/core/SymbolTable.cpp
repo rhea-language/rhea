@@ -17,6 +17,7 @@
  */
 
 #include <ast/ASTNodeException.hpp>
+#include <core/Runtime.hpp>
 #include <core/SymbolTable.hpp>
 
 SymbolTable& SymbolTable::operator=(const SymbolTable& other) {
@@ -87,4 +88,6 @@ void SymbolTable::detachParallelNodes() {
 
     this->threads.clear();
     this->mtx.unlock();
+
+    Runtime::cleanUp();
 }

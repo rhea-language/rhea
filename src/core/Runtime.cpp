@@ -23,6 +23,7 @@
 #include <vector>
 
 bool Runtime::testMode = false;
+std::unordered_map<std::string, void*> Runtime::nativeLibraries;
 
 bool Runtime::isTestMode() {
     return Runtime::testMode;
@@ -30,4 +31,21 @@ bool Runtime::isTestMode() {
 
 void Runtime::setTestMode(bool _testMode) {
     Runtime::testMode = _testMode;
+}
+
+void Runtime::addLoadedLibrary(std::string libName, void* handle) {
+    Runtime::nativeLibraries[libName] = handle;
+}
+
+void* Runtime::getLoadedLibrary(std::string libName) {
+    return Runtime::nativeLibraries[libName];
+}
+
+bool Runtime::hasLoadedLibrary(std::string libName) {
+    return Runtime::nativeLibraries.find(libName) !=
+        Runtime::nativeLibraries.end();
+}
+
+void Runtime::cleanUp() {
+    Runtime::nativeLibraries.clear();
 }

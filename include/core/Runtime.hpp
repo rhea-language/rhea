@@ -21,13 +21,22 @@
 
 #include <ast/ASTNode.hpp>
 
+#include <unordered_map>
+
 class Runtime {
 private:
     static bool testMode;
+    static std::unordered_map<std::string, void*> nativeLibraries;
 
 public:
     static bool isTestMode();
     static void setTestMode(bool _testMode);
+
+    static void addLoadedLibrary(std::string libName, void* handle);
+    static void* getLoadedLibrary(std::string libName);
+    static bool hasLoadedLibrary(std::string libName);
+
+    static void cleanUp();
 };
 
 #endif

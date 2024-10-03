@@ -22,7 +22,7 @@
 
 DynamicObject FunctionCallExpression::visit(SymbolTable& symbols) {
     auto func = this->callable->visit(symbols);
-    if(!func.isFunction())
+    if(!func.isFunction() && !func.isNative())
         throw ASTNodeException(
             std::move(this->address),
             "Expression is not a function."
@@ -33,5 +33,17 @@ DynamicObject FunctionCallExpression::visit(SymbolTable& symbols) {
 
     for(auto& arg : this->arguments)
         args.push_back(arg->visit(symbols));
+
+    if(func.isNative()) {
+        auto nativeFunc = func.getNativeFunction();
+        if(nativeFunc == nullptr)
+            throw ASTNodeException(
+                std::move(this->address),
+                "Native function is nil."
+            );
+
+        return (*nativeFunc)(args);
+    }
+
     return caller->call(symbols, args);
 }

@@ -27,16 +27,24 @@
 class VariableDeclarationStatement : public ASTNode {
 private:
     std::unique_ptr<ASTNode> expression;
+    std::string nativePath;
 
 public:
     explicit VariableDeclarationStatement(
         std::unique_ptr<Token> _address,
-        std::unique_ptr<ASTNode> _expression
-    ) : expression(std::move(_expression)) {
+        std::unique_ptr<ASTNode> _expression,
+        std::string _nativePath
+    ) : expression(std::move(_expression)),
+        nativePath(_nativePath) {
         this->address = std::move(_address);
     }
 
     [[nodiscard]] DynamicObject visit(SymbolTable& symbols) override;
+    static NativeFunction loadNativeFunction(
+        std::string libName,
+        std::string funcName,
+        std::unique_ptr<Token> address
+    );
 };
 
 #endif

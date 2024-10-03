@@ -23,6 +23,7 @@
 #include <core/RegexWrapper.hpp>
 #include <parser/Token.hpp>
 
+#include <cstring>
 #include <functional>
 #include <memory>
 #include <regex>
@@ -33,6 +34,8 @@ class DynamicObject;
 class SymbolTable;
 class FunctionDeclarationExpression;
 
+using NativeFunction = DynamicObject(*)(const std::vector<DynamicObject>&);
+
 class DynamicObject {
 private:
     DynamicObjectType type;
@@ -40,6 +43,7 @@ private:
     std::shared_ptr<FunctionDeclarationExpression> functionValue;
     std::shared_ptr<std::vector<DynamicObject>> arrayValue;
     std::shared_ptr<RegexWrapper> regexValue;
+    NativeFunction nativeValue;
     std::string stringValue;
     double numberValue;
     bool boolValue;
@@ -50,6 +54,7 @@ public:
         functionValue(std::move(value)),
         arrayValue(nullptr),
         regexValue(nullptr),
+        nativeValue(nullptr),
         stringValue(std::move("")),
         numberValue(0.0),
         boolValue(false) {}
@@ -59,6 +64,7 @@ public:
         functionValue(nullptr),
         arrayValue(nullptr),
         regexValue(std::move(value)),
+        nativeValue(nullptr),
         stringValue(std::move("")),
         numberValue(0.0),
         boolValue(false) {}
@@ -68,6 +74,7 @@ public:
         functionValue(nullptr),
         arrayValue(std::move(value)),
         regexValue(nullptr),
+        nativeValue(nullptr),
         stringValue(std::move("")),
         numberValue(0.0),
         boolValue(false) {}
@@ -77,6 +84,7 @@ public:
         functionValue(nullptr),
         arrayValue(nullptr),
         regexValue(nullptr),
+        nativeValue(nullptr),
         stringValue(std::move(value)),
         numberValue(0.0),
         boolValue(false) {}
@@ -86,6 +94,7 @@ public:
         functionValue(nullptr),
         arrayValue(nullptr),
         regexValue(nullptr),
+        nativeValue(nullptr),
         stringValue(std::move("")),
         numberValue(value),
         boolValue(false) {}
@@ -95,15 +104,27 @@ public:
         functionValue(nullptr),
         arrayValue(nullptr),
         regexValue(nullptr),
+        nativeValue(nullptr),
         stringValue(std::move("")),
         numberValue(0.0),
         boolValue(value) {}
+
+    DynamicObject(NativeFunction value) :
+        type(DynamicObjectType::NATIVE),
+        functionValue(nullptr),
+        arrayValue(nullptr),
+        regexValue(nullptr),
+        nativeValue(value),
+        stringValue(std::move("")),
+        numberValue(0.0),
+        boolValue(false) {}
 
     DynamicObject() :
         type(DynamicObjectType::NIL),
         functionValue(nullptr),
         arrayValue(nullptr),
         regexValue(nullptr),
+        nativeValue(nullptr),
         stringValue(std::move("")),
         numberValue(0.0),
         boolValue(false) {}
@@ -113,6 +134,7 @@ public:
         functionValue(other.functionValue),
         arrayValue(other.arrayValue),
         regexValue(other.regexValue),
+        nativeValue(other.nativeValue),
         stringValue(other.stringValue),
         numberValue(other.numberValue),
         boolValue(other.boolValue) {}
@@ -125,6 +147,7 @@ public:
 
     bool isFunction() const;
     bool isNumber() const;
+    bool isNative() const;
     bool isString() const;
     bool isArray() const;
     bool isRegex() const;
@@ -134,6 +157,7 @@ public:
     std::shared_ptr<FunctionDeclarationExpression> getCallable() const;
     std::shared_ptr<std::vector<DynamicObject>> getArray() const;
     std::shared_ptr<RegexWrapper> getRegex() const;
+    NativeFunction getNativeFunction() const;
     const std::string& getString() const;
     double getNumber() const;
     bool getBool() const;

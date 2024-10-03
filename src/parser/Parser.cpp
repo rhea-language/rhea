@@ -872,17 +872,32 @@ std::unique_ptr<ASTNode> Parser::stmtTest() {
 }
 
 std::unique_ptr<ASTNode> Parser::stmtVal() {
+    std::string nativePath = "";
     this->consume("val");
 
+    if(this->isNext("(", TokenType::OPERATOR)) {
+        this->consume("(");
+        nativePath = this->consume(TokenType::STRING).getImage();
+
+        this->consume(")");
+    }
+
+    std::unique_ptr<ASTNode> value;
     Token address = this->consume(TokenType::IDENTIFIER);
-    this->consume("=");
 
-    std::unique_ptr<ASTNode> value = this->expression();
+    if(nativePath == "") {
+        this->consume("=");
+        value = this->expression();
+    }
+    else value = std::make_unique<NilLiteralExpression>(
+        std::make_unique<Token>(address)
+    );
+
     this->consume(";");
-
     return std::make_unique<VariableDeclarationStatement>(
         std::make_unique<Token>(address),
-        std::move(value)
+        std::move(value),
+        nativePath
     );
 }
 

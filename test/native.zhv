@@ -1,0 +1,2 @@
+val("./libtest.so") greet;
+greet();

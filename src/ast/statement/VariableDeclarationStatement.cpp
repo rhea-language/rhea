@@ -16,14 +16,51 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <ast/ASTNodeException.hpp>
 #include <ast/statement/VariableDeclarationStatement.hpp>
 #include <core/SymbolTable.hpp>
 
+#include <dlfcn.h>
+
 DynamicObject VariableDeclarationStatement::visit(SymbolTable& symbols) {
+    std::string name = this->address->getImage();
+    if(this->nativePath != "") {
+        symbols.setSymbol(name, DynamicObject(
+            VariableDeclarationStatement::loadNativeFunction(
+                this->nativePath,
+                name,
+                std::move(this->address)
+            )
+        ));
+
+        return {};
+    }
+
     symbols.setSymbol(
         this->address->getImage(),
         this->expression->visit(symbols)
     );
-
     return {};
+}
+
+NativeFunction VariableDeclarationStatement::loadNativeFunction(
+    std::string libName,
+    std::string funcName,
+    std::unique_ptr<Token> address
+) {
+    void* handle = dlopen(libName.c_str(), RTLD_LAZY);
+    if(!handle)
+        throw ASTNodeException(
+            std::move(address),
+            "Failed to load library: " + libName +
+            "\r\n                 " + dlerror()
+        );
+
+    auto func = reinterpret_cast<NativeFunction>(dlsym(handle, funcName.c_str()));
+    if(!func) {
+        dlclose(handle);
+        throw std::runtime_error("Failed to find function: " + funcName);
+    }
+
+    return func;
 }

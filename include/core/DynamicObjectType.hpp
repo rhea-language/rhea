@@ -26,7 +26,8 @@ enum class DynamicObjectType {
     BOOL,
     ARRAY,
     REGEX,
-    FUNCTION
+    FUNCTION,
+    NATIVE
 };
 
 #endif

@@ -18,6 +18,7 @@
 
 #include <ast/ASTNodeException.hpp>
 #include <ast/statement/VariableDeclarationStatement.hpp>
+#include <core/Runtime.hpp>
 #include <core/SymbolTable.hpp>
 
 #include <dlfcn.h>
@@ -48,7 +49,14 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
     std::string funcName,
     std::unique_ptr<Token> address
 ) {
-    void* handle = dlopen(libName.c_str(), RTLD_LAZY);
+    void* handle;
+    if(Runtime::hasLoadedLibrary(libName))
+        handle = Runtime::getLoadedLibrary(libName);
+    else {
+        handle = dlopen(libName.c_str(), RTLD_LAZY);
+        Runtime::addLoadedLibrary(libName, handle);
+    }
+
     if(!handle)
         throw ASTNodeException(
             std::move(address),

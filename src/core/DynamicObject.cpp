@@ -28,11 +28,12 @@ DynamicObject& DynamicObject::operator=(const DynamicObject& other) {
         this->type = other.type;
         this->numberValue = other.numberValue;
         this->boolValue = other.boolValue;
-        this->stringValue = other.stringValue; 
+        this->stringValue = other.stringValue;
 
-        this->arrayValue.reset(other.arrayValue.get());
-        this->functionValue.reset(other.functionValue.get());
-        this->regexValue.reset(other.regexValue.get());
+        this->arrayValue = other.arrayValue;
+        this->functionValue = other.functionValue;
+        this->regexValue = other.regexValue;
+        this->nativeValue = other.nativeValue;
     }
 
     return *this;
@@ -47,6 +48,7 @@ DynamicObject& DynamicObject::operator=(DynamicObject&& other) {
         this->boolValue = std::move(other.boolValue);
         this->functionValue = std::move(other.functionValue);
         this->regexValue = std::move(other.regexValue);
+        this->nativeValue = std::move(other.nativeValue);
     }
 
     return *this;
@@ -89,6 +91,10 @@ bool DynamicObject::operator!=(const DynamicObject& other) {
 
 bool DynamicObject::isNumber() const {
     return this->type == DynamicObjectType::NUMBER;
+}
+
+bool DynamicObject::isNative() const {
+    return this->type == DynamicObjectType::NATIVE;
 }
 
 bool DynamicObject::isString() const {
@@ -139,12 +145,17 @@ std::shared_ptr<std::vector<DynamicObject>> DynamicObject::getArray() const {
     return this->arrayValue;
 }
 
+NativeFunction DynamicObject::getNativeFunction() const {
+    return this->nativeValue;
+}
+
 bool DynamicObject::booleanEquivalent() {
     return (this->isBool() && this->getBool()) ||
         (this->isNumber() && this->getNumber() < 0.0) ||
         (this->isString() && !this->getString().empty()) ||
         (this->isArray() && this->getArray()->size()) ||
-        this->isFunction() || this->isRegex();
+        this->isFunction() || this->isRegex() ||
+        this->isNative();
 }
 
 void DynamicObject::setArrayElement(
@@ -182,6 +193,8 @@ std::string DynamicObject::objectType() {
         return "function";
     else if(this->isRegex())
         return "regex";
+    else if(this->isNative())
+        return "native";
 
     return "unknown";
 }
@@ -229,6 +242,8 @@ std::string DynamicObject::toString() {
         result += "]";
         return result;
     }
+    else if(this->isNative())
+        return "{{native_func}}";
 
     return "{untyped}";
 }

@@ -69,7 +69,10 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
             "\r\n                 " + dlerror()
         );
 
-    auto func = reinterpret_cast<NativeFunction>(dlsym(handle, funcName.c_str()));
+    std::string name = funcName;
+    std::replace(name.begin(), name.end(), '.', '_');
+
+    auto func = reinterpret_cast<NativeFunction>(dlsym(handle, name.c_str()));
     if(!func) {
         dlclose(handle);
         throw std::runtime_error("Failed to find function: " + funcName);

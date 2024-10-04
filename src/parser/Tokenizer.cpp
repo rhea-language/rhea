@@ -276,7 +276,10 @@ void Tokenizer::scan() {
             std::string token(1, currentChar);
             int startColumn = column;
 
-            while(!this->isAtEnd() && this->isAlphabet(this->source[this->index])) {
+            while(!this->isAtEnd() &&
+                (this->isDigit(this->source[this->index]) ||
+                    this->isAlphabet(this->source[this->index]))
+            ) {
                 token += this->source[this->index++];
                 column++;
             }
@@ -329,9 +332,9 @@ bool Tokenizer::isHexadecimalDigit(char ch) {
 }
 
 bool Tokenizer::isAlphabet(char ch) {
-    return (ch >= 'a' && ch <= 'z') ||
-        (ch >= 'A' && ch <= 'Z') ||
-        ch == '_';
+    return !Tokenizer::isWhitespace(ch) &&
+        !Tokenizer::isDigit(ch) &&
+        !Tokenizer::isOperator(ch);
 }
 
 bool Tokenizer::isOperator(char ch) {

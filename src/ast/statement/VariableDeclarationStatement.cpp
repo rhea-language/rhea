@@ -24,29 +24,34 @@
 #include <dlfcn.h>
 
 DynamicObject VariableDeclarationStatement::visit(SymbolTable& symbols) {
-    std::string name = this->address->getImage();
-    if(this->nativePath != "") {
-        symbols.setSymbol(name, DynamicObject(
-            VariableDeclarationStatement::loadNativeFunction(
-                this->nativePath,
-                name,
-                std::move(this->address)
-            )
-        ));
+    if(!this->nativePath.empty()) {
+        for(const auto& [key, value] : this->declarations) {
+            std::string name = key.getImage();
+
+            symbols.setSymbol(name, DynamicObject(
+                VariableDeclarationStatement::loadNativeFunction(
+                    this->nativePath,
+                    name,
+                    std::move(this->address)
+                )
+            ));
+        }
 
         return {};
     }
 
-    symbols.setSymbol(
-        this->address->getImage(),
-        this->expression->visit(symbols)
-    );
+    for(const auto& [key, value] : this->declarations)
+        symbols.setSymbol(
+            key.getImage(),
+            value->visit(symbols)
+        );
+
     return {};
 }
 
 NativeFunction VariableDeclarationStatement::loadNativeFunction(
-    std::string libName,
-    std::string funcName,
+    std::string& libName,
+    std::string& funcName,
     std::unique_ptr<Token> address
 ) {
     void* handle;

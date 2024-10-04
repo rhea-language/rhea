@@ -22,27 +22,28 @@
 #include <ast/ASTNode.hpp>
 #include <parser/Token.hpp>
 
+#include <map>
 #include <memory>
 
 class VariableDeclarationStatement : public ASTNode {
 private:
-    std::unique_ptr<ASTNode> expression;
+    std::map<Token, std::unique_ptr<ASTNode>> declarations;
     std::string nativePath;
 
 public:
     explicit VariableDeclarationStatement(
         std::unique_ptr<Token> _address,
-        std::unique_ptr<ASTNode> _expression,
+        std::map<Token, std::unique_ptr<ASTNode>> _declarations,
         std::string _nativePath
-    ) : expression(std::move(_expression)),
+    ) : declarations(std::move(_declarations)),
         nativePath(_nativePath) {
         this->address = std::move(_address);
     }
 
     [[nodiscard]] DynamicObject visit(SymbolTable& symbols) override;
     static NativeFunction loadNativeFunction(
-        std::string libName,
-        std::string funcName,
+        std::string& libName,
+        std::string& funcName,
         std::unique_ptr<Token> address
     );
 };

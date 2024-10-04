@@ -21,7 +21,13 @@
 #include <core/Runtime.hpp>
 #include <core/SymbolTable.hpp>
 
-#include <dlfcn.h>
+#if defined(__unix__) || defined(__linux__)
+#   include <dlfcn.h>
+#elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+#   include <Windows.h>
+#else
+#   error "Unsupported architecture for shared objects or dynamic libraries."
+#endif
 
 DynamicObject VariableDeclarationStatement::visit(SymbolTable& symbols) {
     if(!this->nativePath.empty()) {
@@ -56,9 +62,20 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
 ) {
     void* handle;
     if(Runtime::hasLoadedLibrary(libName))
+        #if defined(__unix__) || defined(__linux__)
         handle = Runtime::getLoadedLibrary(libName);
+        #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+        handle = static_cast<HMODULE>(
+            Runtime::getLoadedLibrary(libName)
+        );
+        #endif
     else {
+        #if defined(__unix__) || defined(__linux__)
         handle = dlopen(libName.c_str(), RTLD_LAZY);
+        #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+        handle = LoadLibrary(libName.c_str());
+        #endif
+
         Runtime::addLoadedLibrary(libName, handle);
     }
 
@@ -66,15 +83,30 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
         throw ASTNodeException(
             std::move(address),
             "Failed to load library: " + libName +
-            "\r\n                 " + dlerror()
+            "\r\n                 " +
+            #if defined(__unix__) || defined(__linux__)
+            dlerror()
+            #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+            std::string(GetLastError())
+            #endif
         );
 
     std::string name = funcName;
     std::replace(name.begin(), name.end(), '.', '_');
 
+    #if defined(__unix__) || defined(__linux__)
     auto func = reinterpret_cast<NativeFunction>(dlsym(handle, name.c_str()));
+    #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+    auto func = reinterpret_cast<NativeFunction>(GetProcAddress(handle, name.c_str()));
+    #endif
+
     if(!func) {
+        #if defined(__unix__) || defined(__linux__)
         dlclose(handle);
+        #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+        FreeLibrary(handle);
+        #endif
+
         throw std::runtime_error("Failed to find function: " + funcName);
     }
 

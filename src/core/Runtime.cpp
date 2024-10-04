@@ -22,7 +22,13 @@
 #include <thread>
 #include <vector>
 
-#include <dlfcn.h>
+#if defined(__unix__) || defined(__linux__)
+#   include <dlfcn.h>
+#elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+#   include <Windows.h>
+#else
+#   error "Unsupported architecture for shared objects or dynamic libraries."
+#endif
 
 bool Runtime::testMode = false;
 std::unordered_map<std::string, void*> Runtime::nativeLibraries;
@@ -51,7 +57,11 @@ bool Runtime::hasLoadedLibrary(std::string libName) {
 void Runtime::cleanUp() {
     for(const auto& [key, value] : Runtime::nativeLibraries)
         if(value != nullptr)
+            #if defined(__unix__) || defined(__linux__)
             dlclose(value);
+            #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+            FreeLibrary(value);
+            #endif
 
     Runtime::nativeLibraries.clear();
 }

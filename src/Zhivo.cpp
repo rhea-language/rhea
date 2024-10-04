@@ -28,7 +28,17 @@
 #include <stdexcept>
 
 auto printBanner() -> void {
-    std::cout << "Zhivo Programming Language" << std::endl;
+    std::cout 
+        << "\u001b[36m"
+        << " ██████ ██   ██ ██ ██    ██  ██████  " << std::endl
+        << "    ██  ██   ██ ██ ██    ██ ██    ██ " << std::endl
+        << "   ██   ███████ ██ ██    ██ ██    ██ " << std::endl
+        << "  ██    ██   ██ ██  ██  ██  ██    ██ " << std::endl
+        << " ██████ ██   ██ ██   ████    ██████  " << std::endl
+        << "\u001b[0m—————————————————————————————————————" << std::endl
+        << "\u001b[1;94m Zhivo Programming Language (v1.0.0)" << std::endl
+        << "\u001b[0m—————————————————————————————————————" << std::endl
+        << std::endl;
 }
 
 auto interpreter(int argc, char** argv) -> int {

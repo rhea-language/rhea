@@ -325,8 +325,18 @@ std::unique_ptr<ASTNode> Parser::exprLiteral() {
         );
     }
     else if(this->peek().getType() == TokenType::IDENTIFIER) {
+        Token var = this->consume(TokenType::IDENTIFIER);
+        while(this->isNext(".", TokenType::OPERATOR)) {
+            this->consume(".");
+            var.appendToImage(
+                "." +
+                this->consume(TokenType::IDENTIFIER)
+                    .getImage()
+            );
+        }
+
         expr = std::make_unique<VariableAccessExpression>(
-            std::make_unique<Token>(this->consume(TokenType::IDENTIFIER))
+            std::make_unique<Token>(var)
         );
 
         while(this->isNext("[", TokenType::OPERATOR)) {
@@ -566,8 +576,18 @@ std::unique_ptr<ASTNode> Parser::exprPrimary() {
     else if(this->isNext("[", TokenType::OPERATOR))
         expression = this->exprArray();
     else if(this->peek().getType() == TokenType::IDENTIFIER) {
+        Token var = this->consume(TokenType::IDENTIFIER);
+        while(this->isNext(".", TokenType::OPERATOR)) {
+            this->consume(".");
+            var.appendToImage(
+                "." +
+                this->consume(TokenType::IDENTIFIER)
+                    .getImage()
+            );
+        }
+
         expression = std::make_unique<VariableAccessExpression>(
-            std::make_unique<Token>(this->consume(TokenType::IDENTIFIER))
+            std::make_unique<Token>(var)
         );
 
         while(this->isNext("[", TokenType::OPERATOR)) {
@@ -889,6 +909,14 @@ std::unique_ptr<ASTNode> Parser::stmtVal() {
 
         std::unique_ptr<ASTNode> value;
         Token variable = this->consume(TokenType::IDENTIFIER);
+        while(this->isNext(".", TokenType::OPERATOR)) {
+            this->consume(".");
+            variable.appendToImage(
+                "." +
+                this->consume(TokenType::IDENTIFIER)
+                    .getImage()
+            );
+        }
 
         if(nativePath == "") {
             this->consume("=");

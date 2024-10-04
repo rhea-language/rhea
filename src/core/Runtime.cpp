@@ -22,6 +22,8 @@
 #include <thread>
 #include <vector>
 
+#include <dlfcn.h>
+
 bool Runtime::testMode = false;
 std::unordered_map<std::string, void*> Runtime::nativeLibraries;
 
@@ -47,5 +49,9 @@ bool Runtime::hasLoadedLibrary(std::string libName) {
 }
 
 void Runtime::cleanUp() {
+    for(const auto& [key, value] : Runtime::nativeLibraries)
+        if(value != nullptr)
+            dlclose(value);
+
     Runtime::nativeLibraries.clear();
 }

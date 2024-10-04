@@ -45,7 +45,8 @@ public:
         column(_column),
         type(_type) {}
 
-    bool operator==(const Token& other);
+    bool operator==(const Token& other) const;
+    bool operator<(const Token& other) const;
 
     std::string getImage() const;
     std::string getFileName() const;

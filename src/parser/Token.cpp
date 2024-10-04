@@ -18,12 +18,18 @@
 
 #include <parser/Token.hpp>
 
-bool Token::operator==(const Token& other) {
+bool Token::operator==(const Token& other) const {
     return this->image == other.image &&
         this->fileName == other.fileName &&
         this->line == other.line &&
         this->column == other.column &&
         this->type == other.type;
+}
+
+bool Token::operator<(const Token& other) const {
+    return (this->type != other.type) ?
+        this->type < other.type :
+        this->image < other.image;
 }
 
 std::string Token::getImage() const {

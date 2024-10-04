@@ -873,7 +873,7 @@ std::unique_ptr<ASTNode> Parser::stmtTest() {
 
 std::unique_ptr<ASTNode> Parser::stmtVal() {
     std::string nativePath = "";
-    this->consume("val");
+    Token address = this->consume("val");
 
     if(this->isNext("(", TokenType::OPERATOR)) {
         this->consume("(");
@@ -882,21 +882,29 @@ std::unique_ptr<ASTNode> Parser::stmtVal() {
         this->consume(")");
     }
 
-    std::unique_ptr<ASTNode> value;
-    Token address = this->consume(TokenType::IDENTIFIER);
+    std::map<Token, std::unique_ptr<ASTNode>> declarations;
+    while(!this->isNext(";", TokenType::OPERATOR)) {
+        if(!declarations.empty())
+            this->consume(",");
 
-    if(nativePath == "") {
-        this->consume("=");
-        value = this->expression();
+        std::unique_ptr<ASTNode> value;
+        Token variable = this->consume(TokenType::IDENTIFIER);
+
+        if(nativePath == "") {
+            this->consume("=");
+            value = this->expression();
+        }
+        else value = std::make_unique<NilLiteralExpression>(
+            std::make_unique<Token>(variable)
+        );
+
+        declarations.insert({variable, std::move(value)});
     }
-    else value = std::make_unique<NilLiteralExpression>(
-        std::make_unique<Token>(address)
-    );
 
     this->consume(";");
     return std::make_unique<VariableDeclarationStatement>(
         std::make_unique<Token>(address),
-        std::move(value),
+        std::move(declarations),
         nativePath
     );
 }

@@ -59,3 +59,7 @@ std::string Token::toString() const {
         this->fileName +
         "\u001b[0m)";
 }
+
+void Token::appendToImage(std::string str) {
+    this->image += str;
+}

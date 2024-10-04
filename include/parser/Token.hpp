@@ -56,6 +56,8 @@ public:
 
     TokenType getType() const;
     std::string toString() const;
+
+    void appendToImage(std::string str);
 };
 
 #endif

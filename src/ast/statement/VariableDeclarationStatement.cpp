@@ -79,7 +79,24 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
         Runtime::addLoadedLibrary(libName, handle);
     }
 
-    if(!handle)
+    if(!handle) {
+        DWORD errorMessageId = GetLastError();
+        LPSTR messageBuffer = nullptr;
+
+        size_t size = FormatMessageA(
+            FORMAT_MESSAGE_ALLOCATE_BUFFER |
+                FORMAT_MESSAGE_FROM_SYSTEM |
+                FORMAT_MESSAGE_IGNORE_INSERTS,
+            NULL,
+            errorMessageId,
+            MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+            (LPSTR) &messageBuffer,
+            0,
+            NULL
+        );
+        std::string message(messageBuffer, size);
+
+        LocalFree(messageBuffer);
         throw ASTNodeException(
             std::move(address),
             "Failed to load library: " + libName +
@@ -87,9 +104,10 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
             #if defined(__unix__) || defined(__linux__)
             dlerror()
             #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-            std::string(GetLastError())
+            std::string(message)
             #endif
         );
+    }
 
     std::string name = funcName;
     std::replace(name.begin(), name.end(), '.', '_');
@@ -97,14 +115,17 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
     #if defined(__unix__) || defined(__linux__)
     auto func = reinterpret_cast<NativeFunction>(dlsym(handle, name.c_str()));
     #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-    auto func = reinterpret_cast<NativeFunction>(GetProcAddress(handle, name.c_str()));
+    auto func = reinterpret_cast<NativeFunction>(GetProcAddress(
+        (HMODULE) handle,
+        name.c_str()
+    ));
     #endif
 
     if(!func) {
         #if defined(__unix__) || defined(__linux__)
         dlclose(handle);
         #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-        FreeLibrary(handle);
+        FreeLibrary((HMODULE) handle);
         #endif
 
         throw std::runtime_error("Failed to find function: " + funcName);

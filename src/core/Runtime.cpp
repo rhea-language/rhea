@@ -60,7 +60,7 @@ void Runtime::cleanUp() {
             #if defined(__unix__) || defined(__linux__)
             dlclose(value);
             #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-            FreeLibrary(value);
+            FreeLibrary((HMODULE) value);
             #endif
 
     Runtime::nativeLibraries.clear();

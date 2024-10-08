@@ -16,29 +16,22 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <ast/ASTNodeException.hpp>
-#include <ast/TerminativeSignal.hpp>
-#include <core/Runtime.hpp>
-#include <core/SymbolTable.hpp>
-#include <parser/LexicalAnalysisException.hpp>
-#include <parser/Parser.hpp>
-#include <parser/ParserException.hpp>
+#include <Zhivo.hpp>
 
 #include <iostream>
 #include <stdexcept>
 
 auto printBanner() -> void {
-    std::cout 
-        << "\u001b[36m"
-        << " ██████ ██   ██ ██ ██    ██  ██████  " << std::endl
-        << "    ██  ██   ██ ██ ██    ██ ██    ██ " << std::endl
-        << "   ██   ███████ ██ ██    ██ ██    ██ " << std::endl
-        << "  ██    ██   ██ ██  ██  ██  ██    ██ " << std::endl
-        << " ██████ ██   ██ ██   ████    ██████  " << std::endl
-        << "\u001b[0m—————————————————————————————————————" << std::endl
-        << "\u001b[1;94m Zhivo Programming Language (v1.0.0)" << std::endl
-        << "\u001b[0m—————————————————————————————————————" << std::endl
+    std::cout
+        << "\u001b[1;32mZhivo Programming Language "
+        << ZHIVO_VERSION
+        << "\u001b[0m"
         << std::endl;
+
+    std::cout
+        << "\u001b[1;37mZhivo is free software, please check the source for copying" << std::endl
+        << "terms and conditions. This includes no warranty, not even" << std::endl
+        << "for fitness and/or merchantability for any particular purpose.\u001b[0m" << std::endl;
 }
 
 auto interpreter(int argc, char** argv) -> int {

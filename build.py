@@ -1,9 +1,15 @@
 import os
 import platform
 import subprocess
+import sys
 
 OUT_DIR = 'dist'
-OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'zhivo-win-x86')
+OUTPUT_EXECUTABLE = os.path.join(
+    'dist',
+    'zhivo-' +
+        sys.platform + '-' +
+        platform.machine().lower()
+)
 
 cpp_files = []
 for root, dirs, files in os.walk('src'):

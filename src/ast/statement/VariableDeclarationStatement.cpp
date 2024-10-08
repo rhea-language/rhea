@@ -80,6 +80,7 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
     }
 
     if(!handle) {
+        #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
         DWORD errorMessageId = GetLastError();
         LPSTR messageBuffer = nullptr;
 
@@ -94,9 +95,11 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
             0,
             NULL
         );
-        std::string message(messageBuffer, size);
 
+        std::string message(messageBuffer, size);
         LocalFree(messageBuffer);
+        #endif
+
         throw ASTNodeException(
             std::move(address),
             "Failed to load library: " + libName +
@@ -113,12 +116,19 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
     std::replace(name.begin(), name.end(), '.', '_');
 
     #if defined(__unix__) || defined(__linux__)
+
     auto func = reinterpret_cast<NativeFunction>(dlsym(handle, name.c_str()));
+
     #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+    #   pragma GCC diagnostic push
+    #   pragma GCC diagnostic ignored "-Wcast-function-type"
+
     auto func = reinterpret_cast<NativeFunction>(GetProcAddress(
         (HMODULE) handle,
         name.c_str()
     ));
+
+    #   pragma GCC diagnostic pop
     #endif
 
     if(!func) {

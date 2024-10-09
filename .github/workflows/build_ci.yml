@@ -39,43 +39,43 @@ jobs:
       - name: Run test scripts (x86)
         run: |
           start=$(date +%s%3N)
-          ./dist/zhivo-x86 ./test/arithmetic.zhv
-          ./dist/zhivo-x86 ./test/array.zhv
-          ./dist/zhivo-x86 ./test/digits.zhv
-          ./dist/zhivo-x86 ./test/error_handling.zhv
-          ./dist/zhivo-x86 ./test/flow.zhv
-          ./dist/zhivo-x86 ./test/func.zhv
-          ./dist/zhivo-x86 ./test/loop.zhv
-          ./dist/zhivo-x86 ./test/parallel.zhv
-          ./dist/zhivo-x86 ./test/regex.zhv
-          ./dist/zhivo-x86 ./test/test.zhv
-          ./dist/zhivo-x86 ./test/types.zhv
+          ./dist/zhivo-linux-x86_64 ./test/arithmetic.zhv
+          ./dist/zhivo-linux-x86_64 ./test/array.zhv
+          ./dist/zhivo-linux-x86_64 ./test/digits.zhv
+          ./dist/zhivo-linux-x86_64 ./test/error_handling.zhv
+          ./dist/zhivo-linux-x86_64 ./test/flow.zhv
+          ./dist/zhivo-linux-x86_64 ./test/func.zhv
+          ./dist/zhivo-linux-x86_64 ./test/loop.zhv
+          ./dist/zhivo-linux-x86_64 ./test/parallel.zhv
+          ./dist/zhivo-linux-x86_64 ./test/regex.zhv
+          ./dist/zhivo-linux-x86_64 ./test/test.zhv
+          ./dist/zhivo-linux-x86_64 ./test/types.zhv
           end=$(date +%s%3N)
           echo "Elapsed time: $((end - start)) ms"
 
       - name: Run test scripts (CUDA)
         run: |
           start=$(date +%s%3N)
-          ./dist/zhivo-cuda ./test/arithmetic.zhv
-          ./dist/zhivo-cuda ./test/array.zhv
-          ./dist/zhivo-cuda ./test/digits.zhv
-          ./dist/zhivo-cuda ./test/error_handling.zhv
-          ./dist/zhivo-cuda ./test/flow.zhv
-          ./dist/zhivo-cuda ./test/func.zhv
-          ./dist/zhivo-cuda ./test/loop.zhv
-          ./dist/zhivo-cuda ./test/parallel.zhv
-          ./dist/zhivo-cuda ./test/regex.zhv
-          ./dist/zhivo-cuda ./test/test.zhv
-          ./dist/zhivo-cuda ./test/types.zhv
+          ./dist/zhivo-linux-x86_64-cuda ./test/arithmetic.zhv
+          ./dist/zhivo-linux-x86_64-cuda ./test/array.zhv
+          ./dist/zhivo-linux-x86_64-cuda ./test/digits.zhv
+          ./dist/zhivo-linux-x86_64-cuda ./test/error_handling.zhv
+          ./dist/zhivo-linux-x86_64-cuda ./test/flow.zhv
+          ./dist/zhivo-linux-x86_64-cuda ./test/func.zhv
+          ./dist/zhivo-linux-x86_64-cuda ./test/loop.zhv
+          ./dist/zhivo-linux-x86_64-cuda ./test/parallel.zhv
+          ./dist/zhivo-linux-x86_64-cuda ./test/regex.zhv
+          ./dist/zhivo-linux-x86_64-cuda ./test/test.zhv
+          ./dist/zhivo-linux-x86_64-cuda ./test/types.zhv
           end=$(date +%s%3N)
           echo "Elapsed time: $((end - start)) ms"
 
       - name: Run examples (x86)
         run: |
-          /usr/bin/time -v ./dist/zhivo-x86 ./examples/hello.zhv
-          /usr/bin/time -v ./dist/zhivo-x86 ./examples/99-beers.zhv
+          /usr/bin/time -v ./dist/zhivo-linux-x86_64 ./examples/hello.zhv
+          /usr/bin/time -v ./dist/zhivo-linux-x86_64 ./examples/99-beers.zhv
 
       - name: Run examples (CUDA)
         run: |
-          /usr/bin/time -v ./dist/zhivo-cuda ./examples/hello.zhv
-          /usr/bin/time -v ./dist/zhivo-cuda ./examples/99-beers.zhv
+          /usr/bin/time -v ./dist/zhivo-linux-x86_64-cuda ./examples/hello.zhv
+          /usr/bin/time -v ./dist/zhivo-linux-x86_64-cuda ./examples/99-beers.zhv

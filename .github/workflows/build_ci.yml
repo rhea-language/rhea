@@ -19,13 +19,17 @@ jobs:
         with:
           cuda: '12.5.0'
 
+      - name: Python 3.12 Installation
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Get build dependencies
-        run: sudo apt install build-essential make -y
+        run: sudo apt install build-essential -y
 
       - name: Build Zhivo
         run: |
-          chmod +x ./build.sh
-          ./build.sh
+          python build.py
 
       - name: Build verification
         run: |

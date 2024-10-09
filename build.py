@@ -49,15 +49,27 @@ gpp_command = [
 
 if platform.system() != 'Windows':
     gpp_command.append('-flto=auto')
-gpp_command += cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
-print("Compiling with command:")
-print(' '.join(gpp_command))
+gpp_command += cpp_files + ['-o', OUTPUT_EXECUTABLE]
+nvcc_command = [
+    'nvcc',
+    '-Iinclude'
+] + cpp_files + ['-o', OUTPUT_EXECUTABLE + '-cuda']
 
 os.makedirs(OUT_DIR, exist_ok=True)
 
 try:
+    print("Compiling with command:")
+    print(' '.join(gpp_command))
+
     subprocess.run(gpp_command, check=True)
     print(f"Compilation successful! Executable created at: {OUTPUT_EXECUTABLE}")
+
+    print("Compiling with command:")
+    print(' '.join(nvcc_command))
+
+    subprocess.run(nvcc_command, check=True)
+    print(f"Compilation successful! Executable created at: {OUTPUT_EXECUTABLE + '-cuda'}")
+
 except subprocess.CalledProcessError as e:
     print(f"Compilation failed with error: {e}")

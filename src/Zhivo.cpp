@@ -26,12 +26,16 @@ auto printBanner() -> void {
         << "\u001b[1;32mZhivo Programming Language "
         << ZHIVO_VERSION
         << "\u001b[0m"
+        << std::endl
         << std::endl;
 
     std::cout
-        << "\u001b[1;37mZhivo is free software, please check the source for copying" << std::endl
-        << "terms and conditions. This includes no warranty, not even" << std::endl
-        << "for fitness and/or merchantability for any particular purpose.\u001b[0m" << std::endl;
+        << "\u001b[3;37mZhivo is free software, please check the source for copying"
+            << std::endl
+        << "terms and conditions. This includes no warranty, not even"
+            << std::endl
+        << "for fitness and/or merchantability for any particular purpose.\u001b[0m"
+            << std::endl;
 }
 
 auto interpreter(int argc, char** argv) -> int {

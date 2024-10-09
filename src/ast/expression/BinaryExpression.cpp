@@ -23,6 +23,7 @@
 #include <parser/Token.hpp>
 #include <util/VectorMath.hpp>
 
+#include <limits>
 #include <memory>
 #include <regex>
 
@@ -113,9 +114,11 @@ DynamicObject BinaryExpression::applyNumOp(DynamicObject& lValue, DynamicObject&
     else if(this->op == "<=")
         return DynamicObject(lValue.getNumber() <= rValue.getNumber());
     else if(this->op == "==")
-        return DynamicObject(std::fabs(lValue.getNumber() - rValue.getNumber()) < __DBL_EPSILON__);
+        return DynamicObject(std::fabs(lValue.getNumber() - rValue.getNumber()) <
+            std::numeric_limits<double>::epsilon());
     else if(this->op == "!=")
-        return DynamicObject(std::fabs(lValue.getNumber() - rValue.getNumber()) >= __DBL_EPSILON__);
+        return DynamicObject(std::fabs(lValue.getNumber() - rValue.getNumber()) >=
+            std::numeric_limits<double>::epsilon());
     else if(this->op == "<<")
         return DynamicObject((float) ((unsigned long) lValue.getNumber() << (unsigned long) rValue.getNumber()));
     else if(this->op == ">>")

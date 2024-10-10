@@ -35,7 +35,6 @@ jobs:
 
       - name: Run test scripts (AMD64)
         run: |
-          start=$((Get-Date).Millisecond)
           dist\zhivo-win32-amd64.exe test\arithmetic.zhv
           dist\zhivo-win32-amd64.exe test\array.zhv
           dist\zhivo-win32-amd64.exe test\digits.zhv
@@ -47,12 +46,9 @@ jobs:
           dist\zhivo-win32-amd64.exe test\regex.zhv
           dist\zhivo-win32-amd64.exe test\test.zhv
           dist\zhivo-win32-amd64.exe test\types.zhv
-          end=$((Get-Date).Millisecond)
-          echo "Elapsed time: $((end - start)) ms"
 
       - name: Run test scripts (CUDA)
         run: |
-          start=$((Get-Date).Millisecond)
           dist\zhivo-win32-amd64-cuda.exe test\arithmetic.zhv
           dist\zhivo-win32-amd64-cuda.exe test\array.zhv
           dist\zhivo-win32-amd64-cuda.exe test\digits.zhv
@@ -64,8 +60,6 @@ jobs:
           dist\zhivo-win32-amd64-cuda.exe test\regex.zhv
           dist\zhivo-win32-amd64-cuda.exe test\test.zhv
           dist\zhivo-win32-amd64-cuda.exe test\types.zhv
-          end=$((Get-Date).Millisecond)
-          echo "Elapsed time: $((end - start)) ms"
 
       - name: Run examples (AMD64)
         run: |

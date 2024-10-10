@@ -27,7 +27,7 @@ jobs:
 
       - name: Build verification
         run: |
-          ls dist -ral
+          ls -ral dist
           find dist | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
 
       - name: Run test scripts (x86)

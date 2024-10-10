@@ -7,10 +7,7 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [ macos-12, macos-13, macos-14 ]
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-latest
 
     steps:
       - name: Checkout code

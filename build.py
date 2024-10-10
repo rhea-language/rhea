@@ -95,6 +95,7 @@ if PLATFORM == 'Windows':
 nvcc_command.append('-Iinclude')
 nvcc_command += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-cuda']
 
+os.rmdir(OUT_DIR)
 os.makedirs(OUT_DIR, exist_ok=True)
 
 try:
@@ -104,11 +105,12 @@ try:
     subprocess.run(gpp_command, check=True)
     print(f"Compilation successful! Executable created at: {OUTPUT_EXECUTABLE}")
 
-    print("Compiling with command:")
-    print(' '.join(nvcc_command))
+    if PLATFORM != 'Darwin':
+        print("Compiling for CUDA with command:")
+        print(' '.join(nvcc_command))
 
-    subprocess.run(nvcc_command, check=True)
-    print(f"Compilation successful! Executable created at: {OUTPUT_EXECUTABLE + '-cuda'}")
+        subprocess.run(nvcc_command, check=True)
+        print(f"Compilation successful! Executable created at: {OUTPUT_EXECUTABLE + '-cuda'}")
 
 except subprocess.CalledProcessError as e:
     print(f"Compilation failed with error: {e}")

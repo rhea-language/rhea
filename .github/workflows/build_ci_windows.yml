@@ -5,7 +5,8 @@ on:
     branches:
       - main
 
-  build-windows:
+jobs:
+  build:
     runs-on: windows-latest
 
     steps:

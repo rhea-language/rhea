@@ -59,6 +59,9 @@ if platform.system() == 'Darwin':
     gpp_command.append('-L/usr/local/opt/llvm/lib')
     gpp_command.append('-O3')
     gpp_command.remove('-Ofast')
+    gpp_command.remove('-msse')
+    gpp_command.remove('-msse2')
+    gpp_command.remove('-msse3')
 
 gpp_command += cpp_files + ['-o', OUTPUT_EXECUTABLE]
 nvcc_command = [

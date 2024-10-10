@@ -21,6 +21,9 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install LLVM (with OpenMP support)
+        run: brew install llvm
+
       - name: Build Zhivo
         run: |
           python build.py

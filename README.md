@@ -11,7 +11,7 @@ Just-in-time compiled programming language utilizing system available GPU with b
 
 ## License
 
-Rishka is distributed under the GNU General Public License v3.0. For further details, refer to the LICENSE file.
+Zhivo is distributed under the GNU General Public License v3.0. For further details, refer to the LICENSE file.
 
 ```
 This program is free software: you can redistribute it and/or modify  

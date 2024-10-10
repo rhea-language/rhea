@@ -23,7 +23,7 @@ if not cpp_files:
     exit(1)
 
 if platform.system() == 'Darwin':
-    COMPILER = 'clang++'
+    COMPILER = '/usr/local/opt/llvm/bin/clang++'
 
 gpp_command = [
     COMPILER, '-Iinclude',
@@ -53,6 +53,9 @@ gpp_command = [
 
 if platform.system() != 'Windows':
     gpp_command.append('-flto=auto')
+
+if platform.system() == 'Darwin':
+    gpp_command.append('-L/usr/local/opt/llvm/lib')
 
 gpp_command += cpp_files + ['-o', OUTPUT_EXECUTABLE]
 nvcc_command = [

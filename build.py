@@ -95,10 +95,9 @@ if PLATFORM == 'Windows':
 nvcc_command.append('-Iinclude')
 nvcc_command += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-cuda']
 
-os.rmdir(OUT_DIR)
-os.makedirs(OUT_DIR, exist_ok=True)
-
 try:
+    os.makedirs(OUT_DIR, exist_ok=True)
+
     print("Compiling with command:")
     print(' '.join(gpp_command))
 

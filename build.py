@@ -52,7 +52,7 @@ if platform.system() != 'Windows':
 
 gpp_command += cpp_files + ['-o', OUTPUT_EXECUTABLE]
 nvcc_command = [
-    'nvcc', '-x cu', '-Iinclude',
+    'nvcc', '-Iinclude',
     '-Xcompiler /std:c++17'
 ] + cpp_files + ['-o', OUTPUT_EXECUTABLE + '-cuda']
 

@@ -62,10 +62,9 @@ gpp_command = [
     '-Wunused', '-Wunused-function', '-Wunused-label',
     '-Wunused-parameter', '-Wunused-value', '-Wunused-variable',
     '-Wvariadic-macros', '-Wvolatile-register-var', '-Wwrite-strings',
-    '-pipe', '-Ofast', '-g', '-s', '-std=c++17', '-fopenmp',
+    '-pipe', '-Ofast', '-s', '-std=c++17', '-fopenmp',
     '-msse', '-msse2', '-msse3', '-mfpmath=sse',
-    '-march=native', '-funroll-loops', '-ffast-math',
-    '-DNDEBUG'
+    '-march=native', '-funroll-loops', '-ffast-math'
 ]
 
 if PLATFORM != 'Windows':
@@ -84,6 +83,7 @@ if PLATFORM == 'Darwin':
     gpp_command.remove('-msse2')
     gpp_command.remove('-msse3')
     gpp_command.remove('-mfpmath=sse')
+    gpp_command.remove('-s')
 
 gpp_command += cpp_files + ['-o', OUTPUT_EXECUTABLE]
 nvcc_command = ['nvcc']

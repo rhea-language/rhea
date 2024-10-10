@@ -56,6 +56,7 @@ if platform.system() != 'Windows':
 
 if platform.system() == 'Darwin':
     gpp_command.append('-L/usr/local/opt/llvm/lib')
+    gpp_command.append('-Xpreprocessor')
 
 gpp_command += cpp_files + ['-o', OUTPUT_EXECUTABLE]
 nvcc_command = [

@@ -11,6 +11,7 @@ OUTPUT_EXECUTABLE = os.path.join(
         platform.machine().lower()
 )
 PLATFORM = platform.system()
+COMPILER = 'g++'
 
 cpp_files = []
 for root, dirs, files in os.walk('src'):
@@ -22,8 +23,11 @@ if not cpp_files:
     print("No .cpp files found in the src directory.")
     exit(1)
 
+if PLATFORM == 'Darwin':
+    COMPILER = '/usr/local/opt/llvm/bin/clang++'
+
 gpp_command = [
-    'g++', '-Iinclude',
+    COMPILER, '-Iinclude',
     '-Wall', '-pedantic', '-Wdisabled-optimization',
     '-pedantic-errors', '-Wextra', '-Wcast-align',
     '-Wcast-qual', '-Wchar-subscripts', '-Wcomment',

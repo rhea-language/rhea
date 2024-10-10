@@ -44,7 +44,6 @@ auto printBanner() -> void {
         << "License along with Zhivo. If not, see:"
             << std::endl
         << "<https://www.gnu.org/licenses/>.\u001b[0m"
-            << std::endl
             << std::endl;
 }
 

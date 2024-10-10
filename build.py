@@ -75,6 +75,7 @@ if PLATFORM == 'Darwin':
     gpp_command.append('-Xpreprocessor')
     gpp_command.append('-O3')
     gpp_command.append('-Wno-header-guard')
+    gpp_command.append('-Wno-pessimizing-move')
     gpp_command.remove('-Wunsafe-loop-optimizations')
     gpp_command.remove('-Wvolatile-register-var')
     gpp_command.remove('-Weffc++')

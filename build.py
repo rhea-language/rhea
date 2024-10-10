@@ -64,12 +64,13 @@ if PLATFORM == 'Darwin':
     gpp_command.remove('-msse3')
 
 gpp_command += cpp_files + ['-o', OUTPUT_EXECUTABLE]
-nvcc_command = [
-    'nvcc', '-Iinclude'
-] + cpp_files + ['-o', OUTPUT_EXECUTABLE + '-cuda']
+nvcc_command = ['nvcc']
 
 if PLATFORM == 'Windows':
     nvcc_command.append('-Xcompiler /std:c++17')
+
+nvcc_command.append('-Iinclude')
+nvcc_command += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-cuda']
 
 os.makedirs(OUT_DIR, exist_ok=True)
 

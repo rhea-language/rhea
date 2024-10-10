@@ -10,6 +10,7 @@ OUTPUT_EXECUTABLE = os.path.join(
         sys.platform + '-' +
         platform.machine().lower()
 )
+PLATFORM = platform.system()
 COMPILER = 'g++'
 
 cpp_files = []
@@ -22,7 +23,7 @@ if not cpp_files:
     print("No .cpp files found in the src directory.")
     exit(1)
 
-if platform.system() == 'Darwin':
+if PLATFORM == 'Darwin':
     COMPILER = '/opt/homebrew/opt/llvm/bin/clang++'
 
 gpp_command = [
@@ -51,10 +52,10 @@ gpp_command = [
     '-DNDEBUG'
 ]
 
-if platform.system() != 'Windows':
+if PLATFORM != 'Windows':
     gpp_command.append('-flto=auto')
 
-if platform.system() == 'Darwin':
+if PLATFORM == 'Darwin':
     gpp_command.append('-Xpreprocessor')
     gpp_command.append('-O3')
     gpp_command.remove('-Ofast')
@@ -66,6 +67,9 @@ gpp_command += cpp_files + ['-o', OUTPUT_EXECUTABLE]
 nvcc_command = [
     'nvcc', '-Iinclude'
 ] + cpp_files + ['-o', OUTPUT_EXECUTABLE + '-cuda']
+
+if PLATFORM == 'Windows':
+    nvcc_command.append('-Xcompiler /std:c++17')
 
 os.makedirs(OUT_DIR, exist_ok=True)
 

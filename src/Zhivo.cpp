@@ -34,7 +34,17 @@ auto printBanner() -> void {
             << std::endl
         << "terms and conditions. This includes no warranty, not even"
             << std::endl
-        << "for fitness and/or merchantability for any particular purpose.\u001b[0m"
+        << "for fitness and/or merchantability for any particular purpose."
+            << std::endl
+            << std::endl;
+
+    std::cout
+        << "You should have received a copy of the GNU General Public"
+            << std::endl
+        << "License along with Zhivo. If not, see:"
+            << std::endl
+        << "<https://www.gnu.org/licenses/>.\u001b[0m"
+            << std::endl
             << std::endl;
 }
 

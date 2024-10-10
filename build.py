@@ -67,7 +67,8 @@ gpp_command += cpp_files + ['-o', OUTPUT_EXECUTABLE]
 nvcc_command = ['nvcc']
 
 if PLATFORM == 'Windows':
-    nvcc_command.append('-Xcompiler /std:c++17')
+    nvcc_command.append('-Xcompiler')
+    nvcc_command.append('/std:c++17')
 
 nvcc_command.append('-Iinclude')
 nvcc_command += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-cuda']

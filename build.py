@@ -24,7 +24,7 @@ if not cpp_files:
     exit(1)
 
 if PLATFORM == 'Darwin':
-    COMPILER = '/usr/local/opt/llvm/bin/clang++'
+    COMPILER = 'clang++'
 
 gpp_command = [
     COMPILER, '-Iinclude',

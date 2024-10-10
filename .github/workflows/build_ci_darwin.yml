@@ -46,5 +46,5 @@ jobs:
 
       - name: Run examples (x86)
         run: |
-          /usr/bin/time -v ./dist/zhivo-darwin-arm64 ./examples/hello.zhv
-          /usr/bin/time -v ./dist/zhivo-darwin-arm64 ./examples/99-beers.zhv
+          ./dist/zhivo-darwin-arm64 ./examples/hello.zhv
+          ./dist/zhivo-darwin-arm64 ./examples/99-beers.zhv

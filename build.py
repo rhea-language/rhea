@@ -65,6 +65,7 @@ if PLATFORM == 'Darwin':
     gpp_command.remove('-msse')
     gpp_command.remove('-msse2')
     gpp_command.remove('-msse3')
+    gpp_command.remove('-mfpmath=sse')
 
 gpp_command += cpp_files + ['-o', OUTPUT_EXECUTABLE]
 nvcc_command = ['nvcc']

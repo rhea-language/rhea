@@ -50,7 +50,7 @@ DynamicObject ArrayAccessExpression::visit(SymbolTable& symbols) {
             );
 
         return DynamicObject(
-            std::string(1, origin.getString().at((int) idx.getNumber()))
+            std::string(1, origin.getString().at((size_t) idx.getNumber()))
         );
     }
     else if(origin.isArray()) {
@@ -60,7 +60,7 @@ DynamicObject ArrayAccessExpression::visit(SymbolTable& symbols) {
                 "Accessing array with non-number index is not allowed."
             );
 
-        return DynamicObject(std::move(origin.getArray()->at((int) idx.getNumber())));
+        return DynamicObject(std::move(origin.getArray()->at((size_t) idx.getNumber())));
     }
 
     throw ASTNodeException(

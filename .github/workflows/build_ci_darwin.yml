@@ -16,16 +16,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Python 3.12 Installation
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
       - name: Install LLVM (with OpenMP support)
         run: |
           brew update
           brew upgrade
-          brew install libomp
+          brew install libomp python3
           brew reinstall llvm
 
       - name: Build Zhivo

@@ -35,7 +35,6 @@
 DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
     std::thread task(
         std::bind([
-            this,
             expr = std::move(this->expression),
             sym = &symbols
         ]() mutable {

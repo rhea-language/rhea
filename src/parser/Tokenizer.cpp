@@ -36,7 +36,7 @@ void Tokenizer::scan() {
 
     int line = 1, column = 0;
     while(!this->isAtEnd()) {
-        char currentChar = this->source[this->index++];
+        char currentChar = this->source[(size_t) this->index++];
         column++;
 
         if(this->isWhitespace(currentChar)) {
@@ -47,7 +47,7 @@ void Tokenizer::scan() {
         }
         else if(this->isOperator(currentChar)) {
             if(currentChar == '#') {
-                while(!this->isAtEnd() && this->source[this->index] != '\n') {
+                while(!this->isAtEnd() && this->source[(size_t) this->index] != '\n') {
                     this->index++;
                     column++;
                 }
@@ -58,8 +58,8 @@ void Tokenizer::scan() {
                 std::string str;
                 int startColumn = column;
 
-                while(!this->isAtEnd() && this->source[this->index] != '"') {
-                    char ch = this->source[this->index++];
+                while(!this->isAtEnd() && this->source[(size_t) this->index] != '"') {
+                    char ch = this->source[(size_t) this->index++];
                     column++;
 
                     if(ch == '\n')
@@ -71,7 +71,7 @@ void Tokenizer::scan() {
                         if(isAtEnd())
                             throw LexicalAnalysisException("Expecting escape character, encountered end-of-file. (line " + std::to_string(line) + ", column " + std::to_string(column) + ")");
 
-                        char escape = this->source[this->index++];
+                        char escape = this->source[(size_t) this->index++];
                         str += escape;
                         column++;
                     }
@@ -94,8 +94,8 @@ void Tokenizer::scan() {
                 std::string str;
                 int startColumn = column;
 
-                while(!this->isAtEnd() && this->source[this->index] != '`') {
-                    char ch = this->source[this->index++];
+                while(!this->isAtEnd() && this->source[(size_t) this->index] != '`') {
+                    char ch = this->source[(size_t) this->index++];
 
                     if(ch == '\n')
                         throw LexicalAnalysisException("Found new line inside regular expression literal. (line " + std::to_string(line) + ", column " + std::to_string(column) + ")");
@@ -106,7 +106,7 @@ void Tokenizer::scan() {
                         if(isAtEnd())
                             throw LexicalAnalysisException("Expecting escape character, encountered end-of-file. (line " + std::to_string(line) + ", column " + std::to_string(column) + ")");
 
-                        char escape = this->source[this->index++];
+                        char escape = this->source[(size_t) this->index++];
                         str += escape;
                         column++;
                     }
@@ -132,9 +132,9 @@ void Tokenizer::scan() {
                 while(!isAtEnd() && std::find(
                     OperatorsAndKeys::operators.begin(),
                     OperatorsAndKeys::operators.end(),
-                    op + this->source[this->index]) != OperatorsAndKeys::operators.end()
+                    op + this->source[(size_t) this->index]) != OperatorsAndKeys::operators.end()
                 ) {
-                    op += this->source[this->index++];
+                    op += this->source[(size_t) this->index++];
                     column++;
                 }
 
@@ -152,38 +152,44 @@ void Tokenizer::scan() {
             int startColumn = column;
 
             if(currentChar == '0') {
-                char nextChar = this->source[this->index++];
+                char nextChar = this->source[(size_t) this->index++];
                 column++;
 
                 switch(nextChar) {
                     case 'b':
                         digit += nextChar;
-                        while(!this->isAtEnd() && this->isBinaryDigit(this->source[this->index])) {
-                            digit += this->source[this->index++];
+                        while(!this->isAtEnd() && this->isBinaryDigit(
+                            this->source[(size_t) this->index]
+                        )) {
+                            digit += this->source[(size_t) this->index++];
                             column++;
                         }
                         break;
 
                     case 't':
                         digit += nextChar;
-                        while(!this->isAtEnd() && this->isTrinaryDigit(this->source[this->index])) {
-                            digit += this->source[this->index++];
+                        while(!this->isAtEnd() && this->isTrinaryDigit(this->source[(size_t) this->index])) {
+                            digit += this->source[(size_t) this->index++];
                             column++;
                         }
                         break;
 
                     case 'c':
                         digit += nextChar;
-                        while(!this->isAtEnd() && this->isOctalDecimalDigit(this->source[this->index])) {
-                            digit += this->source[this->index++];
+                        while(!this->isAtEnd() && this->isOctalDecimalDigit(
+                            this->source[(size_t) this->index]
+                        )) {
+                            digit += this->source[(size_t) this->index++];
                             column++;
                         }
                         break;
 
                     case 'x':
                         digit += nextChar;
-                        while(!this->isAtEnd() && this->isHexadecimalDigit(this->source[this->index])) {
-                            digit += this->source[this->index++];
+                        while(!this->isAtEnd() && this->isHexadecimalDigit(
+                            this->source[(size_t) this->index]
+                        )) {
+                            digit += this->source[(size_t) this->index++];
                             column++;
                         }
                         break;
@@ -192,35 +198,44 @@ void Tokenizer::scan() {
                         this->index--;
                         column--;
 
-                        while(!this->isAtEnd() && this->isDigit(this->source[this->index])) {
-                            digit += this->source[this->index++];
+                        while(!this->isAtEnd() && this->isDigit(
+                            this->source[(size_t) this->index]
+                        )) {
+                            digit += this->source[(size_t) this->index++];
                             column++;
                         }
 
-                        if(!this->isAtEnd() && this->source[this->index] == '.') {
-                            digit += this->source[this->index++];
+                        if(!this->isAtEnd() && this->source[(size_t) this->index] == '.') {
+                            digit += this->source[(size_t) this->index++];
                             column++;
 
-                            if(this->isAtEnd() || !this->isDigit(this->source[this->index]))
-                                throw LexicalAnalysisException("Expecting decimal digits. (line " + std::to_string(line) + ", column " + std::to_string(column) + ")");
+                            if(this->isAtEnd() || !this->isDigit(this->source[(size_t) this->index]))
+                                throw LexicalAnalysisException("Expecting decimal digits. (line " +
+                                    std::to_string(line) + ", column " + std::to_string(column) + ")");
 
-                            while(!this->isAtEnd() && this->isDigit(this->source[this->index])) {
-                                digit += this->source[this->index++];
+                            while(!this->isAtEnd() && this->isDigit(this->source[(size_t) this->index])) {
+                                digit += this->source[(size_t) this->index++];
                                 column++;
                             }
                         }
 
-                        if(!this->isAtEnd() && this->source[this->index] == 'e') {
-                            digit += this->source[this->index++];
+                        if(!this->isAtEnd() && this->source[(size_t) this->index] == 'e') {
+                            digit += this->source[(size_t) this->index++];
                             column++;
 
-                            char sign = this->source[this->index++];
+                            char sign = this->source[(size_t) this->index++];
                             if(this->isAtEnd() || (sign != '+' && sign != '-'))
-                                throw LexicalAnalysisException("Expecting 'e' followed by decimal digits. (line " + std::to_string(line) + ", column " + std::to_string(column) + ")");
+                                throw LexicalAnalysisException(
+                                    "Expecting 'e' followed by decimal digits. (line " +
+                                        std::to_string(line) + ", column " +
+                                        std::to_string(column) + ")"
+                                );
 
                             digit += sign;
-                            while(!this->isAtEnd() && this->isDigit(this->source[this->index])) {
-                                digit += this->source[this->index++];
+                            while(!this->isAtEnd() && this->isDigit(
+                                this->source[(size_t) this->index]
+                            )) {
+                                digit += this->source[(size_t) this->index++];
                                 column++;
                             }
                         }
@@ -228,37 +243,44 @@ void Tokenizer::scan() {
                 }
             }
             else {
-                while(!this->isAtEnd() && this->isDigit(this->source[this->index])) {
-                    digit += this->source[this->index++];
+                while(!this->isAtEnd() && this->isDigit(this->source[(size_t) this->index])) {
+                    digit += this->source[(size_t) this->index++];
                     column++;
                 }
 
-                if(!this->isAtEnd() && this->source[this->index] == '.') {
-                    digit += this->source[this->index++];
+                if(!this->isAtEnd() && this->source[(size_t) this->index] == '.') {
+                    digit += this->source[(size_t) this->index++];
                     column++;
 
-                    if(this->isAtEnd() || !this->isDigit(this->source[this->index]))
-                        throw LexicalAnalysisException("Expecting decimal digits. (line " + std::to_string(line) + ", column " + std::to_string(column) + ")");
+                    if(this->isAtEnd() || !this->isDigit(this->source[(size_t) this->index]))
+                        throw LexicalAnalysisException("Expecting decimal digits. (line " +
+                            std::to_string(line) + ", column " +
+                            std::to_string(column) + ")"
+                        );
 
-                    while(!this->isAtEnd() && this->isDigit(this->source[this->index])) {
-                        digit += this->source[this->index++];
+                    while(!this->isAtEnd() && this->isDigit(this->source[(size_t) this->index])) {
+                        digit += this->source[(size_t) this->index++];
                         column++;
                     }
                 }
 
-                if(!this->isAtEnd() && this->source[this->index] == 'e') {
-                    digit += this->source[this->index++];
+                if(!this->isAtEnd() && this->source[(size_t) this->index] == 'e') {
+                    digit += this->source[(size_t) this->index++];
                     column++;
 
-                    char sign = this->source[this->index++];
+                    char sign = this->source[(size_t) this->index++];
                     column++;
 
                     if(this->isAtEnd() || (sign != '+' && sign != '-'))
-                        throw LexicalAnalysisException("Expecting 'e' followed by decimal digits. (line " + std::to_string(line) + ", column " + std::to_string(column) + ")");
+                        throw LexicalAnalysisException(
+                            "Expecting 'e' followed by decimal digits. (line " +
+                                std::to_string(line) + ", column " +
+                                std::to_string(column) + ")"
+                        );
 
                     digit += sign;
-                    while(!this->isAtEnd() && this->isDigit(this->source[this->index])) {
-                        digit += this->source[this->index++];
+                    while(!this->isAtEnd() && this->isDigit(this->source[(size_t) this->index])) {
+                        digit += this->source[(size_t) this->index++];
                         column++;
                     }
                 }
@@ -277,10 +299,10 @@ void Tokenizer::scan() {
             int startColumn = column;
 
             while(!this->isAtEnd() &&
-                (this->isDigit(this->source[this->index]) ||
-                    this->isAlphabet(this->source[this->index]))
+                (this->isDigit(this->source[(size_t) this->index]) ||
+                    this->isAlphabet(this->source[(size_t) this->index]))
             ) {
-                token += this->source[this->index++];
+                token += this->source[(size_t) this->index++];
                 column++;
             }
 

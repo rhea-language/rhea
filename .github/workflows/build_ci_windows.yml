@@ -19,6 +19,9 @@ jobs:
         with:
           cuda: '12.5.0'
 
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
       - name: Python 3.12 Installation
         uses: actions/setup-python@v5
         with:

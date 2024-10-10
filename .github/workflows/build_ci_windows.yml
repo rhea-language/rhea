@@ -22,6 +22,9 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
 
+      - name: Microsoft Visual Studio C/C++
+        uses: ilammy/msvc-dev-cmd@v1
+
       - name: Python 3.12 Installation
         uses: actions/setup-python@v5
         with:

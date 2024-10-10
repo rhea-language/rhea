@@ -19,7 +19,8 @@ jobs:
           brew upgrade
           brew install python@3.12 libomp
           export PATH=/usr/local/opt/python@3.12/bin:$PATH
-          brew reinstall llvm
+          brew reinstall --force llvm
+          which clang++
 
       - name: Build Zhivo
         run: |

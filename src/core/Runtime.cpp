@@ -22,7 +22,7 @@
 #include <thread>
 #include <vector>
 
-#if defined(__unix__) || defined(__linux__)
+#if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
 #   include <dlfcn.h>
 #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 #   include <Windows.h>
@@ -57,7 +57,7 @@ bool Runtime::hasLoadedLibrary(std::string libName) {
 void Runtime::cleanUp() {
     for(const auto& [key, value] : Runtime::nativeLibraries)
         if(value != nullptr)
-            #if defined(__unix__) || defined(__linux__)
+            #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
             dlclose(value);
             #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
             FreeLibrary((HMODULE) value);

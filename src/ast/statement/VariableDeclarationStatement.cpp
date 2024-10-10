@@ -21,7 +21,7 @@
 #include <core/Runtime.hpp>
 #include <core/SymbolTable.hpp>
 
-#if defined(__unix__) || defined(__linux__)
+#if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
 #   include <dlfcn.h>
 #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 #   include <Windows.h>
@@ -64,7 +64,7 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
     std::string library = std::string(libName.c_str());
 
     if(Runtime::hasLoadedLibrary(libName)) {
-        #if defined(__unix__) || defined(__linux__)
+        #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
 
         library += ".so";
         handle = Runtime::getLoadedLibrary(libName);
@@ -79,7 +79,7 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
         #endif
     }
     else {
-        #if defined(__unix__) || defined(__linux__)
+        #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
 
         library += ".so";
         handle = dlopen(library.c_str(), RTLD_LAZY);
@@ -122,7 +122,7 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
             std::move(address),
             "Failed to load library: " + libName +
             "\r\n                 " +
-            #if defined(__unix__) || defined(__linux__)
+            #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
             dlerror()
             #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
             std::string(message)
@@ -133,7 +133,7 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
     std::string name = funcName;
     std::replace(name.begin(), name.end(), '.', '_');
 
-    #if defined(__unix__) || defined(__linux__)
+    #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
 
     auto func = reinterpret_cast<NativeFunction>(dlsym(handle, name.c_str()));
 
@@ -154,7 +154,7 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
     #endif
 
     if(!func) {
-        #if defined(__unix__) || defined(__linux__)
+        #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
         dlclose(handle);
         #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
         FreeLibrary((HMODULE) handle);

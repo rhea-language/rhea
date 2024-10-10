@@ -32,7 +32,6 @@ jobs:
 
       - name: Run test scripts (x86)
         run: |
-          start=$(date +%s%3N)
           ./dist/zhivo-darwin-arm64 ./test/arithmetic.zhv
           ./dist/zhivo-darwin-arm64 ./test/array.zhv
           ./dist/zhivo-darwin-arm64 ./test/digits.zhv
@@ -44,8 +43,6 @@ jobs:
           ./dist/zhivo-darwin-arm64 ./test/regex.zhv
           ./dist/zhivo-darwin-arm64 ./test/test.zhv
           ./dist/zhivo-darwin-arm64 ./test/types.zhv
-          end=$(date +%s%3N)
-          echo "Elapsed time: $((end - start)) ms"
 
       - name: Run examples (x86)
         run: |

@@ -58,6 +58,9 @@ if PLATFORM != 'Windows':
 if PLATFORM == 'Darwin':
     gpp_command.append('-Xpreprocessor')
     gpp_command.append('-O3')
+    gpp_command.remove('-Wunsafe-loop-optimizations')
+    gpp_command.remove('-Wvolatile-register-var')
+    gpp_command.remove('-Weffc+')
     gpp_command.remove('-Ofast')
     gpp_command.remove('-msse')
     gpp_command.remove('-msse2')

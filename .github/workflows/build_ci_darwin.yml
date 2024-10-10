@@ -20,7 +20,7 @@ jobs:
           brew install python@3.12 libomp
           export PATH=/usr/local/opt/python@3.12/bin:$PATH
           brew reinstall --force llvm
-          which clang++
+          /opt/homebrew/opt/llvm/bin/clang++
 
       - name: Build Zhivo
         run: |

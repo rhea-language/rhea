@@ -18,9 +18,6 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Get build dependencies
-        run: brew install make
-
       - name: Build Zhivo
         run: |
           python build.py
@@ -46,3 +43,8 @@ jobs:
           ./dist/zhivo-darwin-x86_64 ./test/types.zhv
           end=$(date +%s%3N)
           echo "Elapsed time: $((end - start)) ms"
+
+      - name: Run examples (x86)
+        run: |
+          /usr/bin/time -v ./dist/zhivo-darwin-x86_64 ./examples/hello.zhv
+          /usr/bin/time -v ./dist/zhivo-darwin-x86_64 ./examples/99-beers.zhv

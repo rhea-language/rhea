@@ -13,13 +13,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: CUDA Toolkit
+        uses: Jimver/cuda-toolkit@v0.2.17
+        id: cuda-toolkit
+        with:
+          cuda: '12.5.0'
+
       - name: Python 3.12 Installation
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
-      - name: Get build dependencies
-        run: choco install make -y
 
       - name: Build Zhivo
         run: |
@@ -30,19 +33,46 @@ jobs:
           dir dist
           tree dist
 
-      - name: Run test scripts (x86)
+      - name: Run test scripts (AMD64)
         run: |
           start=$((Get-Date).Millisecond)
-          ./dist/zhivo-win-x86_64.exe ./test/arithmetic.zhv
-          ./dist/zhivo-win-x86_64.exe ./test/array.zhv
-          ./dist/zhivo-win-x86_64.exe ./test/digits.zhv
-          ./dist/zhivo-win-x86_64.exe ./test/error_handling.zhv
-          ./dist/zhivo-win-x86_64.exe ./test/flow.zhv
-          ./dist/zhivo-win-x86_64.exe ./test/func.zhv
-          ./dist/zhivo-win-x86_64.exe ./test/loop.zhv
-          ./dist/zhivo-win-x86_64.exe ./test/parallel.zhv
-          ./dist/zhivo-win-x86_64.exe ./test/regex.zhv
-          ./dist/zhivo-win-x86_64.exe ./test/test.zhv
-          ./dist/zhivo-win-x86_64.exe ./test/types.zhv
+          dist\zhivo-win32-amd64.exe test\arithmetic.zhv
+          dist\zhivo-win32-amd64.exe test\array.zhv
+          dist\zhivo-win32-amd64.exe test\digits.zhv
+          dist\zhivo-win32-amd64.exe test\error_handling.zhv
+          dist\zhivo-win32-amd64.exe test\flow.zhv
+          dist\zhivo-win32-amd64.exe test\func.zhv
+          dist\zhivo-win32-amd64.exe test\loop.zhv
+          dist\zhivo-win32-amd64.exe test\parallel.zhv
+          dist\zhivo-win32-amd64.exe test\regex.zhv
+          dist\zhivo-win32-amd64.exe test\test.zhv
+          dist\zhivo-win32-amd64.exe test\types.zhv
           end=$((Get-Date).Millisecond)
           echo "Elapsed time: $((end - start)) ms"
+
+      - name: Run test scripts (CUDA)
+        run: |
+          start=$((Get-Date).Millisecond)
+          dist\zhivo-win32-amd64-cuda.exe test\arithmetic.zhv
+          dist\zhivo-win32-amd64-cuda.exe test\array.zhv
+          dist\zhivo-win32-amd64-cuda.exe test\digits.zhv
+          dist\zhivo-win32-amd64-cuda.exe test\error_handling.zhv
+          dist\zhivo-win32-amd64-cuda.exe test\flow.zhv
+          dist\zhivo-win32-amd64-cuda.exe test\func.zhv
+          dist\zhivo-win32-amd64-cuda.exe test\loop.zhv
+          dist\zhivo-win32-amd64-cuda.exe test\parallel.zhv
+          dist\zhivo-win32-amd64-cuda.exe test\regex.zhv
+          dist\zhivo-win32-amd64-cuda.exe test\test.zhv
+          dist\zhivo-win32-amd64-cuda.exe test\types.zhv
+          end=$((Get-Date).Millisecond)
+          echo "Elapsed time: $((end - start)) ms"
+
+      - name: Run examples (AMD64)
+        run: |
+          dist\zhivo-win32-amd64.exe examples\99-beers.zhv
+          dist\zhivo-win32-amd64.exe examples\hello.zhv
+
+      - name: Run examples (CUDA)
+        run: |
+          dist\zhivo-win32-amd64-cuda.exe examples\99-beers.zhv
+          dist\zhivo-win32-amd64-cuda.exe examples\hello.zhv

@@ -1,8 +1,26 @@
+# Copyright (c) 2024 - Nathanne Isip
+# This file is part of Zhivo.
+# 
+# Zhivo is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published
+# by the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+# 
+# Zhivo is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
+
 import os
 import platform
 import subprocess
 import sys
 
+PLATFORM = platform.system()
+COMPILER = 'g++'
 OUT_DIR = 'dist'
 OUTPUT_EXECUTABLE = os.path.join(
     'dist',
@@ -10,8 +28,6 @@ OUTPUT_EXECUTABLE = os.path.join(
         sys.platform + '-' +
         platform.machine().lower()
 )
-PLATFORM = platform.system()
-COMPILER = 'g++'
 
 cpp_files = []
 for root, dirs, files in os.walk('src'):
@@ -58,6 +74,7 @@ if PLATFORM != 'Windows':
 if PLATFORM == 'Darwin':
     gpp_command.append('-Xpreprocessor')
     gpp_command.append('-O3')
+    gpp_command.append('-Wno-header-guard')
     gpp_command.remove('-Wunsafe-loop-optimizations')
     gpp_command.remove('-Wvolatile-register-var')
     gpp_command.remove('-Weffc++')

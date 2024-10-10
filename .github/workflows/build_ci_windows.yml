@@ -1,0 +1,47 @@
+name: Build CI [Windows]
+
+on:
+  push:
+    branches:
+      - main
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Python 3.12 Installation
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Get build dependencies
+        run: choco install make -y
+
+      - name: Build Zhivo
+        run: |
+          python build.py
+
+      - name: Build verification
+        run: |
+          dir dist
+          tree dist
+
+      - name: Run test scripts (x86)
+        run: |
+          start=$((Get-Date).Millisecond)
+          ./dist/zhivo-win-x86_64.exe ./test/arithmetic.zhv
+          ./dist/zhivo-win-x86_64.exe ./test/array.zhv
+          ./dist/zhivo-win-x86_64.exe ./test/digits.zhv
+          ./dist/zhivo-win-x86_64.exe ./test/error_handling.zhv
+          ./dist/zhivo-win-x86_64.exe ./test/flow.zhv
+          ./dist/zhivo-win-x86_64.exe ./test/func.zhv
+          ./dist/zhivo-win-x86_64.exe ./test/loop.zhv
+          ./dist/zhivo-win-x86_64.exe ./test/parallel.zhv
+          ./dist/zhivo-win-x86_64.exe ./test/regex.zhv
+          ./dist/zhivo-win-x86_64.exe ./test/test.zhv
+          ./dist/zhivo-win-x86_64.exe ./test/types.zhv
+          end=$((Get-Date).Millisecond)
+          echo "Elapsed time: $((end - start)) ms"

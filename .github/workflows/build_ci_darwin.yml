@@ -1,0 +1,47 @@
+name: Build CI [Darwin]
+
+on:
+  push:
+    branches:
+      - main
+
+  build-darwin:
+    runs-on: darwin-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Python 3.12 Installation
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Get build dependencies
+        run: brew install make
+
+      - name: Build Zhivo
+        run: |
+          python build.py
+
+      - name: Build verification
+        run: |
+          ls dist -ral
+          find dist | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
+
+      - name: Run test scripts (x86)
+        run: |
+          start=$(date +%s%3N)
+          ./dist/zhivo-darwin-x86_64 ./test/arithmetic.zhv
+          ./dist/zhivo-darwin-x86_64 ./test/array.zhv
+          ./dist/zhivo-darwin-x86_64 ./test/digits.zhv
+          ./dist/zhivo-darwin-x86_64 ./test/error_handling.zhv
+          ./dist/zhivo-darwin-x86_64 ./test/flow.zhv
+          ./dist/zhivo-darwin-x86_64 ./test/func.zhv
+          ./dist/zhivo-darwin-x86_64 ./test/loop.zhv
+          ./dist/zhivo-darwin-x86_64 ./test/parallel.zhv
+          ./dist/zhivo-darwin-x86_64 ./test/regex.zhv
+          ./dist/zhivo-darwin-x86_64 ./test/test.zhv
+          ./dist/zhivo-darwin-x86_64 ./test/types.zhv
+          end=$(date +%s%3N)
+          echo "Elapsed time: $((end - start)) ms"

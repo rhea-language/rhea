@@ -41,7 +41,13 @@ DynamicObject UnaryExpression::visit(SymbolTable& symbols) {
         else if(this->op == "-")
             return DynamicObject(-value.getNumber());
         else if(this->op == "~")
-            return DynamicObject((double) ~((unsigned long) value.getNumber()));
+            return DynamicObject(
+                static_cast<double>(
+                    ~static_cast<unsigned long>(
+                        value.getNumber()
+                    )
+                )
+            );
     }
     else if(value.isString()) {
         if(this->op == "*")

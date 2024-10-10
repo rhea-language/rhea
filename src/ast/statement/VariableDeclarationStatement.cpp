@@ -61,22 +61,37 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
     std::unique_ptr<Token> address
 ) {
     void* handle;
-    if(Runtime::hasLoadedLibrary(libName))
+    std::string library = std::string(libName.c_str());
+
+    if(Runtime::hasLoadedLibrary(libName)) {
         #if defined(__unix__) || defined(__linux__)
+
+        library += ".so";
         handle = Runtime::getLoadedLibrary(libName);
+
         #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+
+        library += ".dll";
         handle = static_cast<HMODULE>(
             Runtime::getLoadedLibrary(libName)
         );
+
         #endif
+    }
     else {
         #if defined(__unix__) || defined(__linux__)
-        handle = dlopen(libName.c_str(), RTLD_LAZY);
+
+        library += ".so";
+        handle = dlopen(library.c_str(), RTLD_LAZY);
+
         #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-        handle = LoadLibraryA(libName.c_str());
+
+        library += ".dll";
+        handle = LoadLibraryA(library.c_str());
+
         #endif
 
-        Runtime::addLoadedLibrary(libName, handle);
+        Runtime::addLoadedLibrary(library, handle);
     }
 
     if(!handle) {

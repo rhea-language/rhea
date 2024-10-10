@@ -29,6 +29,9 @@ DynamicObject CatchHandleExpression::visit(SymbolTable& symbols) {
     catch(const TerminativeThrowSignal& throwSig) {
         std::string handleName = this->handler->getImage();
         if(symbols.hasSymbol(handleName))
+            #ifdef _MSC_VER
+            #   pragma warning(disable : 5272)
+            #endif
             throw ASTNodeException(
                 std::move(this->address),
                 "Handle name for catch-handle is already in-use."

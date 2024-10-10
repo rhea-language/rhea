@@ -60,7 +60,8 @@ bool DynamicObject::operator==(const DynamicObject& other) {
     else if(this->isBool() && other.isBool())
         return this->getBool() == other.getBool();
     else if(this->isNumber() && other.isNumber())
-        return std::fabs(this->getNumber() - other.getNumber()) < __DBL_EPSILON__;
+        return std::fabs(this->getNumber() - other.getNumber()) <
+            std::numeric_limits<double>::epsilon();
     else if(this->isString() && other.isString())
         return this->getString() == other.getString();
     else if(this->isRegex() && other.isRegex())
@@ -164,12 +165,18 @@ void DynamicObject::setArrayElement(
     std::unique_ptr<DynamicObject> object
 ) {
     if(!this->isArray())
+        #ifdef _MSC_VER
+        #   pragma warning(disable : 5272)
+        #endif
         throw ASTNodeException(
             std::move(reference),
             "Subject value not an array."
         );
 
     if(index >= this->arrayValue->size())
+        #ifdef _MSC_VER
+        #   pragma warning(disable : 5272)
+        #endif
         throw ASTNodeException(
             std::move(reference),
             "Index is out of bounds."

@@ -20,6 +20,11 @@
 #include <core/DynamicObject.hpp>
 #include <core/SymbolTable.hpp>
 
-DynamicObject BooleanLiteralExpression::visit(SymbolTable& symbols __attribute__((unused))) {
+DynamicObject BooleanLiteralExpression::visit(
+    SymbolTable& symbols
+    #ifndef _MSC_VER
+    __attribute__((unused))
+    #endif
+) {
     return DynamicObject(this->value);
 }

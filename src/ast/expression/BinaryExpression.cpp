@@ -35,6 +35,9 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
 
         DynamicObject arrayVal = arrayExpr->visit(symbols);
         if(!arrayVal.isArray())
+            #ifdef _MSC_VER
+            #   pragma warning(disable : 5272)
+            #endif
             throw ASTNodeException(
                 std::move(this->address),
                 "Object is not an array, cannot update value in specified index."

@@ -73,7 +73,7 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
         #if defined(__unix__) || defined(__linux__)
         handle = dlopen(libName.c_str(), RTLD_LAZY);
         #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-        handle = LoadLibrary(libName.c_str());
+        handle = LoadLibraryA(libName.c_str());
         #endif
 
         Runtime::addLoadedLibrary(libName, handle);
@@ -100,6 +100,9 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
         LocalFree(messageBuffer);
         #endif
 
+        #ifdef _MSC_VER
+        #   pragma warning(disable : 5272)
+        #endif
         throw ASTNodeException(
             std::move(address),
             "Failed to load library: " + libName +
@@ -120,15 +123,19 @@ NativeFunction VariableDeclarationStatement::loadNativeFunction(
     auto func = reinterpret_cast<NativeFunction>(dlsym(handle, name.c_str()));
 
     #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-    #   pragma GCC diagnostic push
-    #   pragma GCC diagnostic ignored "-Wcast-function-type"
+    #   ifndef _MSC_VER
+    #       pragma GCC diagnostic push
+    #       pragma GCC diagnostic ignored "-Wcast-function-type"
+    #endif
 
     auto func = reinterpret_cast<NativeFunction>(GetProcAddress(
         (HMODULE) handle,
         name.c_str()
     ));
 
-    #   pragma GCC diagnostic pop
+    #   ifndef _MSC_VER
+    #       pragma GCC diagnostic pop
+    #   endif
     #endif
 
     if(!func) {

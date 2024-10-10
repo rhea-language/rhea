@@ -31,7 +31,12 @@ FunctionDeclarationExpression& FunctionDeclarationExpression::operator=(Function
     return *this;
 }
 
-DynamicObject FunctionDeclarationExpression::visit(SymbolTable& symbols __attribute__((unused))) {
+DynamicObject FunctionDeclarationExpression::visit(
+    SymbolTable& symbols
+    #ifndef _MSC_VER
+    __attribute__((unused))
+    #endif
+) {
     return DynamicObject(std::make_shared<FunctionDeclarationExpression>(std::move(*this)));
 }
 
@@ -41,6 +46,9 @@ Token FunctionDeclarationExpression::getFunctionImage() const {
 
 DynamicObject FunctionDeclarationExpression::call(SymbolTable& symbols, const std::vector<DynamicObject>& args) {
     if(args.size() != this->parameters.size())
+        #ifdef _MSC_VER
+        #   pragma warning(disable : 5272)
+        #endif
         throw ASTNodeException(
             std::move(this->address),
             "Argument count mismatch"

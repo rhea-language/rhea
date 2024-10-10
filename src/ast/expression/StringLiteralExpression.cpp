@@ -18,6 +18,11 @@
 
 #include <ast/expression/StringLiteralExpression.hpp>
 
-DynamicObject StringLiteralExpression::visit(SymbolTable& symbols __attribute__((unused))) {
+DynamicObject StringLiteralExpression::visit(
+    SymbolTable& symbols
+    #ifndef _MSC_VER
+    __attribute__((unused))
+    #endif
+) {
     return DynamicObject(this->value);
 }

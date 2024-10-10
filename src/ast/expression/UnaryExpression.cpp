@@ -54,6 +54,9 @@ DynamicObject UnaryExpression::visit(SymbolTable& symbols) {
         }
     }
 
+    #ifdef _MSC_VER
+    #   pragma warning(disable : 5272)
+    #endif
     throw ASTNodeException(
         std::move(this->address),
         "Invalid unary expression operation"

@@ -88,6 +88,9 @@ Token Parser::previous() {
 
 Token Parser::peek() {
     if(this->isAtEnd())
+        #ifdef _MSC_VER
+        #   pragma warning(disable : 5272)
+        #endif
         throw ParserException(
             std::make_unique<Token>(this->previous()),
             "Encountered end-of-file."
@@ -114,6 +117,9 @@ Token Parser::current() {
 
 Token Parser::consume(const std::string& image) {
     if(this->isAtEnd())
+        #ifdef _MSC_VER
+        #   pragma warning(disable : 5272)
+        #endif
         throw ParserException(
             std::make_unique<Token>(this->previous()),
             "Expecting \"" + image +
@@ -122,6 +128,9 @@ Token Parser::consume(const std::string& image) {
 
     Token token = this->peek();
     if(token.getImage() != image)
+        #ifdef _MSC_VER
+        #   pragma warning(disable : 5272)
+        #endif
         throw ParserException(
             std::make_unique<Token>(this->previous()),
             "Expecting \"" + image +
@@ -134,6 +143,9 @@ Token Parser::consume(const std::string& image) {
 
 Token Parser::consume(TokenType type) {
     if(this->isAtEnd())
+        #ifdef _MSC_VER
+        #   pragma warning(disable : 5272)
+        #endif
         throw ParserException(
             std::make_unique<Token>(this->previous()),
             "Expecting token type, encountered end-of-code."
@@ -141,6 +153,9 @@ Token Parser::consume(TokenType type) {
 
     Token token = this->peek();
     if(token.getType() != type)
+        #ifdef _MSC_VER
+        #   pragma warning(disable : 5272)
+        #endif
         throw ParserException(
             std::make_unique<Token>(this->current()),
             "Expecting " + tokenTypeToString(type) +
@@ -355,6 +370,9 @@ std::unique_ptr<ASTNode> Parser::exprLiteral() {
     if(!expr) {
         auto address = this->current();
 
+        #ifdef _MSC_VER
+        #   pragma warning(disable : 5272)
+        #endif
         throw ParserException(
             std::make_unique<Token>(address),
             "Expecting expression, encountered " +
@@ -478,6 +496,9 @@ std::unique_ptr<ASTNode> Parser::exprWhen() {
         }
         else if(this->isNext("else", TokenType::KEYWORD)) {
             if(defaultCase)
+                #ifdef _MSC_VER
+                #   pragma warning(disable : 5272)
+                #endif
                 throw ParserException(
                     std::make_unique<Token>(address),
                     "Cannot have more than one (1) else for when expression."

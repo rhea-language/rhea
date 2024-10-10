@@ -18,6 +18,11 @@
 
 #include <ast/expression/NilLiteralExpression.hpp>
 
-DynamicObject NilLiteralExpression::visit(SymbolTable& symbols __attribute__((unused))) {
+DynamicObject NilLiteralExpression::visit(
+    SymbolTable& symbols
+    #ifndef _MSC_VER
+    __attribute__((unused))
+    #endif
+) {
     return {};
 }

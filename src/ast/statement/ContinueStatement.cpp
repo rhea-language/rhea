@@ -18,6 +18,11 @@
 
 #include <ast/statement/ContinueStatement.hpp>
 
-DynamicObject ContinueStatement::visit(SymbolTable& symbols __attribute__((unused))) {
+DynamicObject ContinueStatement::visit(
+    SymbolTable& symbols
+    #ifndef _MSC_VER
+    __attribute__((unused))
+    #endif
+) {
     throw TerminativeContinueSignal(*this->address);
 }

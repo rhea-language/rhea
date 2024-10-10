@@ -18,6 +18,11 @@
 
 #include <ast/statement/BreakStatement.hpp>
 
-DynamicObject BreakStatement::visit(SymbolTable& symbols __attribute__((unused))) {
+DynamicObject BreakStatement::visit(
+    SymbolTable& symbols
+    #ifndef _MSC_VER
+    __attribute__((unused))
+    #endif
+) {
     throw TerminativeBreakSignal(*this->address);
 }

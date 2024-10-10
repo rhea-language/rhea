@@ -41,6 +41,9 @@ DynamicObject SymbolTable::getSymbol(
             name
         );
 
+    #ifdef _MSC_VER
+    #   pragma warning(disable : 5272)
+    #endif
     throw ASTNodeException(
         std::move(reference),
         "Cannot resolve symbol: " + name

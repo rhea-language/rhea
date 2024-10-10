@@ -52,8 +52,7 @@ if platform.system() != 'Windows':
 
 gpp_command += cpp_files + ['-o', OUTPUT_EXECUTABLE]
 nvcc_command = [
-    'nvcc', '-Iinclude',
-    '-Xcompiler /std:c++17'
+    'nvcc', '-Iinclude'
 ] + cpp_files + ['-o', OUTPUT_EXECUTABLE + '-cuda']
 
 os.makedirs(OUT_DIR, exist_ok=True)

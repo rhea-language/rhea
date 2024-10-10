@@ -55,7 +55,7 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
 
         arrayVal.setArrayElement(
             std::move(this->address),
-            (int) indexVal.getNumber(),
+            (size_t) indexVal.getNumber(),
             std::move(rValuePtr)
         );
 

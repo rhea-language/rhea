@@ -81,7 +81,7 @@ void Parser::advance() {
 
 Token Parser::previous() {
     if(this->index > 1)
-        return this->tokens[this->index - 1];
+        return this->tokens[(size_t) this->index - 1];
 
     return this->tokens[0];
 }
@@ -96,7 +96,7 @@ Token Parser::peek() {
             "Encountered end-of-file."
         );
 
-    return this->tokens[this->index];
+    return this->tokens[(size_t) this->index];
 }
 
 bool Parser::isNext(const std::string& image, TokenType type) {
@@ -112,7 +112,7 @@ Token Parser::current() {
     if(this->index >= (int) this->tokens.size())
         return this->previous();
 
-    return this->tokens[this->index];
+    return this->tokens[(size_t) this->index];
 }
 
 Token Parser::consume(const std::string& image) {

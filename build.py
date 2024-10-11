@@ -42,7 +42,7 @@ if not cpp_files:
 if PLATFORM == 'Darwin':
     COMPILER = '/opt/homebrew/opt/llvm/bin/clang++'
 
-gpp_command = [
+exe_build_args = [
     COMPILER, '-Iinclude',
     '-Wall', '-pedantic', '-Wdisabled-optimization',
     '-pedantic-errors', '-Wextra', '-Wcast-align',
@@ -68,48 +68,54 @@ gpp_command = [
 ]
 
 if PLATFORM != 'Windows':
-    gpp_command.append('-flto=auto')
+    exe_build_args.append('-flto=auto')
 
 if PLATFORM == 'Darwin':
-    gpp_command.append('-Xpreprocessor')
-    gpp_command.append('-O3')
-    gpp_command.append('-Wno-header-guard')
-    gpp_command.append('-Wno-pessimizing-move')
-    gpp_command.remove('-Wunsafe-loop-optimizations')
-    gpp_command.remove('-Wvolatile-register-var')
-    gpp_command.remove('-Weffc++')
-    gpp_command.remove('-Ofast')
-    gpp_command.remove('-msse')
-    gpp_command.remove('-msse2')
-    gpp_command.remove('-msse3')
-    gpp_command.remove('-mfpmath=sse')
-    gpp_command.remove('-s')
+    exe_build_args.append('-Xpreprocessor')
+    exe_build_args.append('-O3')
+    exe_build_args.append('-Wno-header-guard')
+    exe_build_args.append('-Wno-pessimizing-move')
+    exe_build_args.remove('-Wunsafe-loop-optimizations')
+    exe_build_args.remove('-Wvolatile-register-var')
+    exe_build_args.remove('-Weffc++')
+    exe_build_args.remove('-Ofast')
+    exe_build_args.remove('-msse')
+    exe_build_args.remove('-msse2')
+    exe_build_args.remove('-msse3')
+    exe_build_args.remove('-mfpmath=sse')
+    exe_build_args.remove('-s')
 
-gpp_command += cpp_files + ['-o', OUTPUT_EXECUTABLE]
-nvcc_command = ['nvcc']
+rt_build_args = exe_build_args + cpp_files + [
+    '-shared',
+    '-o',
+    os.path.join('dist', 'zhivocore.a'),
+]
+
+exe_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE]
+cuda_build_args = ['nvcc']
 
 if PLATFORM == 'Windows':
-    nvcc_command.append('-Xcompiler')
-    nvcc_command.append('/std:c++17')
+    cuda_build_args.append('-Xcompiler')
+    cuda_build_args.append('/std:c++17')
 
-nvcc_command.append('-Iinclude')
-nvcc_command += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-cuda']
+cuda_build_args.append('-Iinclude')
+cuda_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-cuda']
 
 try:
     os.makedirs(OUT_DIR, exist_ok=True)
 
-    print("Compiling with command:")
-    print(' '.join(gpp_command))
+    print("Executing:")
+    print(' '.join(exe_build_args))
+    subprocess.run(exe_build_args, check=True)
 
-    subprocess.run(gpp_command, check=True)
-    print(f"Compilation successful! Executable created at: {OUTPUT_EXECUTABLE}")
+    print("Executing:")
+    print(' '.join(rt_build_args))
+    subprocess.run(rt_build_args, check=True)
 
     if PLATFORM != 'Darwin':
-        print("Compiling for CUDA with command:")
-        print(' '.join(nvcc_command))
-
-        subprocess.run(nvcc_command, check=True)
-        print(f"Compilation successful! Executable created at: {OUTPUT_EXECUTABLE + '-cuda'}")
+        print("Executing:")
+        print(' '.join(cuda_build_args))
+        subprocess.run(cuda_build_args, check=True)
 
 except subprocess.CalledProcessError as e:
     print(f"Compilation failed with error: {e}")

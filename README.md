@@ -1,8 +1,13 @@
-# Zhivo (Живо)
+<p align="center">
+    <img src="assets/zhivo-logo.png" width="180" />
+</p>
+<h1 align="center">Zhivo (Живо)</h1>
 
-![Build CI for Linux](https://github.com/nthnn/zhivo/actions/workflows/build_ci_linux.yml/badge.svg)
-![Build CI for Darwin](https://github.com/nthnn/zhivo/actions/workflows/build_ci_darwin.yml/badge.svg)
-![Build CI for Windows](https://github.com/nthnn/zhivo/actions/workflows/build_ci_windows.yml/badge.svg)
+<p align="center">
+    <img alt="Build CI for Linux" src="https://github.com/nthnn/zhivo/actions/workflows/build_ci_linux.yml/badge.svg" />
+    <img alt="Build CI for Darwin" src="https://github.com/nthnn/zhivo/actions/workflows/build_ci_darwin.yml/badge.svg" />
+    <img alt="Build CI for Windows" src="https://github.com/nthnn/zhivo/actions/workflows/build_ci_windows.yml/badge.svg" />
+</p>
 
 Just-in-time compiled programming language utilizing system available GPU with built-in unconventional expressivenes.
 

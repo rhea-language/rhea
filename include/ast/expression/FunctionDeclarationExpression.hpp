@@ -56,7 +56,7 @@ public:
 
     [[nodiscard]] DynamicObject visit(SymbolTable& symbols) override;
     DynamicObject call(
-        SymbolTable& symbols,
+        const SymbolTable& symbols,
         const std::vector<DynamicObject>& args
     );
 

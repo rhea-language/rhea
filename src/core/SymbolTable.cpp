@@ -54,9 +54,9 @@ void SymbolTable::setSymbol(const std::string& name, DynamicObject value) {
     std::lock_guard<std::mutex> lock(this->mtx);
 
     if(this->hasSymbol(name))
-        this->table[name] = value;
+        this->table[name] = std::move(value);
     else if(this->parent && this->parent->hasSymbol(name))
-        this->parent->setSymbol(name, value);
+        this->parent->setSymbol(name, std::move(value));
 
     this->table[name] = std::move(value);
 }

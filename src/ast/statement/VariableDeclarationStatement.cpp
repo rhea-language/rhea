@@ -33,14 +33,15 @@ DynamicObject VariableDeclarationStatement::visit(SymbolTable& symbols) {
     if(!this->nativePath.empty()) {
         for(const auto& [key, value] : this->declarations) {
             std::string name = key.getImage();
-
-            symbols.setSymbol(name, DynamicObject(
+            DynamicObject func = DynamicObject(
                 VariableDeclarationStatement::loadNativeFunction(
                     this->nativePath,
                     name,
                     std::move(this->address)
                 )
-            ));
+            );
+
+            symbols.setSymbol(name, std::move(func));
         }
 
         return {};

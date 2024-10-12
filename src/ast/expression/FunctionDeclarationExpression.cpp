@@ -21,7 +21,9 @@
 #include <core/SymbolTable.hpp>
 #include <parser/Token.hpp>
 
-FunctionDeclarationExpression& FunctionDeclarationExpression::operator=(FunctionDeclarationExpression&& other) noexcept {
+FunctionDeclarationExpression& FunctionDeclarationExpression::operator=(
+    FunctionDeclarationExpression&& other
+) noexcept {
     if(this != &other) {
         this->address = std::move(other.address);
         this->parameters = std::move(other.parameters);
@@ -37,14 +39,21 @@ DynamicObject FunctionDeclarationExpression::visit(
     __attribute__((unused))
     #endif
 ) {
-    return DynamicObject(std::make_shared<FunctionDeclarationExpression>(std::move(*this)));
+    return DynamicObject(
+        std::make_shared<FunctionDeclarationExpression>(
+            std::move(*this)
+        )
+    );
 }
 
 Token FunctionDeclarationExpression::getFunctionImage() const {
     return *this->address;
 }
 
-DynamicObject FunctionDeclarationExpression::call(SymbolTable& symbols, const std::vector<DynamicObject>& args) {
+DynamicObject FunctionDeclarationExpression::call(
+    const SymbolTable& symbols,
+    const std::vector<DynamicObject>& args
+) {
     if(args.size() != this->parameters.size())
         #ifdef _MSC_VER
         #   pragma warning(disable : 5272)
@@ -54,7 +63,7 @@ DynamicObject FunctionDeclarationExpression::call(SymbolTable& symbols, const st
             "Argument count mismatch"
         );
 
-    SymbolTable localSymbols(&symbols);
+    SymbolTable localSymbols(const_cast<SymbolTable&>(symbols));
     for(size_t i = 0; i < args.size(); ++i)
         localSymbols.setSymbol(
             this->parameters[i]->getImage(),

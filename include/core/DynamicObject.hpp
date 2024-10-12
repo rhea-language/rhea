@@ -34,7 +34,14 @@ class DynamicObject;
 class SymbolTable;
 class FunctionDeclarationExpression;
 
-using NativeFunction = DynamicObject(*)(const std::vector<DynamicObject>&);
+using NativeFunction = DynamicObject(
+    #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+    __stdcall
+    #endif
+*)(
+    const SymbolTable&,
+    const std::vector<DynamicObject>&
+);
 
 class DynamicObject {
 private:
@@ -166,6 +173,11 @@ public:
         std::unique_ptr<Token> reference,
         size_t index,
         std::unique_ptr<DynamicObject> object
+    );
+
+    DynamicObject callFromNative(
+        const SymbolTable& symtab,
+        const std::vector<DynamicObject> args
     );
 
     std::string objectType();

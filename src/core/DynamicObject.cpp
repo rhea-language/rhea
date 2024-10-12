@@ -20,6 +20,7 @@
 #include <ast/expression/FunctionDeclarationExpression.hpp>
 #include <core/DynamicObject.hpp>
 #include <core/RegexWrapper.hpp>
+#include <core/SymbolTable.hpp>
 
 #include <cmath>
 
@@ -183,6 +184,15 @@ void DynamicObject::setArrayElement(
         );
 
     (*this->arrayValue)[index] = std::move(*object);
+}
+
+DynamicObject DynamicObject::callFromNative(
+    const SymbolTable& symtab,
+    const std::vector<DynamicObject> args
+) {
+    return !this->isNative() ?
+        this->getCallable()->call(symtab, args) :
+        this->getNativeFunction()(symtab, args);
 }
 
 std::string DynamicObject::objectType() {

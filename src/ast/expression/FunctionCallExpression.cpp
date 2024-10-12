@@ -49,7 +49,7 @@ DynamicObject FunctionCallExpression::visit(SymbolTable& symbols) {
                 "Native function is nil."
             );
 
-        return (*nativeFunc)(args);
+        return (*nativeFunc)(symbols, args);
     }
 
     return caller->call(symbols, args);

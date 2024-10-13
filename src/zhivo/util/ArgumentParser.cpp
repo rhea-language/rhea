@@ -43,7 +43,9 @@ void ArgumentParser::defineParameter(
 }
 
 void ArgumentParser::printAllParamWithDesc() const {
-    std::cout << std::endl << "\u001b[32mArguments\u001b[0m: ";
+    std::cout << std::endl
+        << "\u001b[32mArguments\u001b[0m: "
+        << std::endl;
 
     for(const auto& entry : parameters)
         std::cout << "  -" << entry.first

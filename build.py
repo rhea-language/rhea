@@ -103,6 +103,23 @@ cuda_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-cuda']
 
 try:
     os.makedirs(OUT_DIR, exist_ok=True)
+    os.makedirs(os.path.join(OUT_DIR, 'misc'), exist_ok=True)
+
+    if PLATFORM == 'Windows':
+        app_icon_path = os.path.join(os.path.join(OUT_DIR, 'misc'), 'appicon.rc')
+        app_icon = open(app_icon_path, "w")
+        app_icon.write('app_icon ICON "assets/zhivo-logo.ico"')
+        app_icon.close()
+
+        app_icon_obj = os.path.join(OUT_DIR, 'app_icon.o')
+        subprocess.run([
+            'windres',
+            app_icon_path,
+            '-o',
+            app_icon_obj
+        ], check=True)
+
+        exe_build_args.append(app_icon_obj)
 
     print("Executing:")
     print(' '.join(exe_build_args))

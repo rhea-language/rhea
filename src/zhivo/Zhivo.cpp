@@ -23,7 +23,7 @@
 
 auto printBanner() -> void {
     std::cout
-        << "\u001b[1;32mZhivo Programming Language "
+        << "\u001b[1;36mZhivo Programming Language "
         << ZHIVO_VERSION
         << "\u001b[0m"
         << std::endl
@@ -47,11 +47,13 @@ auto printBanner() -> void {
             << std::endl;
 }
 
-auto interpreter(int argc, char** argv) -> int {
+auto interpreter(std::vector<std::string> files) -> int {
     SymbolTable symbols;
+
     try {
-        for(int i = 1; i < argc; i++) {
-            Parser parser = Parser::fromFile(argv[i]);
+        std::vector<std::string>::iterator iterator;
+        for(iterator = files.begin(); iterator != files.end(); iterator++) {
+            Parser parser = Parser::fromFile(*iterator);
             parser.parse();
 
             for(const auto& statement : parser.getGlobalStatements())
@@ -129,9 +131,25 @@ auto interpreter(int argc, char** argv) -> int {
 }
 
 auto main(int argc, char** argv) -> int {
-    if(argc > 1)
-        return interpreter(argc, argv);
+    ArgumentParser argParse(argc, argv);
+    argParse.defineParameter("h", "help", "Show this help banner.");
+    argParse.defineParameter("t", "test", "Run the script files in test mode.");
+
+    if(argParse.hasParameter("h")) {
+        printBanner();
+        argParse.printAllParamWithDesc();
+        return 1;
+    }
+
+    if(argc > 1) {
+        if(argParse.hasParameter("t"))
+            Runtime::setTestMode(true);
+
+        return interpreter(argParse.getInputFiles());
+    }
 
     printBanner();
+    argParse.printAllParamWithDesc();
+
     return 1;
 }

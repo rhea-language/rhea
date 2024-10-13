@@ -26,6 +26,7 @@
 #include <zhivo/parser/LexicalAnalysisException.hpp>
 #include <zhivo/parser/Parser.hpp>
 #include <zhivo/parser/ParserException.hpp>
+#include <zhivo/util/ArgumentParser.hpp>
 
 #define ZHIVO_VERSION "(v1.0.0-beta)"
 

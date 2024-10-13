@@ -18,11 +18,15 @@
 
 #include <zhivo/ast/statement/TestStatement.hpp>
 #include <zhivo/core/DynamicObject.hpp>
+#include <zhivo/core/Runtime.hpp>
 #include <zhivo/core/SymbolTable.hpp>
 
 #include <iostream>
 
 DynamicObject TestStatement::visit(SymbolTable& symbols) {
+    if(!Runtime::isTestMode())
+        return {};
+
     auto startTime = std::chrono::high_resolution_clock::now();
     DynamicObject value = this->testBody->visit(symbols);
     auto elapsedTime = std::chrono::high_resolution_clock::now() - startTime;

@@ -23,7 +23,7 @@
 
 #include <memory>
 
-class ParallelExpression : public ASTNode {
+class ParallelExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> expression;
 

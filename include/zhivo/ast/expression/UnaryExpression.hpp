@@ -23,7 +23,7 @@
 #include <zhivo/core/DynamicObject.hpp>
 #include <zhivo/core/SymbolTable.hpp>
 
-class UnaryExpression : public ASTNode {
+class UnaryExpression final : public ASTNode {
 private:
     std::string op;
     std::unique_ptr<ASTNode> expression;

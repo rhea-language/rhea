@@ -25,7 +25,7 @@
 #include <memory>
 #include <vector>
 
-class LoopExpression : public ASTNode {
+class LoopExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> initial;
     std::unique_ptr<ASTNode> condition;

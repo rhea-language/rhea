@@ -25,7 +25,7 @@
 #include <memory>
 #include <vector>
 
-class ArrayAccessExpression : public ASTNode {
+class ArrayAccessExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> array;
     std::unique_ptr<ASTNode> index;

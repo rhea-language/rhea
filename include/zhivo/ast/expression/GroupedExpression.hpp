@@ -23,7 +23,7 @@
 #include <zhivo/core/DynamicObject.hpp>
 #include <zhivo/core/SymbolTable.hpp>
 
-class GroupedExpression : public ASTNode {
+class GroupedExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> expression;
 

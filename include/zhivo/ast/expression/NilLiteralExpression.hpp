@@ -23,7 +23,7 @@
 #include <zhivo/core/DynamicObject.hpp>
 #include <zhivo/core/SymbolTable.hpp>
 
-class NilLiteralExpression : public ASTNode {
+class NilLiteralExpression final : public ASTNode {
 public:
     explicit NilLiteralExpression(std::unique_ptr<Token> _address) {
         this->address = std::move(_address);

@@ -23,7 +23,7 @@
 
 #include <memory>
 
-class IfElseExpression : public ASTNode {
+class IfElseExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> condition;
     std::unique_ptr<ASTNode> thenBranch;

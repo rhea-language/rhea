@@ -25,7 +25,7 @@
 
 #include <string>
 
-class StringLiteralExpression : public ASTNode {
+class StringLiteralExpression final : public ASTNode {
 private:
     std::string value;
 

@@ -22,7 +22,7 @@
 #include <stdexcept>
 #include <string>
 
-class LexicalAnalysisException : public std::runtime_error {
+class LexicalAnalysisException final : public std::runtime_error {
 public:
     explicit LexicalAnalysisException(const std::string& message);
 };

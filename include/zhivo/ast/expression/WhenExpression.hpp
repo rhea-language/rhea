@@ -25,7 +25,7 @@
 #include <memory>
 #include <vector>
 
-class WhenExpression : public ASTNode {
+class WhenExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> expression;
     std::vector<std::pair<std::unique_ptr<ASTNode>, std::unique_ptr<ASTNode>>> cases;

@@ -23,7 +23,7 @@
 
 #include <unordered_map>
 
-class Runtime {
+class Runtime final {
 private:
     static bool testMode;
     static std::unordered_map<std::string, void*> nativeLibraries;

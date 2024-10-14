@@ -43,7 +43,7 @@ using NativeFunction = DynamicObject(
     const std::vector<DynamicObject>&
 );
 
-class DynamicObject {
+class DynamicObject final {
 private:
     DynamicObjectType type;
 

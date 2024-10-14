@@ -23,7 +23,7 @@
 
 #include <memory>
 
-class UnlessExpression : public ASTNode {
+class UnlessExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> condition;
     std::unique_ptr<ASTNode> thenBranch;

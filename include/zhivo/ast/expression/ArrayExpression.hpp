@@ -25,7 +25,7 @@
 #include <memory>
 #include <vector>
 
-class ArrayExpression : public ASTNode {
+class ArrayExpression final : public ASTNode {
 private:
     std::vector<std::unique_ptr<ASTNode>> elements;
 

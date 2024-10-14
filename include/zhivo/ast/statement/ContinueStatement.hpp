@@ -25,7 +25,7 @@
 #include <zhivo/core/SymbolTable.hpp>
 #include <zhivo/parser/Token.hpp>
 
-class ContinueStatement : public ASTNode {
+class ContinueStatement final : public ASTNode {
 public:
     explicit ContinueStatement(std::unique_ptr<Token> _address) {
         this->address = std::move(_address);

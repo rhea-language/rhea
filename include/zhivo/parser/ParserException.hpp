@@ -24,7 +24,7 @@
 #include <memory>
 #include <stdexcept>
 
-class ParserException : public std::runtime_error {
+class ParserException final : public std::runtime_error {
 private:
     std::unique_ptr<Token> address;
 

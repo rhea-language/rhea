@@ -21,7 +21,7 @@
 
 #include <zhivo/ast/ASTNode.hpp>
 
-class RenderExpression : public ASTNode {
+class RenderExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> expression;
     bool newLine;

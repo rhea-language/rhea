@@ -24,7 +24,7 @@
 #include <memory>
 #include <stdexcept>
 
-class ASTNodeException : public std::runtime_error {
+class ASTNodeException final : public std::runtime_error {
 private:
     std::unique_ptr<Token> address;
 

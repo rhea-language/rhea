@@ -23,7 +23,7 @@
 #include <zhivo/core/DynamicObject.hpp>
 #include <zhivo/core/SymbolTable.hpp>
 
-class NumberLiteralExpression : public ASTNode {
+class NumberLiteralExpression final : public ASTNode {
 private:
     double value;
 

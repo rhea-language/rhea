@@ -25,7 +25,7 @@
 
 #include <cmath>
 
-class BinaryExpression : public ASTNode {
+class BinaryExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> left;
     std::unique_ptr<ASTNode> right;

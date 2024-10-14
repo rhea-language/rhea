@@ -25,7 +25,7 @@
 
 #include <memory>
 
-class ReturnStatement : public ASTNode {
+class ReturnStatement final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> expression;
 

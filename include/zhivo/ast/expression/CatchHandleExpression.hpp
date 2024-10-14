@@ -26,7 +26,7 @@
 #include <memory>
 #include <vector>
 
-class CatchHandleExpression : public ASTNode {
+class CatchHandleExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> catchBlock;
     std::unique_ptr<ASTNode> handleBlock;

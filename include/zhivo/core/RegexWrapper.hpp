@@ -23,7 +23,7 @@
 #include <regex>
 #include <string>
 
-class RegexWrapper {
+class RegexWrapper final {
 private:
     std::string pattern;
     std::unique_ptr<std::regex> regex;

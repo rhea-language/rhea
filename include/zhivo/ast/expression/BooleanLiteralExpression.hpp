@@ -23,7 +23,7 @@
 #include <zhivo/core/DynamicObject.hpp>
 #include <zhivo/core/SymbolTable.hpp>
 
-class BooleanLiteralExpression : public ASTNode {
+class BooleanLiteralExpression final : public ASTNode {
 private:
     bool value;
 

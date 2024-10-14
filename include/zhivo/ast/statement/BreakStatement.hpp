@@ -25,7 +25,7 @@
 #include <zhivo/core/SymbolTable.hpp>
 #include <zhivo/parser/Token.hpp>
 
-class BreakStatement : public ASTNode {
+class BreakStatement final : public ASTNode {
 public:
     explicit BreakStatement(std::unique_ptr<Token> _address) {
         this->address = std::move(_address);

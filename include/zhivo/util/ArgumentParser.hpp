@@ -23,7 +23,7 @@
 #include <unordered_map>
 #include <vector>
 
-class ArgumentParser {
+class ArgumentParser final {
 private:
     int argCount;
     char** argValues;

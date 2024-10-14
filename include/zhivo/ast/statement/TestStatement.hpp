@@ -24,7 +24,7 @@
 #include <chrono>
 #include <memory>
 
-class TestStatement : public ASTNode {
+class TestStatement final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> testName;
     std::unique_ptr<ASTNode> testBody;

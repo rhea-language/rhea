@@ -23,7 +23,7 @@
 
 #include <memory>
 
-class ExpressionStatement : public ASTNode {
+class ExpressionStatement final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> expression;
 

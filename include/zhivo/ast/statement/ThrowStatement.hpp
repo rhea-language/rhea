@@ -25,7 +25,7 @@
 
 #include <memory>
 
-class ThrowStatement : public ASTNode {
+class ThrowStatement final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> expression;
 

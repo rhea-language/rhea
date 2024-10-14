@@ -27,7 +27,7 @@
 #include <string>
 #include <vector>
 
-class FunctionDeclarationExpression : public ASTNode {
+class FunctionDeclarationExpression final : public ASTNode {
 private:
     std::vector<std::unique_ptr<Token>> parameters;
     std::unique_ptr<ASTNode> body;

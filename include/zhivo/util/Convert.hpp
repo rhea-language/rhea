@@ -28,7 +28,7 @@
 
 namespace ZhivoUtil {
 
-class Convert {
+class Convert final {
 public:
     static double toDouble(const unsigned char* bytes, size_t length);
     static std::vector<unsigned char> toBytes(double number);

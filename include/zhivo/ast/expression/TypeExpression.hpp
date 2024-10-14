@@ -25,7 +25,7 @@
 
 #include <string>
 
-class TypeExpression : public ASTNode {
+class TypeExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> expression;
 

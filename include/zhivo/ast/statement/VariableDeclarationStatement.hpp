@@ -25,7 +25,7 @@
 #include <map>
 #include <memory>
 
-class VariableDeclarationStatement : public ASTNode {
+class VariableDeclarationStatement final : public ASTNode {
 private:
     std::map<Token, std::unique_ptr<ASTNode>> declarations;
     std::string nativePath;

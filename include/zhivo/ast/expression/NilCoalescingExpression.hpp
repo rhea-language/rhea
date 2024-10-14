@@ -22,7 +22,7 @@
 #include <zhivo/ast/ASTNode.hpp>
 #include <zhivo/ast/TerminativeSignal.hpp>
 
-class NilCoalescingExpression : public ASTNode {
+class NilCoalescingExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> left;
     std::unique_ptr<ASTNode> right;

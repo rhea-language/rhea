@@ -24,7 +24,7 @@
 #include <zhivo/core/SymbolTable.hpp>
 #include <zhivo/parser/Token.hpp>
 
-class WaitStatement : public ASTNode {
+class WaitStatement final : public ASTNode {
 public:
     explicit WaitStatement(std::unique_ptr<Token> _address) {
         this->address = std::move(_address);

@@ -32,7 +32,7 @@
 #include <unordered_set>
 #include <vector>
 
-class Tokenizer {
+class Tokenizer final {
 private:
     std::string source;
     std::string fileName;

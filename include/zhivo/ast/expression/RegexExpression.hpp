@@ -24,7 +24,7 @@
 #include <zhivo/core/RegexWrapper.hpp>
 #include <zhivo/core/SymbolTable.hpp>
 
-class RegexExpression : public ASTNode {
+class RegexExpression final : public ASTNode {
 private:
     std::string regExpression;
 public:

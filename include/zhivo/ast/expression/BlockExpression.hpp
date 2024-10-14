@@ -25,7 +25,7 @@
 #include <memory>
 #include <vector>
 
-class BlockExpression : public ASTNode {
+class BlockExpression final : public ASTNode {
 private:
     std::vector<std::unique_ptr<ASTNode>> statements;
 

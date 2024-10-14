@@ -25,7 +25,7 @@
 #include <memory>
 #include <vector>
 
-class WhileExpression : public ASTNode {
+class WhileExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> expression;
     std::unique_ptr<ASTNode> body;

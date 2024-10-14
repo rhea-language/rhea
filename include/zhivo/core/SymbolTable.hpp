@@ -29,7 +29,7 @@
 #include <unordered_map>
 #include <vector>
 
-class SymbolTable {
+class SymbolTable final {
 private:
     SymbolTable* parent;
     std::unordered_map<std::string, DynamicObject> table;

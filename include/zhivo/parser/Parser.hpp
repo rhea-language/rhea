@@ -26,7 +26,7 @@
 #include <memory>
 #include <vector>
 
-class Parser {
+class Parser final {
 private:
     std::vector<std::unique_ptr<ASTNode>> globalStatements;
     std::vector<Token> tokens;

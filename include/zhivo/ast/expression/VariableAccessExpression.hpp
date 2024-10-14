@@ -25,7 +25,7 @@
 
 #include <string>
 
-class VariableAccessExpression : public ASTNode {
+class VariableAccessExpression final : public ASTNode {
 private:
     std::unique_ptr<Token> name;
 

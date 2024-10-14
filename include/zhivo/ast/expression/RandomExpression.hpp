@@ -23,7 +23,7 @@
 
 #include <memory>
 
-class RandomExpression : public ASTNode {
+class RandomExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> thenBranch;
     std::unique_ptr<ASTNode> elseBranch;

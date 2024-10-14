@@ -23,7 +23,7 @@
 #include <unordered_set>
 #include <vector>
 
-class OperatorsAndKeys {
+class OperatorsAndKeys final {
 public:
     static const std::vector<std::string> operators;
     static const std::unordered_set<std::string> keywords;

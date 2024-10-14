@@ -27,7 +27,7 @@ namespace ZhivoUtil {
 DynamicObject vector2Object(const std::vector<double>& vec);
 std::vector<double> object2Vector(const DynamicObject object);
 
-class VectorMath {
+class VectorMath final {
 public:
     static std::vector<double> add(
         std::vector<double> left,

@@ -28,7 +28,7 @@
 #include <string>
 #include <vector>
 
-class FunctionCallExpression : public ASTNode {
+class FunctionCallExpression final : public ASTNode {
 private:
     std::unique_ptr<ASTNode> callable;
     std::vector<std::unique_ptr<ASTNode>> arguments;

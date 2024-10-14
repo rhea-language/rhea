@@ -22,7 +22,7 @@
 #include <zhivo/parser/TokenType.hpp>
 #include <string>
 
-class Token {
+class Token final {
 private:
     std::string image;
     std::string fileName;

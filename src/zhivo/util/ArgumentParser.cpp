@@ -64,11 +64,27 @@ bool ArgumentParser::hasParameter(const std::string& paramShort) const {
 
 std::vector<std::string> ArgumentParser::getInputFiles() const {
     std::vector<std::string> inputFiles;
+
     for(int i = 1; i < argCount; ++i) {
         std::string arg = argValues[i];
-        if(arg[0] != '-' ||
-            parameters.find(arg.substr(1)) == parameters.end())
-            inputFiles.push_back(arg);
+
+        if(arg.rfind("--", 0) == 0) {
+            std::string paramLong = arg.substr(2);
+            if(std::any_of(
+                parameters.begin(),
+                parameters.end(), 
+                [&](const auto& pair) {
+                    return pair.second == paramLong;
+                }
+            )) continue;
+        }
+        else if(arg[0] == '-') {
+            std::string paramShort = arg.substr(1);
+            if(parameters.find(paramShort) != parameters.end())
+                continue;
+        }
+
+        inputFiles.push_back(arg);
     }
 
     return inputFiles;

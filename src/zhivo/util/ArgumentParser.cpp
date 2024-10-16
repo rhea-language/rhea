@@ -37,9 +37,9 @@ void ArgumentParser::defineParameter(
     const std::string& paramLong,
     const std::string& description
 ) {
-    parameters[paramShort] = paramLong;
-    descriptions[paramShort] = description;
-    descriptions[paramLong] = description;
+    this->parameters[paramShort] = paramLong;
+    this->descriptions[paramShort] = description;
+    this->descriptions[paramLong] = description;
 }
 
 void ArgumentParser::printAllParamWithDesc() const {
@@ -50,29 +50,33 @@ void ArgumentParser::printAllParamWithDesc() const {
     for(const auto& entry : parameters)
         std::cout << "  -" << entry.first
             << ", --" << entry.second
-            << ": " << descriptions.at(entry.first)
+            << ": " << this->descriptions.at(entry.first)
             << std::endl;
 }
 
 bool ArgumentParser::hasParameter(const std::string& paramShort) const {
-    std::string paramLong = parameters.at(paramShort);
+    std::string paramLong = this->parameters.at(paramShort);
     return std::any_of(argValues, argValues + argCount, [&](const char* arg) {
         return arg == std::string("-" + paramShort) ||
             arg == std::string("--" + paramLong);
     });
 }
 
+std::string ArgumentParser::getProgramFileName() const {
+    return this->argValues[0];
+}
+
 std::vector<std::string> ArgumentParser::getInputFiles() const {
     std::vector<std::string> inputFiles;
 
     for(int i = 1; i < argCount; ++i) {
-        std::string arg = argValues[i];
+        std::string arg = this->argValues[i];
 
         if(arg.rfind("--", 0) == 0) {
             std::string paramLong = arg.substr(2);
             if(std::any_of(
-                parameters.begin(),
-                parameters.end(), 
+                this->parameters.begin(),
+                this->parameters.end(), 
                 [&](const auto& pair) {
                     return pair.second == paramLong;
                 }
@@ -80,7 +84,7 @@ std::vector<std::string> ArgumentParser::getInputFiles() const {
         }
         else if(arg[0] == '-') {
             std::string paramShort = arg.substr(1);
-            if(parameters.find(paramShort) != parameters.end())
+            if(this->parameters.find(paramShort) != this->parameters.end())
                 continue;
         }
 

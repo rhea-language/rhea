@@ -52,6 +52,8 @@ public:
 
     void printAllParamWithDesc() const;
     bool hasParameter(const std::string& paramShort) const;
+
+    std::string getProgramFileName() const;
     std::vector<std::string> getInputFiles() const;
 };
 

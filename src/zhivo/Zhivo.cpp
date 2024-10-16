@@ -21,15 +21,24 @@
 #include <iostream>
 #include <stdexcept>
 
-auto printBanner() -> void {
+auto printBanner(ArgumentParser argParse) -> void {
     std::cout
         << "\u001b[1;36mZhivo Programming Language "
         << ZHIVO_VERSION
         << "\u001b[0m"
-        << std::endl
         << std::endl;
 
+    std::cout << std::endl
+        << "\u001b[32mUsage\u001b[0m:"
+        << std::endl
+        << "  "
+        << argParse.getProgramFileName()
+        << " [args] <file-list>"
+        << std::endl;
+    argParse.printAllParamWithDesc();
+
     std::cout
+        << std::endl
         << "\u001b[3;37mZhivo is free software, please check the source for copying"
             << std::endl
         << "terms and conditions. This includes no warranty, not even"
@@ -136,8 +145,7 @@ auto main(int argc, char** argv) -> int {
     argParse.defineParameter("t", "test", "Run the script files in test mode.");
 
     if(argParse.hasParameter("h")) {
-        printBanner();
-        argParse.printAllParamWithDesc();
+        printBanner(argParse);
         return 1;
     }
 
@@ -148,8 +156,6 @@ auto main(int argc, char** argv) -> int {
         return interpreter(argParse.getInputFiles());
     }
 
-    printBanner();
-    argParse.printAllParamWithDesc();
-
+    printBanner(argParse);
     return 1;
 }

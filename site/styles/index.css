@@ -1,0 +1,26 @@
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.header-section {
+    height: 100%;
+    position: relative;
+    filter: brightness(60%);
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("../assets/background-1.png");
+}
+
+.header-section-content {
+    position: absolute;
+    display: block;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-shadow: 1px 1px 8px rgba(28, 29, 31, 0.65);
+}

@@ -28,5 +28,20 @@ html, body {
 @media only screen and (max-width: 771px) {
     .header-section {
         background-position: 12%;
+        animation: move-bg 75s linear infinite;
+    }
+}
+
+@keyframes move-bg {
+    0% {
+        background-position: left center;
+    }
+
+    50% {
+        background-position: right center;
+    }
+
+    100% {
+        background-position: left center;
     }
 }

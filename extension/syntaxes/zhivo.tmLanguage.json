@@ -11,7 +11,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.zhivo",
-				"match": "\\b(break|continue|ret|throw|if|else|unless|when|do|while|loop|random|catch|handle|then|func|use|test|render|type|true|false|maybe|nil)\\b"
+				"match": "\\b(while|loop|render|unless|nil|if|else|when|break|continue|random|func|ret|true|false|catch|handle|throw|maybe|then|type|use|test|val|parallel|wait)\\b"
 			}]
 		},
 		"digits": {

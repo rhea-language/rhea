@@ -19,10 +19,13 @@ import platform
 import subprocess
 import sys
 
-PLATFORM = platform.system()
 COMPILER = 'g++'
 OUT_DIR = 'dist'
-APP_ICON_PATH = 'app_icon.rc'
+
+APP_ICON_PATH = os.path.join(OUT_DIR, 'app_icon.rc')
+APP_ICON_OBJ = os.path.join(OUT_DIR, 'app_icon.o')
+
+PLATFORM = platform.system()
 OUTPUT_EXECUTABLE = os.path.join(
     'dist',
     'zhivo-' +
@@ -134,16 +137,15 @@ try:
         app_icon.write('app_icon ICON "assets/zhivo-logo.ico"')
         app_icon.close()
 
-        app_icon_obj = os.path.join(OUT_DIR, 'app_icon.o')
         subprocess.run([
             'windres',
             APP_ICON_PATH,
             '-o',
-            app_icon_obj
+            APP_ICON_OBJ
         ], check=True)
 
-        exe_build_args.append(app_icon_obj)
-        cuda_build_args.append(app_icon_obj)
+        exe_build_args.append(APP_ICON_OBJ)
+        cuda_build_args.append(APP_ICON_OBJ)
 
     print("Executing:")
     print(' '.join(exe_build_args))
@@ -162,9 +164,12 @@ try:
         print(' '.join(cuda_build_args))
         subprocess.run(cuda_build_args, check=True)
 
-except subprocess.CalledProcessError as e:
+except Exception as e:
     print(f"Compilation failed with error: {e}")
 
-print("Performing quick clean up...")
-os.remove('app_icon.rc')
-os.remove('app_icon.o')
+finally:
+    print("Performing quick clean up...")
+
+    if PLATFORM == 'Windows':
+        os.remove(APP_ICON_PATH)
+        os.remove(APP_ICON_OBJ)

@@ -48,46 +48,46 @@ jobs:
       - name: Run test scripts (x86)
         run: |
           start=$(date +%s%3N)
-          ./dist/zhivo-linux-x86_64 ./test/arithmetic.zhv
-          ./dist/zhivo-linux-x86_64 ./test/array.zhv
-          ./dist/zhivo-linux-x86_64 ./test/digits.zhv
-          ./dist/zhivo-linux-x86_64 ./test/error_handling.zhv
-          ./dist/zhivo-linux-x86_64 ./test/flow.zhv
-          ./dist/zhivo-linux-x86_64 ./test/func.zhv
-          ./dist/zhivo-linux-x86_64 ./test/loop.zhv
-          ./dist/zhivo-linux-x86_64 ./test/parallel.zhv
-          ./dist/zhivo-linux-x86_64 ./test/regex.zhv
-          ./dist/zhivo-linux-x86_64 ./test/test.zhv
-          ./dist/zhivo-linux-x86_64 ./test/types.zhv
+          ./dist/zhivo-linux-x86_64-omp ./test/arithmetic.zhv
+          ./dist/zhivo-linux-x86_64-omp ./test/array.zhv
+          ./dist/zhivo-linux-x86_64-omp ./test/digits.zhv
+          ./dist/zhivo-linux-x86_64-omp ./test/error_handling.zhv
+          ./dist/zhivo-linux-x86_64-omp ./test/flow.zhv
+          ./dist/zhivo-linux-x86_64-omp ./test/func.zhv
+          ./dist/zhivo-linux-x86_64-omp ./test/loop.zhv
+          ./dist/zhivo-linux-x86_64-omp ./test/parallel.zhv
+          ./dist/zhivo-linux-x86_64-omp ./test/regex.zhv
+          ./dist/zhivo-linux-x86_64-omp ./test/test.zhv
+          ./dist/zhivo-linux-x86_64-omp ./test/types.zhv
           end=$(date +%s%3N)
           echo "Elapsed time: $((end - start)) ms"
 
       - name: Run test scripts (CUDA)
         run: |
           start=$(date +%s%3N)
-          ./dist/zhivo-linux-x86_64-cuda ./test/arithmetic.zhv
-          ./dist/zhivo-linux-x86_64-cuda ./test/array.zhv
-          ./dist/zhivo-linux-x86_64-cuda ./test/digits.zhv
-          ./dist/zhivo-linux-x86_64-cuda ./test/error_handling.zhv
-          ./dist/zhivo-linux-x86_64-cuda ./test/flow.zhv
-          ./dist/zhivo-linux-x86_64-cuda ./test/func.zhv
-          ./dist/zhivo-linux-x86_64-cuda ./test/loop.zhv
-          ./dist/zhivo-linux-x86_64-cuda ./test/parallel.zhv
-          ./dist/zhivo-linux-x86_64-cuda ./test/regex.zhv
-          ./dist/zhivo-linux-x86_64-cuda ./test/test.zhv
-          ./dist/zhivo-linux-x86_64-cuda ./test/types.zhv
+          ./dist/zhivo-linux-x86_64-nvidia ./test/arithmetic.zhv
+          ./dist/zhivo-linux-x86_64-nvidia ./test/array.zhv
+          ./dist/zhivo-linux-x86_64-nvidia ./test/digits.zhv
+          ./dist/zhivo-linux-x86_64-nvidia ./test/error_handling.zhv
+          ./dist/zhivo-linux-x86_64-nvidia ./test/flow.zhv
+          ./dist/zhivo-linux-x86_64-nvidia ./test/func.zhv
+          ./dist/zhivo-linux-x86_64-nvidia ./test/loop.zhv
+          ./dist/zhivo-linux-x86_64-nvidia ./test/parallel.zhv
+          ./dist/zhivo-linux-x86_64-nvidia ./test/regex.zhv
+          ./dist/zhivo-linux-x86_64-nvidia ./test/test.zhv
+          ./dist/zhivo-linux-x86_64-nvidia ./test/types.zhv
           end=$(date +%s%3N)
           echo "Elapsed time: $((end - start)) ms"
 
       - name: Run examples (x86)
         run: |
-          /usr/bin/time -v ./dist/zhivo-linux-x86_64 ./examples/hello.zhv
-          /usr/bin/time -v ./dist/zhivo-linux-x86_64 ./examples/99-beers.zhv
+          /usr/bin/time -v ./dist/zhivo-linux-x86_64-omp ./examples/hello.zhv
+          /usr/bin/time -v ./dist/zhivo-linux-x86_64-omp ./examples/99-beers.zhv
 
       - name: Run examples (CUDA)
         run: |
-          /usr/bin/time -v ./dist/zhivo-linux-x86_64-cuda ./examples/hello.zhv
-          /usr/bin/time -v ./dist/zhivo-linux-x86_64-cuda ./examples/99-beers.zhv
+          /usr/bin/time -v ./dist/zhivo-linux-x86_64-nvidia ./examples/hello.zhv
+          /usr/bin/time -v ./dist/zhivo-linux-x86_64-nvidia ./examples/99-beers.zhv
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

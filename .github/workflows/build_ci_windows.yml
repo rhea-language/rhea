@@ -50,41 +50,41 @@ jobs:
 
       - name: Run test scripts (AMD64)
         run: |
-          dist\zhivo-win32-amd64.exe test\arithmetic.zhv
-          dist\zhivo-win32-amd64.exe test\array.zhv
-          dist\zhivo-win32-amd64.exe test\digits.zhv
-          dist\zhivo-win32-amd64.exe test\error_handling.zhv
-          dist\zhivo-win32-amd64.exe test\flow.zhv
-          dist\zhivo-win32-amd64.exe test\func.zhv
-          dist\zhivo-win32-amd64.exe test\loop.zhv
-          dist\zhivo-win32-amd64.exe test\parallel.zhv
-          dist\zhivo-win32-amd64.exe test\regex.zhv
-          dist\zhivo-win32-amd64.exe test\test.zhv
-          dist\zhivo-win32-amd64.exe test\types.zhv
+          dist\zhivo-win32-amd64-omp.exe test\arithmetic.zhv
+          dist\zhivo-win32-amd64-omp.exe test\array.zhv
+          dist\zhivo-win32-amd64-omp.exe test\digits.zhv
+          dist\zhivo-win32-amd64-omp.exe test\error_handling.zhv
+          dist\zhivo-win32-amd64-omp.exe test\flow.zhv
+          dist\zhivo-win32-amd64-omp.exe test\func.zhv
+          dist\zhivo-win32-amd64-omp.exe test\loop.zhv
+          dist\zhivo-win32-amd64-omp.exe test\parallel.zhv
+          dist\zhivo-win32-amd64-omp.exe test\regex.zhv
+          dist\zhivo-win32-amd64-omp.exe test\test.zhv
+          dist\zhivo-win32-amd64-omp.exe test\types.zhv
 
       - name: Run test scripts (CUDA)
         run: |
-          dist\zhivo-win32-amd64-cuda.exe test\arithmetic.zhv
-          dist\zhivo-win32-amd64-cuda.exe test\array.zhv
-          dist\zhivo-win32-amd64-cuda.exe test\digits.zhv
-          dist\zhivo-win32-amd64-cuda.exe test\error_handling.zhv
-          dist\zhivo-win32-amd64-cuda.exe test\flow.zhv
-          dist\zhivo-win32-amd64-cuda.exe test\func.zhv
-          dist\zhivo-win32-amd64-cuda.exe test\loop.zhv
-          dist\zhivo-win32-amd64-cuda.exe test\parallel.zhv
-          dist\zhivo-win32-amd64-cuda.exe test\regex.zhv
-          dist\zhivo-win32-amd64-cuda.exe test\test.zhv
-          dist\zhivo-win32-amd64-cuda.exe test\types.zhv
+          dist\zhivo-win32-amd64-nvidia.exe test\arithmetic.zhv
+          dist\zhivo-win32-amd64-nvidia.exe test\array.zhv
+          dist\zhivo-win32-amd64-nvidia.exe test\digits.zhv
+          dist\zhivo-win32-amd64-nvidia.exe test\error_handling.zhv
+          dist\zhivo-win32-amd64-nvidia.exe test\flow.zhv
+          dist\zhivo-win32-amd64-nvidia.exe test\func.zhv
+          dist\zhivo-win32-amd64-nvidia.exe test\loop.zhv
+          dist\zhivo-win32-amd64-nvidia.exe test\parallel.zhv
+          dist\zhivo-win32-amd64-nvidia.exe test\regex.zhv
+          dist\zhivo-win32-amd64-nvidia.exe test\test.zhv
+          dist\zhivo-win32-amd64-nvidia.exe test\types.zhv
 
       - name: Run examples (AMD64)
         run: |
-          dist\zhivo-win32-amd64.exe examples\99-beers.zhv
-          dist\zhivo-win32-amd64.exe examples\hello.zhv
+          dist\zhivo-win32-amd64-omp.exe examples\99-beers.zhv
+          dist\zhivo-win32-amd64-omp.exe examples\hello.zhv
 
       - name: Run examples (CUDA)
         run: |
-          dist\zhivo-win32-amd64-cuda.exe examples\99-beers.zhv
-          dist\zhivo-win32-amd64-cuda.exe examples\hello.zhv
+          dist\zhivo-win32-amd64-nvidia.exe examples\99-beers.zhv
+          dist\zhivo-win32-amd64-nvidia.exe examples\hello.zhv
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

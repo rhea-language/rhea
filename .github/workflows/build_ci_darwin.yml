@@ -41,22 +41,22 @@ jobs:
 
       - name: Run test scripts (x86)
         run: |
-          ./dist/zhivo-darwin-arm64 ./test/arithmetic.zhv
-          ./dist/zhivo-darwin-arm64 ./test/array.zhv
-          ./dist/zhivo-darwin-arm64 ./test/digits.zhv
-          ./dist/zhivo-darwin-arm64 ./test/error_handling.zhv
-          ./dist/zhivo-darwin-arm64 ./test/flow.zhv
-          ./dist/zhivo-darwin-arm64 ./test/func.zhv
-          ./dist/zhivo-darwin-arm64 ./test/loop.zhv
-          ./dist/zhivo-darwin-arm64 ./test/parallel.zhv
-          ./dist/zhivo-darwin-arm64 ./test/regex.zhv
-          ./dist/zhivo-darwin-arm64 ./test/test.zhv
-          ./dist/zhivo-darwin-arm64 ./test/types.zhv
+          ./dist/zhivo-darwin-arm64-omp ./test/arithmetic.zhv
+          ./dist/zhivo-darwin-arm64-omp ./test/array.zhv
+          ./dist/zhivo-darwin-arm64-omp ./test/digits.zhv
+          ./dist/zhivo-darwin-arm64-omp ./test/error_handling.zhv
+          ./dist/zhivo-darwin-arm64-omp ./test/flow.zhv
+          ./dist/zhivo-darwin-arm64-omp ./test/func.zhv
+          ./dist/zhivo-darwin-arm64-omp ./test/loop.zhv
+          ./dist/zhivo-darwin-arm64-omp ./test/parallel.zhv
+          ./dist/zhivo-darwin-arm64-omp ./test/regex.zhv
+          ./dist/zhivo-darwin-arm64-omp ./test/test.zhv
+          ./dist/zhivo-darwin-arm64-omp ./test/types.zhv
 
       - name: Run examples (x86)
         run: |
-          ./dist/zhivo-darwin-arm64 ./examples/hello.zhv
-          ./dist/zhivo-darwin-arm64 ./examples/99-beers.zhv
+          ./dist/zhivo-darwin-arm64-omp ./examples/hello.zhv
+          ./dist/zhivo-darwin-arm64-omp ./examples/99-beers.zhv
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

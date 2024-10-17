@@ -10,6 +10,7 @@ on:
       - lib/**
       - src/**
       - test/**
+      - build.py
     branches:
       - main
 

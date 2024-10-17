@@ -30,10 +30,17 @@ OUTPUT_EXECUTABLE = os.path.join(
 )
 
 cpp_files = []
+cc_files = []
+
 for root, dirs, files in os.walk('src'):
     for file in files:
         if file.endswith('.cpp'):
             cpp_files.append(os.path.join(root, file))
+
+for root, dirs, files in os.walk('lib'):
+    for file in files:
+        if file.endswith('.cc'):
+            cc_files.append(os.path.join(root, file))
 
 if not cpp_files:
     print("No .cpp files found in the src directory.")
@@ -85,13 +92,28 @@ if PLATFORM == 'Darwin':
     exe_build_args.remove('-mfpmath=sse')
     exe_build_args.remove('-s')
 
+rt_bin = os.path.join('dist', 'zhivocore.a')
 rt_build_args = exe_build_args + cpp_files + [
     '-shared',
     '-o',
-    os.path.join('dist', 'zhivocore.a'),
+    rt_bin,
+]
+
+lib_bin = os.path.join('dist', 'stdzhv1.0')
+if PLATFORM == 'Windows':
+    lib_bin = lib_bin + ".dll"
+else:
+    lib_bin = lib_bin + ".so"
+
+lib_build_args = [
+    COMPILER, '-Iinclude',
+    '-shared', '-o',
+    lib_bin,
+    rt_bin
 ]
 
 exe_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE]
+lib_build_args += cc_files
 cuda_build_args = ['nvcc']
 
 if PLATFORM == 'Windows':
@@ -128,6 +150,10 @@ try:
     print("Executing:")
     print(' '.join(rt_build_args))
     subprocess.run(rt_build_args, check=True)
+
+    print("Executing:")
+    print(' '.join(lib_build_args))
+    subprocess.run(lib_build_args, check=True)
 
     if PLATFORM != 'Darwin':
         print("Executing:")

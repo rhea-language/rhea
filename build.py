@@ -116,6 +116,9 @@ exe_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE]
 lib_build_args += cc_files
 cuda_build_args = ['nvcc']
 
+if PLATFORM == 'Linux':
+    lib_build_args.append('-fPIC')
+
 if PLATFORM == 'Windows':
     cuda_build_args.append('-Xcompiler')
     cuda_build_args.append('/std:c++17')

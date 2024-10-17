@@ -7,6 +7,7 @@ on:
       - assets/**
       - examples/**
       - include/**
+      - lib/**
       - src/**
       - test/**
     branches:
@@ -55,3 +56,9 @@ jobs:
         run: |
           ./dist/zhivo-darwin-arm64 ./examples/hello.zhv
           ./dist/zhivo-darwin-arm64 ./examples/99-beers.zhv
+
+      - name: Upload dist folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: zhivo-linux-dist
+          path: dist/

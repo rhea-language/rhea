@@ -6,6 +6,7 @@ on:
       - .github/workflows/**
       - assets/**
       - examples/**
+      - lib/**
       - include/**
       - src/**
       - test/**
@@ -86,3 +87,9 @@ jobs:
         run: |
           /usr/bin/time -v ./dist/zhivo-linux-x86_64-cuda ./examples/hello.zhv
           /usr/bin/time -v ./dist/zhivo-linux-x86_64-cuda ./examples/99-beers.zhv
+
+      - name: Upload dist folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: zhivo-linux-dist
+          path: dist/

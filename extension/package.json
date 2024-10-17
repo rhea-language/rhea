@@ -1,0 +1,32 @@
+{
+    "name": "zhivo-syntax-highlighting",
+    "displayName": "Zhivo",
+    "description": "Zhivo language and syntax highlighting extension.",
+    "version": "0.0.1",
+    "icon": "../assets/zhivo-logo.png",
+    "publisher": "Nathanne Isip",
+    "repository": "https://github.com/nthnn/zhivo",
+    "engines": {
+        "vscode": "^1.91.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "zhivo",
+            "aliases": ["Zhivo", "zhivo"],
+            "extensions": [".zhv"],
+            "configuration": "./language-configuration.json",
+            "icon": {
+                "light": "../assets/zhivo-logo.png",
+                "dark": "../assets/zhivo-logo.png"
+            }
+        }],
+        "grammars": [{
+            "language": "zhivo",
+            "scopeName": "source.zhivo",
+            "path": "./syntaxes/zhivo.tmLanguage.json"
+        }]
+    }
+}

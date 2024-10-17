@@ -145,6 +145,7 @@ try:
         ], check=True)
 
         exe_build_args.append(app_icon_obj)
+        cuda_build_args.append(app_icon_obj)
 
     print("Executing:")
     print(' '.join(exe_build_args))

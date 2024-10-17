@@ -1,0 +1,59 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Zhivo",
+	"patterns": [
+		{ "include": "#keywords" },
+		{ "include": "#strings" },
+		{ "include": "#digits" },
+		{ "include": "#comments" }
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.zhivo",
+				"match": "\\b(break|continue|ret|throw|if|else|unless|when|do|while|loop|random|catch|handle|then|func|use|test|render|type|true|false|maybe|nil)\\b"
+			}]
+		},
+		"digits": {
+			"patterns": [{
+				"name": "digit.numberic.zhivo",
+				"match": "\\b(0b[01]+|0t[0-2]+|0c[0-7]+|0x[0-9a-fA-F]+|\\d+(\\.\\d*)?)\\b"
+			}]
+		},
+		"comments": {
+			"patterns": [{
+				"name": "comment.line.zhivo",
+				"begin": "#",
+				"beginCaptures": {
+				  	"0": {
+						"name": "punctuation.definition.comment.zhivo"
+					}
+				},
+				"end": "$"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.zhivo",
+			"begin": "\"",
+			"end": "\"",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.begin.zhivo"
+				}
+			},
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.end.zhivo"
+				}
+			},
+			"patterns": [
+				{
+					"name": "constant.character.escape.zhivo",
+					"match": "\\\\[btnfr\"\\\\]"
+				}
+			]
+		}
+	},
+	"fileTypes": ["zhv"],
+	"scopeName": "source.zhivo"
+}

@@ -22,6 +22,7 @@ import sys
 PLATFORM = platform.system()
 COMPILER = 'g++'
 OUT_DIR = 'dist'
+APP_ICON_PATH = 'app_icon.rc'
 OUTPUT_EXECUTABLE = os.path.join(
     'dist',
     'zhivo-' +
@@ -92,7 +93,7 @@ if PLATFORM == 'Darwin':
     exe_build_args.remove('-mfpmath=sse')
     exe_build_args.remove('-s')
 
-rt_bin = os.path.join('dist', 'zhivocore.a')
+rt_bin = os.path.join('dist', 'zhivocore-1.0.a')
 rt_build_args = exe_build_args + cpp_files + [
     '-shared',
     '-o',
@@ -112,7 +113,7 @@ lib_build_args = [
     rt_bin
 ]
 
-exe_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE]
+exe_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-omp']
 lib_build_args += cc_files
 cuda_build_args = ['nvcc']
 
@@ -124,22 +125,19 @@ if PLATFORM == 'Windows':
     cuda_build_args.append('/std:c++17')
 
 cuda_build_args.append('-Iinclude')
-cuda_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-cuda']
+cuda_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-nvidia']
 
 try:
     os.makedirs(OUT_DIR, exist_ok=True)
-    os.makedirs(os.path.join(OUT_DIR, 'misc'), exist_ok=True)
-
     if PLATFORM == 'Windows':
-        app_icon_path = os.path.join(os.path.join(OUT_DIR, 'misc'), 'appicon.rc')
-        app_icon = open(app_icon_path, "w")
+        app_icon = open(APP_ICON_PATH, "w")
         app_icon.write('app_icon ICON "assets/zhivo-logo.ico"')
         app_icon.close()
 
         app_icon_obj = os.path.join(OUT_DIR, 'app_icon.o')
         subprocess.run([
             'windres',
-            app_icon_path,
+            APP_ICON_PATH,
             '-o',
             app_icon_obj
         ], check=True)
@@ -166,3 +164,7 @@ try:
 
 except subprocess.CalledProcessError as e:
     print(f"Compilation failed with error: {e}")
+
+print("Performing quick clean up...")
+os.remove('app_icon.rc')
+os.remove('app_icon.o')

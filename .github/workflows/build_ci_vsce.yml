@@ -3,6 +3,7 @@ name: VSCode Extension Build
 on:
   push:
     paths:
+      - .github/workflows/**
       - extension/**
     branches:
       - main

@@ -88,7 +88,7 @@
                         </div>
 
                         <div class="col-lg-6">
-                            <a href="getting-started.html" class="btn btn-lg btn-outline-light text-white shadow w-100">Get started with Zhivo</a>
+                            <a href="getting-started.html" class="btn btn-lg btn-outline-light text-white shadow w-100 get-started-btn">Get started with Zhivo</a>
                         </div>
                     </div>
 
@@ -101,27 +101,30 @@
                             <span class="window-dot" style="background:#ed594a"></span>
                             <span class="window-dot" style="background:#fdd800"></span>
                             <span class="window-dot" style="background:#5ac05a"></span>
-                            <span class="text-dark d-inline-block ms-2">99-Beers-on-the-Wall.zhv</span>
+                            <span class="text-dark d-inline-block ms-2">Zhivo Basic Examples</span>
                         </div>
-                    
-                        <div class="window-content">
-                            <pre><span class="code-comment">#!/bin/zhivo</span>
 
-<span class="code-keyword">val</span> <span class="code-identifier">count</span> = <span class="code-digits">99</span>;
-
-<span class="code-keyword">while</span>(<span class="code-identifier">count</span> > <span class="code-digits">0</span>) {
-    <span class="code-keyword">val</span> <span class="code-identifier">bottle</span> = <span class="code-keyword">if</span>(<span class="code-identifier">count</span> == <span class="code-digits">1</span>) <span class="code-string">&quot;bottle&quot;</span> <span class="code-keyword">else</span> <span class="code-string">&quot;bottles&quot;</span>;
-
-    <span class="code-keyword">render</span>! <span class="code-identifier">count</span> + <span class="code-string">&quot; &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of beer on the wall&quot;</span>;
-    <span class="code-keyword">render</span>! <span class="code-identifier">count</span> + <span class="code-string">&quot; &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of beer,&quot;</span>;
-    <span class="code-keyword">render</span>! <span class="code-string">&quot;Take one down, pass it around,&quot</span>;
-
-    <span class="code-identifier">count</span> = <span class="code-identifier">count</span> - <span class="code-digits">1</span>;
-
-    <span class="code-keyword">if</span>(<span class="code-identifier">count</span> > <span class="code-digits">0</span>)
-        <span class="code-keyword">render</span>! <span class="code-identifier">count</span> + <span class="code-string">&quot; &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of the beer on the wall.\r\n&quot;</span>
-    <span class="code-keyword">else</span> <span class="code-keyword">render</span>! <span class="code-string">&quot;\r\nNo more &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of beer on the wall.&quot;</span>;
-};</pre>
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#example-99-beers" aria-selected="true" role="tab">99-beers.zhv</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-bs-toggle="tab" href="#example-hello" aria-selected="false" role="tab" tabindex="-1">hello.zhv</a>
+                            </li>
+                        </ul>
+                        <div id="example-tab-contents" class="tab-content py-2 w-100">
+                            <div class="tab-pane fade active show" id="example-99-beers" role="tabpanel">
+                                <pre class="snippet py-2"><span class="line"><span class="code-comment">#!/bin/zhivo</span></span><span class="line"></span>
+<span class="line"><span class="code-keyword">val</span> <span class="code-identifier">count</span> = <span class="code-digits">99</span>;</span><span class="line"></span>
+<span class="line"><span class="code-keyword">while</span>(<span class="code-identifier">count</span> > <span class="code-digits">0</span>) {</span><span class="line">    <span class="code-keyword">val</span> <span class="code-identifier">bottle</span> = <span class="code-keyword">if</span>(<span class="code-identifier">count</span> == <span class="code-digits">1</span>) <span class="code-string">&quot;bottle&quot;</span> <span class="code-keyword">else</span> <span class="code-string">&quot;bottles&quot;</span>;</span><span class="line"></span>
+<span class="line">    <span class="code-keyword">render</span>! <span class="code-identifier">count</span> + <span class="code-string">&quot; &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of beer on the wall&quot;</span>;</span><span class="line">    <span class="code-keyword">render</span>! <span class="code-identifier">count</span> + <span class="code-string">&quot; &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of beer,&quot;</span>;</span><span class="line">    <span class="code-keyword">render</span>! <span class="code-string">&quot;Take one down, pass it around,&quot</span>;</span><span class="line"></span>
+<span class="line">    <span class="code-identifier">count</span> = <span class="code-identifier">count</span> - <span class="code-digits">1</span>;</span><span class="line"></span>
+<span class="line">    <span class="code-keyword">if</span>(<span class="code-identifier">count</span> > <span class="code-digits">0</span>)</span><span class="line">        <span class="code-keyword">render</span>! <span class="code-identifier">count</span> + <span class="code-string">&quot; &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of the beer on the wall.\r\n&quot;</span></span><span class="line">    <span class="code-keyword">else</span> <span class="code-keyword">render</span>! <span class="code-string">&quot;\r\nNo more &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of beer on the wall.&quot;</span>;</span><span class="line">};</span></pre>
+                            </div>
+                            <div class="tab-pane fade" id="example-hello" role="tabpanel">
+                                <pre class="snippet py-2"><span class="line"><span class="code-comment">#!/bin/zhivo</span></span><span class="line"></span>
+<span class="line"><span class="code-keyword">val</span> <span class="code-identifier">greet</span> = <span class="code-keyword">func</span>(<span class="code-identifier">name</span>)</span><span class="line">    <span class="code-keyword">render</span>! <span class="code-string">&quot;Hello, &quot;</span> + <span class="code-identifier">name</span> + <span class="code-string">&quot;!&quot;</span>;</span><span class="line"><span class="code-identifier">greet</span>(<span class="code-string">&quot;world&quot;</span>);</span></pre>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -133,5 +136,6 @@
 
     <script src="./scripts/jquery.min.js"></script>
     <script src="./scripts/bootstrap.bundle.min.js"></script>
+    <script src="./scripts/global.js"></script>
 </body>
 </html>

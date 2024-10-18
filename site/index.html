@@ -11,16 +11,15 @@
     <title>Zhivo Programming Language</title>
 
     <link href="./styles/bootstrap.min.css" rel="stylesheet" />
+    <link href="./styles/global.css" rel="stylesheet" />
     <link href="./styles/index.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="header-section">
-    </div>
+    <div class="header-section"></div>
 
     <div align="center" class="header-section-content">
         <br/><br/><br/>
         <br/><br/><br/>
-        <br/><br/>
 
         <h1 class="mb-0 pb-0 fw-bold">Zhivo Programming Language</h1>
         <small class="text-muted">Reshaping traditional scripting practices</small>
@@ -30,6 +29,106 @@
         <p class="col-lg-4 col-8">
             Just-in-time compiled programming language utilizing system-available GPU with built-in unconventional expressiveness.
         </p>
+
+        <br/><br/>
+        <a href="#introduction" class="btn btn-primary shadow text-decoration-none">Learn More</a>
+    </div>
+
+    <div class="d-block" id="introduction"></div>
+    <div class="main-content">
+        <nav class="navbar sticky-top navbar-expand-lg bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Zhivo</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar-main">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="getting-started.html">Getting Started</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="download.html">Download</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="documentations.html">Documentations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="references.html">References</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://github.com/nthnn/zhivo" target="_blank">GitHub</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="bg-primary text-white px-2 px-lg-4 pt-2 pt-lg-4">
+            <br/>
+
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <br/>
+                    <h1>Utilize your GPU in just few lines!</h1>
+                    <hr/>
+
+                    <ul>
+                        <li>Direct mathematical operations for vectors and/or arrays.</li>
+                        <li>Syntax-level concurrency and multithreading.</li>
+                        <li>Language expressiveness with unconventional grammars.</li>
+                        <li>Easy foreign-function interfacing for native interoperability.</li>
+                        <li>Simplified ecosystem and project structuing.</li>
+                    </ul>
+                    <br/>
+
+                    <div class="row">
+                        <div class="col-lg-6 pb-2">
+                            <a href="download.html" class="btn btn-lg btn-warning shadow w-100">Download latest Zhivo</a>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <a href="getting-started.html" class="btn btn-lg btn-outline-light text-white shadow w-100">Get started with Zhivo</a>
+                        </div>
+                    </div>
+
+                    <br/>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="window bg-dark d-block shadow">
+                        <div class="window-header">
+                            <span class="window-dot" style="background:#ed594a"></span>
+                            <span class="window-dot" style="background:#fdd800"></span>
+                            <span class="window-dot" style="background:#5ac05a"></span>
+                            <span class="text-dark d-inline-block ms-2">99-Beers-on-the-Wall.zhv</span>
+                        </div>
+                    
+                        <div class="window-content">
+                            <pre><span class="code-comment">#!/bin/zhivo</span>
+
+<span class="code-keyword">val</span> <span class="code-identifier">count</span> = <span class="code-digits">99</span>;
+
+<span class="code-keyword">while</span>(<span class="code-identifier">count</span> > <span class="code-digits">0</span>) {
+    <span class="code-keyword">val</span> <span class="code-identifier">bottle</span> = <span class="code-keyword">if</span>(<span class="code-identifier">count</span> == <span class="code-digits">1</span>) <span class="code-string">&quot;bottle&quot;</span> <span class="code-keyword">else</span> <span class="code-string">&quot;bottles&quot;</span>;
+
+    <span class="code-keyword">render</span>! <span class="code-identifier">count</span> + <span class="code-string">&quot; &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of beer on the wall&quot;</span>;
+    <span class="code-keyword">render</span>! <span class="code-identifier">count</span> + <span class="code-string">&quot; &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of beer,&quot;</span>;
+    <span class="code-keyword">render</span>! <span class="code-string">&quot;Take one down, pass it around,&quot</span>;
+
+    <span class="code-identifier">count</span> = <span class="code-identifier">count</span> - <span class="code-digits">1</span>;
+
+    <span class="code-keyword">if</span>(<span class="code-identifier">count</span> > <span class="code-digits">0</span>)
+        <span class="code-keyword">render</span>! <span class="code-identifier">count</span> + <span class="code-string">&quot; &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of the beer on the wall.\r\n&quot;</span>
+    <span class="code-keyword">else</span> <span class="code-keyword">render</span>! <span class="code-string">&quot;\r\nNo more &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of beer on the wall.&quot;</span>;
+};</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br/><br/>
+        </div>
     </div>
 
     <script src="./scripts/jquery.min.js"></script>

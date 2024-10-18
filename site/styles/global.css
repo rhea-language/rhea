@@ -16,6 +16,11 @@ html::-webkit-scrollbar-thumb {
     background-color:var(--bs-primary);
 }
 
+body {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 .header-section {
     height: 100%;
     position: relative;

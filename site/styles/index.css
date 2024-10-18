@@ -6,3 +6,11 @@
     width: 100%;
     display: block;
 }
+
+.get-started-btn:hover {
+    color: var(--bs-dark) !important;
+}
+
+#example-tab-contents {
+    padding: 22px 16px;
+}

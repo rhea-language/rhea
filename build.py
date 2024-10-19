@@ -111,7 +111,7 @@ else:
 
 lib_build_args = [
     COMPILER, '-Iinclude',
-    '-shared', '-o',
+    '-Ilib', '-shared', '-o',
     lib_bin,
     rt_bin
 ]

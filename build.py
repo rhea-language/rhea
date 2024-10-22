@@ -139,7 +139,7 @@ cuda_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-nvidia']
 
 cuda_lib_args = [
     'nvcc', '-Ilib', '-shared', '-o',
-    os.path.join('dist', 'stdzhv1.0-cuda'),
+    os.path.join('dist', 'stdzhv1.0-nvidia'),
     rt_bin, cc_files
 ]
 

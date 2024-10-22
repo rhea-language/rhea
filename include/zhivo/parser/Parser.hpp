@@ -59,13 +59,13 @@ private:
     std::unique_ptr<ASTNode> exprTerm();
     std::unique_ptr<ASTNode> exprFactor();
     std::unique_ptr<ASTNode> exprParallel();
+    std::unique_ptr<ASTNode> exprVal();
 
     std::unique_ptr<ASTNode> stmtBreak();
     std::unique_ptr<ASTNode> stmtContinue();
     std::unique_ptr<ASTNode> stmtRet();
     std::unique_ptr<ASTNode> stmtThrow();
     std::unique_ptr<ASTNode> stmtTest();
-    std::unique_ptr<ASTNode> stmtVal();
     std::unique_ptr<ASTNode> stmtWait();
 
     std::unique_ptr<ASTNode> expression();

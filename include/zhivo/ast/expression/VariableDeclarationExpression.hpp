@@ -16,8 +16,8 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ZHIVO_AST_STMT_VAR_DECL_HPP
-#define ZHIVO_AST_STMT_VAR_DECL_HPP
+#ifndef ZHIVO_AST_EXPR_VAR_DECL_HPP
+#define ZHIVO_AST_EXPR_VAR_DECL_HPP
 
 #include <zhivo/ast/ASTNode.hpp>
 #include <zhivo/parser/Token.hpp>
@@ -25,13 +25,13 @@
 #include <map>
 #include <memory>
 
-class VariableDeclarationStatement final : public ASTNode {
+class VariableDeclarationExpression final : public ASTNode {
 private:
     std::map<Token, std::unique_ptr<ASTNode>> declarations;
     std::string nativePath;
 
 public:
-    explicit VariableDeclarationStatement(
+    explicit VariableDeclarationExpression(
         std::unique_ptr<Token> _address,
         std::map<Token, std::unique_ptr<ASTNode>> _declarations,
         std::string _nativePath

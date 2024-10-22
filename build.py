@@ -112,8 +112,7 @@ else:
 lib_build_args = [
     COMPILER, '-Iinclude',
     '-Ilib', '-shared', '-o',
-    lib_bin,
-    rt_bin
+    lib_bin, rt_bin
 ]
 
 exe_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-omp']
@@ -127,8 +126,27 @@ if PLATFORM == 'Windows':
     cuda_build_args.append('-Xcompiler')
     cuda_build_args.append('/std:c++17')
 
+    lib_build_args = lib_build_args + [
+        '-pipe', '-Ofast', '-s',
+        '-std=c++17', '-fopenmp',
+        '-msse', '-msse2', '-msse3',
+        '-mfpmath=sse',
+        '-march=native'
+    ]
+
 cuda_build_args.append('-Iinclude')
 cuda_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-nvidia']
+
+cuda_lib_args = [
+    'nvcc', '-Ilib', '-shared', '-o',
+    os.path.join('dist', 'stdzhv1.0-cuda'),
+    rt_bin, cc_files
+]
+
+if PLATFORM == 'Windows':
+    cuda_lib_args[4] += '.dll'
+else:
+    cuda_lib_args[4] += '.so'
 
 try:
     os.makedirs(OUT_DIR, exist_ok=True)
@@ -163,6 +181,10 @@ try:
         print("Executing:")
         print(' '.join(cuda_build_args))
         subprocess.run(cuda_build_args, check=True)
+
+        print("Executing:")
+        print(' '.join(cuda_lib_args))
+        subprocess.run(cuda_lib_args, check=True)
 
 except Exception as e:
     print(f"Compilation failed with error: {e}")

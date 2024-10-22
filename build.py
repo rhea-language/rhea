@@ -139,15 +139,21 @@ cuda_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-nvidia']
 
 cuda_lib_args = [
     'nvcc', '--shared', '-Ilib', '-o',
-    os.path.join('dist', 'stdzhv1.0-nvidia'),
-    '--compiler-options \'-fPIC\'',
+    os.path.join('dist', 'stdzhv1.0-nvidia')
+]
+
+if PLATFORM == 'Windows':
+    cuda_lib_args[-1] += '.dll'
+else:
+    cuda_lib_args[-1] += '.so'
+
+cuda_lib_args += [
+    '--compiler-options', '-fPIC',
     rt_bin
 ] + cc_files
 
 if PLATFORM == 'Windows':
-    cuda_lib_args[4] += '.dll'
-else:
-    cuda_lib_args[4] += '.so'
+    cuda_lib_args += ['--compiler-options', '/std:c++17']
 
 try:
     os.makedirs(OUT_DIR, exist_ok=True)

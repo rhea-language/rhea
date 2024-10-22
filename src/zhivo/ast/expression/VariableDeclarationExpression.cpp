@@ -17,7 +17,7 @@
  */
 
 #include <zhivo/ast/ASTNodeException.hpp>
-#include <zhivo/ast/statement/VariableDeclarationStatement.hpp>
+#include <zhivo/ast/expression/VariableDeclarationExpression.hpp>
 #include <zhivo/core/Runtime.hpp>
 #include <zhivo/core/SymbolTable.hpp>
 
@@ -29,12 +29,12 @@
 #   error "Unsupported architecture for shared objects or dynamic libraries."
 #endif
 
-DynamicObject VariableDeclarationStatement::visit(SymbolTable& symbols) {
+DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
     if(!this->nativePath.empty()) {
         for(const auto& [key, value] : this->declarations) {
             std::string name = key.getImage();
             DynamicObject func = DynamicObject(
-                VariableDeclarationStatement::loadNativeFunction(
+                VariableDeclarationExpression::loadNativeFunction(
                     this->nativePath,
                     name,
                     std::move(this->address)
@@ -56,7 +56,7 @@ DynamicObject VariableDeclarationStatement::visit(SymbolTable& symbols) {
     return {};
 }
 
-NativeFunction VariableDeclarationStatement::loadNativeFunction(
+NativeFunction VariableDeclarationExpression::loadNativeFunction(
     std::string& libName,
     std::string& funcName,
     std::unique_ptr<Token> address

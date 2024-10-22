@@ -40,6 +40,7 @@
 #include <zhivo/ast/expression/UnaryExpression.hpp>
 #include <zhivo/ast/expression/UnlessExpression.hpp>
 #include <zhivo/ast/expression/VariableAccessExpression.hpp>
+#include <zhivo/ast/expression/VariableDeclarationExpression.hpp>
 #include <zhivo/ast/expression/WhenExpression.hpp>
 #include <zhivo/ast/expression/WhileExpression.hpp>
 
@@ -48,7 +49,6 @@
 #include <zhivo/ast/statement/ReturnStatement.hpp>
 #include <zhivo/ast/statement/TestStatement.hpp>
 #include <zhivo/ast/statement/ThrowStatement.hpp>
-#include <zhivo/ast/statement/VariableDeclarationStatement.hpp>
 #include <zhivo/ast/statement/WaitStatement.hpp>
 
 #include <zhivo/core/SymbolTable.hpp>
@@ -594,6 +594,8 @@ std::unique_ptr<ASTNode> Parser::exprPrimary() {
         expression = this->exprType();
     else if(this->isNext("parallel", TokenType::KEYWORD))
         expression = this->exprParallel();
+    else if(this->isNext("val", TokenType::KEYWORD))
+        expression = this->exprVal();
     else if(this->isNext("[", TokenType::OPERATOR))
         expression = this->exprArray();
     else if(this->peek().getType() == TokenType::IDENTIFIER) {
@@ -851,6 +853,51 @@ std::unique_ptr<ASTNode> Parser::exprFactor() {
     return expression;
 }
 
+std::unique_ptr<ASTNode> Parser::exprVal() {
+    std::string nativePath = "";
+    Token address = this->consume("val");
+
+    if(this->isNext("(", TokenType::OPERATOR)) {
+        this->consume("(");
+        nativePath = this->consume(TokenType::STRING).getImage();
+
+        this->consume(")");
+    }
+
+    std::map<Token, std::unique_ptr<ASTNode>> declarations;
+    while(!this->isNext(";", TokenType::OPERATOR)) {
+        if(!declarations.empty())
+            this->consume(",");
+
+        std::unique_ptr<ASTNode> value;
+        Token variable = this->consume(TokenType::IDENTIFIER);
+        while(this->isNext(".", TokenType::OPERATOR)) {
+            this->consume(".");
+            variable.appendToImage(
+                "." +
+                this->consume(TokenType::IDENTIFIER)
+                    .getImage()
+            );
+        }
+
+        if(nativePath == "") {
+            this->consume("=");
+            value = this->expression();
+        }
+        else value = std::make_unique<NilLiteralExpression>(
+            std::make_unique<Token>(variable)
+        );
+
+        declarations.insert({variable, std::move(value)});
+    }
+
+    return std::make_unique<VariableDeclarationExpression>(
+        std::make_unique<Token>(address),
+        std::move(declarations),
+        nativePath
+    );
+}
+
 std::unique_ptr<ASTNode> Parser::expression() {
     return this->exprLogicOr();
 }
@@ -912,52 +959,6 @@ std::unique_ptr<ASTNode> Parser::stmtTest() {
     );
 }
 
-std::unique_ptr<ASTNode> Parser::stmtVal() {
-    std::string nativePath = "";
-    Token address = this->consume("val");
-
-    if(this->isNext("(", TokenType::OPERATOR)) {
-        this->consume("(");
-        nativePath = this->consume(TokenType::STRING).getImage();
-
-        this->consume(")");
-    }
-
-    std::map<Token, std::unique_ptr<ASTNode>> declarations;
-    while(!this->isNext(";", TokenType::OPERATOR)) {
-        if(!declarations.empty())
-            this->consume(",");
-
-        std::unique_ptr<ASTNode> value;
-        Token variable = this->consume(TokenType::IDENTIFIER);
-        while(this->isNext(".", TokenType::OPERATOR)) {
-            this->consume(".");
-            variable.appendToImage(
-                "." +
-                this->consume(TokenType::IDENTIFIER)
-                    .getImage()
-            );
-        }
-
-        if(nativePath == "") {
-            this->consume("=");
-            value = this->expression();
-        }
-        else value = std::make_unique<NilLiteralExpression>(
-            std::make_unique<Token>(variable)
-        );
-
-        declarations.insert({variable, std::move(value)});
-    }
-
-    this->consume(";");
-    return std::make_unique<VariableDeclarationStatement>(
-        std::make_unique<Token>(address),
-        std::move(declarations),
-        nativePath
-    );
-}
-
 std::unique_ptr<ASTNode> Parser::stmtWait() {
     Token address = this->consume("wait");
     this->consume(";");
@@ -978,8 +979,6 @@ std::unique_ptr<ASTNode> Parser::statement() {
         return this->stmtThrow();
     else if(this->isNext("test", TokenType::KEYWORD))
         return this->stmtTest();
-    else if(this->isNext("val", TokenType::KEYWORD))
-        return this->stmtVal();
     else if(this->isNext("wait", TokenType::KEYWORD))
         return this->stmtWait();
 

@@ -24,8 +24,16 @@
 ZHIVO_LIB_START
 
 ZHIVO_FUNC(math_cos);
+ZHIVO_FUNC(math_cosh);
 ZHIVO_FUNC(math_sin);
+ZHIVO_FUNC(math_sinh);
 ZHIVO_FUNC(math_tan);
+ZHIVO_FUNC(math_tanh);
+
+ZHIVO_FUNC(math_rand);
+
+ZHIVO_FUNC(math_sigmoid);
+ZHIVO_FUNC(math_sigmoidDerivative);
 
 ZHIVO_LIB_END
 

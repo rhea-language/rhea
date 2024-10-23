@@ -904,7 +904,9 @@ std::unique_ptr<ASTNode> Parser::expression() {
 
 std::unique_ptr<ASTNode> Parser::stmtBreak() {
     Token address = this->consume("break");
-    this->consume(";");
+
+    if(this->isNext(";"))
+        this->consume(";");
 
     return std::make_unique<BreakStatement>(
         std::make_unique<Token>(address)
@@ -913,7 +915,9 @@ std::unique_ptr<ASTNode> Parser::stmtBreak() {
 
 std::unique_ptr<ASTNode> Parser::stmtContinue() {
     Token address = this->consume("continue");
-    this->consume(";");
+
+    if(this->isNext(";"))
+        this->consume(";");
 
     return std::make_unique<ContinueStatement>(
         std::make_unique<Token>(address)
@@ -924,7 +928,9 @@ std::unique_ptr<ASTNode> Parser::stmtRet() {
     Token address = this->consume("ret");
     std::unique_ptr<ASTNode> expression = this->expression();
 
-    this->consume(";");
+    if(this->isNext(";"))
+        this->consume(";");
+
     return std::make_unique<ReturnStatement>(
         std::make_unique<Token>(address),
         std::move(expression)
@@ -935,7 +941,9 @@ std::unique_ptr<ASTNode> Parser::stmtThrow() {
     Token address = this->consume("throw");
     std::unique_ptr<ASTNode> expression = this->expression();
 
-    this->consume(";");
+    if(this->isNext(";"))
+        this->consume(";");
+
     return std::make_unique<ThrowStatement>(
         std::make_unique<Token>(address),
         std::move(expression)
@@ -950,7 +958,9 @@ std::unique_ptr<ASTNode> Parser::stmtTest() {
     this->consume(")");
 
     std::unique_ptr<ASTNode> testBody = this->expression();
-    this->consume(";");
+
+    if(this->isNext(";"))
+        this->consume(";");
 
     return std::make_unique<TestStatement>(
         std::make_unique<Token>(address),
@@ -961,7 +971,9 @@ std::unique_ptr<ASTNode> Parser::stmtTest() {
 
 std::unique_ptr<ASTNode> Parser::stmtWait() {
     Token address = this->consume("wait");
-    this->consume(";");
+
+    if(this->isNext(";"))
+        this->consume(";");
 
     return std::make_unique<WaitStatement>(
         std::make_unique<Token>(address)
@@ -983,7 +995,9 @@ std::unique_ptr<ASTNode> Parser::statement() {
         return this->stmtWait();
 
     std::unique_ptr<ASTNode> expr = this->expression();
-    this->consume(";");
+
+    if(this->isNext(";"))
+        this->consume(";");
 
     return expr;
 }

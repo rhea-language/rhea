@@ -865,7 +865,7 @@ std::unique_ptr<ASTNode> Parser::exprVal() {
     }
 
     std::map<Token, std::unique_ptr<ASTNode>> declarations;
-    while(!this->isNext(";", TokenType::OPERATOR)) {
+    while(true) {
         if(!declarations.empty())
             this->consume(",");
 
@@ -889,6 +889,9 @@ std::unique_ptr<ASTNode> Parser::exprVal() {
         );
 
         declarations.insert({variable, std::move(value)});
+
+        if(!this->isNext(",", TokenType::OPERATOR))
+            break;
     }
 
     return std::make_unique<VariableDeclarationExpression>(

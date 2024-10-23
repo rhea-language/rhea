@@ -16,16 +16,18 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <zhivo/Zhivo.hpp>
+#include <Zhivo.hpp>
 
 #include <iostream>
 #include <stdexcept>
 
 auto printBanner(ArgumentParser argParse) -> void {
     std::cout
-        << "\u001b[1;36mZhivo Programming Language "
+        << "\u001b[1;36mZhivo Programming Language ("
         << ZHIVO_VERSION
-        << "\u001b[0m"
+        << ", "
+        << ZHIVO_BUILD_TIME
+        << ")\u001b[0m"
         << std::endl;
 
     std::cout << std::endl

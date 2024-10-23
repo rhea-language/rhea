@@ -905,7 +905,7 @@ std::unique_ptr<ASTNode> Parser::expression() {
 std::unique_ptr<ASTNode> Parser::stmtBreak() {
     Token address = this->consume("break");
 
-    if(this->isNext(";"))
+    if(this->isNext(";", TokenType::OPERATOR))
         this->consume(";");
 
     return std::make_unique<BreakStatement>(
@@ -916,7 +916,7 @@ std::unique_ptr<ASTNode> Parser::stmtBreak() {
 std::unique_ptr<ASTNode> Parser::stmtContinue() {
     Token address = this->consume("continue");
 
-    if(this->isNext(";"))
+    if(this->isNext(";", TokenType::OPERATOR))
         this->consume(";");
 
     return std::make_unique<ContinueStatement>(
@@ -928,7 +928,7 @@ std::unique_ptr<ASTNode> Parser::stmtRet() {
     Token address = this->consume("ret");
     std::unique_ptr<ASTNode> expression = this->expression();
 
-    if(this->isNext(";"))
+    if(this->isNext(";", TokenType::OPERATOR))
         this->consume(";");
 
     return std::make_unique<ReturnStatement>(
@@ -941,7 +941,7 @@ std::unique_ptr<ASTNode> Parser::stmtThrow() {
     Token address = this->consume("throw");
     std::unique_ptr<ASTNode> expression = this->expression();
 
-    if(this->isNext(";"))
+    if(this->isNext(";", TokenType::OPERATOR))
         this->consume(";");
 
     return std::make_unique<ThrowStatement>(
@@ -959,7 +959,7 @@ std::unique_ptr<ASTNode> Parser::stmtTest() {
 
     std::unique_ptr<ASTNode> testBody = this->expression();
 
-    if(this->isNext(";"))
+    if(this->isNext(";", TokenType::OPERATOR))
         this->consume(";");
 
     return std::make_unique<TestStatement>(
@@ -972,7 +972,7 @@ std::unique_ptr<ASTNode> Parser::stmtTest() {
 std::unique_ptr<ASTNode> Parser::stmtWait() {
     Token address = this->consume("wait");
 
-    if(this->isNext(";"))
+    if(this->isNext(";", TokenType::OPERATOR))
         this->consume(";");
 
     return std::make_unique<WaitStatement>(
@@ -996,7 +996,7 @@ std::unique_ptr<ASTNode> Parser::statement() {
 
     std::unique_ptr<ASTNode> expr = this->expression();
 
-    if(this->isNext(";"))
+    if(this->isNext(";", TokenType::OPERATOR))
         this->consume(";");
 
     return expr;

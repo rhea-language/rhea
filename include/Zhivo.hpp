@@ -28,6 +28,20 @@
 #include <zhivo/parser/ParserException.hpp>
 #include <zhivo/util/ArgumentParser.hpp>
 
-#define ZHIVO_VERSION "(v1.0.0-beta)"
+#define ZHIVO_BUILD_TYPE        "beta"
+#define ZHIVO_SEMANTIC_VERSION  "v1.0.0-" ZHIVO_BUILD_TYPE
+
+#ifdef __CUDACC__
+#define ZHIVO_BUILD_BACKEND     "nvidia"
+#else
+#define ZHIVO_BUILD_BACKEND     "openmp"
+#endif
+
+#define ZHIVO_VERSION       \
+    ZHIVO_SEMANTIC_VERSION  \
+    "-"                     \
+    ZHIVO_BUILD_BACKEND
+
+#define ZHIVO_BUILD_TIME        __TIME__ " " __DATE__
 
 #endif

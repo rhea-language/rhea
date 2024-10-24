@@ -104,6 +104,8 @@ if PLATFORM == 'Darwin':
     exe_build_args.remove('-mfma')
     exe_build_args.remove('-mfpmath=sse')
     exe_build_args.remove('-s')
+    exe_build_args.remove('-static-libgcc')
+    exe_build_args.remove('-static-libstdc++')
 
 rt_bin = os.path.join('dist', 'zhivocore-1.0.a')
 rt_build_args = exe_build_args + cpp_files + [

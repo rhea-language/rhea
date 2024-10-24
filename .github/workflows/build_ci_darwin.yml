@@ -39,7 +39,7 @@ jobs:
           ls -ral dist
           find dist | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
 
-      - name: Run test scripts (x86)
+      - name: Run test scripts
         run: |
           ./dist/zhivo-darwin-arm64-omp ./test/arithmetic.zhv
           ./dist/zhivo-darwin-arm64-omp ./test/array.zhv
@@ -53,7 +53,7 @@ jobs:
           ./dist/zhivo-darwin-arm64-omp ./test/test.zhv
           ./dist/zhivo-darwin-arm64-omp ./test/types.zhv
 
-      - name: Run examples (x86)
+      - name: Run examples
         run: |
           ./dist/zhivo-darwin-arm64-omp ./examples/hello.zhv
           ./dist/zhivo-darwin-arm64-omp ./examples/99-beers.zhv

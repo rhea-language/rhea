@@ -12,6 +12,10 @@
 
 JIT-compiled dynamic general-purpose programming language utilizing system-available GPU with built-in concurrency and unconventional expressiveness.
 
+<p align="center">
+    <a href="https://zhivo.vercel.app"><img src="https://img.shields.io/badge/Learn%20More-007ec6?style=for-the-badge&logoColor=white&logo=Google-Chrome" /></a>
+</p>
+
 ```zhivo
 #!/bin/zhivo
 
@@ -31,10 +35,6 @@ while(count > 0) {
     else render! "\r\nNo more " + bottle + " of beer on the wall.";
 };
 ```
-
-<p align="center">
-    <a href="https://zhivo.vercel.app"><img src="https://img.shields.io/badge/Learn%20More-007ec6?style=for-the-badge&logoColor=white&logo=Google-Chrome" /></a>
-</p>
 
 > [!WARNING]
 > This repository is under a slow development. (Busy on my job)

@@ -74,8 +74,9 @@ exe_build_args = [
     '-Wunused-parameter', '-Wunused-value', '-Wunused-variable',
     '-Wvariadic-macros', '-Wvolatile-register-var', '-Wwrite-strings',
     '-pipe', '-Ofast', '-s', '-std=c++17', '-fopenmp',
-    '-msse', '-msse2', '-msse3', '-mfpmath=sse',
-    '-march=native', '-funroll-loops', '-ffast-math'
+    '-msse', '-msse2', '-msse3', '-msse4', '-msse4.1', '-msse4.2',
+    '-mavx', '-mavx2', '-mfpmath=sse', '-march=native',
+    '-funroll-loops', '-ffast-math'
 ]
 
 if PLATFORM != 'Windows':
@@ -130,7 +131,8 @@ if PLATFORM == 'Windows':
         '-pipe', '-Ofast', '-s',
         '-std=c++17', '-fopenmp',
         '-msse', '-msse2', '-msse3',
-        '-mfpmath=sse',
+        '-msse4', '-msse4.1', '-msse4.2',
+        '-mavx', '-mavx2', '-mfpmath=sse',
         '-march=native'
     ]
 

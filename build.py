@@ -73,10 +73,10 @@ exe_build_args = [
     '-Wunused', '-Wunused-function', '-Wunused-label',
     '-Wunused-parameter', '-Wunused-value', '-Wunused-variable',
     '-Wvariadic-macros', '-Wvolatile-register-var', '-Wwrite-strings',
-    '-pipe', '-Ofast', '-s', '-std=c++17', '-fopenmp',
+    '-pipe', '-Ofast', '-s', '-std=c++17', '-fopenmp', '-mmmx',
     '-msse', '-msse2', '-msse3', '-msse4', '-msse4.1', '-msse4.2',
-    '-mavx', '-mavx2', '-mfpmath=sse', '-march=native',
-    '-funroll-loops', '-ffast-math'
+    '-mavx', '-mavx2', '-mfma', '-mfpmath=sse',
+    '-march=native', '-funroll-loops', '-ffast-math'
 ]
 
 if PLATFORM != 'Windows':
@@ -91,6 +91,7 @@ if PLATFORM == 'Darwin':
     exe_build_args.remove('-Wvolatile-register-var')
     exe_build_args.remove('-Weffc++')
     exe_build_args.remove('-Ofast')
+    exe_build_args.remove('-mmmx')
     exe_build_args.remove('-msse')
     exe_build_args.remove('-msse2')
     exe_build_args.remove('-msse3')
@@ -99,6 +100,7 @@ if PLATFORM == 'Darwin':
     exe_build_args.remove('-msse4.2')
     exe_build_args.remove('-mavx')
     exe_build_args.remove('-mavx2')
+    exe_build_args.remove('-mfma')
     exe_build_args.remove('-mfpmath=sse')
     exe_build_args.remove('-s')
 
@@ -133,12 +135,11 @@ if PLATFORM == 'Windows':
     cuda_build_args.append('/std:c++17')
 
     lib_build_args = lib_build_args + [
-        '-pipe', '-Ofast', '-s',
-        '-std=c++17', '-fopenmp',
-        '-msse', '-msse2', '-msse3',
+        '-pipe', '-Ofast', '-s', '-std=c++17',
+        '-fopenmp', '-msse', '-msse2', '-msse3',
         '-msse4', '-msse4.1', '-msse4.2',
-        '-mavx', '-mavx2', '-mfpmath=sse',
-        '-march=native'
+        '-mavx', '-mavx2', '-mmmx', '-mfma',
+        '-mfpmath=sse', '-march=native'
     ]
 
 cuda_build_args.append('-Iinclude')

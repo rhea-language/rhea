@@ -10,7 +10,31 @@
     <img alt="VSCode Extension Build" src="https://github.com/nthnn/zhivo/actions/workflows/build_ci_vsce.yml/badge.svg" />
 </p>
 
-Just-in-time compiled programming language utilizing system available GPU with built-in unconventional expressivenes.
+JIT-compiled dynamic general-purpose programming language utilizing system-available GPU with built-in concurrency and unconventional expressiveness.
+
+```zhivo
+#!/bin/zhivo
+
+val count = 99;
+
+while(count > 0) {
+    val bottle = if(count == 1) "bottle" else "bottles";
+
+    render! count + " " + bottle + " of beer on the wall";
+    render! count + " " + bottle + " of beer,";
+    render! "Take one down, pass it around,";
+
+    count = count - 1;
+
+    if(count > 0)
+        render! count + " " + bottle + " of the beer on the wall.\r\n"
+    else render! "\r\nNo more " + bottle + " of beer on the wall.";
+};
+```
+
+<p align="center">
+    <a href="https://zhivo.vercel.app"><img src="https://img.shields.io/badge/Learn%20More-007ec6?style=for-the-badge&logoColor=white&logo=Google-Chrome" /></a>
+</p>
 
 > [!WARNING]
 > This repository is under a slow development. (Busy on my job)

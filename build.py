@@ -96,6 +96,7 @@ if PLATFORM == 'Darwin':
     exe_build_args.remove('-msse3')
     exe_build_args.remove('-msse4')
     exe_build_args.remove('-msse4.1')
+    exe_build_args.remove('-msse4.2')
     exe_build_args.remove('-mavx')
     exe_build_args.remove('-mavx2')
     exe_build_args.remove('-mfpmath=sse')

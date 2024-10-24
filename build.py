@@ -76,12 +76,13 @@ exe_build_args = [
     '-pipe', '-Ofast', '-s', '-std=c++17', '-fopenmp', '-mmmx',
     '-msse', '-msse2', '-msse3', '-msse4', '-msse4.1', '-msse4.2',
     '-mavx', '-mavx2', '-mfma', '-mfpmath=sse',
-    '-march=native', '-funroll-loops', '-ffast-math',
-    '-static', '-static-libgcc', '-static-libstdc++'
+    '-march=native', '-funroll-loops', '-ffast-math'
 ]
 
 if PLATFORM != 'Windows':
     exe_build_args.append('-flto=auto')
+else:
+    exe_build_args += ['-static', '-static-libgcc', '-static-libstdc++']
 
 if PLATFORM == 'Darwin':
     exe_build_args.append('-Xpreprocessor')
@@ -104,8 +105,6 @@ if PLATFORM == 'Darwin':
     exe_build_args.remove('-mfma')
     exe_build_args.remove('-mfpmath=sse')
     exe_build_args.remove('-s')
-    exe_build_args.remove('-static-libgcc')
-    exe_build_args.remove('-static-libstdc++')
 
 rt_bin = os.path.join('dist', 'zhivocore-1.0.a')
 rt_build_args = exe_build_args + cpp_files + [

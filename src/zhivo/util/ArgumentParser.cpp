@@ -21,6 +21,8 @@
 #include <algorithm>
 #include <iostream>
 
+namespace ZhivoUtil {
+
 ArgumentParser& ArgumentParser::operator=(const ArgumentParser& other) {
     if(this != &other) {
         this->argCount = other.argCount;
@@ -92,4 +94,6 @@ std::vector<std::string> ArgumentParser::getInputFiles() const {
     }
 
     return inputFiles;
+}
+
 }

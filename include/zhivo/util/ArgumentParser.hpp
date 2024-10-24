@@ -23,6 +23,8 @@
 #include <unordered_map>
 #include <vector>
 
+namespace ZhivoUtil {
+
 class ArgumentParser final {
 private:
     int argCount;
@@ -56,5 +58,7 @@ public:
     std::string getProgramFileName() const;
     std::vector<std::string> getInputFiles() const;
 };
+
+}
 
 #endif

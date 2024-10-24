@@ -76,7 +76,8 @@ exe_build_args = [
     '-pipe', '-Ofast', '-s', '-std=c++17', '-fopenmp', '-mmmx',
     '-msse', '-msse2', '-msse3', '-msse4', '-msse4.1', '-msse4.2',
     '-mavx', '-mavx2', '-mfma', '-mfpmath=sse',
-    '-march=native', '-funroll-loops', '-ffast-math'
+    '-march=native', '-funroll-loops', '-ffast-math',
+    '-static', '-static-libgcc', '-static-libstdc++'
 ]
 
 if PLATFORM != 'Windows':

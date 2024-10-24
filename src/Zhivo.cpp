@@ -21,7 +21,7 @@
 #include <iostream>
 #include <stdexcept>
 
-auto printBanner(ArgumentParser argParse) -> void {
+auto printBanner(ZhivoUtil::ArgumentParser argParse) -> void {
     std::cout
         << "\u001b[1;36mZhivo Programming Language ("
         << ZHIVO_VERSION
@@ -29,6 +29,15 @@ auto printBanner(ArgumentParser argParse) -> void {
         << ZHIVO_BUILD_TIME
         << ")\u001b[0m"
         << std::endl;
+
+    std::cout
+        << std::endl
+        << "\u001b[3;37mZhivo is free software, please check the source for copying"
+            << std::endl
+        << "terms and conditions. This includes no warranty, not even"
+            << std::endl
+        << "for fitness and/or merchantability for any particular purpose."
+            << std::endl;
 
     std::cout << std::endl
         << "\u001b[32mUsage\u001b[0m:"
@@ -41,15 +50,6 @@ auto printBanner(ArgumentParser argParse) -> void {
 
     std::cout
         << std::endl
-        << "\u001b[3;37mZhivo is free software, please check the source for copying"
-            << std::endl
-        << "terms and conditions. This includes no warranty, not even"
-            << std::endl
-        << "for fitness and/or merchantability for any particular purpose."
-            << std::endl
-            << std::endl;
-
-    std::cout
         << "You should have received a copy of the GNU General Public"
             << std::endl
         << "License along with Zhivo. If not, see:"
@@ -142,7 +142,7 @@ auto interpreter(std::vector<std::string> files) -> int {
 }
 
 auto main(int argc, char** argv) -> int {
-    ArgumentParser argParse(argc, argv);
+    ZhivoUtil::ArgumentParser argParse(argc, argv);
     argParse.defineParameter("h", "help", "Show this help banner.");
     argParse.defineParameter("t", "test", "Run the script files in test mode.");
 

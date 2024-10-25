@@ -92,6 +92,7 @@ try:
         cuda_exe_build_args = [
             'nvcc', '-x=cu', '-std=c++20',
             '--compiler-options=/openmp',
+            '--compiler-options=/std:c++20'
             '-Iinclude'
         ] + cpp_files + [
             '-lcudadevrt',

@@ -156,7 +156,7 @@ std::vector<double> object2Vector(const DynamicObject object) {
 
     #pragma omp parallel for
     for(long i = 0; i < (long) objSize; ++i)
-        values[i] = objects[i].getNumber();
+        values[(size_t) i] = objects[(size_t) i].getNumber();
 
     return values;
 }

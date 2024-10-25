@@ -33,6 +33,8 @@ jobs:
 
       - name: Microsoft Visual Studio C/C++
         uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86_amd64
 
       - name: Python 3.12 Installation
         uses: actions/setup-python@v5

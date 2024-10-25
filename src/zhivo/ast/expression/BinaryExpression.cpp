@@ -179,7 +179,7 @@ DynamicObject BinaryExpression::applyBoolOp(DynamicObject& lValue, DynamicObject
     else if(this->op == "==")
         return DynamicObject(lValue == rValue);
     else if(this->op == "!=")
-        return DynamicObject(lValue != rValue);
+        return DynamicObject(!(lValue == rValue));
 
     throw ASTNodeException(
         std::move(this->address),

@@ -43,7 +43,7 @@ DynamicObject UnaryExpression::visit(SymbolTable& symbols) {
         else if(this->op == "~")
             return DynamicObject(
                 static_cast<double>(
-                    ~static_cast<unsigned long>(
+                    ~static_cast<long>(
                         value.getNumber()
                     )
                 )

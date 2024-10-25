@@ -134,8 +134,7 @@ try:
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-Ofast', '-s',
             '-std=c++20', '-fopenmp', '-mmmx', '-msse', '-msse2', '-msse3', '-msse4',
             '-msse4.1', '-msse4.2', '-mavx', '-mavx2', '-mfma', '-mfpmath=sse',
-            '-march=native', '-funroll-loops', '-ffast-math', '-static', '-static-libgcc',
-            '-static-libstdc++'
+            '-march=native', '-funroll-loops', '-ffast-math'
         ] + cpp_files
 
         core_build_args = exe_build_args + [

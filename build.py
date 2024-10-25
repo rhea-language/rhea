@@ -16,22 +16,31 @@
 
 import os
 import platform
+import shutil
 import subprocess
 import sys
 
-OUT_DIR = 'dist'
 PLATFORM = platform.system()
 
+OUT_DIR = 'dist'
+if os.path.exists(OUT_DIR):
+    shutil.rmtree(OUT_DIR)
+os.makedirs('dist')
+
 OUTPUT_EXECUTABLE = os.path.join(
-    'dist',
+    OUT_DIR,
     'zhivo-' +
         sys.platform + '-' +
         platform.machine().lower()
 )
-
-COMPILER = 'g++'
-if PLATFORM == 'Darwin':
-    COMPILER = '/opt/homebrew/opt/llvm/bin/clang++'
+OUTPUT_LIBRARY = os.path.join(
+    OUT_DIR,
+    'zhivo-' +
+        sys.platform + '-' +
+        platform.machine().lower() +
+        '-stdlib'
+)
+OUTPUT_CORE = OUTPUT_EXECUTABLE + '-core.a'
 
 cpp_files = []
 cc_files = []
@@ -72,9 +81,13 @@ try:
 
         core_build_args = exe_build_args + [
             '-shared',
-            '-o', OUTPUT_EXECUTABLE + '-core.a'
+            '-o', OUTPUT_CORE
         ]
         exe_build_args += ['-o', OUTPUT_EXECUTABLE + '-openmp']
+        lib_build_args = [
+            'g++', '-Iinclude', '-Ilib', '-shared',
+            '-o', OUTPUT_LIBRARY + '.dll', OUTPUT_CORE
+        ] + cc_files
 
         cuda_exe_build_args = [
             'nvcc', '-x=cu', '-std=c++20',
@@ -93,6 +106,10 @@ try:
         print("Executing:")
         print(' '.join(core_build_args))
         subprocess.run(core_build_args)
+
+        print("Executing:")
+        print(' '.join(lib_build_args))
+        subprocess.run(lib_build_args)
 
         print("Executing:")
         print(' '.join(cuda_exe_build_args))

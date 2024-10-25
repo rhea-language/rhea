@@ -197,7 +197,7 @@ try:
         ] + cpp_files
 
         core_build_args = exe_build_args + ['-shared', '-o', OUTPUT_CORE]
-        exe_build_args += ['-o', OUTPUT_EXECUTABLE]
+        exe_build_args += ['-o', OUTPUT_EXECUTABLE + '-openmp']
 
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',

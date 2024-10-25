@@ -143,7 +143,7 @@ try:
         ]
         exe_build_args += ['-o', OUTPUT_EXECUTABLE + '-openmp']
         lib_build_args = [
-            'g++', '-Iinclude', '-Ilib', '-shared',
+            'g++', '-Iinclude', '-Ilib', '-shared', '-fPIC',
             '-o', OUTPUT_LIBRARY + '.so', OUTPUT_CORE
         ] + cc_files
 

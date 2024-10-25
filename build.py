@@ -73,7 +73,7 @@ try:
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-Ofast', '-s',
-            '-std=c++20', '-fopenmp', '-mmmx', '-msse', '-msse2', '-msse3', '-msse4',
+            '-std=c++17', '-fopenmp', '-mmmx', '-msse', '-msse2', '-msse3', '-msse4',
             '-msse4.1', '-msse4.2', '-mavx', '-mavx2', '-mfma', '-mfpmath=sse',
             '-march=native', '-funroll-loops', '-ffast-math', '-static', '-static-libgcc',
             '-static-libstdc++'
@@ -138,12 +138,12 @@ try:
         ] + cpp_files
 
         core_build_args = exe_build_args + [
-            '-shared',
+            '-fPIC', '-shared',
             '-o', OUTPUT_CORE
         ]
         exe_build_args += ['-o', OUTPUT_EXECUTABLE + '-openmp']
         lib_build_args = [
-            'g++', '-Iinclude', '-Ilib', '-shared', '-fPIC',
+            'g++', '-Iinclude', '-Ilib', '-fPIC', '-shared',
             '-o', OUTPUT_LIBRARY + '.so', OUTPUT_CORE
         ] + cc_files
 

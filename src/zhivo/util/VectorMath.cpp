@@ -52,7 +52,7 @@ std::vector<double> ZhivoUtil::VectorMath::add(
 
     std::vector<double> result(size);
 
-    #ifdef __CUDACC__
+    #ifdef __CUDA__
 
     double *d_left, *d_right, *d_result;
     cudaMalloc(&d_left, size * sizeof(double));
@@ -90,7 +90,7 @@ std::vector<double> ZhivoUtil::VectorMath::sub(
 
     std::vector<double> result(size);
 
-    #ifdef __CUDACC__
+    #ifdef __CUDA__
 
     double *d_left, *d_right, *d_result;
     cudaMalloc(&d_left, size * sizeof(double));
@@ -128,7 +128,7 @@ std::vector<double> ZhivoUtil::VectorMath::div(
 
     std::vector<double> result(size);
 
-    #ifdef __CUDACC__
+    #ifdef __CUDA__
 
     double *d_left, *d_right, *d_result;
     cudaMalloc(&d_left, size * sizeof(double));
@@ -166,7 +166,7 @@ std::vector<double> ZhivoUtil::VectorMath::mul(
 
     std::vector<double> result(size);
 
-    #ifdef __CUDACC__
+    #ifdef __CUDA__
 
     double *d_left, *d_right, *d_result;
     cudaMalloc(&d_left, size * sizeof(double));
@@ -204,7 +204,7 @@ std::vector<double> ZhivoUtil::VectorMath::rem(
 
     std::vector<double> result(size);
 
-    #ifdef __CUDACC__
+    #ifdef __CUDA__
 
     double *d_left, *d_right, *d_result;
     cudaMalloc(&d_left, size * sizeof(double));
@@ -242,7 +242,7 @@ std::vector<double> ZhivoUtil::VectorMath::bitwiseAnd(
 
     std::vector<double> result(size);
 
-    #ifdef __CUDACC__
+    #ifdef __CUDA__
 
     double *d_left, *d_right, *d_result;
     cudaMalloc(&d_left, size * sizeof(double));
@@ -280,7 +280,7 @@ std::vector<double> ZhivoUtil::VectorMath::bitwiseOr(
 
     std::vector<double> result(size);
 
-    #ifdef __CUDACC__
+    #ifdef __CUDA__
 
     double *d_left, *d_right, *d_result;
     cudaMalloc(&d_left, size * sizeof(double));
@@ -318,7 +318,7 @@ std::vector<double> ZhivoUtil::VectorMath::bitwiseXor(
 
     std::vector<double> result(size);
 
-    #ifdef __CUDACC__
+    #ifdef __CUDA__
 
     double *d_left, *d_right, *d_result;
     cudaMalloc(&d_left, size * sizeof(double));
@@ -356,7 +356,7 @@ std::vector<double> ZhivoUtil::VectorMath::shiftLeft(
 
     std::vector<double> result(size);
 
-    #ifdef __CUDACC__
+    #ifdef __CUDA__
 
     double *d_left, *d_right, *d_result;
     cudaMalloc(&d_left, size * sizeof(double));
@@ -394,7 +394,7 @@ std::vector<double> ZhivoUtil::VectorMath::shiftRight(
 
     std::vector<double> result(size);
 
-    #ifdef __CUDACC__
+    #ifdef __CUDA__
 
     double *d_left, *d_right, *d_result;
     cudaMalloc(&d_left, size * sizeof(double));
@@ -422,7 +422,7 @@ std::vector<double> ZhivoUtil::VectorMath::shiftRight(
     return result;
 }
 
-#ifdef __CUDACC__
+#ifdef __CUDA__
 static __global__ void cudaVectorAdd(
     const double* left,
     const double* right,

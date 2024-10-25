@@ -173,6 +173,49 @@ try:
         print("Executing:")
         print(' '.join(cuda_exe_build_args))
         subprocess.run(cuda_exe_build_args)
+    
+    elif PLATFORM == 'Darwin':
+        exe_build_args = [
+            '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude', '-Wall',
+            '-pedantic', '-Wdisabled-optimization', '-pedantic-errors',
+            '-Wextra', '-Wcast-align', '-Wcast-qual', '-Wchar-subscripts',
+            '-Wcomment', '-Wconversion', '-Werror', '-Wfloat-equal',
+            '-Wformat', '-Wformat=2', '-Wformat-nonliteral', '-Wformat-security',
+            '-Wformat-y2k', '-Wimport', '-Winit-self', '-Winvalid-pch',
+            '-Wlong-long', '-Wmissing-braces', '-Wmissing-field-initializers',
+            '-Wmissing-format-attribute', '-Wmissing-include-dirs', '-Wpacked',
+            '-Wparentheses', '-Wpointer-arith', '-Wredundant-decls',
+            '-Wreturn-type', '-Wsequence-point', '-Wshadow', '-Wsign-compare',
+            '-Wstack-protector', '-Wstrict-aliasing', '-Wstrict-aliasing=2',
+            '-Wswitch', '-Wswitch-default', '-Wswitch-enum', '-Wtrigraphs',
+            '-Wuninitialized', '-Wunknown-pragmas', '-Wunreachable-code',
+            '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
+            '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
+            '-Wwrite-strings', '-pipe', '-std=c++17', '-fopenmp', '-march=native',
+            '-funroll-loops', '-ffast-math', '-flto=auto', '-Xpreprocessor',
+            '-O3', '-Wno-header-guard', '-Wno-pessimizing-move'
+        ] + cpp_files
+
+        core_build_args = exe_build_args + ['-shared', '-o', OUTPUT_CORE]
+        exe_build_args += ['-o', OUTPUT_EXECUTABLE]
+
+        lib_build_args = [
+            '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
+            '-Ilib', '-shared', '-o', OUTPUT_LIBRARY + '.so',
+            OUTPUT_CORE
+        ] + cc_files
+
+        print("Executing:")
+        print(' '.join(exe_build_args))
+        subprocess.run(exe_build_args)
+
+        print("Executing:")
+        print(' '.join(core_build_args))
+        subprocess.run(core_build_args)
+
+        print("Executing:")
+        print(' '.join(lib_build_args))
+        subprocess.run(lib_build_args)
 
 except Exception as e:
     print(f"Compilation failed with error: {e}")

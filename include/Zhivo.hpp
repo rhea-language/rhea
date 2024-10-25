@@ -31,7 +31,7 @@
 #define ZHIVO_BUILD_TYPE        "beta"
 #define ZHIVO_SEMANTIC_VERSION  "v1.0.0-" ZHIVO_BUILD_TYPE
 
-#ifdef __CUDA__
+#if defined(__NVCC__) || defined(__CUDA__) || defined(__CUDACC__)
 #define ZHIVO_BUILD_BACKEND     "nvidia"
 #else
 #define ZHIVO_BUILD_BACKEND     "openmp"

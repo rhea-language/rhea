@@ -48,17 +48,17 @@ jobs:
       - name: Run test scripts (x86)
         run: |
           start=$(date +%s%3N)
-          ./dist/zhivo-linux-x86_64-omp ./test/arithmetic.zhv
-          ./dist/zhivo-linux-x86_64-omp ./test/array.zhv
-          ./dist/zhivo-linux-x86_64-omp ./test/digits.zhv
-          ./dist/zhivo-linux-x86_64-omp ./test/error_handling.zhv
-          ./dist/zhivo-linux-x86_64-omp ./test/flow.zhv
-          ./dist/zhivo-linux-x86_64-omp ./test/func.zhv
-          ./dist/zhivo-linux-x86_64-omp ./test/loop.zhv
-          ./dist/zhivo-linux-x86_64-omp ./test/parallel.zhv
-          ./dist/zhivo-linux-x86_64-omp ./test/regex.zhv
-          ./dist/zhivo-linux-x86_64-omp ./test/test.zhv
-          ./dist/zhivo-linux-x86_64-omp ./test/types.zhv
+          ./dist/zhivo-linux-x86_64-openmp ./test/arithmetic.zhv
+          ./dist/zhivo-linux-x86_64-openmp ./test/array.zhv
+          ./dist/zhivo-linux-x86_64-openmp ./test/digits.zhv
+          ./dist/zhivo-linux-x86_64-openmp ./test/error_handling.zhv
+          ./dist/zhivo-linux-x86_64-openmp ./test/flow.zhv
+          ./dist/zhivo-linux-x86_64-openmp ./test/func.zhv
+          ./dist/zhivo-linux-x86_64-openmp ./test/loop.zhv
+          ./dist/zhivo-linux-x86_64-openmp ./test/parallel.zhv
+          ./dist/zhivo-linux-x86_64-openmp ./test/regex.zhv
+          ./dist/zhivo-linux-x86_64-openmp ./test/test.zhv
+          ./dist/zhivo-linux-x86_64-openmp ./test/types.zhv
           end=$(date +%s%3N)
           echo "Elapsed time: $((end - start)) ms"
 
@@ -81,8 +81,8 @@ jobs:
 
       - name: Run examples (x86)
         run: |
-          /usr/bin/time -v ./dist/zhivo-linux-x86_64-omp ./examples/hello.zhv
-          /usr/bin/time -v ./dist/zhivo-linux-x86_64-omp ./examples/99-beers.zhv
+          /usr/bin/time -v ./dist/zhivo-linux-x86_64-openmp ./examples/hello.zhv
+          /usr/bin/time -v ./dist/zhivo-linux-x86_64-openmp ./examples/99-beers.zhv
 
       - name: Run examples (CUDA)
         run: |

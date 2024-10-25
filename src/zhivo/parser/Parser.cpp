@@ -874,7 +874,7 @@ std::unique_ptr<ASTNode> Parser::exprVal() {
         while(this->isNext(".", TokenType::OPERATOR)) {
             this->consume(".");
             variable.appendToImage(
-                "." +
+                std::string(".") +
                 this->consume(TokenType::IDENTIFIER)
                     .getImage()
             );

@@ -127,14 +127,18 @@ lib_build_args = [
 
 exe_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-omp']
 lib_build_args += cc_files
-cuda_build_args = ['nvcc']
+cuda_build_args = [
+    'nvcc',
+    '-lcudadevrt',
+    '-lcudart_static'
+]
 
 if PLATFORM == 'Linux':
     lib_build_args.append('-fPIC')
 
 if PLATFORM == 'Windows':
-    cuda_build_args.append('-Xcompiler')
-    cuda_build_args.append('/std:c++17')
+    cuda_build_args.append('-Xcompiler /MT')
+    cuda_build_args.append('-Xcompiler /std:c++17')
 
     lib_build_args = lib_build_args + [
         '-pipe', '-Ofast', '-s', '-std=c++17',
@@ -145,7 +149,7 @@ if PLATFORM == 'Windows':
     ]
 
 cuda_build_args.append('-Iinclude')
-cuda_build_args += cpp_files + ['-o', OUTPUT_EXECUTABLE + '-nvidia']
+cuda_build_args += cpp_files
 
 cuda_lib_args = [
     'nvcc', '--shared', '-Ilib', '-o',
@@ -155,12 +159,14 @@ cuda_lib_args = [
 if PLATFORM == 'Windows':
     cuda_lib_args[-1] += '.dll'
 else:
+    cuda_build_args += '-Xcompiler \'-static-libstdc++ -static-libgcc -static\''
     cuda_lib_args[-1] += '.so'
+    cuda_lib_args += [
+        '-Xcompiler \'-static-libgcc -static-libstdc++\'',
+        '--compiler-options', '\'-fPIC\''
+    ]
 
-cuda_lib_args += [
-    '--compiler-options', '-fPIC',
-    rt_bin
-] + cc_files
+cuda_lib_args += [rt_bin] + cc_files
 
 if PLATFORM == 'Windows':
     cuda_lib_args += ['--compiler-options', '/std:c++17']
@@ -181,6 +187,7 @@ try:
 
         exe_build_args.append(APP_ICON_OBJ)
         cuda_build_args.append(APP_ICON_OBJ)
+    cuda_build_args += ['-o', OUTPUT_EXECUTABLE + '-nvidia']
 
     print("Executing:")
     print(' '.join(exe_build_args))

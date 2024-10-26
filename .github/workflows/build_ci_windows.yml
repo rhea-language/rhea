@@ -27,6 +27,9 @@ jobs:
         with:
           arch: x86_amd64
 
+      - name: Install winget
+        uses: Cyberboss/install-winget@v1
+
       - name: MSVC Redistributable Installation
         run: |
           winget install --id=Microsoft.VCRedist.2008.x86 -e

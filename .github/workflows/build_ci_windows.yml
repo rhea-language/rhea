@@ -27,10 +27,18 @@ jobs:
         with:
           arch: x86_amd64
 
-      - name: MSVC Test
+      - name: MSVC Redistributable Installation
         run: |
-          where cl.exe
-          cl.exe
+          winget install --id=Microsoft.VCRedist.2008.x86 -e
+          winget install --id=Microsoft.VCRedist.2008.x64 -e
+          winget install --id=Microsoft.VCRedist.2010.x86 -e
+          winget install --id=Microsoft.VCRedist.2010.x64 -e
+          winget install --id=Microsoft.VCRedist.2012.x86 -e
+          winget install --id=Microsoft.VCRedist.2012.x64 -e
+          winget install --id=Microsoft.VCRedist.2013.x86 -e
+          winget install --id=Microsoft.VCRedist.2013.x64 -e
+          winget install --id=Microsoft.VCRedist.2015+.x86 -e
+          winget install --id=Microsoft.VCRedist.2015+.x64 -e 
 
       - name: CUDA Toolkit
         uses: Jimver/cuda-toolkit@v0.2.17

@@ -51,7 +51,7 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
             );
 
         DynamicObject rValue = this->right->visit(symbols);
-        std::unique_ptr<DynamicObject> rValuePtr = std::make_unique<DynamicObject>(rValue);
+        std::shared_ptr<DynamicObject> rValuePtr = std::make_shared<DynamicObject>(rValue);
 
         arrayVal.setArrayElement(
             std::move(this->address),

@@ -59,7 +59,7 @@ DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
 NativeFunction VariableDeclarationExpression::loadNativeFunction(
     std::string& libName,
     std::string& funcName,
-    std::unique_ptr<Token> address
+    std::shared_ptr<Token> address
 ) {
     void* handle;
     std::string library = std::string(libName.c_str());

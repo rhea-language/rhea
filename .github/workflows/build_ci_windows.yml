@@ -27,6 +27,11 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Microsoft Visual Studio C/C++
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86_amd64
+
       - name: Install winget
         uses: Cyberboss/install-winget@v1
 

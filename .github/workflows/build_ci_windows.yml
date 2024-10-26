@@ -40,8 +40,6 @@ jobs:
           winget install --id=Microsoft.VCRedist.2012.x64 --disable-interactivity --accept-source-agreements -e
           winget install --id=Microsoft.VCRedist.2013.x86 --disable-interactivity --accept-source-agreements -e
           winget install --id=Microsoft.VCRedist.2013.x64 --disable-interactivity --accept-source-agreements -e
-          winget install --id=Microsoft.VCRedist.2015+.x86 --disable-interactivity --accept-source-agreements -e
-          winget install --id=Microsoft.VCRedist.2015+.x64 --disable-interactivity --accept-source-agreements -e 
 
       - name: CUDA Toolkit
         uses: Jimver/cuda-toolkit@v0.2.17

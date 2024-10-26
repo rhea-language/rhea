@@ -27,7 +27,7 @@
 
 class ContinueStatement final : public ASTNode {
 public:
-    explicit ContinueStatement(std::unique_ptr<Token> _address) {
+    explicit ContinueStatement(std::shared_ptr<Token> _address) {
         this->address = std::move(_address);
     }
 

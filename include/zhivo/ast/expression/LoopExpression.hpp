@@ -27,18 +27,18 @@
 
 class LoopExpression final : public ASTNode {
 private:
-    std::unique_ptr<ASTNode> initial;
-    std::unique_ptr<ASTNode> condition;
-    std::unique_ptr<ASTNode> postexpr;
-    std::unique_ptr<ASTNode> body;
+    std::shared_ptr<ASTNode> initial;
+    std::shared_ptr<ASTNode> condition;
+    std::shared_ptr<ASTNode> postexpr;
+    std::shared_ptr<ASTNode> body;
 
 public:
     explicit LoopExpression(
-        std::unique_ptr<Token> _address,
-        std::unique_ptr<ASTNode> _initial,
-        std::unique_ptr<ASTNode> _condition,
-        std::unique_ptr<ASTNode> _postexpr,
-        std::unique_ptr<ASTNode> _body
+        std::shared_ptr<Token> _address,
+        std::shared_ptr<ASTNode> _initial,
+        std::shared_ptr<ASTNode> _condition,
+        std::shared_ptr<ASTNode> _postexpr,
+        std::shared_ptr<ASTNode> _body
     ) : initial(std::move(_initial)),
         condition(std::move(_condition)),
         postexpr(std::move(_postexpr)),

@@ -25,7 +25,7 @@
 
 class NilLiteralExpression final : public ASTNode {
 public:
-    explicit NilLiteralExpression(std::unique_ptr<Token> _address) {
+    explicit NilLiteralExpression(std::shared_ptr<Token> _address) {
         this->address = std::move(_address);
     }
 

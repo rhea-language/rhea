@@ -27,14 +27,14 @@
 
 class WhileExpression final : public ASTNode {
 private:
-    std::unique_ptr<ASTNode> expression;
-    std::unique_ptr<ASTNode> body;
+    std::shared_ptr<ASTNode> expression;
+    std::shared_ptr<ASTNode> body;
 
 public:
     explicit WhileExpression(
-        std::unique_ptr<Token> _address,
-        std::unique_ptr<ASTNode> _expression,
-        std::unique_ptr<ASTNode> _body
+        std::shared_ptr<Token> _address,
+        std::shared_ptr<ASTNode> _expression,
+        std::shared_ptr<ASTNode> _body
     ) : expression(std::move(_expression)),
         body(std::move(_body)) {
         this->address = std::move(_address);

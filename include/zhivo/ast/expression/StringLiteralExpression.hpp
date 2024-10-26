@@ -31,7 +31,7 @@ private:
 
 public:
     explicit StringLiteralExpression(
-        std::unique_ptr<Token> _address,
+        std::shared_ptr<Token> _address,
         std::string _value
     ) : value(_value) {
         this->address = std::move(_address);

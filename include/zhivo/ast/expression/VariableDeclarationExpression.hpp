@@ -27,13 +27,13 @@
 
 class VariableDeclarationExpression final : public ASTNode {
 private:
-    std::map<Token, std::unique_ptr<ASTNode>> declarations;
+    std::map<Token, std::shared_ptr<ASTNode>> declarations;
     std::string nativePath;
 
 public:
     explicit VariableDeclarationExpression(
-        std::unique_ptr<Token> _address,
-        std::map<Token, std::unique_ptr<ASTNode>> _declarations,
+        std::shared_ptr<Token> _address,
+        std::map<Token, std::shared_ptr<ASTNode>> _declarations,
         std::string _nativePath
     ) : declarations(std::move(_declarations)),
         nativePath(_nativePath) {
@@ -44,7 +44,7 @@ public:
     static NativeFunction loadNativeFunction(
         std::string& libName,
         std::string& funcName,
-        std::unique_ptr<Token> address
+        std::shared_ptr<Token> address
     );
 };
 

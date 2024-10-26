@@ -29,7 +29,7 @@ private:
 
 public:
     explicit NumberLiteralExpression(
-        std::unique_ptr<Token> _address,
+        std::shared_ptr<Token> _address,
         double _value
     ) : value(_value) {
         this->address = std::move(_address);

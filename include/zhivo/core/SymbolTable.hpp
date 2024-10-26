@@ -52,7 +52,7 @@ public:
     SymbolTable& operator=(const SymbolTable& other);
 
     DynamicObject getSymbol(
-        std::unique_ptr<Token> reference,
+        std::shared_ptr<Token> reference,
         const std::string& name
     );
 

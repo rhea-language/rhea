@@ -28,18 +28,18 @@
 
 class CatchHandleExpression final : public ASTNode {
 private:
-    std::unique_ptr<ASTNode> catchBlock;
-    std::unique_ptr<ASTNode> handleBlock;
-    std::unique_ptr<Token> handler;
-    std::unique_ptr<ASTNode> finalBlock;
+    std::shared_ptr<ASTNode> catchBlock;
+    std::shared_ptr<ASTNode> handleBlock;
+    std::shared_ptr<Token> handler;
+    std::shared_ptr<ASTNode> finalBlock;
 
 public:
     explicit CatchHandleExpression(
-        std::unique_ptr<Token> _address,
-        std::unique_ptr<ASTNode> _catchBlock,
-        std::unique_ptr<ASTNode> _handleBlock,
-        std::unique_ptr<Token> _handler,
-        std::unique_ptr<ASTNode> _finalBlock
+        std::shared_ptr<Token> _address,
+        std::shared_ptr<ASTNode> _catchBlock,
+        std::shared_ptr<ASTNode> _handleBlock,
+        std::shared_ptr<Token> _handler,
+        std::shared_ptr<ASTNode> _finalBlock
     ) : catchBlock(std::move(_catchBlock)),
         handleBlock(std::move(_handleBlock)),
         handler(std::move(_handler)),

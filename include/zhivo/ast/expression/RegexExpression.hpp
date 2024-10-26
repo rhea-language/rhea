@@ -29,7 +29,7 @@ private:
     std::string regExpression;
 public:
     explicit RegexExpression(
-        std::unique_ptr<Token> _address,
+        std::shared_ptr<Token> _address,
         std::string& _regExpression
     ) : regExpression(std::move(_regExpression)) {
         this->address = std::move(_address);

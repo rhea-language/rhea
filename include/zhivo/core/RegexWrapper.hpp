@@ -26,12 +26,12 @@
 class RegexWrapper final {
 private:
     std::string pattern;
-    std::unique_ptr<std::regex> regex;
+    std::shared_ptr<std::regex> regex;
 
 public:
     RegexWrapper(const std::string& _pattern) :
         pattern(std::move(_pattern)),
-        regex(std::make_unique<std::regex>(this->pattern)) {}
+        regex(std::make_shared<std::regex>(this->pattern)) {}
 
     const std::string& getPattern() const;
     const std::regex getRegex() const;

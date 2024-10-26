@@ -26,11 +26,11 @@
 
 class ParserException final : public std::runtime_error {
 private:
-    std::unique_ptr<Token> address;
+    std::shared_ptr<Token> address;
 
 public:
     explicit ParserException(
-        std::unique_ptr<Token> _address,
+        std::shared_ptr<Token> _address,
         const std::string& message) :
         std::runtime_error(message),
         address(std::move(_address)) {}

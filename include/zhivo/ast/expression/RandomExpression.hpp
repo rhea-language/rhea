@@ -25,14 +25,14 @@
 
 class RandomExpression final : public ASTNode {
 private:
-    std::unique_ptr<ASTNode> thenBranch;
-    std::unique_ptr<ASTNode> elseBranch;
+    std::shared_ptr<ASTNode> thenBranch;
+    std::shared_ptr<ASTNode> elseBranch;
 
 public:
     explicit RandomExpression(
-        std::unique_ptr<Token> _address,
-        std::unique_ptr<ASTNode> _thenBranch,
-        std::unique_ptr<ASTNode> _elseBranch
+        std::shared_ptr<Token> _address,
+        std::shared_ptr<ASTNode> _thenBranch,
+        std::shared_ptr<ASTNode> _elseBranch
     ) : thenBranch(std::move(_thenBranch)),
         elseBranch(std::move(_elseBranch)) {
         this->address = std::move(_address);

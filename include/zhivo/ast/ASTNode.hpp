@@ -25,7 +25,7 @@
 
 class ASTNode {
 protected:
-    std::unique_ptr<Token> address = nullptr;
+    std::shared_ptr<Token> address = nullptr;
 
 public:
     ASTNode() : address(nullptr) {}

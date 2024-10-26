@@ -27,12 +27,12 @@
 
 class BlockExpression final : public ASTNode {
 private:
-    std::vector<std::unique_ptr<ASTNode>> statements;
+    std::vector<std::shared_ptr<ASTNode>> statements;
 
 public:
     explicit BlockExpression(
-        std::unique_ptr<Token> _address,
-        std::vector<std::unique_ptr<ASTNode>> _statements
+        std::shared_ptr<Token> _address,
+        std::vector<std::shared_ptr<ASTNode>> _statements
     ) : statements(std::move(_statements)) {
         this->address = std::move(_address);
     }

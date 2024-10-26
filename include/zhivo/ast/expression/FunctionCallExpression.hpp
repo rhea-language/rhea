@@ -30,14 +30,14 @@
 
 class FunctionCallExpression final : public ASTNode {
 private:
-    std::unique_ptr<ASTNode> callable;
-    std::vector<std::unique_ptr<ASTNode>> arguments;
+    std::shared_ptr<ASTNode> callable;
+    std::vector<std::shared_ptr<ASTNode>> arguments;
 
 public:
     explicit FunctionCallExpression(
-        std::unique_ptr<Token> _address,
-        std::unique_ptr<ASTNode> _callable,
-        std::vector<std::unique_ptr<ASTNode>> _arguments
+        std::shared_ptr<Token> _address,
+        std::shared_ptr<ASTNode> _callable,
+        std::vector<std::shared_ptr<ASTNode>> _arguments
     ) : callable(std::move(_callable)),
         arguments(std::move(_arguments)) {
         this->address = std::move(_address);

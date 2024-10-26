@@ -27,7 +27,7 @@
 
 class BreakStatement final : public ASTNode {
 public:
-    explicit BreakStatement(std::unique_ptr<Token> _address) {
+    explicit BreakStatement(std::shared_ptr<Token> _address) {
         this->address = std::move(_address);
     }
 

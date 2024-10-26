@@ -43,6 +43,9 @@ jobs:
           winget install --id=Microsoft.VCRedist.2015+.x86 --disable-interactivity --accept-source-agreements -e
           winget install --id=Microsoft.VCRedist.2015+.x64 --disable-interactivity --accept-source-agreements -e 
 
+      - name: Windows 10 SDK Installation
+        uses: GuillaumeFalourd/setup-windows10-sdk-action@v2
+
       - name: CUDA Toolkit
         uses: Jimver/cuda-toolkit@v0.2.17
         id: cuda-toolkit

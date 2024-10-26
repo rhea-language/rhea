@@ -32,16 +32,15 @@ jobs:
         with:
           arch: x86_amd64
 
-      - name: Install winget
-        uses: Cyberboss/install-winget@v1
+      - name: Install Conda
+        uses: s-weigand/setup-conda@v1
+        run: conda --version
 
       - name: CUDA Toolkit Installation
-        run: |
-          winget install Nvidia.CUDA --disable-interactivity --accept-source-agreements -e
+        run: conda install cuda -c nvidia
 
       - name: Build Zhivo
-        run: |
-          python build.py
+        run: python build.py
 
       - name: Build verification
         run: |

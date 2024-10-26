@@ -39,6 +39,41 @@ while(count > 0) {
 > [!WARNING]
 > This repository is under a slow development. (Busy on my job)
 
+## Why Zhivo?
+
+- Direct mathematical operations for vectors and/or arrays.
+- Syntax-level concurrency and multithreading.
+- Language expressiveness with unconventional grammars.
+- Easy foreign-function interfacing for native interoperability.
+- Simplified ecosystem and project structuing.
+
+## Use Cases
+
+- **High-performance Scientific Computing**
+
+    Zhivo's ability to perform direct mathematical operations on vectors and arrays makes it ideal for scientific computing applications such as simulations, data analysis, and mathematical modeling. Its concurrency support ensures that heavy computational tasks can run efficiently on multi-core CPUs and GPUs.
+
+- **Data Pipelines and ETL (Extract, Transform, Load)**
+
+    With the Zhivo's expressiveness, it can be used to build efficient data pipelines for ETL processes in big data applications. Its support for complex data structures and built-in concurrency enables scalable, high-throughput data processing, making it ideal for tasks like data aggregation, transformation, and loading in distributed systems.
+
+- **Machine Learning Model Prototyping**
+
+    Zhivo is ideal for Machine Learning and AI due to its efficient mathematical operations, built-in concurrency, flexible syntax, seamless integration with native libraries, and a simplified project structure, enabling rapid development and optimization of advanced algorithms and applications.
+
+- **Game Development**
+
+    Language's native support for concurrency and vector operations is perfect for game engines that require real-time physics simulations, AI processing, and rendering pipelines. Developers can also easily interface with native libraries for advanced graphical rendering or sound processing.
+
+## Contribution and Feedback
+
+Contributions and feedback are all welcome to enhance this library. If you encounter any issues, have suggestions for improvements, or would like to contribute code, please do so.
+
+## Authors and Contributors
+
+- [Nathanne Isip](https://github.com/nthnn) - Author and Maintainer
+- [Lady Selene](https://instagram.com/lady.selenee) - Illustrator
+
 ## License
 
 Zhivo is distributed under the GNU General Public License v3.0. For further details, refer to the LICENSE file.

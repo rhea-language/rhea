@@ -28,9 +28,9 @@ jobs:
           python-version: '3.12'
 
       - name: MSVC v142 - VS 2019 C++ x64/x86 Build Tools
-          shell: cmd
-          run: |
-            "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" modify --channelId VisualStudio.16.Release --productId Microsoft.VisualStudio.Product.Enterprise -q --includeRecommended --add "Microsoft.VisualStudio.Component.VC.14.25.x86.x64"
+        shell: cmd
+        run: |
+          "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" modify --channelId VisualStudio.16.Release --productId Microsoft.VisualStudio.Product.Enterprise -q --includeRecommended --add "Microsoft.VisualStudio.Component.VC.14.25.x86.x64"
 
       - name: CUDA Toolkit
         uses: Jimver/cuda-toolkit@v0.2.17

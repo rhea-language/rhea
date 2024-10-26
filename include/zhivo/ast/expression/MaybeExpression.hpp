@@ -26,7 +26,7 @@
 
 class MaybeExpression final : public ASTNode {
 public:
-    explicit MaybeExpression(std::unique_ptr<Token> _address) {
+    explicit MaybeExpression(std::shared_ptr<Token> _address) {
         this->address = std::move(_address);
     }
 

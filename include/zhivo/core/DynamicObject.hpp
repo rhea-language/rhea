@@ -170,9 +170,9 @@ public:
     bool getBool() const;
 
     void setArrayElement(
-        std::unique_ptr<Token> reference,
+        std::shared_ptr<Token> reference,
         size_t index,
-        std::unique_ptr<DynamicObject> object
+        std::shared_ptr<DynamicObject> object
     );
 
     DynamicObject callFromNative(

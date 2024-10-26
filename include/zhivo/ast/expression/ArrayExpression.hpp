@@ -27,12 +27,12 @@
 
 class ArrayExpression final : public ASTNode {
 private:
-    std::vector<std::unique_ptr<ASTNode>> elements;
+    std::vector<std::shared_ptr<ASTNode>> elements;
 
 public:
     explicit ArrayExpression(
-        std::unique_ptr<Token> _address,
-        std::vector<std::unique_ptr<ASTNode>> _elements
+        std::shared_ptr<Token> _address,
+        std::vector<std::shared_ptr<ASTNode>> _elements
     ) : elements(std::move(_elements)) {
         this->address = std::move(_address);
     }

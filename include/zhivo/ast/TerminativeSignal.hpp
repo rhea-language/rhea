@@ -59,11 +59,11 @@ public:
 
 class TerminativeThrowSignal : public std::exception {
 private:
-    std::unique_ptr<Token> address;
+    std::shared_ptr<Token> address;
     DynamicObject value;
 
 public:
-    TerminativeThrowSignal(std::unique_ptr<Token> _address, DynamicObject _value) :
+    TerminativeThrowSignal(std::shared_ptr<Token> _address, DynamicObject _value) :
         address(std::move(_address)),
         value(std::move(_value)) {}
 

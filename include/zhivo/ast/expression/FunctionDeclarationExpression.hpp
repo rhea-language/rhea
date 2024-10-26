@@ -29,14 +29,14 @@
 
 class FunctionDeclarationExpression final : public ASTNode {
 private:
-    std::vector<std::unique_ptr<Token>> parameters;
-    std::unique_ptr<ASTNode> body;
+    std::vector<std::shared_ptr<Token>> parameters;
+    std::shared_ptr<ASTNode> body;
 
 public:
     explicit FunctionDeclarationExpression(
-        std::unique_ptr<Token> _address,
-        std::vector<std::unique_ptr<Token>> _parameters,
-        std::unique_ptr<ASTNode> _body
+        std::shared_ptr<Token> _address,
+        std::vector<std::shared_ptr<Token>> _parameters,
+        std::shared_ptr<ASTNode> _body
     ) : parameters(std::move(_parameters)),
         body(std::move(_body)) {
         this->address = std::move(_address);

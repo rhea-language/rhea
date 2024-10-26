@@ -26,13 +26,13 @@
 class UnaryExpression final : public ASTNode {
 private:
     std::string op;
-    std::unique_ptr<ASTNode> expression;
+    std::shared_ptr<ASTNode> expression;
 
 public:
     explicit UnaryExpression(
-        std::unique_ptr<Token> _address,
+        std::shared_ptr<Token> _address,
         std::string _op,
-        std::unique_ptr<ASTNode> _expression
+        std::shared_ptr<ASTNode> _expression
     ) : op(std::move(_op)),
         expression(std::move(_expression)) {
         this->address = std::move(_address);

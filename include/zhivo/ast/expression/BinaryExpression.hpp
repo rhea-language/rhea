@@ -27,8 +27,8 @@
 
 class BinaryExpression final : public ASTNode {
 private:
-    std::unique_ptr<ASTNode> left;
-    std::unique_ptr<ASTNode> right;
+    std::shared_ptr<ASTNode> left;
+    std::shared_ptr<ASTNode> right;
     std::string op;
 
     DynamicObject applyStringOp(DynamicObject& lValue, DynamicObject& rValue);
@@ -39,10 +39,10 @@ private:
 
 public:
     explicit BinaryExpression(
-        std::unique_ptr<Token> _address,
-        std::unique_ptr<ASTNode> _left,
+        std::shared_ptr<Token> _address,
+        std::shared_ptr<ASTNode> _left,
         std::string _op,
-        std::unique_ptr<ASTNode> _right
+        std::shared_ptr<ASTNode> _right
     ) : left(std::move(_left)),
         right(std::move(_right)),
         op(_op) {

@@ -27,14 +27,14 @@
 
 class ArrayAccessExpression final : public ASTNode {
 private:
-    std::unique_ptr<ASTNode> array;
-    std::unique_ptr<ASTNode> index;
+    std::shared_ptr<ASTNode> array;
+    std::shared_ptr<ASTNode> index;
 
 public:
     explicit ArrayAccessExpression(
-        std::unique_ptr<Token> _address,
-        std::unique_ptr<ASTNode> _array,
-        std::unique_ptr<ASTNode> _index
+        std::shared_ptr<Token> _address,
+        std::shared_ptr<ASTNode> _array,
+        std::shared_ptr<ASTNode> _index
     ) : array(std::move(_array)),
         index(std::move(_index)) {
         this->address = std::move(_address);

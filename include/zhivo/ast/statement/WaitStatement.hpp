@@ -26,7 +26,7 @@
 
 class WaitStatement final : public ASTNode {
 public:
-    explicit WaitStatement(std::unique_ptr<Token> _address) {
+    explicit WaitStatement(std::shared_ptr<Token> _address) {
         this->address = std::move(_address);
     }
 

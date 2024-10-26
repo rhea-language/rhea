@@ -24,14 +24,14 @@
 
 class NilCoalescingExpression final : public ASTNode {
 private:
-    std::unique_ptr<ASTNode> left;
-    std::unique_ptr<ASTNode> right;
+    std::shared_ptr<ASTNode> left;
+    std::shared_ptr<ASTNode> right;
 
 public:
     explicit NilCoalescingExpression(
-        std::unique_ptr<Token> _address,
-        std::unique_ptr<ASTNode> _left,
-        std::unique_ptr<ASTNode> _right
+        std::shared_ptr<Token> _address,
+        std::shared_ptr<ASTNode> _left,
+        std::shared_ptr<ASTNode> _right
     ) : left(std::move(_left)),
         right(std::move(_right)) {
         this->address = std::move(_address);

@@ -28,48 +28,48 @@
 
 class Parser final {
 private:
-    std::vector<std::unique_ptr<ASTNode>> globalStatements;
+    std::vector<std::shared_ptr<ASTNode>> globalStatements;
     std::vector<Token> tokens;
     int length;
     int index = 0;
 
-    std::unique_ptr<ASTNode> exprArray();
-    std::unique_ptr<ASTNode> exprBlock();
-    std::unique_ptr<ASTNode> exprCatchHandle();
-    std::unique_ptr<ASTNode> exprFunctionDecl();
-    std::unique_ptr<ASTNode> exprLoop();
-    std::unique_ptr<ASTNode> exprIf();
-    std::unique_ptr<ASTNode> exprLiteral();
-    std::unique_ptr<ASTNode> exprRandom();
-    std::unique_ptr<ASTNode> exprRender();
-    std::unique_ptr<ASTNode> exprType();
-    std::unique_ptr<ASTNode> exprUnless();
-    std::unique_ptr<ASTNode> exprWhen();
-    std::unique_ptr<ASTNode> exprWhile();
-    std::unique_ptr<ASTNode> exprPrimary();
-    std::unique_ptr<ASTNode> exprLogicOr();
-    std::unique_ptr<ASTNode> exprLogicAnd();
-    std::unique_ptr<ASTNode> exprBitwiseOr();
-    std::unique_ptr<ASTNode> exprBitwiseXor();
-    std::unique_ptr<ASTNode> exprBitwiseAnd();
-    std::unique_ptr<ASTNode> exprNilCoalescing();
-    std::unique_ptr<ASTNode> exprEquality();
-    std::unique_ptr<ASTNode> exprComparison();
-    std::unique_ptr<ASTNode> exprShift();
-    std::unique_ptr<ASTNode> exprTerm();
-    std::unique_ptr<ASTNode> exprFactor();
-    std::unique_ptr<ASTNode> exprParallel();
-    std::unique_ptr<ASTNode> exprVal();
+    std::shared_ptr<ASTNode> exprArray();
+    std::shared_ptr<ASTNode> exprBlock();
+    std::shared_ptr<ASTNode> exprCatchHandle();
+    std::shared_ptr<ASTNode> exprFunctionDecl();
+    std::shared_ptr<ASTNode> exprLoop();
+    std::shared_ptr<ASTNode> exprIf();
+    std::shared_ptr<ASTNode> exprLiteral();
+    std::shared_ptr<ASTNode> exprRandom();
+    std::shared_ptr<ASTNode> exprRender();
+    std::shared_ptr<ASTNode> exprType();
+    std::shared_ptr<ASTNode> exprUnless();
+    std::shared_ptr<ASTNode> exprWhen();
+    std::shared_ptr<ASTNode> exprWhile();
+    std::shared_ptr<ASTNode> exprPrimary();
+    std::shared_ptr<ASTNode> exprLogicOr();
+    std::shared_ptr<ASTNode> exprLogicAnd();
+    std::shared_ptr<ASTNode> exprBitwiseOr();
+    std::shared_ptr<ASTNode> exprBitwiseXor();
+    std::shared_ptr<ASTNode> exprBitwiseAnd();
+    std::shared_ptr<ASTNode> exprNilCoalescing();
+    std::shared_ptr<ASTNode> exprEquality();
+    std::shared_ptr<ASTNode> exprComparison();
+    std::shared_ptr<ASTNode> exprShift();
+    std::shared_ptr<ASTNode> exprTerm();
+    std::shared_ptr<ASTNode> exprFactor();
+    std::shared_ptr<ASTNode> exprParallel();
+    std::shared_ptr<ASTNode> exprVal();
 
-    std::unique_ptr<ASTNode> stmtBreak();
-    std::unique_ptr<ASTNode> stmtContinue();
-    std::unique_ptr<ASTNode> stmtRet();
-    std::unique_ptr<ASTNode> stmtThrow();
-    std::unique_ptr<ASTNode> stmtTest();
-    std::unique_ptr<ASTNode> stmtWait();
+    std::shared_ptr<ASTNode> stmtBreak();
+    std::shared_ptr<ASTNode> stmtContinue();
+    std::shared_ptr<ASTNode> stmtRet();
+    std::shared_ptr<ASTNode> stmtThrow();
+    std::shared_ptr<ASTNode> stmtTest();
+    std::shared_ptr<ASTNode> stmtWait();
 
-    std::unique_ptr<ASTNode> expression();
-    std::unique_ptr<ASTNode> statement();
+    std::shared_ptr<ASTNode> expression();
+    std::shared_ptr<ASTNode> statement();
 
     Token previous();
     Token peek();
@@ -88,7 +88,7 @@ public:
         tokens(_tokens),
         length(static_cast<int>(_tokens.size())) {}
 
-    const std::vector<std::unique_ptr<ASTNode>>& getGlobalStatements() const;
+    const std::vector<std::shared_ptr<ASTNode>>& getGlobalStatements() const;
     void parse();
 
     static Parser fromFile(const std::string& fileName);

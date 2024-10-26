@@ -62,7 +62,7 @@ public:
         length((int) this->source.length()),
         index(0) {}
 
-    static std::unique_ptr<Tokenizer> loadFile(const std::string& filePath);
+    static std::shared_ptr<Tokenizer> loadFile(const std::string& filePath);
 
     void scan();
     const std::vector<Token>& getTokens() const;

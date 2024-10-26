@@ -27,13 +27,13 @@
 
 class VariableAccessExpression final : public ASTNode {
 private:
-    std::unique_ptr<Token> name;
+    std::shared_ptr<Token> name;
 
 public:
     explicit VariableAccessExpression(
-        std::unique_ptr<Token> _name
+        std::shared_ptr<Token> _name
     ) : name(std::move(_name)) {
-        this->address = std::make_unique<Token>(*this->name);
+        this->address = std::make_shared<Token>(*this->name);
     }
 
     Token getName() const;

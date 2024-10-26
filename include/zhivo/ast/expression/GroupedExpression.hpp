@@ -25,12 +25,12 @@
 
 class GroupedExpression final : public ASTNode {
 private:
-    std::unique_ptr<ASTNode> expression;
+    std::shared_ptr<ASTNode> expression;
 
 public:
     explicit GroupedExpression(
-        std::unique_ptr<Token> _address,
-        std::unique_ptr<ASTNode> _expression
+        std::shared_ptr<Token> _address,
+        std::shared_ptr<ASTNode> _expression
     ) : expression(std::move(_expression)) {
         this->address = std::move(_address);
     }

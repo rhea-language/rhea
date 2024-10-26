@@ -27,16 +27,16 @@
 
 class WhenExpression final : public ASTNode {
 private:
-    std::unique_ptr<ASTNode> expression;
-    std::vector<std::pair<std::unique_ptr<ASTNode>, std::unique_ptr<ASTNode>>> cases;
-    std::unique_ptr<ASTNode> defaultCase;
+    std::shared_ptr<ASTNode> expression;
+    std::vector<std::pair<std::shared_ptr<ASTNode>, std::shared_ptr<ASTNode>>> cases;
+    std::shared_ptr<ASTNode> defaultCase;
 
 public:
     explicit WhenExpression(
-        std::unique_ptr<Token> _address,
-        std::unique_ptr<ASTNode> _expression,
-        std::vector<std::pair<std::unique_ptr<ASTNode>, std::unique_ptr<ASTNode>>> _cases,
-        std::unique_ptr<ASTNode> _defaultCase
+        std::shared_ptr<Token> _address,
+        std::shared_ptr<ASTNode> _expression,
+        std::vector<std::pair<std::shared_ptr<ASTNode>, std::shared_ptr<ASTNode>>> _cases,
+        std::shared_ptr<ASTNode> _defaultCase
     ) : expression(std::move(_expression)),
         cases(std::move(_cases)),
         defaultCase(std::move(_defaultCase)) {

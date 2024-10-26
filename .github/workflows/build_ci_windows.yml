@@ -29,17 +29,9 @@ jobs:
 
       - name: Microsoft Visual Studio C/C++
         uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x86_amd64
-
-      - name: Install Conda
-        uses: s-weigand/setup-conda@v1
-
-      - name: Verify Conda Installation
-        run: conda --version
 
       - name: CUDA Toolkit Installation
-        run: conda install cuda -c nvidia
+        uses: Jimver/cuda-toolkit@v0.2.18
 
       - name: Build Zhivo
         run: python build.py

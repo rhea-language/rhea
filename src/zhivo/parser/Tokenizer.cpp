@@ -19,7 +19,7 @@
 #include <zhivo/parser/Tokenizer.hpp>
 #include <zhivo/util/StringUnescape.hpp>
 
-std::unique_ptr<Tokenizer> Tokenizer::loadFile(const std::string& filePath) {
+std::shared_ptr<Tokenizer> Tokenizer::loadFile(const std::string& filePath) {
     std::ifstream file(filePath);
     if(!file.is_open())
         throw std::runtime_error("File not found: " + filePath);
@@ -27,7 +27,7 @@ std::unique_ptr<Tokenizer> Tokenizer::loadFile(const std::string& filePath) {
     std::ostringstream content;
     content << file.rdbuf();
 
-    return std::make_unique<Tokenizer>(content.str(), filePath);
+    return std::make_shared<Tokenizer>(content.str(), filePath);
 }
 
 void Tokenizer::scan() {

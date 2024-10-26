@@ -30,7 +30,7 @@ SymbolTable& SymbolTable::operator=(const SymbolTable& other) {
 }
 
 DynamicObject SymbolTable::getSymbol(
-    std::unique_ptr<Token> reference,
+    std::shared_ptr<Token> reference,
     const std::string& name
 ) {
     if(this->hasSymbol(name))

@@ -22,6 +22,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Microsoft Visual Studio C/C++
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86_amd64
+
+      - name: MSVC Test
+        run: |
+          where cl.exe
+          cl.exe
+
       - name: CUDA Toolkit
         uses: Jimver/cuda-toolkit@v0.2.17
         id: cuda-toolkit
@@ -30,11 +40,6 @@ jobs:
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
-
-      - name: Microsoft Visual Studio C/C++
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x86_amd64
 
       - name: Python 3.12 Installation
         uses: actions/setup-python@v5

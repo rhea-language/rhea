@@ -24,7 +24,28 @@
 ZHIVO_LIB_START
 
 ZHIVO_FUNC(io_print);
-ZHIVO_FUNC(io_read);
+ZHIVO_FUNC(io_printLine);
+
+ZHIVO_FUNC(io_readString);
+ZHIVO_FUNC(io_readNumber);
+ZHIVO_FUNC(io_readBoolean);
+
+ZHIVO_FUNC(io_fileRead);
+ZHIVO_FUNC(io_fileWrite);
+ZHIVO_FUNC(io_fileSize);
+ZHIVO_FUNC(io_filePerms);
+ZHIVO_FUNC(io_fileCreationDate);
+ZHIVO_FUNC(io_fileDelete);
+
+ZHIVO_FUNC(io_folderCreate);
+ZHIVO_FUNC(io_folderSize);
+ZHIVO_FUNC(io_folderCreationDate);
+ZHIVO_FUNC(io_folderDelete);
+
+ZHIVO_FUNC(io_isFile);
+ZHIVO_FUNC(io_isFolder);
+ZHIVO_FUNC(io_listAllFiles);
+
 ZHIVO_FUNC(io_exit);
 
 ZHIVO_LIB_END

@@ -184,7 +184,7 @@ ZHIVO_FUNC(io_filePerms) {
     #else
 
     struct stat fileStat;
-    if(stat(fileName.c_str(), &fileStat) != 0) {
+    if(stat(fileName.toString().c_str(), &fileStat) != 0) {
         returnValues.emplace_back(DynamicObject(0.0));
         returnValues.emplace_back(DynamicObject("Could not get file status"));
 
@@ -269,7 +269,7 @@ ZHIVO_FUNC(io_fileDelete) {
 
     struct stat buffer;
     if(stat(fileName.toString().c_str(), &buffer) == 0) {
-        if(remove(fileName.c_str()) == 0) {
+        if(remove(fileName.toString().c_str()) == 0) {
             returnValues.emplace_back(DynamicObject(true));
             returnValues.emplace_back(DynamicObject());
         }

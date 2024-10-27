@@ -85,7 +85,8 @@ try:
         ]
         exe_build_args += ['-o', OUTPUT_EXECUTABLE + '-openmp']
         lib_build_args = [
-            'g++', '-Iinclude', '-Ilib', '-shared',
+            'g++', '-static', '-static-libgcc',
+            '-Iinclude', '-Ilib', '-shared',
             '-o', OUTPUT_LIBRARY + '.dll', OUTPUT_CORE
         ] + cc_files
 
@@ -144,7 +145,8 @@ try:
         ]
         exe_build_args += ['-o', OUTPUT_EXECUTABLE + '-openmp']
         lib_build_args = [
-            'g++', '-Iinclude', '-Ilib', '-fPIC', '-shared',
+            'g++', '-static', '-static-libgcc',
+            '-Iinclude', '-Ilib', '-fPIC', '-shared',
             '-o', OUTPUT_LIBRARY + '.so', OUTPUT_CORE
         ] + cc_files
 
@@ -201,7 +203,8 @@ try:
 
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
-            '-Ilib', '-shared', '-o', OUTPUT_LIBRARY + '.so',
+            '-static', '-static-libgcc', '-Ilib', '-shared',
+            '-o', OUTPUT_LIBRARY + '.so',
             OUTPUT_CORE
         ] + cc_files
 

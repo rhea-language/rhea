@@ -17,8 +17,16 @@
  */
 
 #include <zhivo/ast/ASTNode.hpp>
+#include <zhivo/ast/ASTNodeException.hpp>
+#include <zhivo/ast/TerminativeSignal.hpp>
 #include <zhivo/core/Runtime.hpp>
+#include <zhivo/parser/Parser.hpp>
+#include <zhivo/parser/ParserException.hpp>
+#include <zhivo/parser/Tokenizer.hpp>
 
+#include <exception>
+#include <iostream>
+#include <stack>
 #include <thread>
 #include <vector>
 
@@ -64,4 +72,126 @@ void Runtime::cleanUp() {
             #endif
 
     Runtime::nativeLibraries.clear();
+}
+
+static inline bool isBalanced(const std::string& input) {
+    std::stack<char> stack;
+
+    for(char ch : input) {
+        if(ch == '(' || ch == '{' || ch == '[')
+            stack.push(ch);
+        else if(ch == ')' || ch == '}' || ch == ']') {
+            if(stack.empty())
+                return false;
+
+            char top = stack.top();
+            if((ch == ')' && top != '(') ||
+                (ch == '}' && top != '{') ||
+                (ch == ']' && top != '['))
+                return false;
+
+            stack.pop();
+        }
+    }
+
+    return stack.empty();
+}
+
+void Runtime::repl() {
+    SymbolTable symtab;
+    std::string input, line;
+    int iterNum = 1;
+
+    std::cout << ">>> ";
+    while(std::getline(std::cin, line)) {
+        input += line + '\n';
+
+        if(isBalanced(input)) {
+            try{
+                Tokenizer tokenizer(
+                    input,
+                    "<repl, iteration: " +
+                        std::to_string(iterNum) + ">"
+                );
+                tokenizer.scan();
+
+                Parser parser(tokenizer.getTokens());
+                parser.parse();
+
+                for(const auto& statement : parser.getGlobalStatements())
+                    statement->visit(symtab);
+
+                symtab.detachParallelNodes();
+            }
+            catch(const std::system_error& exc) {
+                Runtime::cleanUp();
+                std::cerr << "[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m"
+                    << exc.what() << "\u001b[0m" << std::endl;
+            }
+            catch(const ASTNodeException& nodeExc) {
+                symtab.waitForThreads();
+                Runtime::cleanUp();
+
+                std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
+                    << "\u001b[3;37m" << nodeExc.what() << "\u001b[0m"
+                    << std::endl << "                 "
+                    << nodeExc.getAddress()->toString() << std::endl;
+            }
+            catch(const LexicalAnalysisException& lexAnlExc) {
+                symtab.waitForThreads();
+                Runtime::cleanUp();
+
+                std::cerr << "[\u001b[1;31mLexical Error\u001b[0m]:" << std::endl
+                    << "\t" << lexAnlExc.what() << std::endl;
+            }
+            catch(const ParserException& parserExc) {
+                symtab.waitForThreads();
+                Runtime::cleanUp();
+
+                std::cerr << "[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m"
+                    << parserExc.what() << "\u001b[0m" << std::endl;
+                std::cerr << "                 " <<
+                    parserExc.getAddress()->toString() << std::endl;
+            }
+            catch(const TerminativeBreakSignal& breakExc) {
+                symtab.waitForThreads();
+                Runtime::cleanUp();
+
+                std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
+                    << "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
+                    << std::endl << "                 "
+                    << breakExc.getAddress().toString() << std::endl;
+            }
+            catch(const TerminativeContinueSignal& continueExc) {
+                symtab.waitForThreads();
+                Runtime::cleanUp();
+
+                std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
+                    << "\u001b[3;37mInvalid continue statement signal caught.\u001b[0m"
+                    << std::endl << "                 "
+                    << continueExc.getAddress().toString() << std::endl;
+            }
+            catch(const TerminativeReturnSignal& retExc) {
+                symtab.waitForThreads();
+                Runtime::cleanUp();
+
+                std::cerr << "\u001b[0;93m"
+                    << retExc.getObject().toString()
+                    << "\u001b[0m" << std::endl;
+            }
+            catch(const std::exception& exc) {
+                symtab.waitForThreads();
+                Runtime::cleanUp();
+
+                std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m"
+                    << exc.what() << "\u001b[0m" << std::endl;
+            }
+
+            input.clear();
+            iterNum++;
+
+            std::cout << std::endl << ">>> ";
+        }
+        else std::cout << "... ";
+    }
 }

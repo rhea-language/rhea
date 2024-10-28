@@ -29,6 +29,8 @@ private:
     static std::unordered_map<std::string, void*> nativeLibraries;
 
 public:
+    static void repl();
+
     static bool isTestMode();
     static void setTestMode(bool _testMode);
 

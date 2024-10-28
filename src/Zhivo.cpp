@@ -151,17 +151,16 @@ auto main(int argc, char** argv) -> int {
         printBanner(argParse);
         return 1;
     }
-    else if(argParse.hasParameter("r")) {
+
+    if(argParse.hasParameter("t"))
+        Runtime::setTestMode(true);
+
+    if(argParse.hasParameter("r")) {
         Runtime::repl();
         return 1;
     }
-
-    if(argc > 1) {
-        if(argParse.hasParameter("t"))
-            Runtime::setTestMode(true);
-
+    else if(argc > 1)
         return interpreter(argParse.getInputFiles());
-    }
 
     printBanner(argParse);
     return 1;

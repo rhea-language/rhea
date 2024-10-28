@@ -144,10 +144,15 @@ auto interpreter(std::vector<std::string> files) -> int {
 auto main(int argc, char** argv) -> int {
     ZhivoUtil::ArgumentParser argParse(argc, argv);
     argParse.defineParameter("h", "help", "Show this help banner.");
+    argParse.defineParameter("r", "repl", "Interative interpreter mode (REPL).");
     argParse.defineParameter("t", "test", "Run the script files in test mode.");
 
     if(argParse.hasParameter("h")) {
         printBanner(argParse);
+        return 1;
+    }
+    else if(argParse.hasParameter("r")) {
+        Runtime::repl();
         return 1;
     }
 

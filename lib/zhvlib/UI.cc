@@ -105,9 +105,11 @@ ZHIVO_FUNC(ui_dialog_openFile) {
     if(windowDictionary.find(uuid.toString()) == windowDictionary.end())
         throw std::runtime_error("Cannot find window with specified key");
 
-    return DynamicObject(std::string(
-        uiOpenFile(windowDictionary[uuid.toString()])
-    ));
+    char* filePath = uiOpenFile(windowDictionary[uuid.toString()]);
+    if(filePath == nullptr)
+        return DynamicObject();
+
+    return DynamicObject(std::string(filePath));
 }
 
 ZHIVO_FUNC(ui_dialog_saveFile) {
@@ -122,9 +124,11 @@ ZHIVO_FUNC(ui_dialog_saveFile) {
     if(windowDictionary.find(uuid.toString()) == windowDictionary.end())
         throw std::runtime_error("Cannot find window with specified key");
 
-    return DynamicObject(std::string(
-        uiSaveFile(windowDictionary[uuid.toString()])
-    ));
+    char* filePath = uiSaveFile(windowDictionary[uuid.toString()]);
+    if(filePath == nullptr)
+        return DynamicObject();
+
+    return DynamicObject(std::string(filePath));
 }
 
 ZHIVO_FUNC(ui_dialog_messageBox) {

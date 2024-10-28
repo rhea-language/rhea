@@ -16,16 +16,25 @@
 
 import os
 import platform
+import requests
 import shutil
 import subprocess
 import sys
+import zipfile
+
+from glob import glob
 
 PLATFORM = platform.system()
 
 OUT_DIR = 'dist'
 if os.path.exists(OUT_DIR):
     shutil.rmtree(OUT_DIR)
-os.makedirs('dist')
+os.makedirs(OUT_DIR)
+
+TEMP_DIR = 'temp'
+if os.path.exists(TEMP_DIR):
+    shutil.rmtree(TEMP_DIR)
+os.makedirs(TEMP_DIR)
 
 OUTPUT_EXECUTABLE = os.path.join(
     OUT_DIR,
@@ -45,6 +54,39 @@ OUTPUT_CORE = OUTPUT_EXECUTABLE + '-core.a'
 cpp_files = []
 cc_files = []
 
+def download_libui():
+    url = ''
+    if PLATFORM == 'Windows':
+        url = 'https://github.com/andlabs/libui/releases/download/alpha4.1/libui-alpha4.1-windows-amd64-shared.zip'
+    elif PLATFORM == 'Linux':
+        url = 'https://github.com/andlabs/libui/releases/download/alpha4.1/libui-alpha4.1-linux-amd64-shared.tgz'
+    elif PLATFORM == 'Darwin':
+        url = 'https://github.com/andlabs/libui/releases/download/alpha4.1/libui-alpha4.1-darwin-amd64-shared.tgz'
+
+    zip_path = url.split('/')[-1]
+
+    print('Downloading file...')
+    response = requests.get(url)
+    with open(zip_path, 'wb') as file:
+        file.write(response.content)
+    print('Download completed.')
+    os.makedirs(OUT_DIR, exist_ok=True)
+
+    print('Extracting the ZIP file...')
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(OUT_DIR)
+    print('Extraction completed.')
+
+    lib_header_path = os.path.join(TEMP_DIR, 'include')
+    os.makedirs(TEMP_DIR, exist_ok=True)
+    os.makedirs(lib_header_path, exist_ok=True)
+
+    header_files = glob(os.path.join(OUT_DIR, '*.h'))
+    for header_file in header_files:
+        shutil.move(header_file, lib_header_path)
+
+    os.remove(zip_path)
+
 for root, dirs, files in os.walk('src'):
     for file in files:
         if file.endswith('.cpp'):
@@ -56,7 +98,10 @@ for root, dirs, files in os.walk('lib'):
             cc_files.append(os.path.join(root, file))
 
 try:
+    download_libui()
+
     if PLATFORM == 'Windows':
+
         exe_build_args= [
             'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
             '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
@@ -85,9 +130,10 @@ try:
         ]
         exe_build_args += ['-o', OUTPUT_EXECUTABLE + '-openmp']
         lib_build_args = [
-            'g++', '-static', '-static-libgcc',
-            '-Iinclude', '-Ilib', '-shared',
-            '-o', OUTPUT_LIBRARY + '.dll', OUTPUT_CORE
+            'g++', '-static', '-static-libgcc', '-Iinclude',
+            '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
+            '-shared', '-o', OUTPUT_LIBRARY + '.dll', OUTPUT_CORE,
+            os.path.join(OUT_DIR, 'libui.dll')
         ] + cc_files
 
         cuda_exe_build_args = [
@@ -145,9 +191,10 @@ try:
         ]
         exe_build_args += ['-o', OUTPUT_EXECUTABLE + '-openmp']
         lib_build_args = [
-            'g++', '-static', '-static-libgcc',
-            '-Iinclude', '-Ilib', '-fPIC', '-shared',
-            '-o', OUTPUT_LIBRARY + '.so', OUTPUT_CORE
+            'g++', '-static', '-static-libgcc', '-Iinclude',
+            '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
+            '-fPIC', '-shared', '-o', OUTPUT_LIBRARY + '.so',
+            OUTPUT_CORE, os.path.join(OUT_DIR, 'libui.so')
         ] + cc_files
 
         cuda_exe_build_args = [
@@ -202,10 +249,10 @@ try:
         exe_build_args += ['-o', OUTPUT_EXECUTABLE + '-openmp']
 
         lib_build_args = [
-            '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
-            '-static', '-static-libgcc', '-Ilib', '-shared',
-            '-o', OUTPUT_LIBRARY + '.so',
-            OUTPUT_CORE
+            '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude', '-static',
+            '-static-libgcc', '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
+            '-shared', '-o', OUTPUT_LIBRARY + '.so', OUTPUT_CORE,
+            os.path.join(OUT_DIR, 'libui.so')
         ] + cc_files
 
         print("Executing:")

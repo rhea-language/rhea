@@ -93,6 +93,86 @@ ZHIVO_FUNC(ui_main) {
     return DynamicObject();
 }
 
+ZHIVO_FUNC(ui_dialog_openFile) {
+    if(args.size() > 1)
+        throw std::runtime_error(
+            "Expecting 1 argument, got " +
+                std::to_string(args.size()) +
+                "."
+        );
+
+    DynamicObject uuid = args.at(0);
+    if(windowDictionary.find(uuid.toString()) == windowDictionary.end())
+        throw std::runtime_error("Cannot find window with specified key");
+
+    return DynamicObject(std::string(
+        uiOpenFile(windowDictionary[uuid.toString()])
+    ));
+}
+
+ZHIVO_FUNC(ui_dialog_saveFile) {
+    if(args.size() > 1)
+        throw std::runtime_error(
+            "Expecting 1 argument, got " +
+                std::to_string(args.size()) +
+                "."
+        );
+
+    DynamicObject uuid = args.at(0);
+    if(windowDictionary.find(uuid.toString()) == windowDictionary.end())
+        throw std::runtime_error("Cannot find window with specified key");
+
+    return DynamicObject(std::string(
+        uiSaveFile(windowDictionary[uuid.toString()])
+    ));
+}
+
+ZHIVO_FUNC(ui_dialog_messageBox) {
+    if(args.size() != 3)
+        throw std::runtime_error(
+            "Expecting 3 argument, got " +
+                std::to_string(args.size()) +
+                "."
+        );
+
+    DynamicObject uuid = args.at(0),
+        title = args.at(1),
+        caption = args.at(2);
+
+    if(windowDictionary.find(uuid.toString()) == windowDictionary.end())
+        throw std::runtime_error("Cannot find window with specified key");
+
+    uiMsgBox(
+        windowDictionary[uuid.toString()],
+        title.toString().c_str(),
+        caption.toString().c_str()
+    );
+    return DynamicObject();
+}
+
+ZHIVO_FUNC(ui_dialog_messageBoxError) {
+    if(args.size() != 3)
+        throw std::runtime_error(
+            "Expecting 3 argument, got " +
+                std::to_string(args.size()) +
+                "."
+        );
+
+    DynamicObject uuid = args.at(0),
+        title = args.at(1),
+        caption = args.at(2);
+
+    if(windowDictionary.find(uuid.toString()) == windowDictionary.end())
+        throw std::runtime_error("Cannot find window with specified key");
+
+    uiMsgBoxError(
+        windowDictionary[uuid.toString()],
+        title.toString().c_str(),
+        caption.toString().c_str()
+    );
+    return DynamicObject();
+}
+
 ZHIVO_FUNC(ui_window_create) {
     if(args.size() != 4)
         throw std::runtime_error(
@@ -141,7 +221,7 @@ ZHIVO_FUNC(ui_window_onClosing) {
     std::string uuidStr = uuid.toString();
     if(windowDictionary.find(uuidStr) != windowDictionary.end())
         window = windowDictionary[uuidStr];
-    else throw std::runtime_error("Cannot window with specified key");
+    else throw std::runtime_error("Cannot find window with specified key");
 
     windowCallbackMap[uuidStr] = [callback, uuidStr, symtab]() -> int {
         std::shared_ptr<FunctionDeclarationExpression> func = callback.getCallable();

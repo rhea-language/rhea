@@ -260,8 +260,8 @@ try:
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude', '-static',
             '-static-libgcc', '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
-            '-shared', '-o', OUTPUT_LIBRARY + '.so', OUTPUT_CORE,
-            os.path.join(OUT_DIR, 'libui.so')
+            '-shared', '-o', OUTPUT_LIBRARY + '.dylib', OUTPUT_CORE,
+            os.path.join(OUT_DIR, 'libui.dylib')
         ] + cc_files
 
         print("Executing:")

@@ -20,6 +20,7 @@ import requests
 import shutil
 import subprocess
 import sys
+import tarfile
 import zipfile
 
 from glob import glob
@@ -72,10 +73,18 @@ def download_libui():
     print('Download completed.')
     os.makedirs(OUT_DIR, exist_ok=True)
 
-    print('Extracting the ZIP file...')
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall(OUT_DIR)
-    print('Extraction completed.')
+    if zip_path.endswith('.zip'):
+        print('Extracting the ZIP file...')
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(OUT_DIR)
+        print('Extraction completed.')
+    elif zip_path.endswith('.tgz') or zip_path.endswith('.tar.gz'):
+        print('Extracting the TAR file...')
+        with tarfile.open(zip_path, 'r:gz') as tar_ref:
+            tar_ref.extractall(OUT_DIR)
+        print('Extraction completed.')
+    else:
+        print('Unsupported file format for extraction.')
 
     lib_header_path = os.path.join(TEMP_DIR, 'include')
     os.makedirs(TEMP_DIR, exist_ok=True)

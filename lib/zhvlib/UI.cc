@@ -197,6 +197,10 @@ ZHIVO_FUNC(ui_window_create) {
         throw std::runtime_error("Parameter height must be a number");
 
     std::string key = generateUUID();
+    if(windowDictionary.find(key) != windowDictionary.end())
+        while(windowDictionary.find(key) != windowDictionary.end())
+            key = generateUUID();
+
     windowDictionary[key] = uiNewWindow(
         title.toString().c_str(),
         width.getNumber(),

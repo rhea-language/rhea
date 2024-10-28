@@ -82,7 +82,7 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
     else {
         #if defined(__APPLE__)
 
-        library += ".dylib"
+        library += ".dylib";
         handle = dlopen(library.c_str(), RTLD_LAZY);
 
         #elif defined(__unix__) || defined(__linux__)

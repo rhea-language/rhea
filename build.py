@@ -73,7 +73,7 @@ def get_ext_instructions():
                 supported_features.append('-m' + feature.replace('_', '.'))
                 print('supported')
             else:
-                print('not supported')
+                print('not found')
 
     return supported_features
 

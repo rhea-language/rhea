@@ -27,6 +27,11 @@ ZHIVO_FUNC(ui_init);
 ZHIVO_FUNC(ui_quit);
 ZHIVO_FUNC(ui_main);
 
+ZHIVO_FUNC(ui_dialog_openFile);
+ZHIVO_FUNC(ui_dialog_saveFile);
+ZHIVO_FUNC(ui_dialog_messageBox);
+ZHIVO_FUNC(ui_dialog_messageBoxError);
+
 ZHIVO_FUNC(ui_window_create);
 ZHIVO_FUNC(ui_window_onClosing);
 ZHIVO_FUNC(ui_window_show);

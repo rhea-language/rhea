@@ -129,6 +129,7 @@ for root, dirs, files in os.walk('lib'):
             cc_files.append(os.path.join(root, file))
 
 try:
+    ext_instructions = get_ext_instructions()
     download_libui()
 
     if PLATFORM == 'Windows':
@@ -149,7 +150,7 @@ try:
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-Ofast', '-s',
-            '-std=c++17', '-fopenmp'] + get_ext_instructions() + ['-mfpmath=sse',
+            '-std=c++17', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
             '-march=native', '-funroll-loops', '-ffast-math', '-static', '-static-libgcc',
             '-static-libstdc++'
         ] + cpp_files
@@ -210,7 +211,7 @@ try:
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-Ofast', '-s',
-            '-std=c++20', '-fopenmp'] + get_ext_instructions() + ['-mfpmath=sse',
+            '-std=c++20', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
             '-march=native', '-funroll-loops', '-ffast-math'
         ] + cpp_files
 

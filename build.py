@@ -200,7 +200,7 @@ try:
         ]
         exe_build_args += ['-o', OUTPUT_EXECUTABLE + '-openmp']
         lib_build_args = [
-            'g++', '-static', '-static-libgcc', '-Iinclude',
+            'g++', '-Iinclude',
             '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
             '-fPIC', '-shared', '-o', OUTPUT_LIBRARY + '.so',
             OUTPUT_CORE, os.path.join(OUT_DIR, 'libui.so')
@@ -258,8 +258,8 @@ try:
         exe_build_args += ['-o', OUTPUT_EXECUTABLE + '-openmp']
 
         lib_build_args = [
-            '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude', '-static',
-            '-static-libgcc', '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
+            '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
+            '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
             '-shared', '-o', OUTPUT_LIBRARY + '.dylib', OUTPUT_CORE,
             os.path.join(OUT_DIR, 'libui.dylib')
         ] + cc_files

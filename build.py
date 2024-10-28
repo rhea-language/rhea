@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
 
+import cpuinfo
 import os
 import platform
 import requests
@@ -54,6 +55,27 @@ OUTPUT_CORE = OUTPUT_EXECUTABLE + '-core.a'
 
 cpp_files = []
 cc_files = []
+
+def get_ext_instructions():
+    features_to_check = [
+        "mmx", "sse", "sse2", "sse3",
+        "sse4", "sse4_1", "sse4_2",
+        "avx", "avx2", "fma"
+    ]
+
+    supported_features = []
+    cpu_info = cpuinfo.get_cpu_info()
+
+    if 'flags' in cpu_info:
+        for feature in features_to_check:
+            print('Checking extended instruction support for ' + feature + '... ', end='')
+            if feature in cpu_info['flags']:
+                supported_features.append('-m' + feature.replace('_', '.'))
+                print('supported')
+            else:
+                print('not supported')
+
+    return supported_features
 
 def download_libui():
     url = ''
@@ -127,8 +149,7 @@ try:
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-Ofast', '-s',
-            '-std=c++17', '-fopenmp', '-mmmx', '-msse', '-msse2', '-msse3', '-msse4',
-            '-msse4.1', '-msse4.2', '-mavx', '-mavx2', '-mfma', '-mfpmath=sse',
+            '-std=c++17', '-fopenmp'] + get_ext_instructions() + ['-mfpmath=sse',
             '-march=native', '-funroll-loops', '-ffast-math', '-static', '-static-libgcc',
             '-static-libstdc++'
         ] + cpp_files
@@ -189,8 +210,7 @@ try:
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-Ofast', '-s',
-            '-std=c++20', '-fopenmp', '-mmmx', '-msse', '-msse2', '-msse3', '-msse4',
-            '-msse4.1', '-msse4.2', '-mavx', '-mavx2', '-mfma', '-mfpmath=sse',
+            '-std=c++20', '-fopenmp'] + get_ext_instructions() + ['-mfpmath=sse',
             '-march=native', '-funroll-loops', '-ffast-math'
         ] + cpp_files
 

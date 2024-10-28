@@ -16,6 +16,8 @@
  * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <Zhivo.hpp>
+
 #include <zhivo/ast/ASTNode.hpp>
 #include <zhivo/ast/ASTNodeException.hpp>
 #include <zhivo/ast/TerminativeSignal.hpp>
@@ -102,7 +104,15 @@ void Runtime::repl() {
     std::string input, line;
     int iterNum = 1;
 
-    std::cout << ">>> ";
+    std::cout
+        << "\u001b[1;36mZhivo Programming Language ("
+        << ZHIVO_VERSION
+        << ", "
+        << ZHIVO_BUILD_TIME
+        << ")\u001b[0m"
+        << std::endl;
+    std::cout << "\u001b[1;32m>>>\u001b[0m ";
+
     while(std::getline(std::cin, line)) {
         input += line + '\n';
 
@@ -190,8 +200,8 @@ void Runtime::repl() {
             input.clear();
             iterNum++;
 
-            std::cout << std::endl << ">>> ";
+            std::cout << std::endl << "\u001b[1;32m>>>\u001b[0m ";
         }
-        else std::cout << "... ";
+        else std::cout << "\u001b[93m...\u001b[0m ";
     }
 }

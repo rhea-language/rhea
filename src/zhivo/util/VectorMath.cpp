@@ -18,126 +18,7 @@
 
 #include <zhivo/util/VectorMath.hpp>
 
-#if defined(__NVCC__) || defined(__CUDA__) || defined(__CUDACC__)
-#   include <cuda_runtime.h>
-#   include <source_location>
-#endif
-
 namespace ZhivoUtil {
-
-#if defined(__NVCC__) || defined(__CUDA__) || defined(__CUDACC__)
-
-static __global__ void cudaVectorAdd(
-    const double* left,
-    const double* right,
-    double* result,
-    size_t size
-) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if(idx < size)
-        result[idx] = left[idx] + right[idx];
-}
-
-static __global__ void cudaVectorSub(
-    const double* left,
-    const double* right,
-    double* result,
-    size_t size
-) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if(idx < size)
-        result[idx] = left[idx] - right[idx];
-}
-
-static __global__ void cudaVectorDiv(
-    const double* left,
-    const double* right,
-    double* result,
-    size_t size
-) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if(idx < size)
-        result[idx] = left[idx] / right[idx];
-}
-
-static __global__ void cudaVectorMul(
-    const double* left,
-    const double* right,
-    double* result,
-    size_t size
-) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if(idx < size)
-        result[idx] = left[idx] * right[idx];
-}
-
-static __global__ void cudaVectorRem(
-    const double* left,
-    const double* right,
-    double* result,
-    size_t size
-) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if(idx < size)
-        result[idx] = (double) ((long) left[idx] * (long) right[idx]);
-}
-
-static __global__ void cudaVectorBitwiseAnd(
-    const double* left,
-    const double* right,
-    double* result,
-    size_t size
-) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if(idx < size)
-        result[idx] = (double) ((long) left[idx] & (long) right[idx]);
-}
-
-static __global__ void cudaVectorBitwiseOr(
-    const double* left,
-    const double* right,
-    double* result,
-    size_t size
-) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if(idx < size)
-        result[idx] = (double) ((long) left[idx] | (long) right[idx]);
-}
-
-static __global__ void cudaVectorBitwiseXor(
-    const double* left,
-    const double* right,
-    double* result,
-    size_t size
-) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if(idx < size)
-        result[idx] = (double) ((long) left[idx] ^ (long) right[idx]);
-}
-
-static __global__ void cudaVectorShiftLeft(
-    const double* left,
-    const double* right,
-    double* result,
-    size_t size
-) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if(idx < size)
-        result[idx] = (double) ((long) left[idx] << (long) right[idx]);
-}
-
-static __global__ void cudaVectorShiftRight(
-    const double* left,
-    const double* right,
-    double* result,
-    size_t size
-) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if(idx < size)
-        result[idx] = (double) ((long) left[idx] >> (long) right[idx]);
-}
-
-#endif
 
 DynamicObject vector2Object(const std::vector<double>& vec) {
     std::vector<DynamicObject> objects(vec.size());
@@ -171,31 +52,9 @@ std::vector<double> ZhivoUtil::VectorMath::add(
 
     std::vector<double> result(size);
 
-    #if defined(__NVCC__) || defined(__CUDA__) || defined(__CUDACC__)
-
-    double *d_left, *d_right, *d_result;
-    cudaMalloc(&d_left, size * sizeof(double));
-    cudaMalloc(&d_right, size * sizeof(double));
-    cudaMalloc(&d_result, size * sizeof(double));
-
-    cudaMemcpy(d_left, left.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_right, right.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-
-    cudaVectorAdd<<<(size + 255) / 256, 256>>>(d_left, d_right, d_result, size);
-    cudaMemcpy(result.data(), d_result, size * sizeof(double), cudaMemcpyDeviceToHost);
-
-    cudaFree(d_left);
-    cudaFree(d_right);
-    cudaFree(d_result);
-
-    #else
-
     #pragma omp parallel for
     for(size_t i = 0; i < size; ++i)
         result[i] = left[i] + right[i];
-
-    #endif
-
     return result;
 }
 
@@ -209,31 +68,9 @@ std::vector<double> ZhivoUtil::VectorMath::sub(
 
     std::vector<double> result(size);
 
-    #if defined(__NVCC__) || defined(__CUDA__) || defined(__CUDACC__)
-
-    double *d_left, *d_right, *d_result;
-    cudaMalloc(&d_left, size * sizeof(double));
-    cudaMalloc(&d_right, size * sizeof(double));
-    cudaMalloc(&d_result, size * sizeof(double));
-
-    cudaMemcpy(d_left, left.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_right, right.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-
-    cudaVectorSub<<<(size + 255) / 256, 256>>>(d_left, d_right, d_result, size);
-    cudaMemcpy(result.data(), d_result, size * sizeof(double), cudaMemcpyDeviceToHost);
-
-    cudaFree(d_left);
-    cudaFree(d_right);
-    cudaFree(d_result);
-
-    #else
-
     #pragma omp parallel for
     for(size_t i = 0; i < size; ++i)
         result[i] = left[i] - right[i];
-
-    #endif
-
     return result;
 }
 
@@ -247,31 +84,9 @@ std::vector<double> ZhivoUtil::VectorMath::div(
 
     std::vector<double> result(size);
 
-    #if defined(__NVCC__) || defined(__CUDA__) || defined(__CUDACC__)
-
-    double *d_left, *d_right, *d_result;
-    cudaMalloc(&d_left, size * sizeof(double));
-    cudaMalloc(&d_right, size * sizeof(double));
-    cudaMalloc(&d_result, size * sizeof(double));
-
-    cudaMemcpy(d_left, left.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_right, right.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-
-    cudaVectorDiv<<<(size + 255) / 256, 256>>>(d_left, d_right, d_result, size);
-    cudaMemcpy(result.data(), d_result, size * sizeof(double), cudaMemcpyDeviceToHost);
-
-    cudaFree(d_left);
-    cudaFree(d_right);
-    cudaFree(d_result);
-
-    #else
-
     #pragma omp parallel for
     for(size_t i = 0; i < size; ++i)
         result[i] = left[i] / right[i];
-
-    #endif
-
     return result;
 }
 
@@ -285,31 +100,9 @@ std::vector<double> ZhivoUtil::VectorMath::mul(
 
     std::vector<double> result(size);
 
-    #if defined(__NVCC__) || defined(__CUDA__) || defined(__CUDACC__)
-
-    double *d_left, *d_right, *d_result;
-    cudaMalloc(&d_left, size * sizeof(double));
-    cudaMalloc(&d_right, size * sizeof(double));
-    cudaMalloc(&d_result, size * sizeof(double));
-
-    cudaMemcpy(d_left, left.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_right, right.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-
-    cudaVectorMul<<<(size + 255) / 256, 256>>>(d_left, d_right, d_result, size);
-    cudaMemcpy(result.data(), d_result, size * sizeof(double), cudaMemcpyDeviceToHost);
-
-    cudaFree(d_left);
-    cudaFree(d_right);
-    cudaFree(d_result);
-
-    #else
-
     #pragma omp parallel for
     for(size_t i = 0; i < size; ++i)
         result[i] = left[i] * right[i];
-
-    #endif
-
     return result;
 }
 
@@ -323,31 +116,9 @@ std::vector<double> ZhivoUtil::VectorMath::rem(
 
     std::vector<double> result(size);
 
-    #if defined(__NVCC__) || defined(__CUDA__) || defined(__CUDACC__)
-
-    double *d_left, *d_right, *d_result;
-    cudaMalloc(&d_left, size * sizeof(double));
-    cudaMalloc(&d_right, size * sizeof(double));
-    cudaMalloc(&d_result, size * sizeof(double));
-
-    cudaMemcpy(d_left, left.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_right, right.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-
-    cudaVectorRem<<<(size + 255) / 256, 256>>>(d_left, d_right, d_result, size);
-    cudaMemcpy(result.data(), d_result, size * sizeof(double), cudaMemcpyDeviceToHost);
-
-    cudaFree(d_left);
-    cudaFree(d_right);
-    cudaFree(d_result);
-
-    #else
-
     #pragma omp parallel for
     for(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] % (long) right[i]);
-
-    #endif
-
     return result;
 }
 
@@ -361,31 +132,9 @@ std::vector<double> ZhivoUtil::VectorMath::bitwiseAnd(
 
     std::vector<double> result(size);
 
-    #if defined(__NVCC__) || defined(__CUDA__) || defined(__CUDACC__)
-
-    double *d_left, *d_right, *d_result;
-    cudaMalloc(&d_left, size * sizeof(double));
-    cudaMalloc(&d_right, size * sizeof(double));
-    cudaMalloc(&d_result, size * sizeof(double));
-
-    cudaMemcpy(d_left, left.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_right, right.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-
-    cudaVectorBitwiseAnd<<<(size + 255) / 256, 256>>>(d_left, d_right, d_result, size);
-    cudaMemcpy(result.data(), d_result, size * sizeof(double), cudaMemcpyDeviceToHost);
-
-    cudaFree(d_left);
-    cudaFree(d_right);
-    cudaFree(d_result);
-
-    #else
-
     #pragma omp parallel for
     for(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] & (long) right[i]);
-
-    #endif
-
     return result;
 }
 
@@ -399,31 +148,9 @@ std::vector<double> ZhivoUtil::VectorMath::bitwiseOr(
 
     std::vector<double> result(size);
 
-    #if defined(__NVCC__) || defined(__CUDA__) || defined(__CUDACC__)
-
-    double *d_left, *d_right, *d_result;
-    cudaMalloc(&d_left, size * sizeof(double));
-    cudaMalloc(&d_right, size * sizeof(double));
-    cudaMalloc(&d_result, size * sizeof(double));
-
-    cudaMemcpy(d_left, left.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_right, right.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-
-    cudaVectorBitwiseOr<<<(size + 255) / 256, 256>>>(d_left, d_right, d_result, size);
-    cudaMemcpy(result.data(), d_result, size * sizeof(double), cudaMemcpyDeviceToHost);
-
-    cudaFree(d_left);
-    cudaFree(d_right);
-    cudaFree(d_result);
-
-    #else
-
     #pragma omp parallel for
     for(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] | (long) right[i]);
-
-    #endif
-
     return result;
 }
 
@@ -437,31 +164,9 @@ std::vector<double> ZhivoUtil::VectorMath::bitwiseXor(
 
     std::vector<double> result(size);
 
-    #if defined(__NVCC__) || defined(__CUDA__) || defined(__CUDACC__)
-
-    double *d_left, *d_right, *d_result;
-    cudaMalloc(&d_left, size * sizeof(double));
-    cudaMalloc(&d_right, size * sizeof(double));
-    cudaMalloc(&d_result, size * sizeof(double));
-
-    cudaMemcpy(d_left, left.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_right, right.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-
-    cudaVectorBitwiseXor<<<(size + 255) / 256, 256>>>(d_left, d_right, d_result, size);
-    cudaMemcpy(result.data(), d_result, size * sizeof(double), cudaMemcpyDeviceToHost);
-
-    cudaFree(d_left);
-    cudaFree(d_right);
-    cudaFree(d_result);
-
-    #else
-
     #pragma omp parallel for
     for(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] ^ (long) right[i]);
-
-    #endif
-
     return result;
 }
 
@@ -475,31 +180,9 @@ std::vector<double> ZhivoUtil::VectorMath::shiftLeft(
 
     std::vector<double> result(size);
 
-    #if defined(__NVCC__) || defined(__CUDA__) || defined(__CUDACC__)
-
-    double *d_left, *d_right, *d_result;
-    cudaMalloc(&d_left, size * sizeof(double));
-    cudaMalloc(&d_right, size * sizeof(double));
-    cudaMalloc(&d_result, size * sizeof(double));
-
-    cudaMemcpy(d_left, left.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_right, right.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-
-    cudaVectorShiftLeft<<<(size + 255) / 256, 256>>>(d_left, d_right, d_result, size);
-    cudaMemcpy(result.data(), d_result, size * sizeof(double), cudaMemcpyDeviceToHost);
-
-    cudaFree(d_left);
-    cudaFree(d_right);
-    cudaFree(d_result);
-
-    #else
-
     #pragma omp parallel for
     for(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] << (long) right[i]);
-
-    #endif
-
     return result;
 }
 
@@ -513,31 +196,9 @@ std::vector<double> ZhivoUtil::VectorMath::shiftRight(
 
     std::vector<double> result(size);
 
-    #if defined(__NVCC__) || defined(__CUDA__) || defined(__CUDACC__)
-
-    double *d_left, *d_right, *d_result;
-    cudaMalloc(&d_left, size * sizeof(double));
-    cudaMalloc(&d_right, size * sizeof(double));
-    cudaMalloc(&d_result, size * sizeof(double));
-
-    cudaMemcpy(d_left, left.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_right, right.data(), size * sizeof(double), cudaMemcpyHostToDevice);
-
-    cudaVectorShiftRight<<<(size + 255) / 256, 256>>>(d_left, d_right, d_result, size);
-    cudaMemcpy(result.data(), d_result, size * sizeof(double), cudaMemcpyDeviceToHost);
-
-    cudaFree(d_left);
-    cudaFree(d_right);
-    cudaFree(d_result);
-
-    #else
-
     #pragma omp parallel for
     for(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] >> (long) right[i]);
-
-    #endif
-
     return result;
 }
 

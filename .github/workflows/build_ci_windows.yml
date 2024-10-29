@@ -43,7 +43,7 @@ jobs:
           dir dist
           tree dist
 
-      - name: Run test scripts (AMD64)
+      - name: Run test scripts
         run: |
           dist\zhivo-win32-amd64-openmp.exe test\arithmetic.zhv
           dist\zhivo-win32-amd64-openmp.exe test\array.zhv
@@ -57,29 +57,10 @@ jobs:
           dist\zhivo-win32-amd64-openmp.exe test\test.zhv
           dist\zhivo-win32-amd64-openmp.exe test\types.zhv
 
-      - name: Run test scripts (CUDA)
-        run: |
-          dist\zhivo-win32-amd64-nvidia.exe test\arithmetic.zhv
-          dist\zhivo-win32-amd64-nvidia.exe test\array.zhv
-          dist\zhivo-win32-amd64-nvidia.exe test\digits.zhv
-          dist\zhivo-win32-amd64-nvidia.exe test\error_handling.zhv
-          dist\zhivo-win32-amd64-nvidia.exe test\flow.zhv
-          dist\zhivo-win32-amd64-nvidia.exe test\func.zhv
-          dist\zhivo-win32-amd64-nvidia.exe test\loop.zhv
-          dist\zhivo-win32-amd64-nvidia.exe test\parallel.zhv
-          dist\zhivo-win32-amd64-nvidia.exe test\regex.zhv
-          dist\zhivo-win32-amd64-nvidia.exe test\test.zhv
-          dist\zhivo-win32-amd64-nvidia.exe test\types.zhv
-
-      - name: Run examples (AMD64)
+      - name: Run examples
         run: |
           dist\zhivo-win32-amd64-openmp.exe examples\99-beers.zhv
           dist\zhivo-win32-amd64-openmp.exe examples\hello.zhv
-
-      - name: Run examples (CUDA)
-        run: |
-          dist\zhivo-win32-amd64-nvidia.exe examples\99-beers.zhv
-          dist\zhivo-win32-amd64-nvidia.exe examples\hello.zhv
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

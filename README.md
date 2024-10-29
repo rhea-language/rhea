@@ -10,7 +10,7 @@
     <img alt="VSCode Extension Build" src="https://github.com/nthnn/zhivo/actions/workflows/build_ci_vsce.yml/badge.svg" />
 </p>
 
-JIT-compiled dynamic general-purpose programming language utilizing system-available GPU with built-in concurrency and unconventional expressiveness.
+JIT-compiled dynamic general-purpose programming language utilizing OpenMP parallelism with built-in concurrency and unconventional expressiveness.
 
 <p align="center">
     <a href="https://zhivo.vercel.app"><img src="https://img.shields.io/badge/Learn%20More-007ec6?style=for-the-badge&logoColor=white&logo=Google-Chrome" /></a>
@@ -51,7 +51,7 @@ while(count > 0) {
 
 - **High-performance Scientific Computing**
 
-    Zhivo's ability to perform direct mathematical operations on vectors and arrays makes it ideal for scientific computing applications such as simulations, data analysis, and mathematical modeling. Its concurrency support ensures that heavy computational tasks can run efficiently on multi-core CPUs and GPUs.
+    Zhivo's ability to perform direct mathematical operations on vectors and arrays makes it ideal for scientific computing applications such as simulations, data analysis, and mathematical modeling. Its concurrency support ensures that heavy computational tasks can run efficiently on multi-core CPUs.
 
 - **Data Pipelines and ETL (Extract, Transform, Load)**
 

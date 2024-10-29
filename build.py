@@ -167,17 +167,6 @@ try:
             os.path.join(OUT_DIR, 'libui.dll')
         ] + cc_files
 
-        cuda_exe_build_args = [
-            'nvcc', '-x=cu', '-std=c++20',
-            '--compiler-options=/openmp',
-            '--compiler-options=/std:c++20',
-            '-Iinclude'
-        ] + cpp_files + [
-            '-lcudadevrt',
-            '-lcudart_static',
-            '-o'
-        ] + [OUTPUT_EXECUTABLE + '-nvidia']
-
         print("Executing:")
         print(' '.join(exe_build_args))
         subprocess.run(exe_build_args)
@@ -189,10 +178,6 @@ try:
         print("Executing:")
         print(' '.join(lib_build_args))
         subprocess.run(lib_build_args)
-
-        print("Executing:")
-        print(' '.join(cuda_exe_build_args))
-        subprocess.run(cuda_exe_build_args)
 
     elif PLATFORM == 'Linux':
         exe_build_args= [
@@ -227,16 +212,6 @@ try:
             OUTPUT_CORE, os.path.join(OUT_DIR, 'libui.so')
         ] + cc_files
 
-        cuda_exe_build_args = [
-            'nvcc', '-x=cu', '-std=c++20',
-            '--compiler-options=-fopenmp',
-            '-Iinclude'
-        ] + cpp_files + [
-            '-lcudadevrt',
-            '-lcudart_static',
-            '-o'
-        ] + [OUTPUT_EXECUTABLE + '-nvidia']
-
         print("Executing:")
         print(' '.join(exe_build_args))
         subprocess.run(exe_build_args)
@@ -249,10 +224,6 @@ try:
         print(' '.join(lib_build_args))
         subprocess.run(lib_build_args)
 
-        print("Executing:")
-        print(' '.join(cuda_exe_build_args))
-        subprocess.run(cuda_exe_build_args)
-    
     elif PLATFORM == 'Darwin':
         exe_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude', '-Wall',

@@ -18,6 +18,8 @@
 
 #include "zhvlib/UI.hpp"
 
+#if !(defined(__APPLE__) && (defined(__aarch64__) || defined(__arm64__)))
+
 #include <zhivo/ast/TerminativeSignal.hpp>
 #include <zhivo/ast/expression/FunctionDeclarationExpression.hpp>
 
@@ -294,3 +296,5 @@ ZHIVO_FUNC(ui_window_show) {
 
     return DynamicObject(uuidStr);
 }
+
+#endif

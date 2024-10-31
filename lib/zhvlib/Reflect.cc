@@ -19,6 +19,7 @@
 #include "zhvlib/Reflect.hpp"
 
 #include <zhivo/ast/TerminativeSignal.hpp>
+#include <zhivo/parser/Tokenizer.hpp>
 
 ZHIVO_FUNC(reflect_get) {
     if(args.size() != 1)

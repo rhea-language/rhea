@@ -19,6 +19,11 @@
 #ifndef ZHIVO_STDLIB_ML_CC
 #define ZHIVO_STDLIB_ML_CC
 
+#ifdef __clang__
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
+#endif
+
 #include "ZhivoLibrary.hpp"
 
 ZHIVO_LIB_START
@@ -28,5 +33,9 @@ ZHIVO_FUNC(ml_trendline_calculateRmse);
 ZHIVO_FUNC(ml_trendline_predict);
 
 ZHIVO_LIB_END
+
+#ifdef __clang__
+#   pragma clang diagnostic pop
+#endif
 
 #endif

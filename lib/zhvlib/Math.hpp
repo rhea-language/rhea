@@ -19,6 +19,11 @@
 #ifndef ZHIVO_STDLIB_MATH_CC
 #define ZHIVO_STDLIB_MATH_CC
 
+#ifdef __clang__
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
+#endif
+
 #include "ZhivoLibrary.hpp"
 
 ZHIVO_LIB_START
@@ -36,5 +41,9 @@ ZHIVO_FUNC(math_sigmoid);
 ZHIVO_FUNC(math_sigmoidDerivative);
 
 ZHIVO_LIB_END
+
+#ifdef __clang__
+#   pragma clang diagnostic pop
+#endif
 
 #endif

@@ -19,6 +19,11 @@
 #ifndef ZHIVO_STDLIB_IO_CC
 #define ZHIVO_STDLIB_IO_CC
 
+#ifdef __clang__
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
+#endif
+
 #include "ZhivoLibrary.hpp"
 
 ZHIVO_LIB_START
@@ -49,5 +54,9 @@ ZHIVO_FUNC(io_listAllFiles);
 ZHIVO_FUNC(io_exit);
 
 ZHIVO_LIB_END
+
+#ifdef __clang__
+#   pragma clang diagnostic pop
+#endif
 
 #endif

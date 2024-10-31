@@ -134,14 +134,12 @@ void Runtime::repl() {
                 symtab.detachParallelNodes();
             }
             catch(const std::system_error& exc) {
-                Runtime::cleanUp();
+                symtab.waitForThreads();
                 std::cerr << "[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m"
                     << exc.what() << "\u001b[0m" << std::endl;
             }
             catch(const ASTNodeException& nodeExc) {
                 symtab.waitForThreads();
-                Runtime::cleanUp();
-
                 std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
                     << "\u001b[3;37m" << nodeExc.what() << "\u001b[0m"
                     << std::endl << "                 "
@@ -149,14 +147,11 @@ void Runtime::repl() {
             }
             catch(const LexicalAnalysisException& lexAnlExc) {
                 symtab.waitForThreads();
-                Runtime::cleanUp();
-
                 std::cerr << "[\u001b[1;31mLexical Error\u001b[0m]:" << std::endl
                     << "\t" << lexAnlExc.what() << std::endl;
             }
             catch(const ParserException& parserExc) {
                 symtab.waitForThreads();
-                Runtime::cleanUp();
 
                 std::cerr << "[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m"
                     << parserExc.what() << "\u001b[0m" << std::endl;
@@ -165,8 +160,6 @@ void Runtime::repl() {
             }
             catch(const TerminativeBreakSignal& breakExc) {
                 symtab.waitForThreads();
-                Runtime::cleanUp();
-
                 std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
                     << "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
                     << std::endl << "                 "
@@ -174,8 +167,6 @@ void Runtime::repl() {
             }
             catch(const TerminativeContinueSignal& continueExc) {
                 symtab.waitForThreads();
-                Runtime::cleanUp();
-
                 std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
                     << "\u001b[3;37mInvalid continue statement signal caught.\u001b[0m"
                     << std::endl << "                 "
@@ -183,16 +174,21 @@ void Runtime::repl() {
             }
             catch(const TerminativeReturnSignal& retExc) {
                 symtab.waitForThreads();
-                Runtime::cleanUp();
-
                 std::cerr << "\u001b[0;93m"
                     << retExc.getObject().toString()
                     << "\u001b[0m" << std::endl;
             }
+            catch(const TerminativeThrowSignal& throwExc) {
+                symtab.waitForThreads();
+                std::cerr << "[\u001b[1;31mUncaught Error\u001b[0m]: "
+                    << "\u001b[3;37m"
+                    << throwExc.getObject().toString()
+                    << "\u001b[0m"
+                    << std::endl << "                  "
+                    << throwExc.getAddress()->toString() << std::endl;
+            }
             catch(const std::exception& exc) {
                 symtab.waitForThreads();
-                Runtime::cleanUp();
-
                 std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m"
                     << exc.what() << "\u001b[0m" << std::endl;
             }

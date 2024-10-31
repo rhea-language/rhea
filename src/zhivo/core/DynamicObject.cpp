@@ -77,6 +77,8 @@ bool DynamicObject::operator==(const DynamicObject& other) {
 
         auto left = this->getArray(),
             right = other.getArray();
+        
+        #pragma omp parallel for
         for(size_t i = 0; i < len; i++)
             if(!(left->at(i) == right->at(i)))
                 return false;

@@ -63,6 +63,7 @@ auto interpreter(std::vector<std::string> files) -> int {
 
     try {
         std::vector<std::string>::iterator iterator;
+
         for(iterator = files.begin(); iterator != files.end(); iterator++) {
             Parser parser = Parser::fromFile(*iterator);
             parser.parse();

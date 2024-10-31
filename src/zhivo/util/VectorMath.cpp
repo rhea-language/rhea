@@ -22,6 +22,8 @@ namespace ZhivoUtil {
 
 DynamicObject vector2Object(const std::vector<double>& vec) {
     std::vector<DynamicObject> objects(vec.size());
+
+    #pragma omp parallel for
     for(size_t i = 0; i < vec.size(); ++i)
         objects[i] = std::move(DynamicObject(vec[i]));
 

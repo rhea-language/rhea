@@ -39,22 +39,22 @@ jobs:
 
       - name: Run test scripts
         run: |
-          dist\zhivo-win32-amd64-openmp.exe test\arithmetic.zhv
-          dist\zhivo-win32-amd64-openmp.exe test\array.zhv
-          dist\zhivo-win32-amd64-openmp.exe test\digits.zhv
-          dist\zhivo-win32-amd64-openmp.exe test\error_handling.zhv
-          dist\zhivo-win32-amd64-openmp.exe test\flow.zhv
-          dist\zhivo-win32-amd64-openmp.exe test\func.zhv
-          dist\zhivo-win32-amd64-openmp.exe test\loop.zhv
-          dist\zhivo-win32-amd64-openmp.exe test\parallel.zhv
-          dist\zhivo-win32-amd64-openmp.exe test\regex.zhv
-          dist\zhivo-win32-amd64-openmp.exe test\test.zhv
-          dist\zhivo-win32-amd64-openmp.exe test\types.zhv
+          dist\zhivo test\arithmetic.zhv
+          dist\zhivo test\array.zhv
+          dist\zhivo test\digits.zhv
+          dist\zhivo test\error_handling.zhv
+          dist\zhivo test\flow.zhv
+          dist\zhivo test\func.zhv
+          dist\zhivo test\loop.zhv
+          dist\zhivo test\parallel.zhv
+          dist\zhivo test\regex.zhv
+          dist\zhivo test\test.zhv
+          dist\zhivo test\types.zhv
 
       - name: Run examples
         run: |
-          dist\zhivo-win32-amd64-openmp.exe examples\99-beers.zhv
-          dist\zhivo-win32-amd64-openmp.exe examples\hello.zhv
+          dist\zhivo examples\99-beers.zhv
+          dist\zhivo examples\hello.zhv
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

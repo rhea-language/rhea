@@ -41,7 +41,7 @@ ZHIVO_FUNC(ui_window_show);
 ZHIVO_LIB_END
 
 #else
-#   warning "Libui is currently not supported for Apple M1 architecture."
+#   pragma message("Libui is currently not supported for Apple M1 architecture.")
 #endif
 
 #endif

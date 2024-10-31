@@ -187,12 +187,17 @@ void DynamicObject::setArrayElement(
 }
 
 DynamicObject DynamicObject::callFromNative(
-    const SymbolTable& symtab,
-    const std::vector<DynamicObject> args
+    std::shared_ptr<Token> address,
+    SymbolTable& symtab,
+    std::vector<DynamicObject> args
 ) {
     return !this->isNative() ?
         this->getCallable()->call(symtab, args) :
-        this->getNativeFunction()(symtab, args);
+        this->getNativeFunction()(
+            std::move(address),
+            symtab,
+            args
+        );
 }
 
 std::string DynamicObject::objectType() {

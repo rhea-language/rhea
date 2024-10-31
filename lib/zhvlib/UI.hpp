@@ -19,6 +19,8 @@
 #ifndef ZHIVO_STDLIB_IO_CC
 #define ZHIVO_STDLIB_IO_CC
 
+#if !(defined(__APPLE__) && (defined(__aarch64__) || defined(__arm64__)))
+
 #include "ZhivoLibrary.hpp"
 
 ZHIVO_LIB_START
@@ -37,5 +39,9 @@ ZHIVO_FUNC(ui_window_onClosing);
 ZHIVO_FUNC(ui_window_show);
 
 ZHIVO_LIB_END
+
+#else
+#   warning "Libui is currently not supported for Apple M1 architecture."
+#endif
 
 #endif

@@ -42,22 +42,22 @@ jobs:
 
       - name: Run test scripts
         run: |
-          ./dist/zhivo-darwin-arm64-openmp ./test/arithmetic.zhv
-          ./dist/zhivo-darwin-arm64-openmp ./test/array.zhv
-          ./dist/zhivo-darwin-arm64-openmp ./test/digits.zhv
-          ./dist/zhivo-darwin-arm64-openmp ./test/error_handling.zhv
-          ./dist/zhivo-darwin-arm64-openmp ./test/flow.zhv
-          ./dist/zhivo-darwin-arm64-openmp ./test/func.zhv
-          ./dist/zhivo-darwin-arm64-openmp ./test/loop.zhv
-          ./dist/zhivo-darwin-arm64-openmp ./test/parallel.zhv
-          ./dist/zhivo-darwin-arm64-openmp ./test/regex.zhv
-          ./dist/zhivo-darwin-arm64-openmp ./test/test.zhv
-          ./dist/zhivo-darwin-arm64-openmp ./test/types.zhv
+          ./dist/zhivo ./test/arithmetic.zhv
+          ./dist/zhivo ./test/array.zhv
+          ./dist/zhivo ./test/digits.zhv
+          ./dist/zhivo ./test/error_handling.zhv
+          ./dist/zhivo ./test/flow.zhv
+          ./dist/zhivo ./test/func.zhv
+          ./dist/zhivo ./test/loop.zhv
+          ./dist/zhivo ./test/parallel.zhv
+          ./dist/zhivo ./test/regex.zhv
+          ./dist/zhivo ./test/test.zhv
+          ./dist/zhivo ./test/types.zhv
 
       - name: Run examples
         run: |
-          ./dist/zhivo-darwin-arm64-openmp ./examples/hello.zhv
-          ./dist/zhivo-darwin-arm64-openmp ./examples/99-beers.zhv
+          ./dist/zhivo ./examples/hello.zhv
+          ./dist/zhivo ./examples/99-beers.zhv
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

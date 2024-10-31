@@ -3,17 +3,23 @@ Todo:
 
 - Multiplatform installer for Zhivo.
 - `use` statement for importing files to current script.
+- Package Manager
+- Jupyter Notebook Kernel (Optional)
 - To be developed libraries:
-    * io
-    * math
-    * reflect
-    * chrono
     * array
-    * map
-    * lang
-    * sys
-    * net
+    * chrono
     * env
+    * format
+    * io
+    * lang
+    * map
+    * math
     * ml
-    * ai
+    * net
+    * reflect
+    * regex
+    * serial
+    * sys
     * thread
+    * ui
+    * vector

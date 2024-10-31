@@ -21,14 +21,18 @@
 
 #include <zhivo/core/DynamicObject.hpp>
 #include <zhivo/core/SymbolTable.hpp>
+#include <zhivo/parser/Token.hpp>
+
+#include <memory>
 
 #define ZHIVO_LIB_START extern "C" {
 #define ZHIVO_LIB_END   }
 
-#define ZHIVO_FUNC(funcName)      \
-    DynamicObject funcName(                     \
-        const SymbolTable& symtab,              \
-        const std::vector<DynamicObject>& args  \
+#define ZHIVO_FUNC(funcName)              \
+    DynamicObject funcName(               \
+        std::shared_ptr<Token> address,   \
+        SymbolTable& symtab,              \
+        std::vector<DynamicObject>& args  \
     )
 
 #endif

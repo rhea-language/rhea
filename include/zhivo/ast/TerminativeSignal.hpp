@@ -67,6 +67,14 @@ public:
         address(std::move(_address)),
         value(std::move(_value)) {}
 
+    TerminativeThrowSignal(std::shared_ptr<Token> _address, std::string _value) :
+        address(std::move(_address)),
+        value(std::move(DynamicObject(_value))) {}
+
+    TerminativeThrowSignal(std::shared_ptr<Token> _address, const char* _value) :
+        address(std::move(_address)),
+        value(std::move(DynamicObject(std::string(_value)))) {}
+
     Token* getAddress() const;
     DynamicObject getObject() const;
 };

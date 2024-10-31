@@ -61,6 +61,11 @@ void SymbolTable::setSymbol(const std::string& name, DynamicObject value) {
     this->table[name] = std::move(value);
 }
 
+void SymbolTable::removeSymbol(const std::string& name) {
+    if(this->hasSymbol(name))
+        this->table.erase(name);
+}
+
 bool SymbolTable::hasSymbol(const std::string& name) {
     return this->table.find(name) != this->table.end() ||
         (this->parent && this->parent->hasSymbol(name));

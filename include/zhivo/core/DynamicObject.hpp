@@ -39,8 +39,9 @@ using NativeFunction = DynamicObject(
     __stdcall
     #endif
 *)(
-    const SymbolTable&,
-    const std::vector<DynamicObject>&
+    std::shared_ptr<Token>,
+    SymbolTable&,
+    std::vector<DynamicObject>&
 );
 
 class DynamicObject final {
@@ -176,8 +177,9 @@ public:
     );
 
     DynamicObject callFromNative(
-        const SymbolTable& symtab,
-        const std::vector<DynamicObject> args
+        std::shared_ptr<Token> address,
+        SymbolTable& symtab,
+        std::vector<DynamicObject> args
     );
 
     std::string objectType();

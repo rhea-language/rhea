@@ -65,7 +65,6 @@ bool Runtime::hasLoadedLibrary(std::string libName) {
 }
 
 void Runtime::cleanUp() {
-    #pragma omp parallel for
     for(const auto& [key, value] : Runtime::nativeLibraries)
         if(value != nullptr)
             #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)

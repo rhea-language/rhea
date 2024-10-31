@@ -31,7 +31,6 @@
 
 DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
     if(!this->nativePath.empty()) {
-        #pragma omp parallel for
         for(const auto& [key, value] : this->declarations) {
             std::string name = key.getImage();
             DynamicObject func = DynamicObject(
@@ -48,7 +47,6 @@ DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
         return {};
     }
 
-    #pragma omp parallel for
     for(const auto& [key, value] : this->declarations)
         symbols.setSymbol(
             key.getImage(),

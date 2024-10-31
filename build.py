@@ -231,9 +231,10 @@ try:
             '-Wuninitialized', '-Wunknown-pragmas', '-Wunreachable-code',
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
-            '-Wwrite-strings', '-pipe', '-std=c++17', '-fopenmp', '-march=native',
-            '-funroll-loops', '-ffast-math', '-flto=auto', '-Xpreprocessor',
-            '-O3', '-Wno-header-guard', '-Wno-pessimizing-move'
+            '-Wwrite-strings', '-Wno-return-type-c-linkage', '-pipe',
+            '-std=c++17', '-fopenmp', '-march=native', '-funroll-loops',
+            '-ffast-math', '-flto=auto', '-Xpreprocessor', '-O3',
+            '-Wno-header-guard', '-Wno-pessimizing-move'
         ] + cpp_files
 
         core_build_args = exe_build_args + ['-shared', '-o', OUTPUT_CORE]

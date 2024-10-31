@@ -46,6 +46,7 @@ cpp_files = []
 cc_files = []
 
 def get_ext_instructions():
+    print('Checking extended instruction availability...')
     features_to_check = [
         "mmx", "sse", "sse2", "sse3",
         "sse4", "sse4_1", "sse4_2",
@@ -77,7 +78,7 @@ def download_libui():
 
     zip_path = url.split('/')[-1]
 
-    print('Downloading file...')
+    print('Downloading libui release...')
     response = requests.get(url)
     with open(zip_path, 'wb') as file:
         file.write(response.content)
@@ -238,11 +239,15 @@ try:
         core_build_args = exe_build_args + ['-shared', '-o', OUTPUT_CORE]
         exe_build_args += ['-o', OUTPUT_EXECUTABLE]
 
+        libui_dylib = (
+            '' if PLATFORM == 'Darwin' and platform.machine() == 'arm64'
+            else os.path.join(OUT_DIR, 'libui.dylib')
+        )
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
             '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
             '-shared', '-o', OUTPUT_LIBRARY + '.dylib', OUTPUT_CORE,
-            os.path.join(OUT_DIR, 'libui.dylib')
+            libui_dylib
         ] + cc_files
 
         print("Executing:")

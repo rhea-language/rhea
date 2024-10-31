@@ -105,3 +105,33 @@ ZHIVO_FUNC(reflect_delete) {
 
     return DynamicObject();
 }
+
+ZHIVO_FUNC(reflect_invoke) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject name = args.at(0),
+        params = args.at(1);
+
+    if(!params.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Parameters must be of array type"
+        );
+
+    const std::string symName = name.toString();
+    DynamicObject callable = symtab.getSymbol(
+        std::move(address),
+        symName
+    );
+
+    return callable.callFromNative(
+        std::move(address),
+        symtab,
+        *params.getArray()
+    );
+}

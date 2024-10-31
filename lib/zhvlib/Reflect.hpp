@@ -34,6 +34,7 @@ ZHIVO_FUNC(reflect_type);
 
 ZHIVO_FUNC(reflect_declare);
 ZHIVO_FUNC(reflect_delete);
+ZHIVO_FUNC(reflect_invoke);
 
 ZHIVO_LIB_END
 

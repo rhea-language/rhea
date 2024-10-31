@@ -57,6 +57,7 @@ public:
     );
 
     void setSymbol(const std::string& name, DynamicObject value);
+    void removeSymbol(const std::string& name);
     bool hasSymbol(const std::string& name);
 
     void addParallelism(std::thread par);

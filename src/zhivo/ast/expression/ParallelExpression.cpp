@@ -45,6 +45,9 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
                 expr->visit(*sym);
             }
             catch(const std::system_error& exc) {
+                sym->waitForThreads();
+                Runtime::cleanUp();
+
                 std::cerr << "[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m"
                     << exc.what() << "\u001b[0m" << std::endl
                     << "                from thread: "
@@ -53,6 +56,8 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
             }
             catch(const ASTNodeException& nodeExc) {
                 sym->waitForThreads();
+                Runtime::cleanUp();
+
                 std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
                     << "\u001b[3;37m" << nodeExc.what() << "\u001b[0m"
                     << std::endl << "                 "
@@ -63,6 +68,8 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
             }
             catch(const LexicalAnalysisException& lexAnlExc) {
                 sym->waitForThreads();
+                Runtime::cleanUp();
+
                 std::cerr << "[\u001b[1;31mLexical Error\u001b[0m]:" << std::endl
                     << "\t" << lexAnlExc.what() << std::endl
                     << "                 from thread: "
@@ -71,6 +78,8 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
             }
             catch(const ParserException& parserExc) {
                 sym->waitForThreads();
+                Runtime::cleanUp();
+
                 std::cerr << "[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m"
                     << parserExc.what() << "\u001b[0m" << std::endl;
                 std::cerr << "                 "
@@ -81,6 +90,8 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
             }
             catch(const TerminativeBreakSignal& breakExc) {
                 sym->waitForThreads();
+                Runtime::cleanUp();
+
                 std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
                     << "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
                     << std::endl << "                 "
@@ -91,6 +102,8 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
             }
             catch(const TerminativeContinueSignal& continueExc) {
                 sym->waitForThreads();
+                Runtime::cleanUp();
+
                 std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
                     << "\u001b[3;37mInvalid continue statement signal caught.\u001b[0m"
                     << std::endl << "                 "
@@ -101,12 +114,27 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
             }
             catch(const TerminativeReturnSignal& retExc) {
                 sym->waitForThreads();
+                Runtime::cleanUp();
+
                 std::cerr << "\u001b[0;93m"
                     << retExc.getObject().toString()
                     << "\u001b[0m" << std::endl;
             }
+            catch(const TerminativeThrowSignal& throwExc) {
+                sym->waitForThreads();
+                Runtime::cleanUp();
+
+                std::cerr << "[\u001b[1;31mUncaught Error\u001b[0m]: "
+                    << "\u001b[3;37m"
+                    << throwExc.getObject().toString()
+                    << "\u001b[0m"
+                    << std::endl << "                  "
+                    << throwExc.getAddress()->toString() << std::endl;
+            }
             catch(const std::exception& exc) {
                 sym->waitForThreads();
+                Runtime::cleanUp();
+
                 std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m"
                     << exc.what() << "\u001b[0m" << std::endl
                     << "                 from thread: "

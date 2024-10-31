@@ -18,17 +18,25 @@
 
 #include "zhvlib/ML.hpp"
 
+#include <zhivo/ast/TerminativeSignal.hpp>
+
 #include <cmath>
 #include <exception>
 #include <vector>
 
-static inline std::vector<double> arrayToDoubleVector(std::vector<DynamicObject> array) {
+static inline std::vector<double> arrayToDoubleVector(
+    std::shared_ptr<Token> address,
+    std::vector<DynamicObject> array
+) {
     std::vector<double> values(array.size());
-    
+
     #pragma omp parallel for
     for(size_t i = 0; i < array.size(); i++) {
         if(!array[i].isNumber())
-            throw std::runtime_error("Value from array is not a number");
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Value from array is not a number"
+            );
 
         values[i] = array[i].getNumber();
     }
@@ -36,8 +44,14 @@ static inline std::vector<double> arrayToDoubleVector(std::vector<DynamicObject>
     return values;
 }
 
-static inline double calculateMean(std::vector<DynamicObject> array) {
-    std::vector<double> values = arrayToDoubleVector(array);
+static inline double calculateMean(
+    std::shared_ptr<Token> address,
+    std::vector<DynamicObject> array
+) {
+    std::vector<double> values = arrayToDoubleVector(
+        std::move(address),
+        array
+    );
     size_t arraySize = array.size();
     double sum = 0.0;
 
@@ -50,26 +64,32 @@ static inline double calculateMean(std::vector<DynamicObject> array) {
 
 ZHIVO_FUNC(ml_trendline_calculate) {
     if(args.size() != 2)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 2 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject xObj = args.at(0),
         yObj = args.at(1);
 
     if(!xObj.isArray() || !yObj.isArray())
-        throw std::runtime_error("Parameter x and y must be both number array");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Parameter x and y must be both number array"
+        );
 
     std::vector<DynamicObject> xObjArray = *xObj.getArray();
     std::vector<DynamicObject> yObjArray = *yObj.getArray();
 
     if(xObjArray.size() != yObjArray.size())
-        throw std::runtime_error("Data set size of x and y did not match");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Data set size of x and y did not match"
+        );
 
-    double x = calculateMean(xObjArray),
-        y = calculateMean(yObjArray),
+    double x = calculateMean(std::move(address), xObjArray),
+        y = calculateMean(std::move(address), yObjArray),
         numerator = 0.0,
         denominator = 0.0;
 
@@ -95,10 +115,10 @@ ZHIVO_FUNC(ml_trendline_calculate) {
 
 ZHIVO_FUNC(ml_trendline_calculateRmse) {
     if(args.size() != 3)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 3 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject xObj = args.at(0),
@@ -107,16 +127,25 @@ ZHIVO_FUNC(ml_trendline_calculateRmse) {
     std::vector<DynamicObject> regModel = *model.getArray();
 
     if(!model.isArray() || regModel.size() != 2)
-        throw std::runtime_error("Invalid linear regression model");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Invalid linear regression model"
+        );
 
     if(!xObj.isArray() || !yObj.isArray())
-        throw std::runtime_error("Parameter x and y must be both number array");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Parameter x and y must be both number array"
+        );
 
     std::vector<DynamicObject> xObjArray = *xObj.getArray();
     std::vector<DynamicObject> yObjArray = *yObj.getArray();
 
     if(xObjArray.size() != yObjArray.size())
-        throw std::runtime_error("Data set size of x and y did not match");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Data set size of x and y did not match"
+        );
 
     double sumSquaredErrs = 0.0;
     size_t paramSize = xObjArray.size();
@@ -133,8 +162,11 @@ ZHIVO_FUNC(ml_trendline_calculateRmse) {
         ));
         params.emplace_back(xObjArray[i]);
 
-        double yPred = ml_trendline_predict(symtab, params)
-            .getNumber();
+        double yPred = ml_trendline_predict(
+            std::move(address),
+            symtab,
+            params
+        ).getNumber();
         double error = yObjArray[i].getNumber() - yPred;
 
         sumSquaredErrs += error * error;
@@ -145,10 +177,10 @@ ZHIVO_FUNC(ml_trendline_calculateRmse) {
 
 ZHIVO_FUNC(ml_trendline_predict) {
     if(args.size() != 2)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 3 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject model = args.at(0),
@@ -156,16 +188,25 @@ ZHIVO_FUNC(ml_trendline_predict) {
     std::vector<DynamicObject> regModel = *model.getArray();
 
     if(!model.isArray() || regModel.size() != 2)
-        throw std::runtime_error("Invalid linear regression model");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Invalid linear regression model"
+        );
 
     if(!value.isNumber())
-        throw std::runtime_error("Cannot predict linear regression value for non-numbers");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Cannot predict linear regression value for non-numbers"
+        );
 
     DynamicObject slope = regModel.at(0),
         intercept = regModel.at(1);
 
     if(!slope.isNumber() || !intercept.isNumber())
-        throw std::runtime_error("Linear regression model's slope and intercept must be a number");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Linear regression model's slope and intercept must be a number"
+        );
 
     return DynamicObject(
         slope.getNumber() *

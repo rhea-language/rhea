@@ -18,6 +18,8 @@
 
 #include "zhvlib/IO.hpp"
 
+#include <zhivo/ast/TerminativeSignal.hpp>
+
 #include <chrono>
 #include <exception>
 #include <filesystem>
@@ -84,10 +86,10 @@ ZHIVO_FUNC(io_readBoolean) {
 
 ZHIVO_FUNC(io_fileRead) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject fileName = args.at(0);
@@ -112,10 +114,10 @@ ZHIVO_FUNC(io_fileRead) {
 
 ZHIVO_FUNC(io_fileWrite) {
     if(args.size() != 2)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 2 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject fileName = args.at(0),
@@ -131,10 +133,10 @@ ZHIVO_FUNC(io_fileWrite) {
 
 ZHIVO_FUNC(io_fileSize) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject fileName = args.at(0);
@@ -157,10 +159,10 @@ ZHIVO_FUNC(io_fileSize) {
 
 ZHIVO_FUNC(io_filePerms) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject fileName = args.at(0);
@@ -212,10 +214,10 @@ ZHIVO_FUNC(io_filePerms) {
 
 ZHIVO_FUNC(io_fileCreationDate) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject fileName = args.at(0);
@@ -240,15 +242,17 @@ ZHIVO_FUNC(io_fileCreationDate) {
         ));
     }
 
-    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(
+        returnValues
+    ));
 }
 
 ZHIVO_FUNC(io_fileDelete) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject fileName = args.at(0);
@@ -290,10 +294,10 @@ ZHIVO_FUNC(io_fileDelete) {
 
 ZHIVO_FUNC(io_folderCreate) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject folderName = args.at(0);
@@ -322,10 +326,10 @@ ZHIVO_FUNC(io_folderCreate) {
 
 ZHIVO_FUNC(io_folderSize) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject folderName = args.at(0);
@@ -354,10 +358,10 @@ ZHIVO_FUNC(io_folderSize) {
 
 ZHIVO_FUNC(io_folderCreationDate) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject folderName = args.at(0);
@@ -387,10 +391,10 @@ ZHIVO_FUNC(io_folderCreationDate) {
 
 ZHIVO_FUNC(io_folderDelete) {
     if(args.empty() || args.size() >= 2)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 or 2 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject folderName = args.at(0);
@@ -415,10 +419,10 @@ ZHIVO_FUNC(io_folderDelete) {
 
 ZHIVO_FUNC(io_isFile) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject fileName = args.at(0);
@@ -432,10 +436,10 @@ ZHIVO_FUNC(io_isFile) {
 
 ZHIVO_FUNC(io_isFolder) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject fileName = args.at(0);
@@ -449,10 +453,10 @@ ZHIVO_FUNC(io_isFolder) {
 
 ZHIVO_FUNC(io_listAllFiles) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject fileName = args.at(0);
@@ -476,7 +480,10 @@ ZHIVO_FUNC(io_exit) {
 
     DynamicObject exitCode = args.at(0);
     if(!exitCode.isNumber())
-        throw std::runtime_error("Exit code is not a number.");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Exit code is not a number."
+        );
 
     exit(static_cast<int>(exitCode.getNumber()));
     return {};

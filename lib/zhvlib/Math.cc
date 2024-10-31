@@ -18,96 +18,116 @@
 
 #include "zhvlib/Math.hpp"
 
+#include <zhivo/ast/TerminativeSignal.hpp>
+
 #include <cmath>
 #include <exception>
 #include <random>
 
 ZHIVO_FUNC(math_cos) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject value = args.at(0);
     if(!value.isNumber())
-        throw std::runtime_error("Argument type is not of number.");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
 
     return DynamicObject(cos(value.getNumber()));
 }
 
 ZHIVO_FUNC(math_cosh) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject value = args.at(0);
     if(!value.isNumber())
-        throw std::runtime_error("Argument type is not of number.");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
 
     return DynamicObject(cosh(value.getNumber()));
 }
 
 ZHIVO_FUNC(math_sin) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject value = args.at(0);
     if(!value.isNumber())
-        throw std::runtime_error("Argument type is not of number.");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
 
     return DynamicObject(sin(value.getNumber()));
 }
 
 ZHIVO_FUNC(math_sinh) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject value = args.at(0);
     if(!value.isNumber())
-        throw std::runtime_error("Argument type is not of number.");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
 
     return DynamicObject(sinh(value.getNumber()));
 }
 
 ZHIVO_FUNC(math_tan) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject value = args.at(0);
     if(!value.isNumber())
-        throw std::runtime_error("Argument type is not of number.");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
 
     return DynamicObject(tan(value.getNumber()));
 }
 
 ZHIVO_FUNC(math_tanh) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject value = args.at(0);
     if(!value.isNumber())
-        throw std::runtime_error("Argument type is not of number.");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
 
     return DynamicObject(tanh(value.getNumber()));
 }
@@ -119,7 +139,10 @@ ZHIVO_FUNC(math_rand) {
     if(args.size() == 1) {
         DynamicObject arg = args.at(0);
         if(!arg.isNumber())
-            throw std::runtime_error("Expecting a number argument.");
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Expecting a number argument."
+            );
 
         std::mt19937 gen(arg.getNumber());
         value = dis(gen);
@@ -136,30 +159,36 @@ ZHIVO_FUNC(math_rand) {
 
 ZHIVO_FUNC(math_sigmoid) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject value = args.at(0);
     if(!value.isNumber())
-        throw std::runtime_error("Argument type is not of number.");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
 
     return DynamicObject(1 / (1 + exp(-value.getNumber())));
 }
 
 ZHIVO_FUNC(math_sigmoidDerivative) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject value = args.at(0);
     if(!value.isNumber())
-        throw std::runtime_error("Argument type is not of number.");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
 
     double num = value.getNumber();
     return DynamicObject(num * (1 - num));

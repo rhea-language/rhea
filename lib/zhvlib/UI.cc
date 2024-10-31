@@ -18,6 +18,9 @@
 
 #include "zhvlib/UI.hpp"
 
+#include <zhivo/ast/TerminativeSignal.hpp>
+#include <zhivo/ast/expression/FunctionDeclarationExpression.hpp>
+
 #include <exception>
 #include <iomanip>
 #include <iostream>
@@ -28,8 +31,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ui.h>
-
-#include <zhivo/ast/expression/FunctionDeclarationExpression.hpp>
 
 using EventCallback = std::function<int()>;
 using WindowDictionary = std::unordered_map<std::string, uiWindow*>;
@@ -95,15 +96,18 @@ ZHIVO_FUNC(ui_main) {
 
 ZHIVO_FUNC(ui_dialog_openFile) {
     if(args.size() > 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject uuid = args.at(0);
     if(windowDictionary.find(uuid.toString()) == windowDictionary.end())
-        throw std::runtime_error("Cannot find window with specified key");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Cannot find window with specified key"
+        );
 
     char* filePath = uiOpenFile(windowDictionary[uuid.toString()]);
     if(filePath == nullptr)
@@ -114,15 +118,18 @@ ZHIVO_FUNC(ui_dialog_openFile) {
 
 ZHIVO_FUNC(ui_dialog_saveFile) {
     if(args.size() > 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject uuid = args.at(0);
     if(windowDictionary.find(uuid.toString()) == windowDictionary.end())
-        throw std::runtime_error("Cannot find window with specified key");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Cannot find window with specified key"
+        );
 
     char* filePath = uiSaveFile(windowDictionary[uuid.toString()]);
     if(filePath == nullptr)
@@ -133,10 +140,10 @@ ZHIVO_FUNC(ui_dialog_saveFile) {
 
 ZHIVO_FUNC(ui_dialog_messageBox) {
     if(args.size() != 3)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 3 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject uuid = args.at(0),
@@ -144,7 +151,10 @@ ZHIVO_FUNC(ui_dialog_messageBox) {
         caption = args.at(2);
 
     if(windowDictionary.find(uuid.toString()) == windowDictionary.end())
-        throw std::runtime_error("Cannot find window with specified key");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Cannot find window with specified key"
+        );
 
     uiMsgBox(
         windowDictionary[uuid.toString()],
@@ -156,10 +166,10 @@ ZHIVO_FUNC(ui_dialog_messageBox) {
 
 ZHIVO_FUNC(ui_dialog_messageBoxError) {
     if(args.size() != 3)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 3 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject uuid = args.at(0),
@@ -167,7 +177,10 @@ ZHIVO_FUNC(ui_dialog_messageBoxError) {
         caption = args.at(2);
 
     if(windowDictionary.find(uuid.toString()) == windowDictionary.end())
-        throw std::runtime_error("Cannot find window with specified key");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Cannot find window with specified key"
+        );
 
     uiMsgBoxError(
         windowDictionary[uuid.toString()],
@@ -179,10 +192,10 @@ ZHIVO_FUNC(ui_dialog_messageBoxError) {
 
 ZHIVO_FUNC(ui_window_create) {
     if(args.size() != 4)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 4 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject title = args.at(0),
@@ -191,10 +204,16 @@ ZHIVO_FUNC(ui_window_create) {
         hasMenubar = args.at(3);
 
     if(!width.isNumber())
-        throw std::runtime_error("Parameter width must be a number");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Parameter width must be a number"
+        );
 
     if(!height.isNumber())
-        throw std::runtime_error("Parameter height must be a number");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Parameter height must be a number"
+        );
 
     std::string key = generateUUID();
     if(windowDictionary.find(key) != windowDictionary.end())
@@ -213,10 +232,10 @@ ZHIVO_FUNC(ui_window_create) {
 
 ZHIVO_FUNC(ui_window_onClosing) {
     if(args.size() != 2)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject uuid = args.at(0),
@@ -224,12 +243,18 @@ ZHIVO_FUNC(ui_window_onClosing) {
     uiWindow* window;
 
     if(!callback.isFunction())
-        throw std::runtime_error("Parameter for callback is not a function");
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Parameter for callback is not a function"
+        );
 
     std::string uuidStr = uuid.toString();
     if(windowDictionary.find(uuidStr) != windowDictionary.end())
         window = windowDictionary[uuidStr];
-    else throw std::runtime_error("Cannot find window with specified key");
+    else throw TerminativeThrowSignal(
+        std::move(address),
+        "Cannot find window with specified key"
+    );
 
     windowCallbackMap[uuidStr] = [callback, uuidStr, symtab]() -> int {
         std::shared_ptr<FunctionDeclarationExpression> func = callback.getCallable();
@@ -255,10 +280,10 @@ ZHIVO_FUNC(ui_window_onClosing) {
 
 ZHIVO_FUNC(ui_window_show) {
     if(args.size() != 1)
-        throw std::runtime_error(
+        throw TerminativeThrowSignal(
+            std::move(address),
             "Expecting 1 argument, got " +
-                std::to_string(args.size()) +
-                "."
+                std::to_string(args.size())
         );
 
     DynamicObject uuid = args.at(0);

@@ -38,20 +38,9 @@ if os.path.exists(TEMP_DIR):
     shutil.rmtree(TEMP_DIR)
 os.makedirs(TEMP_DIR)
 
-OUTPUT_EXECUTABLE = os.path.join(
-    OUT_DIR,
-    'zhivo-' +
-        sys.platform + '-' +
-        platform.machine().lower()
-)
-OUTPUT_LIBRARY = os.path.join(
-    OUT_DIR,
-    'zhivo-' +
-        sys.platform + '-' +
-        platform.machine().lower() +
-        '-stdlib'
-)
-OUTPUT_CORE = OUTPUT_EXECUTABLE + '-core.a'
+OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'zhivo')
+OUTPUT_LIBRARY = os.path.join(OUT_DIR, 'zhvstdlib')
+OUTPUT_CORE = OUTPUT_LIBRARY + '-core.a'
 
 cpp_files = []
 cc_files = []
@@ -159,7 +148,7 @@ try:
             '-shared',
             '-o', OUTPUT_CORE
         ]
-        exe_build_args += ['-o', OUTPUT_EXECUTABLE + '-openmp']
+        exe_build_args += ['-o', OUTPUT_EXECUTABLE]
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',
             '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
@@ -204,7 +193,7 @@ try:
             '-fPIC', '-shared',
             '-o', OUTPUT_CORE
         ]
-        exe_build_args += ['-o', OUTPUT_EXECUTABLE + '-openmp']
+        exe_build_args += ['-o', OUTPUT_EXECUTABLE]
         lib_build_args = [
             'g++', '-Iinclude',
             '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
@@ -247,7 +236,7 @@ try:
         ] + cpp_files
 
         core_build_args = exe_build_args + ['-shared', '-o', OUTPUT_CORE]
-        exe_build_args += ['-o', OUTPUT_EXECUTABLE + '-openmp']
+        exe_build_args += ['-o', OUTPUT_EXECUTABLE]
 
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',

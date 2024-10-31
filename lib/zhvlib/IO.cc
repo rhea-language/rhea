@@ -346,6 +346,7 @@ ZHIVO_FUNC(io_folderSize) {
         return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
     }
 
+    #pragma omp parallel for
     for(const auto& entry : std::filesystem::recursive_directory_iterator(path))
         if(std::filesystem::is_regular_file(entry))
             totalSize += std::filesystem::file_size(entry);
@@ -466,6 +467,7 @@ ZHIVO_FUNC(io_listAllFiles) {
     if(!std::filesystem::exists(dirPath) || !std::filesystem::is_directory(dirPath))
         return DynamicObject();
 
+    #pragma omp parallel for
     for(const auto& entry : std::filesystem::directory_iterator(dirPath))
         returnValues.emplace_back(DynamicObject(
             entry.path().filename().string()

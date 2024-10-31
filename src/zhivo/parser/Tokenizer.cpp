@@ -30,6 +30,18 @@ std::shared_ptr<Tokenizer> Tokenizer::loadFile(const std::string& filePath) {
     return std::make_shared<Tokenizer>(content.str(), filePath);
 }
 
+bool Tokenizer::isValidIdentifier(std::string str) {
+    if(Tokenizer::isDigit(str[0]))
+        return false;
+
+    for(const char& ch : str)
+        if(Tokenizer::isOperator(ch) ||
+            Tokenizer::isWhitespace(ch))
+            return false;
+
+    return !Tokenizer::isKeyword(str);
+}
+
 void Tokenizer::scan() {
     if(this->source.empty())
         return;

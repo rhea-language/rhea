@@ -63,6 +63,7 @@ public:
         index(0) {}
 
     static std::shared_ptr<Tokenizer> loadFile(const std::string& filePath);
+    static bool isValidIdentifier(std::string str);
 
     void scan();
     const std::vector<Token>& getTokens() const;

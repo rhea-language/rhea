@@ -68,6 +68,8 @@ namespace ZhivoUtil {
 
 std::uint32_t SimpleHash::compute(const std::string& data) {
     std::uint32_t hash = 0xffffffff;
+
+    #pragma omp parallel for
     for(const char& byte : data)
         hash = (hash >> 8) ^ precomputed_table[
             (hash ^ static_cast<std::uint8_t>(byte)) &

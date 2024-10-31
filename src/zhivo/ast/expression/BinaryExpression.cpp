@@ -156,6 +156,7 @@ DynamicObject BinaryExpression::applyStringOp(DynamicObject& lValue, DynamicObje
             str = lValue.getString();
         }
 
+        #pragma omp parallel for
         for(unsigned long i = 0; i < count; i++)
             output += str;
         return DynamicObject(output);
@@ -244,6 +245,7 @@ DynamicObject BinaryExpression::applyRegexOp(DynamicObject& lValue, DynamicObjec
 }
 
 DynamicObject BinaryExpression::applyArrayOp(DynamicObject& lValue, DynamicObject& rValue) {
+    #pragma omp parallel for
     for(auto& object : *lValue.getArray())
         if(!object.isNumber())
             throw ASTNodeException(
@@ -251,6 +253,7 @@ DynamicObject BinaryExpression::applyArrayOp(DynamicObject& lValue, DynamicObjec
                 "Unsupported binary operation for array that contains non-numbers."
             );
 
+    #pragma omp parallel for
     for(auto& object : *rValue.getArray())
         if(!object.isNumber())
             throw ASTNodeException(

@@ -79,6 +79,7 @@ void SymbolTable::waitForThreads() {
     if(this->threads.empty())
         return;
 
+    #pragma omp parallel for
     for(auto& thread : this->threads)
         if(thread.joinable())
             thread.join();
@@ -91,6 +92,7 @@ void SymbolTable::detachParallelNodes() {
     if(this->threads.empty())
         return;
 
+    #pragma omp parallel for
     for(auto& thread : this->threads)
         thread.detach();
 

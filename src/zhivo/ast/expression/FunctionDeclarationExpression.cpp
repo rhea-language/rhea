@@ -64,6 +64,8 @@ DynamicObject FunctionDeclarationExpression::call(
         );
 
     SymbolTable localSymbols(const_cast<SymbolTable&>(symbols));
+
+    #pragma omp parallel for
     for(size_t i = 0; i < args.size(); ++i)
         localSymbols.setSymbol(
             this->parameters[i]->getImage(),

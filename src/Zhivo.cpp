@@ -75,7 +75,9 @@ auto interpreter(std::vector<std::string> files) -> int {
         return 0;
     }
     catch(const std::system_error& exc) {
+        symbols.waitForThreads();
         Runtime::cleanUp();
+
         std::cerr << "[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m"
             << exc.what() << "\u001b[0m" << std::endl;
     }
@@ -129,6 +131,17 @@ auto interpreter(std::vector<std::string> files) -> int {
         std::cerr << "\u001b[0;93m"
             << retExc.getObject().toString()
             << "\u001b[0m" << std::endl;
+    }
+    catch(const TerminativeThrowSignal& throwExc) {
+        symbols.waitForThreads();
+        Runtime::cleanUp();
+
+        std::cerr << "[\u001b[1;31mUncaught Error\u001b[0m]: "
+            << "\u001b[3;37m"
+            << throwExc.getObject().toString()
+            << "\u001b[0m"
+            << std::endl << "                  "
+            << throwExc.getAddress()->toString() << std::endl;
     }
     catch(const std::exception& exc) {
         symbols.waitForThreads();

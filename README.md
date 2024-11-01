@@ -1,7 +1,7 @@
 <p align="center">
     <img src="assets/n8-logo.png" width="180" />
 </p>
-<h1 align="center">N8 (Живо)</h1>
+<h1 align="center">N8 Programming Language</h1>
 
 <p align="center">
     <img alt="Build CI for Linux" src="https://github.com/nthnn/n8/actions/workflows/build_ci_linux.yml/badge.svg" />

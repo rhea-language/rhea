@@ -1,18 +1,18 @@
 # Copyright (c) 2024 - Nathanne Isip
-# This file is part of Zhivo.
+# This file is part of N8.
 # 
-# Zhivo is free software: you can redistribute it and/or modify
+# N8 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published
 # by the Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 # 
-# Zhivo is distributed in the hope that it will be useful, but
+# N8 is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 # 
 # You should have received a copy of the GNU General Public License
-# along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
+# along with N8. If not, see <https://www.gnu.org/licenses/>.
 
 import cpuinfo
 import os
@@ -38,8 +38,8 @@ if os.path.exists(TEMP_DIR):
     shutil.rmtree(TEMP_DIR)
 os.makedirs(TEMP_DIR)
 
-OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'zhivo')
-OUTPUT_LIBRARY = os.path.join(OUT_DIR, 'zhvstdlib')
+OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'n8')
+OUTPUT_LIBRARY = os.path.join(OUT_DIR, 'n8std')
 OUTPUT_CORE = OUTPUT_LIBRARY + '-core.a'
 
 cpp_files = []

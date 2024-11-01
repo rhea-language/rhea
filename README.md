@@ -1,23 +1,23 @@
 <p align="center">
-    <img src="assets/zhivo-logo.png" width="180" />
+    <img src="assets/n8-logo.png" width="180" />
 </p>
-<h1 align="center">Zhivo (Живо)</h1>
+<h1 align="center">N8 (Живо)</h1>
 
 <p align="center">
-    <img alt="Build CI for Linux" src="https://github.com/nthnn/zhivo/actions/workflows/build_ci_linux.yml/badge.svg" />
-    <img alt="Build CI for Darwin" src="https://github.com/nthnn/zhivo/actions/workflows/build_ci_darwin.yml/badge.svg" />
-    <img alt="Build CI for Windows" src="https://github.com/nthnn/zhivo/actions/workflows/build_ci_windows.yml/badge.svg" />
-    <img alt="VSCode Extension Build" src="https://github.com/nthnn/zhivo/actions/workflows/build_ci_vsce.yml/badge.svg" />
+    <img alt="Build CI for Linux" src="https://github.com/nthnn/n8/actions/workflows/build_ci_linux.yml/badge.svg" />
+    <img alt="Build CI for Darwin" src="https://github.com/nthnn/n8/actions/workflows/build_ci_darwin.yml/badge.svg" />
+    <img alt="Build CI for Windows" src="https://github.com/nthnn/n8/actions/workflows/build_ci_windows.yml/badge.svg" />
+    <img alt="VSCode Extension Build" src="https://github.com/nthnn/n8/actions/workflows/build_ci_vsce.yml/badge.svg" />
 </p>
 
 JIT-compiled dynamic general-purpose programming language utilizing OpenMP parallelism with built-in concurrency and unconventional expressiveness.
 
 <p align="center">
-    <a href="https://zhivo.vercel.app"><img src="https://img.shields.io/badge/Learn%20More-007ec6?style=for-the-badge&logoColor=white&logo=Google-Chrome" /></a>
+    <a href="https://n8.vercel.app"><img src="https://img.shields.io/badge/Learn%20More-007ec6?style=for-the-badge&logoColor=white&logo=Google-Chrome" /></a>
 </p>
 
-```zhivo
-#!/bin/zhivo
+```n8
+#!/bin/n8
 
 val count = 99;
 
@@ -39,7 +39,7 @@ while(count > 0) {
 > [!WARNING]
 > This repository is under a slow development. (Busy on my job)
 
-## Why Zhivo?
+## Why N8?
 
 - Direct mathematical operations for vectors and/or arrays.
 - Syntax-level concurrency and multithreading.
@@ -51,15 +51,15 @@ while(count > 0) {
 
 - **High-performance Scientific Computing**
 
-    Zhivo's ability to perform direct mathematical operations on vectors and arrays makes it ideal for scientific computing applications such as simulations, data analysis, and mathematical modeling. Its concurrency support ensures that heavy computational tasks can run efficiently on multi-core CPUs.
+    N8's ability to perform direct mathematical operations on vectors and arrays makes it ideal for scientific computing applications such as simulations, data analysis, and mathematical modeling. Its concurrency support ensures that heavy computational tasks can run efficiently on multi-core CPUs.
 
 - **Data Pipelines and ETL (Extract, Transform, Load)**
 
-    With the Zhivo's expressiveness, it can be used to build efficient data pipelines for ETL processes in big data applications. Its support for complex data structures and built-in concurrency enables scalable, high-throughput data processing, making it ideal for tasks like data aggregation, transformation, and loading in distributed systems.
+    With the N8's expressiveness, it can be used to build efficient data pipelines for ETL processes in big data applications. Its support for complex data structures and built-in concurrency enables scalable, high-throughput data processing, making it ideal for tasks like data aggregation, transformation, and loading in distributed systems.
 
 - **Machine Learning Model Prototyping**
 
-    Zhivo is ideal for Machine Learning and AI due to its efficient mathematical operations, built-in concurrency, flexible syntax, seamless integration with native libraries, and a simplified project structure, enabling rapid development and optimization of advanced algorithms and applications.
+    N8 is ideal for Machine Learning and AI due to its efficient mathematical operations, built-in concurrency, flexible syntax, seamless integration with native libraries, and a simplified project structure, enabling rapid development and optimization of advanced algorithms and applications.
 
 - **Game Development**
 
@@ -76,7 +76,7 @@ Contributions and feedback are all welcome to enhance this library. If you encou
 
 ## License
 
-Zhivo is distributed under the GNU General Public License v3.0. For further details, refer to the LICENSE file.
+N8 is distributed under the GNU General Public License v3.0. For further details, refer to the LICENSE file.
 
 ```
 This program is free software: you can redistribute it and/or modify  

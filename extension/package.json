@@ -1,11 +1,11 @@
 {
-    "name": "zhivo-lang-vsce",
-    "displayName": "Zhivo",
-    "description": "Zhivo language and syntax highlighting extension.",
+    "name": "n8-lang-vsce",
+    "displayName": "N8",
+    "description": "N8 language and syntax highlighting extension.",
     "version": "0.0.1",
-    "icon": "assets/zhivo-logo.png",
+    "icon": "assets/n8-logo.png",
     "publisher": "Nathanne Isip",
-    "repository": "https://github.com/nthnn/zhivo",
+    "repository": "https://github.com/nthnn/n8",
     "engines": {
         "vscode": "^1.91.0"
     },
@@ -15,26 +15,26 @@
     "contributes": {
         "languages": [
             {
-                "id": "zhivo",
+                "id": "n8",
                 "aliases": [
-                    "Zhivo",
-                    "zhivo"
+                    "N8",
+                    "n8"
                 ],
                 "extensions": [
-                    ".zhv"
+                    ".n8"
                 ],
                 "configuration": "language-configuration.json",
                 "icon": {
-                    "light": "assets/zhivo-logo.png",
-                    "dark": "assets/zhivo-logo.png"
+                    "light": "assets/n8-logo.png",
+                    "dark": "assets/n8-logo.png"
                 }
             }
         ],
         "grammars": [
             {
-                "language": "zhivo",
-                "scopeName": "source.zhivo",
-                "path": "syntaxes/zhivo.tmLanguage.json"
+                "language": "n8",
+                "scopeName": "source.n8",
+                "path": "syntaxes/n8.tmLanguage.json"
             }
         ]
     },

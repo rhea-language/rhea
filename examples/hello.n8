@@ -1,4 +1,4 @@
-#!/bin/zhivo
+#!/bin/n8
 
 val greet = func(name)
     render! "Hello, " + name + "!";

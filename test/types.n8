@@ -1,4 +1,4 @@
-#!/bin/zhivo
+#!/bin/n8
 
 render! type "hello";
 render! type 3.14;

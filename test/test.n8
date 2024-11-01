@@ -1,4 +1,4 @@
-#!/bin/zhivo
+#!/bin/n8
 
 test("Example Test 1") {
     ret 1 + 1 == 2;

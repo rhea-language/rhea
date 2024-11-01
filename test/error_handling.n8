@@ -1,4 +1,4 @@
-#!/bin/zhivo
+#!/bin/n8
 
 catch {
     render! "This is inside the handle-clause";

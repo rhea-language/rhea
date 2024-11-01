@@ -1,4 +1,4 @@
-#!/bin/zhivo
+#!/bin/n8
 
 val i = 3.14;
 if(i == 3.14)

@@ -1,4 +1,4 @@
-#!/bin/zhivo
+#!/bin/n8
 
 val bin = 0b001000,
     tri = 0t22,

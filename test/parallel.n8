@@ -1,4 +1,4 @@
-#!/bin/zhivo
+#!/bin/n8
 
 parallel render! "Test 1";
 parallel render! "Test 2";

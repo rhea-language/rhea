@@ -1,4 +1,4 @@
-#!/bin/zhivo
+#!/bin/n8
 
 val nums = [1, 2, 3];
 render! nums;

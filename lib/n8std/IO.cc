@@ -1,24 +1,24 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of Zhivo.
+ * This file is part of N8.
  * 
- * Zhivo is free software: you can redistribute it and/or modify
+ * N8 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * Zhivo is distributed in the hope that it will be useful, but
+ * N8 is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
+ * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "zhvlib/IO.hpp"
+#include "n8std/IO.hpp"
 
-#include <zhivo/ast/TerminativeSignal.hpp>
+#include <n8/ast/TerminativeSignal.hpp>
 
 #include <chrono>
 #include <exception>
@@ -35,7 +35,7 @@
 #   include <fcntl.h>
 #endif
 
-ZHIVO_FUNC(io_print) {
+N8_FUNC(io_print) {
     if(args.size() == 0)
         return {};
 
@@ -47,7 +47,7 @@ ZHIVO_FUNC(io_print) {
     return {};
 }
 
-ZHIVO_FUNC(io_printLine) {
+N8_FUNC(io_printLine) {
     if(args.size() == 0)
         return {};
 
@@ -59,21 +59,21 @@ ZHIVO_FUNC(io_printLine) {
     return {};
 }
 
-ZHIVO_FUNC(io_readString) {
+N8_FUNC(io_readString) {
     std::string str;
     std::getline(std::cin, str);
 
     return DynamicObject(str);
 }
 
-ZHIVO_FUNC(io_readNumber) {
+N8_FUNC(io_readNumber) {
     std::string str;
     std::getline(std::cin, str);
 
     return DynamicObject(::atof(str.c_str()));
 }
 
-ZHIVO_FUNC(io_readBoolean) {
+N8_FUNC(io_readBoolean) {
     std::string str;
     std::getline(std::cin, str);
 
@@ -84,7 +84,7 @@ ZHIVO_FUNC(io_readBoolean) {
     return DynamicObject(boolVal);
 }
 
-ZHIVO_FUNC(io_fileRead) {
+N8_FUNC(io_fileRead) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -112,7 +112,7 @@ ZHIVO_FUNC(io_fileRead) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-ZHIVO_FUNC(io_fileWrite) {
+N8_FUNC(io_fileWrite) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -131,7 +131,7 @@ ZHIVO_FUNC(io_fileWrite) {
     return DynamicObject(true);
 }
 
-ZHIVO_FUNC(io_fileSize) {
+N8_FUNC(io_fileSize) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -157,7 +157,7 @@ ZHIVO_FUNC(io_fileSize) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-ZHIVO_FUNC(io_filePerms) {
+N8_FUNC(io_filePerms) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -212,7 +212,7 @@ ZHIVO_FUNC(io_filePerms) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-ZHIVO_FUNC(io_fileCreationDate) {
+N8_FUNC(io_fileCreationDate) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -247,7 +247,7 @@ ZHIVO_FUNC(io_fileCreationDate) {
     ));
 }
 
-ZHIVO_FUNC(io_fileDelete) {
+N8_FUNC(io_fileDelete) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -292,7 +292,7 @@ ZHIVO_FUNC(io_fileDelete) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-ZHIVO_FUNC(io_folderCreate) {
+N8_FUNC(io_folderCreate) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -324,7 +324,7 @@ ZHIVO_FUNC(io_folderCreate) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-ZHIVO_FUNC(io_folderSize) {
+N8_FUNC(io_folderSize) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -357,7 +357,7 @@ ZHIVO_FUNC(io_folderSize) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-ZHIVO_FUNC(io_folderCreationDate) {
+N8_FUNC(io_folderCreationDate) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -390,7 +390,7 @@ ZHIVO_FUNC(io_folderCreationDate) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-ZHIVO_FUNC(io_folderDelete) {
+N8_FUNC(io_folderDelete) {
     if(args.empty() || args.size() >= 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -418,7 +418,7 @@ ZHIVO_FUNC(io_folderDelete) {
     return DynamicObject(true);
 }
 
-ZHIVO_FUNC(io_isFile) {
+N8_FUNC(io_isFile) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -435,7 +435,7 @@ ZHIVO_FUNC(io_isFile) {
     );
 }
 
-ZHIVO_FUNC(io_isFolder) {
+N8_FUNC(io_isFolder) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -452,7 +452,7 @@ ZHIVO_FUNC(io_isFolder) {
     );
 }
 
-ZHIVO_FUNC(io_listAllFiles) {
+N8_FUNC(io_listAllFiles) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -476,7 +476,7 @@ ZHIVO_FUNC(io_listAllFiles) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-ZHIVO_FUNC(io_exit) {
+N8_FUNC(io_exit) {
     if(args.size() == 0)
         exit(0);
 

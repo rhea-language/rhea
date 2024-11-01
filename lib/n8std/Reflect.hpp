@@ -1,46 +1,42 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of Zhivo.
+ * This file is part of N8.
  * 
- * Zhivo is free software: you can redistribute it and/or modify
+ * N8 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * Zhivo is distributed in the hope that it will be useful, but
+ * N8 is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
+ * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ZHIVO_STDLIB_MATH_CC
-#define ZHIVO_STDLIB_MATH_CC
+#ifndef N8_STDLIB_REFLECT_CC
+#define N8_STDLIB_REFLECT_CC
 
 #ifdef __clang__
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 #endif
 
-#include "ZhivoLibrary.hpp"
+#include "N8Library.hpp"
 
-ZHIVO_LIB_START
+N8_LIB_START
 
-ZHIVO_FUNC(math_cos);
-ZHIVO_FUNC(math_cosh);
-ZHIVO_FUNC(math_sin);
-ZHIVO_FUNC(math_sinh);
-ZHIVO_FUNC(math_tan);
-ZHIVO_FUNC(math_tanh);
+N8_FUNC(reflect_get);
+N8_FUNC(reflect_has);
+N8_FUNC(reflect_type);
 
-ZHIVO_FUNC(math_rand);
+N8_FUNC(reflect_declare);
+N8_FUNC(reflect_delete);
+N8_FUNC(reflect_invoke);
 
-ZHIVO_FUNC(math_sigmoid);
-ZHIVO_FUNC(math_sigmoidDerivative);
-
-ZHIVO_LIB_END
+N8_LIB_END
 
 #ifdef __clang__
 #   pragma clang diagnostic pop

@@ -30,7 +30,7 @@ jobs:
           export PATH=/usr/local/opt/python@3.12/bin:$PATH
           brew reinstall --force llvm
 
-      - name: Build Zhivo
+      - name: Build N8
         run: |
           python -m pip install requests py-cpuinfo
           python build.py
@@ -42,25 +42,25 @@ jobs:
 
       - name: Run test scripts
         run: |
-          ./dist/zhivo ./test/arithmetic.zhv
-          ./dist/zhivo ./test/array.zhv
-          ./dist/zhivo ./test/digits.zhv
-          ./dist/zhivo ./test/error_handling.zhv
-          ./dist/zhivo ./test/flow.zhv
-          ./dist/zhivo ./test/func.zhv
-          ./dist/zhivo ./test/loop.zhv
-          ./dist/zhivo ./test/parallel.zhv
-          ./dist/zhivo ./test/regex.zhv
-          ./dist/zhivo ./test/test.zhv
-          ./dist/zhivo ./test/types.zhv
+          ./dist/n8 ./test/arithmetic.n8
+          ./dist/n8 ./test/array.n8
+          ./dist/n8 ./test/digits.n8
+          ./dist/n8 ./test/error_handling.n8
+          ./dist/n8 ./test/flow.n8
+          ./dist/n8 ./test/func.n8
+          ./dist/n8 ./test/loop.n8
+          ./dist/n8 ./test/parallel.n8
+          ./dist/n8 ./test/regex.n8
+          ./dist/n8 ./test/test.n8
+          ./dist/n8 ./test/types.n8
 
       - name: Run examples
         run: |
-          ./dist/zhivo ./examples/hello.zhv
-          ./dist/zhivo ./examples/99-beers.zhv
+          ./dist/n8 ./examples/hello.n8
+          ./dist/n8 ./examples/99-beers.n8
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4
         with:
-          name: zhivo-darwin-dist
+          name: n8-darwin-dist
           path: dist/

@@ -69,11 +69,6 @@ while(count > 0) {
 
 Contributions and feedback are all welcome to enhance this library. If you encounter any issues, have suggestions for improvements, or would like to contribute code, please do so.
 
-## Authors and Contributors
-
-- [Nathanne Isip](https://github.com/nthnn) - Author and Maintainer
-- [Lady Selene](https://instagram.com/lady.selenee) - Illustrator
-
 ## License
 
 N8 is distributed under the GNU General Public License v3.0. For further details, refer to the LICENSE file.

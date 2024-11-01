@@ -16,187 +16,164 @@
     <link href="./styles/index.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="header-section"></div>
-
-    <div align="center" class="header-section-content">
-        <br/><br/><br/>
-        <br/><br/><br/>
-
-        <h1 class="mb-0 pb-0 fw-bold">N8 Programming Language</h1>
-        <small class="text-muted">Reshaping traditional scripting practices</small>
-        <hr class="col-4"/>
-
-        <br/>
-        <p class="col-lg-4 col-8">
-            JIT-compiled dynamic general-purpose programming language utilizing OpenMP parallelism with built-in concurrency and unconventional expressiveness.
-        </p>
-
-        <br/><br/>
-        <a href="#introduction" class="btn btn-primary shadow text-decoration-none">Learn More</a>
-    </div>
-
-    <div class="d-block" id="introduction"></div>
-    <div class="main-content">
-        <nav class="navbar sticky-top navbar-expand-lg bg-primary shadow">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">N8</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbar-main">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="getting-started.html">Getting Started</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="download.html">Download</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="documentations.html">Documentations</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="references.html">References</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="https://github.com/nthnn/n8" target="_blank">GitHub</a>
-                        </li>
-                    </ul>
-                </div>
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark shadow">
+        <div class="container-fluid">
+            <h6 class="navbar-brand shimmer mt-2" href="#">N8 <span class="desktop-only">Programming</span> Language</h6>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar-main">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-md-flex d-block flex-row mx-md-auto mx-0">
+                    <a class="nav-link mx-3" href="getting-started.html">Getting Started</a>
+                    <a class="nav-link mx-3" href="download.html">Download</a>
+                    <a class="nav-link mx-3" href="documentations.html">Documentations</a>
+                    <a class="nav-link mx-3" href="references.html">References</a>
+                    <a class="nav-link mx-3" href="https://github.com/nthnn/n8" target="_blank">GitHub</a>
+                </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <div class="bg-primary text-white px-2 px-lg-4 pt-2 pt-lg-4">
-            <br/>
+    <div class="bg-primary px-2 px-lg-4 pt-2 pt-lg-4">
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <br/><br class="desktop-only" />
+                <h3 class="shimmer mb-0 pb-0 fw-bold">Write functional code in just few lines!</h3>
+                <hr/>
 
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <br/>
-                    <h1>Functional snippets in just few lines!</h1>
-                    <hr/>
+                <p>JIT-compiled dynamic general-purpose programming language utilizing OpenMP parallelism with built-in concurrency and unconventional expressiveness.</p>
+        
+                <ul>
+                    <li>Direct mathematical operations for vectors and/or arrays.</li>
+                    <li>Syntax-level concurrency and multithreading.</li>
+                    <li>Language expressiveness with unconventional grammars.</li>
+                    <li>Easy foreign-function interfacing for native interoperability.</li>
+                    <li>Simplified ecosystem and project structuing.</li>
+                </ul>
+                <br/>
 
-                    <ul>
-                        <li>Direct mathematical operations for vectors and/or arrays.</li>
-                        <li>Syntax-level concurrency and multithreading.</li>
-                        <li>Language expressiveness with unconventional grammars.</li>
-                        <li>Easy foreign-function interfacing for native interoperability.</li>
-                        <li>Simplified ecosystem and project structuing.</li>
-                    </ul>
-                    <br/>
-
-                    <div class="row">
-                        <div class="col-lg-6 pb-2">
-                            <a href="download.html" class="btn btn-lg btn-warning shadow w-100">Download latest N8</a>
-                        </div>
-
-                        <div class="col-lg-6">
-                            <a href="getting-started.html" class="btn btn-lg btn-outline-light text-white shadow w-100 get-started-btn">Get started with N8</a>
-                        </div>
+                <div class="row">
+                    <div class="col-lg-6 pb-2">
+                        <a href="download.html" class="btn btn-lg btn-warning shadow w-100">Download latest N8</a>
                     </div>
 
-                    <br/>
+                    <div class="col-lg-6">
+                        <a href="getting-started.html" class="btn btn-lg btn-outline-dark text-white shadow w-100 get-started-btn">Get started with N8</a>
+                    </div>
                 </div>
 
-                <div class="col-lg-6">
-                    <div class="window bg-dark d-block shadow">
-                        <div class="window-header">
-                            <span class="window-dot" style="background:#ed594a"></span>
-                            <span class="window-dot" style="background:#fdd800"></span>
-                            <span class="window-dot" style="background:#5ac05a"></span>
-                            <span class="text-dark d-inline-block ms-2">N8 Basic Examples</span>
-                        </div>
+                <br/>
+            </div>
 
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link active" data-bs-toggle="tab" href="#example-99-beers" aria-selected="true" role="tab">99-beers.n8</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" data-bs-toggle="tab" href="#example-hello" aria-selected="false" role="tab" tabindex="-1">hello.n8</a>
-                            </li>
-                        </ul>
-                        <div id="example-tab-contents" class="tab-content py-2 w-100">
-                            <div class="tab-pane fade active show" id="example-99-beers" role="tabpanel">
-                                <pre class="snippet py-2"><span class="line"><span class="code-comment">#!/bin/n8</span></span><span class="line"></span>
+            <div class="col-lg-6">
+                <div class="window bg-dark d-block shadow">
+                    <div class="window-header">
+                        <span class="window-dot" style="background:#ed594a"></span>
+                        <span class="window-dot" style="background:#fdd800"></span>
+                        <span class="window-dot" style="background:#5ac05a"></span>
+                        <span class="text-dark d-inline-block ms-2">N8 Basic Examples</span>
+                    </div>
+
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#example-99-beers" aria-selected="true" role="tab">99-beers.n8</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link mx-3" data-bs-toggle="tab" href="#example-hello" aria-selected="false" role="tab" tabindex="-1">hello.n8</a>
+                        </li>
+                    </ul>
+                    <div id="example-tab-contents" class="tab-content py-2 w-100">
+                        <div class="tab-pane fade active show" id="example-99-beers" role="tabpanel">
+                            <pre class="snippet py-2"><span class="line"><span class="code-comment">#!/bin/n8</span></span><span class="line"></span>
 <span class="line"><span class="code-keyword">val</span> <span class="code-identifier">count</span> = <span class="code-digits">99</span>;</span><span class="line"></span>
 <span class="line"><span class="code-keyword">while</span>(<span class="code-identifier">count</span> > <span class="code-digits">0</span>) {</span><span class="line">    <span class="code-keyword">val</span> <span class="code-identifier">bottle</span> = <span class="code-keyword">if</span>(<span class="code-identifier">count</span> == <span class="code-digits">1</span>) <span class="code-string">&quot;bottle&quot;</span> <span class="code-keyword">else</span> <span class="code-string">&quot;bottles&quot;</span>;</span><span class="line"></span>
 <span class="line">    <span class="code-keyword">render</span>! <span class="code-identifier">count</span> + <span class="code-string">&quot; &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of beer on the wall&quot;</span>;</span><span class="line">    <span class="code-keyword">render</span>! <span class="code-identifier">count</span> + <span class="code-string">&quot; &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of beer,&quot;</span>;</span><span class="line">    <span class="code-keyword">render</span>! <span class="code-string">&quot;Take one down, pass it around,&quot</span>;</span><span class="line"></span>
 <span class="line">    <span class="code-identifier">count</span> = <span class="code-identifier">count</span> - <span class="code-digits">1</span>;</span><span class="line"></span>
 <span class="line">    <span class="code-keyword">if</span>(<span class="code-identifier">count</span> > <span class="code-digits">0</span>)</span><span class="line">        <span class="code-keyword">render</span>! <span class="code-identifier">count</span> + <span class="code-string">&quot; &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of the beer on the wall.\r\n&quot;</span></span><span class="line">    <span class="code-keyword">else</span> <span class="code-keyword">render</span>! <span class="code-string">&quot;\r\nNo more &quot;</span> + <span class="code-identifier">bottle</span> + <span class="code-string">&quot; of beer on the wall.&quot;</span>;</span><span class="line">};</span></pre>
-                            </div>
-                            <div class="tab-pane fade" id="example-hello" role="tabpanel">
-                                <pre class="snippet py-2"><span class="line"><span class="code-comment">#!/bin/n8</span></span><span class="line"></span>
+                        </div>
+                        <div class="tab-pane fade" id="example-hello" role="tabpanel">
+                            <pre class="snippet py-2"><span class="line"><span class="code-comment">#!/bin/n8</span></span><span class="line"></span>
 <span class="line"><span class="code-keyword">val</span> <span class="code-identifier">greet</span> = <span class="code-keyword">func</span>(<span class="code-identifier">name</span>)</span><span class="line">    <span class="code-keyword">render</span>! <span class="code-string">&quot;Hello, &quot;</span> + <span class="code-identifier">name</span> + <span class="code-string">&quot;!&quot;</span>;</span><span class="line"><span class="code-identifier">greet</span>(<span class="code-string">&quot;world&quot;</span>);</span></pre>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <br/><br/>
         </div>
 
-        <div class="px-2 px-lg-4 pt-2 pt-lg-4">
-            <div align="center">
-                <br/>
-                <h1>Use Cases</h1>
-                <hr/>
-                <p>N8 is a versatile, general-purpose dynamic programming language designed to support a wide range of software development applications.</p>
-            </div>
+        <br/><br/>
+    </div>
+
+    <div class="px-2 px-lg-4 pt-2 pt-lg-4">
+        <div align="center">
             <br/>
-
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title pt-2">High-performance Scientific Computing</h4>
-                        </div>
-                        <div class="card-body">
-                            <p>N8's ability to perform direct mathematical operations on vectors and arrays makes it ideal for scientific computing applications such as simulations, data analysis, and mathematical modeling. Its concurrency support ensures that heavy computational tasks can run efficiently on multi-core CPUs.</p>
-                        </div>
-                    </div>
-                    <br/>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title pt-2">Data Pipelines and ETL (Extract, Transform, Load)</h4>
-                        </div>
-                        <div class="card-body">
-                            <p>With the N8's expressiveness, it can be used to build efficient data pipelines for ETL processes in big data applications. Its support for complex data structures and built-in concurrency enables scalable, high-throughput data processing, making it ideal for tasks like data aggregation, transformation, and loading in distributed systems.</p>
-                        </div>
-                    </div>
-                    <br/>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title pt-2">Machine Learning Model Prototyping</h4>
-                        </div>
-                        <div class="card-body">
-                            <p>N8 is ideal for Machine Learning and AI due to its efficient mathematical operations, built-in concurrency, flexible syntax, seamless integration with native libraries, and a simplified project structure, enabling rapid development and optimization of advanced algorithms and applications.</p>
-                        </div>
-                    </div>
-                    <br/>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title pt-2">Game Development</h4>
-                        </div>
-                        <div class="card-body">
-                            <p>Language's native support for concurrency and vector operations is perfect for game engines that require real-time physics simulations, AI processing, and rendering pipelines. Developers can also easily interface with native libraries for advanced graphical rendering or sound processing.</p>
-                        </div>
-                    </div>
-                    <br/>
-                </div>
-            </div>
-
-            <br/><br/>
+            <h1 class="shimmer">Use Cases</h1>
+            <hr/>
+            <p>N8 is a versatile, general-purpose dynamic programming language designed to support a wide range of software development applications.</p>
         </div>
+        <br/>
+
+        <div class="row equal-cols">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title pt-2">High-performance Scientific Computing</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>N8's ability to perform direct mathematical operations on vectors and arrays makes it ideal for scientific computing applications such as simulations, data analysis, and mathematical modeling. Its concurrency support ensures that heavy computational tasks can run efficiently on multi-core CPUs.</p>
+                    </div>
+                </div>
+                <br/>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title pt-2">Data Pipelines & ETL (Extract, Transform, Load)</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>With the N8's expressiveness, it can be used to build efficient data pipelines for ETL processes in big data applications. Its support for complex data structures and built-in concurrency enables scalable, high-throughput data processing, making it ideal for tasks like data aggregation, transformation, and loading in distributed systems.</p>
+                    </div>
+                </div>
+                <br/>
+            </div>
+        </div>
+
+        <div class="row equal-cols">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title pt-2">Machine Learning Model Prototyping</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>N8 is ideal for Machine Learning and AI due to its efficient mathematical operations, built-in concurrency, flexible syntax, seamless integration with native libraries, and a simplified project structure, enabling rapid development and optimization of advanced algorithms and applications.</p>
+                    </div>
+                </div>
+                <br/>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title pt-2">Game Development</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Language's native support for concurrency and vector operations is perfect for game engines that require real-time physics simulations, AI processing, and rendering pipelines. Developers can also easily interface with native libraries for advanced graphical rendering or sound processing.</p>
+                    </div>
+                </div>
+                <br/>
+            </div>
+        </div>
+
+        <br/><br/>
+    </div>
+
+    <div class="bg-primary footer">
+        <br/>
+
+        <div align="center">
+            <small>Copyright &copy; 2024 &mdash; <a href="https://github.com/nthnn" target="_blank" class="text-decoration-none">Nathanne Isip</a></small>
+        </div>
+        <br/>
     </div>
 
     <script src="./scripts/jquery.min.js"></script>

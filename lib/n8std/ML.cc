@@ -1,24 +1,24 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of Zhivo.
+ * This file is part of N8.
  * 
- * Zhivo is free software: you can redistribute it and/or modify
+ * N8 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * Zhivo is distributed in the hope that it will be useful, but
+ * N8 is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
+ * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "zhvlib/ML.hpp"
+#include "n8std/ML.hpp"
 
-#include <zhivo/ast/TerminativeSignal.hpp>
+#include <n8/ast/TerminativeSignal.hpp>
 
 #include <cmath>
 #include <exception>
@@ -62,7 +62,7 @@ static inline double calculateMean(
     return sum / arraySize;
 }
 
-ZHIVO_FUNC(ml_trendline_calculate) {
+N8_FUNC(ml_trendline_calculate) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -113,7 +113,7 @@ ZHIVO_FUNC(ml_trendline_calculate) {
     ));
 }
 
-ZHIVO_FUNC(ml_trendline_calculateRmse) {
+N8_FUNC(ml_trendline_calculateRmse) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -175,7 +175,7 @@ ZHIVO_FUNC(ml_trendline_calculateRmse) {
     return DynamicObject(std::sqrt(sumSquaredErrs / paramSize));
 }
 
-ZHIVO_FUNC(ml_trendline_predict) {
+N8_FUNC(ml_trendline_predict) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),

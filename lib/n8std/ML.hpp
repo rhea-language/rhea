@@ -1,38 +1,38 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of Zhivo.
+ * This file is part of N8.
  * 
- * Zhivo is free software: you can redistribute it and/or modify
+ * N8 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * Zhivo is distributed in the hope that it will be useful, but
+ * N8 is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
+ * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ZHIVO_STDLIB_ML_CC
-#define ZHIVO_STDLIB_ML_CC
+#ifndef N8_STDLIB_ML_CC
+#define N8_STDLIB_ML_CC
 
 #ifdef __clang__
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 #endif
 
-#include "ZhivoLibrary.hpp"
+#include "N8Library.hpp"
 
-ZHIVO_LIB_START
+N8_LIB_START
 
-ZHIVO_FUNC(ml_trendline_calculate);
-ZHIVO_FUNC(ml_trendline_calculateRmse);
-ZHIVO_FUNC(ml_trendline_predict);
+N8_FUNC(ml_trendline_calculate);
+N8_FUNC(ml_trendline_calculateRmse);
+N8_FUNC(ml_trendline_predict);
 
-ZHIVO_LIB_END
+N8_LIB_END
 
 #ifdef __clang__
 #   pragma clang diagnostic pop

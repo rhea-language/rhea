@@ -1,27 +1,27 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of Zhivo.
+ * This file is part of N8.
  * 
- * Zhivo is free software: you can redistribute it and/or modify
+ * N8 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * Zhivo is distributed in the hope that it will be useful, but
+ * N8 is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
+ * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "zhvlib/UI.hpp"
+#include "n8std/UI.hpp"
 
 #if !(defined(__APPLE__) && (defined(__aarch64__) || defined(__arm64__)))
 
-#include <zhivo/ast/TerminativeSignal.hpp>
-#include <zhivo/ast/expression/FunctionDeclarationExpression.hpp>
+#include <n8/ast/TerminativeSignal.hpp>
+#include <n8/ast/expression/FunctionDeclarationExpression.hpp>
 
 #include <exception>
 #include <iomanip>
@@ -76,7 +76,7 @@ int windowCallbackWrapper(uiWindow* w, void* data) {
     return 0;
 }
 
-ZHIVO_FUNC(ui_init) {
+N8_FUNC(ui_init) {
     memset(&initOptions, 0, sizeof (uiInitOptions));
     if(uiInit(&initOptions) != NULL) {
         abort();
@@ -86,17 +86,17 @@ ZHIVO_FUNC(ui_init) {
     return DynamicObject(true);
 }
 
-ZHIVO_FUNC(ui_quit) {
+N8_FUNC(ui_quit) {
     uiQuit();
     return DynamicObject();
 }
 
-ZHIVO_FUNC(ui_main) {
+N8_FUNC(ui_main) {
     uiMain();
     return DynamicObject();
 }
 
-ZHIVO_FUNC(ui_dialog_openFile) {
+N8_FUNC(ui_dialog_openFile) {
     if(args.size() > 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -118,7 +118,7 @@ ZHIVO_FUNC(ui_dialog_openFile) {
     return DynamicObject(std::string(filePath));
 }
 
-ZHIVO_FUNC(ui_dialog_saveFile) {
+N8_FUNC(ui_dialog_saveFile) {
     if(args.size() > 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -140,7 +140,7 @@ ZHIVO_FUNC(ui_dialog_saveFile) {
     return DynamicObject(std::string(filePath));
 }
 
-ZHIVO_FUNC(ui_dialog_messageBox) {
+N8_FUNC(ui_dialog_messageBox) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -166,7 +166,7 @@ ZHIVO_FUNC(ui_dialog_messageBox) {
     return DynamicObject();
 }
 
-ZHIVO_FUNC(ui_dialog_messageBoxError) {
+N8_FUNC(ui_dialog_messageBoxError) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -192,7 +192,7 @@ ZHIVO_FUNC(ui_dialog_messageBoxError) {
     return DynamicObject();
 }
 
-ZHIVO_FUNC(ui_window_create) {
+N8_FUNC(ui_window_create) {
     if(args.size() != 4)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -232,7 +232,7 @@ ZHIVO_FUNC(ui_window_create) {
     return DynamicObject(key);
 }
 
-ZHIVO_FUNC(ui_window_onClosing) {
+N8_FUNC(ui_window_onClosing) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -280,7 +280,7 @@ ZHIVO_FUNC(ui_window_onClosing) {
     return DynamicObject(uuidStr);
 }
 
-ZHIVO_FUNC(ui_window_show) {
+N8_FUNC(ui_window_show) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),

@@ -1,30 +1,30 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of Zhivo.
+ * This file is part of N8.
  * 
- * Zhivo is free software: you can redistribute it and/or modify
+ * N8 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * Zhivo is distributed in the hope that it will be useful, but
+ * N8 is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Zhivo. If not, see <https://www.gnu.org/licenses/>.
+ * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "zhvlib/Math.hpp"
+#include "n8std/Math.hpp"
 
-#include <zhivo/ast/TerminativeSignal.hpp>
+#include <n8/ast/TerminativeSignal.hpp>
 
 #include <cmath>
 #include <exception>
 #include <random>
 
-ZHIVO_FUNC(math_cos) {
+N8_FUNC(math_cos) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -42,7 +42,7 @@ ZHIVO_FUNC(math_cos) {
     return DynamicObject(cos(value.getNumber()));
 }
 
-ZHIVO_FUNC(math_cosh) {
+N8_FUNC(math_cosh) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -60,7 +60,7 @@ ZHIVO_FUNC(math_cosh) {
     return DynamicObject(cosh(value.getNumber()));
 }
 
-ZHIVO_FUNC(math_sin) {
+N8_FUNC(math_sin) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -78,7 +78,7 @@ ZHIVO_FUNC(math_sin) {
     return DynamicObject(sin(value.getNumber()));
 }
 
-ZHIVO_FUNC(math_sinh) {
+N8_FUNC(math_sinh) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -96,7 +96,7 @@ ZHIVO_FUNC(math_sinh) {
     return DynamicObject(sinh(value.getNumber()));
 }
 
-ZHIVO_FUNC(math_tan) {
+N8_FUNC(math_tan) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -114,7 +114,7 @@ ZHIVO_FUNC(math_tan) {
     return DynamicObject(tan(value.getNumber()));
 }
 
-ZHIVO_FUNC(math_tanh) {
+N8_FUNC(math_tanh) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -132,7 +132,7 @@ ZHIVO_FUNC(math_tanh) {
     return DynamicObject(tanh(value.getNumber()));
 }
 
-ZHIVO_FUNC(math_rand) {
+N8_FUNC(math_rand) {
     std::uniform_real_distribution<> dis(0.0, 1.0);
     double value = 0.0f;
 
@@ -157,7 +157,7 @@ ZHIVO_FUNC(math_rand) {
     return DynamicObject(value);
 }
 
-ZHIVO_FUNC(math_sigmoid) {
+N8_FUNC(math_sigmoid) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -175,7 +175,7 @@ ZHIVO_FUNC(math_sigmoid) {
     return DynamicObject(1 / (1 + exp(-value.getNumber())));
 }
 
-ZHIVO_FUNC(math_sigmoidDerivative) {
+N8_FUNC(math_sigmoidDerivative) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),

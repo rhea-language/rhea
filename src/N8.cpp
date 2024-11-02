@@ -155,7 +155,18 @@ auto interpreter(std::vector<std::string> files) -> int {
     return 1;
 }
 
-auto main(int argc, char** argv) -> int {
+auto main(
+    #ifndef __EMSCRIPTEN__
+    int argc,
+    char** argv
+    #endif
+) -> int {
+    #ifdef __EMSCRIPTEN__
+
+    Runtime::repl();
+
+    #else
+
     N8Util::ArgumentParser argParse(argc, argv);
     argParse.defineParameter("h", "help", "Show this help banner.");
     argParse.defineParameter("r", "repl", "Interative interpreter mode (REPL).");
@@ -177,5 +188,8 @@ auto main(int argc, char** argv) -> int {
         return interpreter(argParse.getInputFiles());
 
     printBanner(argParse);
+    
+    #endif
+
     return 1;
 }

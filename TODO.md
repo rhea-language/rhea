@@ -10,13 +10,13 @@ Todo:
     * chrono
     * env
     * format
-    * io
+    ✓ io
     * lang
     * map
     * math
     * ml
     * net
-    * reflect
+    ✓ reflect
     * regex
     * serial
     * sys

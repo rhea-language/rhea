@@ -1,10 +1,10 @@
 Todo:
 ---
 
+- N8 "Try" page build via Emscripten.
 - Multiplatform installer for N8.
 - `use` statement for importing files to current script.
 - Package Manager
-- Jupyter Notebook Kernel (Optional)
 - To be developed libraries:
     * array
     * chrono

@@ -28,6 +28,10 @@ private:
     static bool testMode;
     static std::unordered_map<std::string, void*> nativeLibraries;
 
+    #ifdef __EMSCRIPTEN__
+    static std::string elementId;
+    #endif
+
 public:
     static void repl();
 
@@ -39,6 +43,13 @@ public:
     static bool hasLoadedLibrary(std::string libName);
 
     static void cleanUp();
+
+    #ifdef __EMSCRIPTEN__
+    static void setOutputElementId(std::string id);
+    static std::string getOutputElementId();
+
+    static void execute(const char* sourceCode);
+    #endif
 };
 
 #endif

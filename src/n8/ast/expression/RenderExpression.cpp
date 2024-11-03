@@ -18,6 +18,7 @@
 
 #include <n8/ast/expression/FunctionDeclarationExpression.hpp>
 #include <n8/ast/expression/RenderExpression.hpp>
+#include <n8/util/Print.hpp>
 #include <iostream>
 
 DynamicObject RenderExpression::visit(SymbolTable& symbols) {
@@ -25,13 +26,13 @@ DynamicObject RenderExpression::visit(SymbolTable& symbols) {
     std::string str = value.toString();
 
     if(this->errorStream)
-        std::cerr << str;
-    else std::cout << str;
+        N8Util::printError(str);
+    else N8Util::print(str);
 
     if(this->newLine) {
         if(this->errorStream)
-            std::cerr << std::endl;
-        else std::cerr << std::endl;
+            N8Util::printError("\r\n");
+        else N8Util::print("\r\n");
     }
 
     return value;

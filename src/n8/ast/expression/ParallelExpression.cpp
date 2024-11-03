@@ -23,6 +23,7 @@
 #include <n8/core/SymbolTable.hpp>
 #include <n8/parser/LexicalAnalysisException.hpp>
 #include <n8/parser/ParserException.hpp>
+#include <n8/util/Print.hpp>
 #include <n8/util/ThreadId.hpp>
 
 #include <exception>
@@ -48,98 +49,87 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
                 sym->waitForThreads();
                 Runtime::cleanUp();
 
-                std::cerr << "[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m"
-                    << exc.what() << "\u001b[0m" << std::endl
-                    << "                from thread: "
-                    << N8Util::getThreadId(std::this_thread::get_id())
-                    << std::endl;
+                N8Util::printError("[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m");
+                N8Util::printError(exc.what());
+                N8Util::printError("\u001b[0m\r\n");
             }
             catch(const ASTNodeException& nodeExc) {
                 sym->waitForThreads();
                 Runtime::cleanUp();
 
-                std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
-                    << "\u001b[3;37m" << nodeExc.what() << "\u001b[0m"
-                    << std::endl << "                 "
-                    << nodeExc.getAddress()->toString() << std::endl
-                    << "                 from thread: "
-                    << N8Util::getThreadId(std::this_thread::get_id())
-                    << std::endl;
+                N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
+                N8Util::printError(nodeExc.what());
+                N8Util::printError("\u001b[0m\r\n                 ");
+                N8Util::printError(nodeExc.getAddress()->toString());
+                N8Util::printError("\r\n");
             }
             catch(const LexicalAnalysisException& lexAnlExc) {
                 sym->waitForThreads();
                 Runtime::cleanUp();
 
-                std::cerr << "[\u001b[1;31mLexical Error\u001b[0m]:" << std::endl
-                    << "\t" << lexAnlExc.what() << std::endl
-                    << "                 from thread: "
-                    << N8Util::getThreadId(std::this_thread::get_id())
-                    << std::endl;
+                N8Util::printError("[\u001b[1;31mLexical Error\u001b[0m]:\r\n\t");
+                N8Util::printError(lexAnlExc.what());
+                N8Util::printError("\r\n");
             }
             catch(const ParserException& parserExc) {
                 sym->waitForThreads();
                 Runtime::cleanUp();
 
-                std::cerr << "[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m"
-                    << parserExc.what() << "\u001b[0m" << std::endl;
-                std::cerr << "                 "
-                    << parserExc.getAddress()->toString() << std::endl
-                    << "                from thread: "
-                    << N8Util::getThreadId(std::this_thread::get_id())
-                    << std::endl;
+                N8Util::printError("[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m");
+                N8Util::printError(parserExc.what());
+                N8Util::printError("\u001b[0m\r\n                 ");
+                N8Util::printError(parserExc.getAddress()->toString());
+                N8Util::printError("\r\n");
             }
             catch(const TerminativeBreakSignal& breakExc) {
                 sym->waitForThreads();
                 Runtime::cleanUp();
 
-                std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
-                    << "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
-                    << std::endl << "                 "
-                    << breakExc.getAddress().toString() << std::endl
-                    << "                 from thread: "
-                    << N8Util::getThreadId(std::this_thread::get_id())
-                    << std::endl;
+                N8Util::printError(
+                    "[\u001b[1;31mRuntime Error\u001b[0m]: "
+                    "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
+                    "\r\n                 "
+                );
+                N8Util::printError(breakExc.getAddress().toString());
+                N8Util::printError("\r\n");
             }
             catch(const TerminativeContinueSignal& continueExc) {
                 sym->waitForThreads();
                 Runtime::cleanUp();
 
-                std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: "
-                    << "\u001b[3;37mInvalid continue statement signal caught.\u001b[0m"
-                    << std::endl << "                 "
-                    << continueExc.getAddress().toString() << std::endl
-                    << "                 from thread: "
-                    << N8Util::getThreadId(std::this_thread::get_id())
-                    << std::endl;
+                N8Util::printError(
+                    "[\u001b[1;31mRuntime Error\u001b[0m]: "
+                    "\u001b[3;37mInvalid continue statement signal caught.\u001b[0m"
+                    "\r\n                 "
+                );
+                N8Util::printError(continueExc.getAddress().toString());
+                N8Util::printError("\r\n");
             }
             catch(const TerminativeReturnSignal& retExc) {
                 sym->waitForThreads();
                 Runtime::cleanUp();
 
-                std::cerr << "\u001b[0;93m"
-                    << retExc.getObject().toString()
-                    << "\u001b[0m" << std::endl;
+                N8Util::printError("\u001b[0;93m");
+                N8Util::printError(retExc.getObject().toString());
+                N8Util::printError("\u001b[0m\r\n");
             }
             catch(const TerminativeThrowSignal& throwExc) {
                 sym->waitForThreads();
                 Runtime::cleanUp();
 
-                std::cerr << "[\u001b[1;31mUncaught Error\u001b[0m]: "
-                    << "\u001b[3;37m"
-                    << throwExc.getObject().toString()
-                    << "\u001b[0m"
-                    << std::endl << "                  "
-                    << throwExc.getAddress()->toString() << std::endl;
+                N8Util::printError("[\u001b[1;31mUncaught Error\u001b[0m]: \u001b[3;37m");
+                N8Util::printError(throwExc.getObject().toString());
+                N8Util::printError("\u001b[0m\r\n                  ");
+                N8Util::printError(throwExc.getAddress()->toString());
+                N8Util::printError("\r\n");
             }
             catch(const std::exception& exc) {
                 sym->waitForThreads();
                 Runtime::cleanUp();
 
-                std::cerr << "[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m"
-                    << exc.what() << "\u001b[0m" << std::endl
-                    << "                 from thread: "
-                    << N8Util::getThreadId(std::this_thread::get_id())
-                    << std::endl;
+                N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
+                N8Util::printError(exc.what());
+                N8Util::printError("\u001b[0m\r\n");
             }
 
             mtx.unlock();

@@ -67,47 +67,6 @@ def get_ext_instructions():
 
     return supported_features
 
-def download_libui():
-    url = ''
-    if PLATFORM == 'Windows':
-        url = 'https://github.com/andlabs/libui/releases/download/alpha4.1/libui-alpha4.1-windows-amd64-shared.zip'
-    elif PLATFORM == 'Linux':
-        url = 'https://github.com/andlabs/libui/releases/download/alpha4.1/libui-alpha4.1-linux-amd64-shared.tgz'
-    elif PLATFORM == 'Darwin':
-        url = 'https://github.com/andlabs/libui/releases/download/alpha4.1/libui-alpha4.1-darwin-amd64-shared.tgz'
-
-    zip_path = url.split('/')[-1]
-
-    print('Downloading libui release...')
-    response = requests.get(url)
-    with open(zip_path, 'wb') as file:
-        file.write(response.content)
-    print('Download completed.')
-    os.makedirs(OUT_DIR, exist_ok=True)
-
-    if zip_path.endswith('.zip'):
-        print('Extracting the ZIP file...')
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            zip_ref.extractall(OUT_DIR)
-        print('Extraction completed.')
-    elif zip_path.endswith('.tgz') or zip_path.endswith('.tar.gz'):
-        print('Extracting the TAR file...')
-        with tarfile.open(zip_path, 'r:gz') as tar_ref:
-            tar_ref.extractall(OUT_DIR)
-        print('Extraction completed.')
-    else:
-        print('Unsupported file format for extraction.')
-
-    lib_header_path = os.path.join(TEMP_DIR, 'include')
-    os.makedirs(TEMP_DIR, exist_ok=True)
-    os.makedirs(lib_header_path, exist_ok=True)
-
-    header_files = glob(os.path.join(OUT_DIR, '*.h'))
-    for header_file in header_files:
-        shutil.move(header_file, lib_header_path)
-
-    os.remove(zip_path)
-
 for root, dirs, files in os.walk('src'):
     for file in files:
         if file.endswith('.cpp'):
@@ -120,10 +79,8 @@ for root, dirs, files in os.walk('lib'):
 
 try:
     ext_instructions = get_ext_instructions()
-    download_libui()
 
     if PLATFORM == 'Windows':
-
         exe_build_args= [
             'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
             '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
@@ -153,8 +110,7 @@ try:
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',
             '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
-            '-shared', '-o', OUTPUT_LIBRARY + '.dll', OUTPUT_CORE,
-            os.path.join(OUT_DIR, 'libui.dll')
+            '-shared', '-o', OUTPUT_LIBRARY + '.dll', OUTPUT_CORE
         ] + cc_files
 
         print("Executing:")
@@ -199,7 +155,7 @@ try:
             'g++', '-Iinclude',
             '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
             '-fPIC', '-shared', '-o', OUTPUT_LIBRARY + '.so',
-            OUTPUT_CORE, os.path.join(OUT_DIR, 'libui.so')
+            OUTPUT_CORE
         ] + cc_files
 
         print("Executing:")
@@ -240,15 +196,10 @@ try:
         core_build_args = exe_build_args + ['-shared', '-o', OUTPUT_CORE]
         exe_build_args += ['-o', OUTPUT_EXECUTABLE]
 
-        libui_dylib = (
-            '' if PLATFORM == 'Darwin' and platform.machine() == 'arm64'
-            else os.path.join(OUT_DIR, 'libui.dylib')
-        )
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
             '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
-            '-shared', '-o', OUTPUT_LIBRARY + '.dylib', OUTPUT_CORE,
-            libui_dylib
+            '-shared', '-o', OUTPUT_LIBRARY + '.dylib', OUTPUT_CORE
         ] + cc_files
 
         print("Executing:")

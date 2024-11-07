@@ -1,0 +1,36 @@
+name: Build CI [WASM]
+
+on:
+  push:
+    paths:
+      - .github/workflows/**
+      - include/**
+      - src/**
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+
+      - name: Verify Emscripten
+        run: em++ -v
+
+      - name: Build WASM
+        run: |
+          mkdir dist
+          em++ --bind -Wno-header-guard -Iinclude -pipe -O3 -ffast-math -std=c++17 -funroll-loops src/**/*.cpp -sEXPORTED_FUNCTIONS=_executeSource -sEXPORTED_RUNTIME_METHODS=ccall,cwrap -o dist\n8.js
+          ls -ral dist
+
+      - name: Upload dist folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: n8-wasm
+          path: dist/

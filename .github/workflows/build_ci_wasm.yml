@@ -26,7 +26,7 @@ jobs:
       - name: Build WASM
         run: |
           mkdir dist
-          em++ --bind -Wno-header-guard -Iinclude -pipe -O3 -ffast-math -std=c++17 -funroll-loops src/**/*.cpp -sEXPORTED_FUNCTIONS=_executeSource -sEXPORTED_RUNTIME_METHODS=ccall,cwrap -o dist\n8.js
+          em++ --bind -Wno-header-guard -Iinclude -pipe -O3 -ffast-math -std=c++17 -funroll-loops $(find src -type f -name "*.cpp") -sEXPORTED_FUNCTIONS=_executeSource -sEXPORTED_RUNTIME_METHODS=ccall,cwrap -o dist\n8.js
           ls -ral dist
 
       - name: Upload dist folder

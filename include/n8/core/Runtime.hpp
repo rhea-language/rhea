@@ -33,8 +33,6 @@ private:
     #endif
 
 public:
-    static void repl();
-
     static bool isTestMode();
     static void setTestMode(bool _testMode);
 
@@ -44,7 +42,12 @@ public:
 
     static void cleanUp();
 
-    #ifdef __EMSCRIPTEN__
+    #ifndef __EMSCRIPTEN__
+
+    static void repl();
+
+    #else
+
     static void setOutputElementId(std::string id);
     static std::string getOutputElementId();
 

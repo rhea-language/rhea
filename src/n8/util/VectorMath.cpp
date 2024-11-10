@@ -25,7 +25,7 @@ DynamicObject vector2Object(const std::vector<double>& vec) {
 
     #pragma omp parallel for
     for(size_t i = 0; i < vec.size(); ++i)
-        objects[i] = std::move(DynamicObject(vec[i]));
+        objects[i] = DynamicObject(vec[i]);
 
     return DynamicObject(
         std::make_shared<std::vector<DynamicObject>>(std::move(objects))

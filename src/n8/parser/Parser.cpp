@@ -543,7 +543,7 @@ std::shared_ptr<ASTNode> Parser::exprPrimary() {
         Token address = this->consume(TokenType::OPERATOR);
         expression = std::make_shared<UnaryExpression>(
             std::make_shared<Token>(address),
-            std::move(std::string(address.getImage())),
+            std::string(address.getImage()),
             this->expression()
         );
     }
@@ -637,9 +637,7 @@ std::shared_ptr<ASTNode> Parser::exprPrimary() {
                 if(!arguments.empty())
                     this->consume(",");
 
-                arguments.emplace_back(
-                    std::move(this->expression())
-                );
+                arguments.emplace_back(this->expression());
             }
 
             this->consume(")");
@@ -675,7 +673,7 @@ std::shared_ptr<ASTNode> Parser::exprLogicOr() {
             std::make_shared<Token>(address),
             std::move(expression),
             "||",
-            std::move(this->exprLogicAnd())
+            this->exprLogicAnd()
         );
     }
 
@@ -691,7 +689,7 @@ std::shared_ptr<ASTNode> Parser::exprLogicAnd() {
             std::make_shared<Token>(address),
             std::move(expression),
             "&&",
-            std::move(this->exprBitwiseOr())
+            this->exprBitwiseOr()
         );
     }
 
@@ -707,7 +705,7 @@ std::shared_ptr<ASTNode> Parser::exprBitwiseOr() {
             std::make_shared<Token>(address),
             std::move(expression),
             "|",
-            std::move(this->exprBitwiseXor())
+            this->exprBitwiseXor()
         );
     }
 
@@ -723,7 +721,7 @@ std::shared_ptr<ASTNode> Parser::exprBitwiseXor() {
             std::make_shared<Token>(address),
             std::move(expression),
             "^",
-            std::move(this->exprBitwiseAnd())
+            this->exprBitwiseAnd()
         );
     }
 
@@ -739,7 +737,7 @@ std::shared_ptr<ASTNode> Parser::exprBitwiseAnd() {
             std::make_shared<Token>(address),
             std::move(expression),
             "&",
-            std::move(this->exprNilCoalescing())
+            this->exprNilCoalescing()
         );
     }
 
@@ -754,7 +752,7 @@ std::shared_ptr<ASTNode> Parser::exprNilCoalescing() {
         expression = std::make_shared<NilCoalescingExpression>(
             std::make_shared<Token>(address),
             std::move(expression),
-            std::move(this->exprEquality())
+            this->exprEquality()
         );
     }
 
@@ -774,7 +772,7 @@ std::shared_ptr<ASTNode> Parser::exprEquality() {
             std::make_shared<Token>(op),
             std::move(expression),
             op.getImage(),
-            std::move(this->exprComparison())
+            this->exprComparison()
         );
     }
 
@@ -794,7 +792,7 @@ std::shared_ptr<ASTNode> Parser::exprComparison() {
             std::make_shared<Token>(op),
             std::move(expression),
             op.getImage(),
-            std::move(this->exprShift())
+            this->exprShift()
         );
     }
 
@@ -811,7 +809,7 @@ std::shared_ptr<ASTNode> Parser::exprShift() {
             std::make_shared<Token>(op),
             std::move(expression),
             op.getImage(),
-            std::move(this->exprTerm())
+            this->exprTerm()
         );
     }
 
@@ -828,7 +826,7 @@ std::shared_ptr<ASTNode> Parser::exprTerm() {
             std::make_shared<Token>(op),
             std::move(expression),
             op.getImage(),
-            std::move(this->exprFactor())
+            this->exprFactor()
         );
     }
 
@@ -846,7 +844,7 @@ std::shared_ptr<ASTNode> Parser::exprFactor() {
             std::make_shared<Token>(op),
             std::move(expression),
             op.getImage(),
-            std::move(this->exprPrimary())
+            this->exprPrimary()
         );
     }
 

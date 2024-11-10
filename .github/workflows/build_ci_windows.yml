@@ -34,6 +34,7 @@ jobs:
 
       - name: Build verification
         run: |
+          dist\n8
           dir dist
           tree dist
 

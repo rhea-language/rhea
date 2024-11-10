@@ -33,7 +33,7 @@
 #elif defined(__linux__)
 #   define N8_BUILD_PLATFORM "linux"
 #elif defined(__APPLE__)
-#   define N8_BUILD_PLATFORM "apple"
+#   define N8_BUILD_PLATFORM "darwin"
 #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 #   define N8_BUILD_PLATFORM "windows"
 #else
@@ -42,7 +42,7 @@
 
 #ifndef __EMSCRIPTEN__
 #   define N8_BUILD_TYPE        "beta"
-#   define N8_VERSION           "v1.0.0" N8_BUILD_TYPE "-" N8_BUILD_PLATFORM
+#   define N8_VERSION           "v1.0.0-" N8_BUILD_TYPE "-" N8_BUILD_PLATFORM
 #   define N8_BUILD_TIME        __TIME__ " " __DATE__
 #endif
 

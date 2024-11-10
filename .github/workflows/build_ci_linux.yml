@@ -37,6 +37,7 @@ jobs:
 
       - name: Build verification
         run: |
+          ./dist/n8
           ls dist -ral
           find dist | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
 

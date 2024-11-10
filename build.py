@@ -140,8 +140,8 @@ try:
             '-Wstrict-aliasing=2', '-Wswitch', '-Wswitch-default', '-Wswitch-enum',
             '-Wtrigraphs', '-Wuninitialized', '-Wunknown-pragmas', '-Wunreachable-code',
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
-            '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
-            '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-Ofast', '-s',
+            '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-O3',
+            '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-ffast-math', '-s',
             '-std=c++20', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
             '-march=native', '-funroll-loops', '-ffast-math'
         ] + cpp_files

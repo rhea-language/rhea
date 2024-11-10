@@ -40,9 +40,10 @@
 #   define "unknown"
 #endif
 
-#define N8_BUILD_TYPE        "beta"
-#define N8_VERSION           "v1.0.0" N8_BUILD_TYPE "-" N8_BUILD_PLATFORM
-
-#define N8_BUILD_TIME        __TIME__ " " __DATE__
+#ifndef __EMSCRIPTEN__
+#   define N8_BUILD_TYPE        "beta"
+#   define N8_VERSION           "v1.0.0" N8_BUILD_TYPE "-" N8_BUILD_PLATFORM
+#   define N8_BUILD_TIME        __TIME__ " " __DATE__
+#endif
 
 #endif

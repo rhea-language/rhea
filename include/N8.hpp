@@ -37,7 +37,7 @@
 #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 #   define N8_BUILD_PLATFORM "windows"
 #else
-#   define "unknown"
+#   define N8_BUILD_PLATFORM "unknown"
 #endif
 
 #ifndef __EMSCRIPTEN__

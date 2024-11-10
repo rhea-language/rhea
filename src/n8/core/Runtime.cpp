@@ -104,6 +104,7 @@ static inline bool isBalanced(const std::string& input) {
     return stack.empty();
 }
 
+#ifndef __EMSCRIPTEN__
 void Runtime::repl() {
     SymbolTable symtab;
     std::string input, line;
@@ -234,7 +235,7 @@ void Runtime::repl() {
     }
 }
 
-#ifdef __EMSCRIPTEN__
+#else
 
 void Runtime::setOutputElementId(std::string id) {
     Runtime::elementId = id;

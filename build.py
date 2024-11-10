@@ -17,14 +17,8 @@
 import cpuinfo
 import os
 import platform
-import requests
 import shutil
 import subprocess
-import sys
-import tarfile
-import zipfile
-
-from glob import glob
 
 PLATFORM = platform.system()
 
@@ -111,6 +105,51 @@ try:
             'g++', '-static', '-static-libgcc', '-Iinclude',
             '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
             '-shared', '-o', OUTPUT_LIBRARY + '.dll', OUTPUT_CORE
+        ] + cc_files
+
+        print("Executing:")
+        print(' '.join(exe_build_args))
+        subprocess.run(exe_build_args)
+
+        print("Executing:")
+        print(' '.join(core_build_args))
+        subprocess.run(core_build_args)
+
+        print("Executing:")
+        print(' '.join(lib_build_args))
+        subprocess.run(lib_build_args)
+
+    elif "TERMUX_VERSION" in os.environ:
+        exe_build_args= [
+            'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
+            '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
+            '-Wchar-subscripts', '-Wcomment', '-Wconversion', '-Werror',
+            '-Wfloat-equal', '-Wformat', '-Wformat=2', '-Wformat-nonliteral',
+            '-Wformat-security', '-Wformat-y2k', '-Wimport', '-Winit-self',
+            '-Winvalid-pch', '-Wno-header-guard', '-Wlong-long',
+            '-Wmissing-braces', '-Wmissing-field-initializers', '-Wmissing-format-attribute',
+            '-Wmissing-include-dirs', '-Weffc++', '-Wpacked', '-Wparentheses',
+            '-Wpointer-arith', '-Wredundant-decls', '-Wreturn-type', '-Wsequence-point',
+            '-Wshadow', '-Wsign-compare', '-Wstack-protector', '-Wstrict-aliasing',
+            '-Wstrict-aliasing=2', '-Wswitch', '-Wswitch-default', '-Wswitch-enum',
+            '-Wtrigraphs', '-Wuninitialized', '-Wunknown-pragmas', '-Wunreachable-code',
+            '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
+            '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-O3',
+            '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-ffast-math', '-s',
+            '-std=c++20', '-fopenmp'] + ext_instructions + ['-march=native',
+            '-funroll-loops', '-ffast-math'
+        ] + cpp_files
+
+        core_build_args = exe_build_args + [
+            '-fPIC', '-shared',
+            '-o', OUTPUT_CORE
+        ]
+        exe_build_args += ['-o', OUTPUT_EXECUTABLE]
+        lib_build_args = [
+            'g++', '-Iinclude',
+            '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
+            '-fPIC', '-shared', '-o', OUTPUT_LIBRARY + '.so',
+            OUTPUT_CORE
         ] + cc_files
 
         print("Executing:")

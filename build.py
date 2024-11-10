@@ -137,7 +137,7 @@ try:
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-O3',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-ffast-math', '-s',
             '-std=c++20', '-fopenmp'] + ext_instructions + ['-march=native',
-            '-funroll-loops', '-ffast-math'
+            '-funroll-loops', '-ffast-math', '-D__TERMUX__'
         ] + cpp_files
 
         core_build_args = exe_build_args + [

@@ -22,6 +22,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#ifndef __EMSCRIPTEN__
 auto printBanner(N8Util::ArgumentParser argParse) -> void {
     std::cout
         << "\u001b[1;36mN8 Programming Language ("
@@ -165,8 +166,6 @@ auto interpreter(std::vector<std::string> files) -> int {
 
     return 1;
 }
-
-#ifndef __EMSCRIPTEN__
 
 auto main(int argc, char** argv) -> int {
     N8Util::ArgumentParser argParse(argc, argv);

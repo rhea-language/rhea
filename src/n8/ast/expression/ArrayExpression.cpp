@@ -24,7 +24,7 @@ DynamicObject ArrayExpression::visit(SymbolTable& symbols) {
         std::make_shared<std::vector<DynamicObject>>();
 
     for(size_t i = 0; i < this->elements.size(); i++)
-        objects->push_back(std::move(this->elements.at(i)->visit(symbols)));
+        objects->push_back(this->elements.at(i)->visit(symbols));
 
     return DynamicObject(objects);
 }

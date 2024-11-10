@@ -184,13 +184,13 @@ auto main(int argc, char** argv) -> int {
 
     if(argParse.hasParameter("r")) {
         Runtime::repl();
-        return 1;
+        return 0;
     }
     else if(argc > 1)
         return interpreter(argParse.getInputFiles());
 
     printBanner(argParse);
-    return 1;
+    return 0;
 }
 
 #else

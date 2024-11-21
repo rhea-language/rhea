@@ -1,10 +1,14 @@
 Todo:
 ---
 
-- N8 "Try" page build via Emscripten.
-- Multiplatform installer for N8.
+- Operators: \ (x / y = y \ x), vector operators such as (.+, .-, etc)
+- Fractions: // (automatically converted as double floating-point number by the DynamicClass)
+- Inline DynamicObject for Cmd-typed objects/variables
+
 - `use` statement for importing files to current script.
-- Package Manager
+- Package path finding mechanism: Same folder environment. (Using toml)
+
+- Multiplatform installer for N8.
 - To be developed libraries:
     * array
     * chrono
@@ -21,5 +25,4 @@ Todo:
     * serial
     * sys
     * thread
-    * ui
     * vector

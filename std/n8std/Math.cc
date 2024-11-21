@@ -878,32 +878,327 @@ N8_FUNC(math_sigmoidDerivative) {
     return DynamicObject(num * (1 - num));
 }
 
-N8_FUNC(math_step);
+N8_FUNC(math_step) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
 
-N8_FUNC(math_relu);
+    DynamicObject value = args.at(0);
+    if(!value.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
 
-N8_FUNC(math_leakyRelu);
+    double num = value.getNumber();
+    return DynamicObject(num >= 0 ? 1.0 : 0.0);
+}
 
-N8_FUNC(math_elu);
+N8_FUNC(math_relu) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
 
-N8_FUNC(math_selu);
+    DynamicObject value = args.at(0);
+    if(!value.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
 
-N8_FUNC(math_softmax);
+    double num = value.getNumber();
+    return DynamicObject(num > 0 ? num : 0);
+}
 
-N8_FUNC(math_swish);
+N8_FUNC(math_leakyRelu) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 argument, got " +
+                std::to_string(args.size())
+        );
 
-N8_FUNC(math_mish);
+    DynamicObject x = args.at(0),
+        y = args.at(1);
+    if(!x.isNumber() || !y.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "One of the argument type is not of number."
+        );
 
-N8_FUNC(math_hardSigmoid);
+    double xn = x.getNumber();
+    return DynamicObject(xn > 0 ? xn : y.getNumber() * xn);
+}
 
-N8_FUNC(math_hardTan);
+N8_FUNC(math_elu) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 argument, got " +
+                std::to_string(args.size())
+        );
 
-N8_FUNC(math_softplus);
+    DynamicObject x = args.at(0),
+        y = args.at(1);
+    if(!x.isNumber() || !y.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "One of the argument type is not of number."
+        );
 
-N8_FUNC(math_softsign);
+    double xn = x.getNumber();
+    return DynamicObject(xn > 0 ? xn :
+        y.getNumber() * (exp(xn) - 1)
+    );
+}
 
-N8_FUNC(math_gaussian);
+N8_FUNC(math_selu) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
 
-N8_FUNC(math_bentIdentity);
+    DynamicObject value = args.at(0);
+    if(!value.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
 
-N8_FUNC(math_logLogistic);
+    const double lambda = 1.0507;
+    const double alpha = 1.67326;
+    double num = value.getNumber();
+
+    return DynamicObject(
+        num > 0 ?
+            lambda * num :
+            lambda * alpha * (exp(num) - 1)
+    );
+}
+
+N8_FUNC(math_softmax) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of array."
+        );
+
+    std::vector<DynamicObject> values = *value.getArray();
+    size_t len = values.size();
+    if(len == 0)
+        return DynamicObject();
+
+    double max = values.at(0).getNumber(), sum = 0.0;
+    for(size_t i = 1; i < len; i++) {
+        double j = values.at(i).getNumber();
+
+        if(j > max)
+            max = j;
+    }
+
+    std::vector<double> probabilities;
+    for(size_t i = 0; i < len; i++) {
+        double temp = exp(values.at(i).getNumber() - max);
+
+        probabilities.emplace_back(temp);
+        sum += temp;
+    }
+
+    std::vector<DynamicObject> results;
+    for(size_t i = 0; i < len; i++)
+        results.emplace_back(DynamicObject(probabilities[i] / sum));
+
+    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(
+        results
+    ));
+}
+
+N8_FUNC(math_swish) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
+
+    double num = value.getNumber();
+    return DynamicObject(num / (1.0 + exp(-num)));
+}
+
+N8_FUNC(math_mish) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
+
+    double num = value.getNumber();
+    return DynamicObject(num * tanh(log1p(exp(num))));
+}
+
+N8_FUNC(math_hardSigmoid) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
+
+    return DynamicObject(
+        fmax(0.0, fmin(1.0, fma(0.2, value.getNumber(), 0.5)))
+    );
+}
+
+N8_FUNC(math_hardTan) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
+
+    return DynamicObject(
+        fmax(-1.0, fmin(1.0, value.getNumber()))
+    );
+}
+
+N8_FUNC(math_softplus) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
+
+    return DynamicObject(
+        log1p(exp(value.getNumber()))
+    );
+}
+
+N8_FUNC(math_softsign) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
+
+    double num = value.getNumber();
+    return DynamicObject(num / (1.0 + fabs(num)));
+}
+
+N8_FUNC(math_gaussian) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
+
+    double num = value.getNumber();
+    return DynamicObject(exp(-num * num));
+}
+
+N8_FUNC(math_bentIdentity) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
+
+    double num = value.getNumber();
+    return DynamicObject((sqrt(fma(num, num, 1.0) - 1.0) / 2.0) + num);
+}
+
+N8_FUNC(math_logLogistic) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Argument type is not of number."
+        );
+
+    double num = value.getNumber();
+    return DynamicObject(1.0 / (1.0 + exp(-num)));
+}

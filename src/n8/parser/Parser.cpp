@@ -36,6 +36,7 @@
 #include <n8/ast/expression/RegexExpression.hpp>
 #include <n8/ast/expression/RenderExpression.hpp>
 #include <n8/ast/expression/StringLiteralExpression.hpp>
+#include <n8/ast/expression/SizeExpression.hpp>
 #include <n8/ast/expression/TypeExpression.hpp>
 #include <n8/ast/expression/UnaryExpression.hpp>
 #include <n8/ast/expression/UnlessExpression.hpp>
@@ -433,6 +434,16 @@ std::shared_ptr<ASTNode> Parser::exprRender() {
     );
 }
 
+std::shared_ptr<ASTNode> Parser::exprSize() {
+    Token address = this->consume("size");
+    std::shared_ptr<ASTNode> expression = this->expression();
+
+    return std::make_shared<SizeExpression>(
+        std::make_shared<Token>(address),
+        std::move(expression)
+    );
+}
+
 std::shared_ptr<ASTNode> Parser::exprType() {
     Token address = this->consume("type");
     std::shared_ptr<ASTNode> expression = this->expression();
@@ -592,6 +603,8 @@ std::shared_ptr<ASTNode> Parser::exprPrimary() {
         expression = this->exprFunctionDecl();
     else if(this->isNext("type", TokenType::KEYWORD))
         expression = this->exprType();
+    else if(this->isNext("size", TokenType::KEYWORD))
+        expression = this->exprSize();
     else if(this->isNext("parallel", TokenType::KEYWORD))
         expression = this->exprParallel();
     else if(this->isNext("val", TokenType::KEYWORD))

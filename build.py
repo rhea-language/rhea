@@ -66,7 +66,7 @@ for root, dirs, files in os.walk('src'):
         if file.endswith('.cpp'):
             cpp_files.append(os.path.join(root, file))
 
-for root, dirs, files in os.walk('lib'):
+for root, dirs, files in os.walk('std'):
     for file in files:
         if file.endswith('.cc'):
             cc_files.append(os.path.join(root, file))
@@ -103,7 +103,7 @@ try:
         exe_build_args += ['-o', OUTPUT_EXECUTABLE]
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',
-            '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
+            '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
             '-shared', '-o', OUTPUT_LIBRARY + '.dll', OUTPUT_CORE
         ] + cc_files
 
@@ -147,7 +147,7 @@ try:
         exe_build_args += ['-o', OUTPUT_EXECUTABLE]
         lib_build_args = [
             'g++', '-Iinclude',
-            '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
+            '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
             '-fPIC', '-shared', '-o', OUTPUT_LIBRARY + '.so',
             OUTPUT_CORE
         ] + cc_files
@@ -192,7 +192,7 @@ try:
         exe_build_args += ['-o', OUTPUT_EXECUTABLE]
         lib_build_args = [
             'g++', '-Iinclude',
-            '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
+            '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
             '-fPIC', '-shared', '-o', OUTPUT_LIBRARY + '.so',
             OUTPUT_CORE
         ] + cc_files
@@ -237,7 +237,7 @@ try:
 
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
-            '-Ilib', '-I' + os.path.join(TEMP_DIR, 'include'),
+            '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
             '-shared', '-o', OUTPUT_LIBRARY + '.dylib', OUTPUT_CORE
         ] + cc_files
 

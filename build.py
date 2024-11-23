@@ -39,6 +39,9 @@ OUTPUT_CORE = OUTPUT_LIBRARY + '-core.a'
 cpp_files = []
 cc_files = []
 
+lib_headers = ['-Ilib/sConf/include']
+lib_source_files = []
+
 def get_ext_instructions():
     print('Checking extended instruction availability...')
     features_to_check = [
@@ -71,6 +74,11 @@ for root, dirs, files in os.walk('std'):
         if file.endswith('.cc'):
             cc_files.append(os.path.join(root, file))
 
+for root, dirs, files in os.walk('lib/sConf/src'):
+    for file in files:
+        if file.endswith('.cpp'):
+            lib_source_files.append(os.path.join(root, file))
+
 try:
     ext_instructions = get_ext_instructions()
 
@@ -94,7 +102,7 @@ try:
             '-std=c++17', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
             '-march=native', '-funroll-loops', '-ffast-math', '-static', '-static-libgcc',
             '-static-libstdc++'
-        ] + cpp_files
+        ] + lib_headers + lib_source_files + cpp_files
 
         core_build_args = exe_build_args + [
             '-shared',
@@ -138,7 +146,7 @@ try:
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-ffast-math', '-s',
             '-std=c++20', '-fopenmp'] + ext_instructions + ['-march=native',
             '-funroll-loops', '-ffast-math', '-D__TERMUX__'
-        ] + cpp_files
+        ] + lib_headers + lib_source_files + cpp_files
 
         core_build_args = exe_build_args + [
             '-fPIC', '-shared',
@@ -183,7 +191,7 @@ try:
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-ffast-math', '-s',
             '-std=c++20', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
             '-march=native', '-funroll-loops', '-ffast-math'
-        ] + cpp_files
+        ] + lib_headers + lib_source_files + cpp_files
 
         core_build_args = exe_build_args + [
             '-fPIC', '-shared',
@@ -230,7 +238,7 @@ try:
             '-std=c++17', '-fopenmp', '-march=native', '-funroll-loops',
             '-ffast-math', '-flto=auto', '-Xpreprocessor', '-O3',
             '-Wno-header-guard', '-Wno-pessimizing-move'
-        ] + cpp_files
+        ] + lib_headers + lib_source_files + cpp_files
 
         core_build_args = exe_build_args + ['-shared', '-o', OUTPUT_CORE]
         exe_build_args += ['-o', OUTPUT_EXECUTABLE]

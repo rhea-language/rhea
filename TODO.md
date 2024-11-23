@@ -1,9 +1,8 @@
 Todo:
 ---
 
-- Operators: \ (x / y = y \ x), vector operators such as (.+, .-, etc)
+- Vector operators such as (.+, .-, etc)
 - Fractions: // (automatically converted as double floating-point number by the DynamicClass)
-- Inline DynamicObject for Cmd-typed objects/variables
 
 - `use` statement for importing files to current script.
 - Package path finding mechanism: Same folder environment. (Using toml)
@@ -17,7 +16,7 @@ Todo:
     ✓ io
     * lang
     * map
-    * math
+    ✓ math
     * ml
     * net
     ✓ reflect

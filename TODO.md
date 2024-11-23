@@ -2,12 +2,10 @@ Todo:
 ---
 
 - Vector operators such as (.+, .-, etc)
-- Fractions: // (automatically converted as double floating-point number by the DynamicClass)
-
 - `use` statement for importing files to current script.
 - Package path finding mechanism: Same folder environment. (Using toml)
-
 - Multiplatform installer for N8.
+
 - To be developed libraries:
     * array
     * chrono

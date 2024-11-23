@@ -851,6 +851,7 @@ std::shared_ptr<ASTNode> Parser::exprFactor() {
 
     while(this->isNext("*", TokenType::OPERATOR) ||
         this->isNext("/", TokenType::OPERATOR) ||
+        this->isNext("\\", TokenType::OPERATOR) ||
         this->isNext("%", TokenType::OPERATOR)) {
         Token op = this->consume(TokenType::OPERATOR);
         expression = std::make_shared<BinaryExpression>(

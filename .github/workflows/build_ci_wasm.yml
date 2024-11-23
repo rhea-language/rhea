@@ -17,6 +17,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Pull submodules
+        run: |
+          git submodule update --init --recursive
+          git pull --recurse-submodules
+
       - name: Install Emscripten
         uses: mymindstorm/setup-emsdk@v14
 

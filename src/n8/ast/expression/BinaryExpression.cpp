@@ -102,6 +102,8 @@ DynamicObject BinaryExpression::applyNumOp(DynamicObject& lValue, DynamicObject&
         return DynamicObject(lValue.getNumber() * rValue.getNumber());
     else if(this->op == "/")
         return DynamicObject(lValue.getNumber() / rValue.getNumber());
+    else if(this->op == "\\")
+        return DynamicObject(rValue.getNumber() / lValue.getNumber());
     else if(this->op == "%")
         return DynamicObject((float) ((int) lValue.getNumber() % (int) rValue.getNumber()));
     else if(this->op == "&")
@@ -287,6 +289,13 @@ DynamicObject BinaryExpression::applyArrayOp(DynamicObject& lValue, DynamicObjec
             N8Util::VectorMath::div(
                 N8Util::object2Vector(lValue.getArray()),
                 N8Util::object2Vector(rValue.getArray())
+            )
+        );
+    else if(this->op == "\\")
+        return N8Util::vector2Object(
+            N8Util::VectorMath::div(
+                N8Util::object2Vector(rValue.getArray()),
+                N8Util::object2Vector(lValue.getArray())
             )
         );
     else if(this->op == "%")

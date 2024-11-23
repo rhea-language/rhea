@@ -19,7 +19,7 @@
 #include <n8/parser/OperatorsAndKeys.hpp>
 
 const std::vector<std::string> OperatorsAndKeys::operators = {
-    "+", "-", "*", "/", "!", "!=",
+    "+", "-", "*", "/", "\\", "!", "!=",
     "&", "&&", "|", "||", "^", "%",
     "(", ")", "[", "]", "{", "}",
     "=", "==", ":", ";", "'", "\"",

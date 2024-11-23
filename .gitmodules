@@ -1,0 +1,3 @@
+[submodule "lib/sConf"]
+	path = lib/sConf
+	url = https://github.com/nthnn/sConf

@@ -33,5 +33,5 @@ const std::unordered_set<std::string> OperatorsAndKeys::keywords = {
     "random", "func", "ret", "true", "false",
     "catch", "handle", "throw", "maybe", "then",
     "type", "use", "test", "val", "parallel",
-    "wait", "size"
+    "wait", "size", "use"
 };

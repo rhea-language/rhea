@@ -18,8 +18,13 @@
 
 #include "n8std/Reflect.hpp"
 
+#include <n8/ast/ASTNodeException.hpp>
 #include <n8/ast/TerminativeSignal.hpp>
+#include <n8/core/Runtime.hpp>
+#include <n8/parser/Parser.hpp>
+#include <n8/parser/ParserException.hpp>
 #include <n8/parser/Tokenizer.hpp>
+#include <n8/util/Print.hpp>
 
 N8_FUNC(reflect_get) {
     if(args.size() != 1)
@@ -134,4 +139,119 @@ N8_FUNC(reflect_invoke) {
         symtab,
         *params.getArray()
     );
+}
+
+N8_FUNC(reflect_exec) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject source = args.at(0);
+    try {
+        Tokenizer tokenizer(
+            source.getString(),
+            "<reflect.exec::" +
+                address->toString() + ">"
+        );
+        tokenizer.scan();
+
+        Parser parser(tokenizer.getTokens());
+        parser.parse();
+
+        DynamicObject value;
+        for(const auto& statement : parser.getGlobalStatements())
+            value = statement->visit(symtab);
+
+        symtab.detachParallelNodes();
+        return value;
+    }
+    catch(const std::system_error& exc) {
+        symtab.waitForThreads();
+        Runtime::cleanUp();
+
+        N8Util::printError("[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m");
+        N8Util::printError(exc.what());
+        N8Util::printError("\u001b[0m\r\n");
+    }
+    catch(const ASTNodeException& nodeExc) {
+        symtab.waitForThreads();
+        Runtime::cleanUp();
+
+        N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
+        N8Util::printError(nodeExc.what());
+        N8Util::printError("\u001b[0m\r\n                 ");
+        N8Util::printError(nodeExc.getAddress()->toString());
+        N8Util::printError("\r\n");
+    }
+    catch(const LexicalAnalysisException& lexAnlExc) {
+        symtab.waitForThreads();
+        Runtime::cleanUp();
+
+        N8Util::printError("[\u001b[1;31mLexical Error\u001b[0m]:\r\n\t");
+        N8Util::printError(lexAnlExc.what());
+        N8Util::printError("\r\n");
+    }
+    catch(const ParserException& parserExc) {
+        symtab.waitForThreads();
+        Runtime::cleanUp();
+
+        N8Util::printError("[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m");
+        N8Util::printError(parserExc.what());
+        N8Util::printError("\u001b[0m\r\n                 ");
+        N8Util::printError(parserExc.getAddress()->toString());
+        N8Util::printError("\r\n");
+    }
+    catch(const TerminativeBreakSignal& breakExc) {
+        symtab.waitForThreads();
+        Runtime::cleanUp();
+
+        N8Util::printError(
+            "[\u001b[1;31mRuntime Error\u001b[0m]: "
+            "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
+            "\r\n                 "
+        );
+        N8Util::printError(breakExc.getAddress().toString());
+        N8Util::printError("\r\n");
+    }
+    catch(const TerminativeContinueSignal& continueExc) {
+        symtab.waitForThreads();
+        Runtime::cleanUp();
+
+        N8Util::printError(
+            "[\u001b[1;31mRuntime Error\u001b[0m]: "
+            "\u001b[3;37mInvalid continue statement signal caught.\u001b[0m"
+            "\r\n                 "
+        );
+        N8Util::printError(continueExc.getAddress().toString());
+        N8Util::printError("\r\n");
+    }
+    catch(const TerminativeReturnSignal& retExc) {
+        symtab.waitForThreads();
+        Runtime::cleanUp();
+
+        return retExc.getObject();
+    }
+    catch(const TerminativeThrowSignal& throwExc) {
+        symtab.waitForThreads();
+        Runtime::cleanUp();
+
+        N8Util::printError("[\u001b[1;31mUncaught Error\u001b[0m]: \u001b[3;37m");
+        N8Util::printError(throwExc.getObject().toString());
+        N8Util::printError("\u001b[0m\r\n                  ");
+        N8Util::printError(throwExc.getAddress()->toString());
+        N8Util::printError("\r\n");
+    }
+    catch(const std::exception& exc) {
+        symtab.waitForThreads();
+        Runtime::cleanUp();
+
+        N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
+        N8Util::printError(exc.what());
+        N8Util::printError("\u001b[0m\r\n");
+    }
+
+    return DynamicObject();
 }

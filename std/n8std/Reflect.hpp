@@ -36,6 +36,8 @@ N8_FUNC(reflect_declare);
 N8_FUNC(reflect_delete);
 N8_FUNC(reflect_invoke);
 
+N8_FUNC(reflect_exec);
+
 N8_LIB_END
 
 #ifdef __clang__

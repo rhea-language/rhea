@@ -6,9 +6,9 @@ on:
       - .github/workflows/**
       - assets/**
       - examples/**
-      - lib/**
       - include/**
       - src/**
+      - std/**
       - test/**
       - build.py
     branches:

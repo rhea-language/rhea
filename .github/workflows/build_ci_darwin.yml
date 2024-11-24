@@ -7,8 +7,8 @@ on:
       - assets/**
       - examples/**
       - include/**
-      - lib/**
       - src/**
+      - std/**
       - test/**
       - build.py
     branches:

@@ -46,4 +46,12 @@
 #   define N8_BUILD_TIME        __TIME__ " " __DATE__
 #endif
 
+#define N8_ENV_PATH_NAME "N8_PATH"
+
+#ifdef _WIN32
+#   define FS_FILE_SEPARATOR "\\"
+#else
+#   define FS_FILE_SEPARATOR "/"
+#endif
+
 #endif

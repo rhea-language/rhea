@@ -1,0 +1,4 @@
+#!/bin/n8
+
+val("dist/n8-std") io.printLine
+io.printLine("Hello!")

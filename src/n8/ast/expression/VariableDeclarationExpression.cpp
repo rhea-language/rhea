@@ -20,6 +20,7 @@
 #include <n8/ast/expression/VariableDeclarationExpression.hpp>
 #include <n8/core/Runtime.hpp>
 #include <n8/core/SymbolTable.hpp>
+#include <n8/util/PathHelper.hpp>
 
 #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
 #   include <dlfcn.h>
@@ -64,37 +65,30 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
     void* handle;
     std::string library = std::string(libName.c_str());
 
-    if(Runtime::hasLoadedLibrary(libName)) {
+    #if defined(__APPLE__)
+    library += ".dylib";
+    #elif defined(__unix__) || defined(__linux__) || defined(__APPLE__)
+    library += ".so";
+    #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+    library += ".dll";
+    #endif
+
+    library = N8Util::PathHelper::findSharedLibrary(library);
+    if(Runtime::hasLoadedLibrary(libName))
         #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
-
-        library += ".so";
         handle = Runtime::getLoadedLibrary(libName);
-
         #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-
-        library += ".dll";
         handle = static_cast<HMODULE>(
             Runtime::getLoadedLibrary(libName)
         );
-
         #endif
-    }
     else {
         #if defined(__APPLE__)
-
-        library += ".dylib";
         handle = dlopen(library.c_str(), RTLD_LAZY);
-
         #elif defined(__unix__) || defined(__linux__)
-
-        library += ".so";
         handle = dlopen(library.c_str(), RTLD_LAZY);
-
         #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-
-        library += ".dll";
         handle = LoadLibraryA(library.c_str());
-
         #endif
 
         Runtime::addLoadedLibrary(library, handle);

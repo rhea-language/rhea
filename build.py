@@ -33,7 +33,7 @@ if os.path.exists(TEMP_DIR):
 os.makedirs(TEMP_DIR)
 
 OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'n8')
-OUTPUT_LIBRARY = os.path.join(OUT_DIR, 'n8std')
+OUTPUT_LIBRARY = os.path.join(OUT_DIR, 'n8-std')
 OUTPUT_CORE = OUTPUT_LIBRARY + '-core.a'
 
 cpp_files = []
@@ -102,26 +102,16 @@ try:
             '-std=c++17', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
             '-march=native', '-funroll-loops', '-ffast-math', '-static', '-static-libgcc',
             '-static-libstdc++'
-        ] + lib_headers + lib_source_files + cpp_files
-
-        core_build_args = exe_build_args + [
-            '-shared',
-            '-o', OUTPUT_CORE
-        ]
-        exe_build_args += ['-o', OUTPUT_EXECUTABLE]
+        ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',
             '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
-            '-shared', '-o', OUTPUT_LIBRARY + '.dll', OUTPUT_CORE
-        ] + cc_files
+            '-shared', '-o', OUTPUT_LIBRARY + '.dll'
+        ] + cpp_files + cc_files
 
         print("Executing:")
         print(' '.join(exe_build_args))
         subprocess.run(exe_build_args)
-
-        print("Executing:")
-        print(' '.join(core_build_args))
-        subprocess.run(core_build_args)
 
         print("Executing:")
         print(' '.join(lib_build_args))
@@ -146,27 +136,16 @@ try:
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-ffast-math', '-s',
             '-std=c++20', '-fopenmp'] + ext_instructions + ['-march=native',
             '-funroll-loops', '-ffast-math', '-D__TERMUX__'
-        ] + lib_headers + lib_source_files + cpp_files
-
-        core_build_args = exe_build_args + [
-            '-fPIC', '-shared',
-            '-o', OUTPUT_CORE
-        ]
-        exe_build_args += ['-o', OUTPUT_EXECUTABLE]
+        ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
         lib_build_args = [
             'g++', '-Iinclude',
             '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
-            '-fPIC', '-shared', '-o', OUTPUT_LIBRARY + '.so',
-            OUTPUT_CORE
-        ] + cc_files
+            '-fPIC', '-shared', '-o', OUTPUT_LIBRARY + '.so'
+        ] + cpp_files + cc_files
 
         print("Executing:")
         print(' '.join(exe_build_args))
         subprocess.run(exe_build_args)
-
-        print("Executing:")
-        print(' '.join(core_build_args))
-        subprocess.run(core_build_args)
 
         print("Executing:")
         print(' '.join(lib_build_args))
@@ -191,27 +170,16 @@ try:
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-ffast-math', '-s',
             '-std=c++20', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
             '-march=native', '-funroll-loops', '-ffast-math'
-        ] + lib_headers + lib_source_files + cpp_files
-
-        core_build_args = exe_build_args + [
-            '-fPIC', '-shared',
-            '-o', OUTPUT_CORE
-        ]
-        exe_build_args += ['-o', OUTPUT_EXECUTABLE]
+        ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
         lib_build_args = [
             'g++', '-Iinclude',
             '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
-            '-fPIC', '-shared', '-o', OUTPUT_LIBRARY + '.so',
-            OUTPUT_CORE
-        ] + cc_files
+            '-fPIC', '-shared', '-o', OUTPUT_LIBRARY + '.so'
+        ] + cpp_files + cc_files
 
         print("Executing:")
         print(' '.join(exe_build_args))
         subprocess.run(exe_build_args)
-
-        print("Executing:")
-        print(' '.join(core_build_args))
-        subprocess.run(core_build_args)
 
         print("Executing:")
         print(' '.join(lib_build_args))
@@ -238,24 +206,16 @@ try:
             '-std=c++17', '-fopenmp', '-march=native', '-funroll-loops',
             '-ffast-math', '-flto=auto', '-Xpreprocessor', '-O3',
             '-Wno-header-guard', '-Wno-pessimizing-move'
-        ] + lib_headers + lib_source_files + cpp_files
-
-        core_build_args = exe_build_args + ['-shared', '-o', OUTPUT_CORE]
-        exe_build_args += ['-o', OUTPUT_EXECUTABLE]
-
+        ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
             '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
-            '-shared', '-o', OUTPUT_LIBRARY + '.dylib', OUTPUT_CORE
-        ] + cc_files
+            '-shared', '-o', OUTPUT_LIBRARY + '.dylib'
+        ] + cpp_files + cc_files
 
         print("Executing:")
         print(' '.join(exe_build_args))
         subprocess.run(exe_build_args)
-
-        print("Executing:")
-        print(' '.join(core_build_args))
-        subprocess.run(core_build_args)
 
         print("Executing:")
         print(' '.join(lib_build_args))

@@ -1,7 +1,6 @@
 Todo:
 ---
 
-- `halt` statement to stop the interpreter globally.
 - Vector operators such as (.+, .-, etc)
 - `use` statement for importing files to current script.
 - Package path finding mechanism: Same folder environment. (Using toml)

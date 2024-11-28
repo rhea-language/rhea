@@ -47,6 +47,7 @@
 
 #include <n8/ast/statement/BreakStatement.hpp>
 #include <n8/ast/statement/ContinueStatement.hpp>
+#include <n8/ast/statement/HaltStatement.hpp>
 #include <n8/ast/statement/ReturnStatement.hpp>
 #include <n8/ast/statement/TestStatement.hpp>
 #include <n8/ast/statement/ThrowStatement.hpp>
@@ -939,6 +940,17 @@ std::shared_ptr<ASTNode> Parser::stmtContinue() {
     );
 }
 
+std::shared_ptr<ASTNode> Parser::stmtHalt() {
+    Token address = this->consume("halt");
+
+    if(this->isNext(";", TokenType::OPERATOR))
+        this->consume(";");
+
+    return std::make_shared<HaltStatement>(
+        std::make_shared<Token>(address)
+    );
+}
+
 std::shared_ptr<ASTNode> Parser::stmtRet() {
     Token address = this->consume("ret");
     std::shared_ptr<ASTNode> expression = this->expression();
@@ -1000,6 +1012,8 @@ std::shared_ptr<ASTNode> Parser::statement() {
         return this->stmtBreak();
     else if(this->isNext("continue", TokenType::KEYWORD))
         return this->stmtContinue();
+    else if(this->isNext("halt", TokenType::KEYWORD))
+        return this->stmtHalt();
     else if(this->isNext("ret", TokenType::KEYWORD))
         return this->stmtRet();
     else if(this->isNext("throw", TokenType::KEYWORD))

@@ -16,8 +16,8 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef N8_AST_EPXR_FUNC_DECL_HPP
-#define N8_AST_EPXR_FUNC_DECL_HPP
+#ifndef N8_AST_EXPR_FUNC_DECL_HPP
+#define N8_AST_EXPR_FUNC_DECL_HPP
 
 #include <n8/ast/ASTNode.hpp>
 #include <n8/ast/TerminativeSignal.hpp>

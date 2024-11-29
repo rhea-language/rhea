@@ -26,6 +26,7 @@
 class Runtime final {
 private:
     static bool testMode;
+    static std::vector<std::string> fileHashes;
     static std::unordered_map<std::string, void*> nativeLibraries;
 
     #ifdef __EMSCRIPTEN__
@@ -40,10 +41,17 @@ public:
     static void* getLoadedLibrary(std::string libName);
     static bool hasLoadedLibrary(std::string libName);
 
+    static void addFileHash(std::string hash);
+    static bool hasFileHash(std::string hash);
+
     static void cleanUp();
 
     #ifndef __EMSCRIPTEN__
 
+    static int interpreter(
+        SymbolTable& symbols,
+        std::vector<std::string> files
+    );
     static void repl();
 
     #else

@@ -1006,6 +1006,10 @@ std::shared_ptr<ASTNode> Parser::stmtUse() {
         this->consume("@");
         libVersion = this->expression();
     }
+    else libVersion = std::make_shared<StringLiteralExpression>(
+        std::make_shared<Token>(address),
+        "1.0.0"
+    );
 
     if(this->isNext(";", TokenType::OPERATOR))
         this->consume(";");

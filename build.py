@@ -27,11 +27,6 @@ if os.path.exists(OUT_DIR):
     shutil.rmtree(OUT_DIR)
 os.makedirs(OUT_DIR)
 
-TEMP_DIR = 'temp'
-if os.path.exists(TEMP_DIR):
-    shutil.rmtree(TEMP_DIR)
-os.makedirs(TEMP_DIR)
-
 OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'n8')
 OUTPUT_LIBRARY = os.path.join(OUT_DIR, 'n8-std')
 OUTPUT_CORE = OUTPUT_LIBRARY + '-core.a'
@@ -113,8 +108,7 @@ try:
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',
-            '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
-            '-shared', '-o', OUTPUT_LIBRARY + '.dll'
+            '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
 
         print("Executing:")
@@ -146,9 +140,8 @@ try:
             '-funroll-loops', '-ffast-math', '-D__TERMUX__'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
         lib_build_args = [
-            'g++', '-Iinclude',
-            '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
-            '-fPIC', '-shared', '-o', OUTPUT_LIBRARY + '.so'
+            'g++', '-Iinclude', '-Istd', '-fPIC',
+            '-shared', '-o', OUTPUT_LIBRARY + '.so'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
 
         print("Executing:")
@@ -180,9 +173,8 @@ try:
             '-march=native', '-funroll-loops', '-ffast-math'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
         lib_build_args = [
-            'g++', '-Iinclude',
-            '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
-            '-fPIC', '-shared', '-o', OUTPUT_LIBRARY + '.so'
+            'g++', '-Iinclude', '-Istd', '-fPIC',
+            '-shared', '-o', OUTPUT_LIBRARY + '.so'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
 
         print("Executing:")
@@ -217,8 +209,7 @@ try:
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
-            '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
-            '-shared', '-o', OUTPUT_LIBRARY + '.dylib'
+            '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
 
         print("Executing:")

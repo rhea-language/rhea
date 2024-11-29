@@ -20,6 +20,7 @@
 #include <n8/ast/statement/UseStatement.hpp>
 #include <n8/core/Runtime.hpp>
 #include <n8/util/PathHelper.hpp>
+#include <n8/util/SemVer.hpp>
 
 DynamicObject UseStatement::visit(
     SymbolTable& symbols
@@ -27,11 +28,19 @@ DynamicObject UseStatement::visit(
     __attribute__((unused))
     #endif
 ) {
+    #ifndef __EMSCRIPTEN__
     DynamicObject libName = this->libraryName->visit(symbols),
         libVer = this->libraryVersion->visit(symbols);
 
     std::string lName = libName.toString(),
         lVersion = libVer.toString();
+
+    if(!N8Util::SemVer::validateSemVer(lVersion))
+        throw ASTNodeException(
+            std::move(address),
+            "Invalid semantic version '" + lVersion +
+                "' for library " + lName
+        );
 
     if(!N8Util::PathHelper::isLibraryInstalled(
         lName, lVersion
@@ -45,6 +54,12 @@ DynamicObject UseStatement::visit(
         lName,
         lVersion
     ));
+    #else
+    throw ASTNodeException(
+        std::move(address),
+        "The 'use' statement is not allowed on WebAssembly build type."
+    );
+    #endif
 
     return DynamicObject();
 }

@@ -51,6 +51,7 @@
 #include <n8/ast/statement/ReturnStatement.hpp>
 #include <n8/ast/statement/TestStatement.hpp>
 #include <n8/ast/statement/ThrowStatement.hpp>
+#include <n8/ast/statement/UseStatement.hpp>
 #include <n8/ast/statement/WaitStatement.hpp>
 
 #include <n8/core/SymbolTable.hpp>
@@ -996,6 +997,26 @@ std::shared_ptr<ASTNode> Parser::stmtTest() {
     );
 }
 
+std::shared_ptr<ASTNode> Parser::stmtUse() {
+    Token address = this->consume("use");
+    std::shared_ptr<ASTNode> libName = this->expression();
+    std::shared_ptr<ASTNode> libVersion = nullptr;
+
+    if(this->peek().getImage() == "@") {
+        this->consume("@");
+        libVersion = this->expression();
+    }
+
+    if(this->isNext(";", TokenType::OPERATOR))
+        this->consume(";");
+
+    return std::make_shared<UseStatement>(
+        std::make_shared<Token>(address),
+        std::move(libName),
+        std::move(libVersion)
+    );
+}
+
 std::shared_ptr<ASTNode> Parser::stmtWait() {
     Token address = this->consume("wait");
 
@@ -1020,6 +1041,8 @@ std::shared_ptr<ASTNode> Parser::statement() {
         return this->stmtThrow();
     else if(this->isNext("test", TokenType::KEYWORD))
         return this->stmtTest();
+    else if(this->isNext("use", TokenType::KEYWORD))
+        return this->stmtUse();
     else if(this->isNext("wait", TokenType::KEYWORD))
         return this->stmtWait();
 

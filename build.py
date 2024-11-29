@@ -45,9 +45,12 @@ lib_source_files = []
 def get_ext_instructions():
     print('Checking extended instruction availability...')
     features_to_check = [
-        "mmx", "sse", "sse2", "sse3",
-        "sse4", "sse4_1", "sse4_2",
-        "avx", "avx2", "fma"
+        "abm", "adx", "aes", "avx", "avx2", "bmi",
+        "clflushopt", "cx16", "f16c", "fma", "fsgsbase",
+        "fxsr", "mmx", "movbe", "rdrnd", "rdseed",
+        "rtm", "sgx", "sse", "sse2", "sse3", "sse4",
+        "sse4_1", "sse4_2", "vpclmulqdq", "xsave",
+        "xsavec", "xsaveopt", "xsave"
     ]
 
     supported_features = []
@@ -107,7 +110,7 @@ try:
             'g++', '-static', '-static-libgcc', '-Iinclude',
             '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
             '-shared', '-o', OUTPUT_LIBRARY + '.dll'
-        ] + cpp_files + cc_files
+        ] + ext_instructions + cpp_files + cc_files
 
         print("Executing:")
         print(' '.join(exe_build_args))
@@ -141,7 +144,7 @@ try:
             'g++', '-Iinclude',
             '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
             '-fPIC', '-shared', '-o', OUTPUT_LIBRARY + '.so'
-        ] + cpp_files + cc_files
+        ] + ext_instructions + cpp_files + cc_files
 
         print("Executing:")
         print(' '.join(exe_build_args))
@@ -175,7 +178,7 @@ try:
             'g++', '-Iinclude',
             '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
             '-fPIC', '-shared', '-o', OUTPUT_LIBRARY + '.so'
-        ] + cpp_files + cc_files
+        ] + ext_instructions + cpp_files + cc_files
 
         print("Executing:")
         print(' '.join(exe_build_args))
@@ -211,7 +214,7 @@ try:
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
             '-Istd', '-I' + os.path.join(TEMP_DIR, 'include'),
             '-shared', '-o', OUTPUT_LIBRARY + '.dylib'
-        ] + cpp_files + cc_files
+        ] + ext_instructions + cpp_files + cc_files
 
         print("Executing:")
         print(' '.join(exe_build_args))

@@ -1,3 +1,6 @@
 [submodule "lib/sConf"]
 	path = lib/sConf
 	url = https://github.com/nthnn/sConf
+[submodule "lib/QuickDigest5"]
+	path = lib/QuickDigest5
+	url = https://github.com/nthnn/QuickDigest5

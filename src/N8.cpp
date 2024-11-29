@@ -23,15 +23,9 @@
 #include <stdexcept>
 
 #ifndef __EMSCRIPTEN__
-auto printBanner(N8Util::ArgumentParser argParse) -> void {
-    std::cout
-        << "\u001b[1;36mN8 Programming Language ("
-        << N8_VERSION
-        << ", "
-        << N8_BUILD_TIME
-        << ")\u001b[0m"
-        << std::endl;
 
+auto printBanner(N8Util::ArgumentParser argParse) -> void {
+    std::cout << N8_MAIN_BANNER << std::endl;
     std::cout
         << std::endl
         << "\u001b[3;37mN8 is free software, please check the source for copying"

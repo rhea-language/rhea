@@ -110,13 +110,8 @@ void Runtime::repl() {
     std::string input, line;
     int iterNum = 1;
 
-    std::cout
-        << "\u001b[1;36mN8 Programming Language ("
-        << N8_VERSION
-        << ", "
-        << N8_BUILD_TIME
-        << ")\u001b[0m"
-        << std::endl;
+    std::cout << N8_MAIN_BANNER
+        << std::endl << std::endl;
     std::cout << "\u001b[1;32m>>>\u001b[0m ";
 
     while(std::getline(std::cin, line)) {

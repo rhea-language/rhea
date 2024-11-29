@@ -28,6 +28,20 @@ std::string PathHelper::installationPath() {
     return std::getenv(N8_ENV_PATH_NAME);
 }
 
+bool PathHelper::isLibraryInstalled(
+    std::string libraryName,
+    std::string libraryVersion
+) {
+    namespace fs = std::filesystem;
+    std::string path = PathHelper::installationPath() +
+        FS_FILE_SEPARATOR + "modules" + FS_FILE_SEPARATOR +
+        libraryName + "@" + libraryVersion +
+        FS_FILE_SEPARATOR + "src";
+
+    return fs::exists(path) &&
+        fs::is_directory(path);
+}
+
 std::string PathHelper::findSharedLibrary(std::string name) {
     if(std::filesystem::exists(name))
         return name;
@@ -62,7 +76,8 @@ std::vector<std::string> PathHelper::getLibraryFiles(
 
     std::string directoryPath = PathHelper::installationPath() +
         FS_FILE_SEPARATOR + "modules" + FS_FILE_SEPARATOR +
-        libraryName + "@" + libraryVersion + "src";
+        libraryName + "@" + libraryVersion +
+        FS_FILE_SEPARATOR + "src";
 
     try {
         if(fs::exists(directoryPath) &&

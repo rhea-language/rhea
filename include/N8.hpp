@@ -44,6 +44,17 @@
 #   define N8_BUILD_TYPE        "beta"
 #   define N8_VERSION           "v1.0.0-" N8_BUILD_TYPE "-" N8_BUILD_PLATFORM
 #   define N8_BUILD_TIME        __TIME__ " " __DATE__
+
+#   define N8_MAIN_BANNER \
+    "        \u001b[38;5;87m___\r\n       /   \\\r\n    "  \
+    "\u001b[38;5;110m__\u001b[38;5;87m|     |\u001b[0m  "  \
+    "\u001b[1;33mN8 Programming Language\u001b[0m\r\n   "  \
+    "\u001b[38;5;110m/   \u001b[38;5;87m\\___/\u001b[0m "  \
+    "  \u001b[1;33m" N8_VERSION "          \u001b[0m\r\n"  \
+    "  \u001b[38;5;110m|     |\u001b[0m      \u001b[1;33m" \
+    N8_BUILD_TIME "\u001b[0m\r\n   \u001b[38;5;110m\\___"  \
+    "/\u001b[0m"
+
 #endif
 
 #define N8_ENV_PATH_NAME "N8_PATH"

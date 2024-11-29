@@ -21,12 +21,26 @@
 
 #include <random>
 
+#if defined(__RDRND__) && defined(__RDSEED__)
+#   include <immintrin.h>
+#endif
+
 namespace N8Util {
 
 inline static bool randomBoolValue() {
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    thread_local std::random_device rd;
+    thread_local std::mt19937 gen(rd());
     std::uniform_int_distribution<> distrib(0, 1);
+
+    #if defined(__RDRND__) && defined(__RDSEED__)
+    uint32_t rand, seed, genSeed;
+
+    while(_rdrand32_step(&rand) == 0);
+    while(_rdseed32_step(&seed) == 0);
+    while(_rdrand32_step(&genSeed) == 0);
+
+    gen.seed(genSeed);
+    #endif
 
     return distrib(gen) == 1;
 }

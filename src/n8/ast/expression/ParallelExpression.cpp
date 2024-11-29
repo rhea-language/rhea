@@ -39,7 +39,7 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
             expr = std::move(this->expression),
             sym = &symbols
         ]() mutable {
-            std::mutex mtx;
+            thread_local std::mutex mtx;
 
             try {
                 mtx.lock();

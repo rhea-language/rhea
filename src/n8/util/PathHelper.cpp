@@ -53,13 +53,16 @@ std::string PathHelper::findSharedLibrary(std::string name) {
     return "";
 }
 
-std::vector<std::string> PathHelper::getLibraryFiles(std::string libraryName) {
+std::vector<std::string> PathHelper::getLibraryFiles(
+    std::string libraryName,
+    std::string libraryVersion
+) {
     namespace fs = std::filesystem;
     std::vector<std::string> n8Files;
 
     std::string directoryPath = PathHelper::installationPath() +
         FS_FILE_SEPARATOR + "modules" + FS_FILE_SEPARATOR +
-        libraryName + "src";
+        libraryName + "@" + libraryVersion + "src";
 
     try {
         if(fs::exists(directoryPath) &&

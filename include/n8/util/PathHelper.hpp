@@ -29,6 +29,11 @@ public:
     static std::string installationPath();
     static std::string findSharedLibrary(std::string name);
 
+    static bool isLibraryInstalled(
+        std::string libraryName,
+        std::string libraryVersion
+    );
+
     static std::vector<std::string> getLibraryFiles(
         std::string libraryName,
         std::string libraryVersion

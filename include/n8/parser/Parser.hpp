@@ -66,6 +66,7 @@ private:
     std::shared_ptr<ASTNode> stmtContinue();
     std::shared_ptr<ASTNode> stmtHalt();
     std::shared_ptr<ASTNode> stmtRet();
+    std::shared_ptr<ASTNode> stmtUse();
     std::shared_ptr<ASTNode> stmtThrow();
     std::shared_ptr<ASTNode> stmtTest();
     std::shared_ptr<ASTNode> stmtWait();

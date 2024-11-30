@@ -39,3 +39,4 @@ jobs:
         with:
           name: n8-wasm
           path: dist/
+          retention-days: 1

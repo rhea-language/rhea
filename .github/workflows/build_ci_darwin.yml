@@ -71,3 +71,4 @@ jobs:
         with:
           name: n8-darwin-dist
           path: dist/
+          retention-days: 1

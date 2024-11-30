@@ -37,3 +37,4 @@ jobs:
         with:
           name: n8-vsce
           path: extension/n8-lang-vsce-0.0.1.vsix
+          retention-days: 1

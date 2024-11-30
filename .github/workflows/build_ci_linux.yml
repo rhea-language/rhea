@@ -74,3 +74,4 @@ jobs:
         with:
           name: n8-linux-dist
           path: dist/
+          retention-days: 1

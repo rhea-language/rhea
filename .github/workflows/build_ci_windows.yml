@@ -68,3 +68,4 @@ jobs:
         with:
           name: n8-windows-dist
           path: dist/
+          retention-days: 1

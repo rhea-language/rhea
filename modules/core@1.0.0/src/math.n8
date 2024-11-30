@@ -62,7 +62,7 @@ val("n8-std")
 
     math.dim,
     math.min,
-    math.max
+    math.max,
 
     math.errorFunc,
     math.errorFuncComp,

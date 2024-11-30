@@ -20,16 +20,34 @@ import platform
 import shutil
 import subprocess
 
-PLATFORM = platform.system()
-
+CORE_VERSION = '1.0.0'
 OUT_DIR = 'dist'
+
 if os.path.exists(OUT_DIR):
     shutil.rmtree(OUT_DIR)
+
+OUT_DIR = os.path.join(OUT_DIR, 'n8lang')
 os.makedirs(OUT_DIR)
 
-OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'n8')
-OUTPUT_LIBRARY = os.path.join(OUT_DIR, 'n8-std')
-OUTPUT_CORE = OUTPUT_LIBRARY + '-core.a'
+try:
+    src = 'modules'
+
+    shutil.copytree(src, os.path.join(OUT_DIR, os.path.basename(src)), dirs_exist_ok=True)
+    print(f"Successfully copied '{src}' to '{OUT_DIR}'")
+
+except Exception as e:
+    print("Failed to copy modules.")
+    exit(0)
+
+PLATFORM = platform.system()
+OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'bin')
+OUTPUT_LIBRARY = os.path.join(OUT_DIR, 'modules', 'core@' + CORE_VERSION, 'lib')
+
+os.makedirs(OUTPUT_EXECUTABLE)
+os.makedirs(OUTPUT_LIBRARY)
+
+OUTPUT_EXECUTABLE = os.path.join(OUTPUT_EXECUTABLE, 'n8')
+OUTPUT_LIBRARY = os.path.join(OUTPUT_LIBRARY, 'n8-std')
 
 cpp_files = []
 cc_files = []

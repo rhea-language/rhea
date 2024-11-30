@@ -1,4 +1,4 @@
-#!/bin/n8
+#!/opt/n8lang/bin/n8
 
 val emailRegex = `(\w+)(\.?\w+)*@(\w+)(\.\w+)+`;
 val validEmail = "test@test.com";

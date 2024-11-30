@@ -18,7 +18,7 @@ JIT-compiled dynamic general-purpose programming language utilizing OpenMP paral
 </p>
 
 ```n8
-#!/bin/n8
+#!/opt/n8lang/bin/n8
 
 val count = 99;
 

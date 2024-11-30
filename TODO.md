@@ -2,8 +2,6 @@ Todo:
 ---
 
 - Vector operators such as (.+, .-, etc)
-- `use` statement for importing files to current script.
-- Package path finding mechanism: Same folder environment. (Using toml)
 - Multiplatform installer for N8.
 
 - To be developed libraries:
@@ -22,4 +20,3 @@ Todo:
     * serial
     * sys
     * thread
-    * vector

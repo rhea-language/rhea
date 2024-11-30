@@ -1,4 +1,5 @@
 #!/opt/n8lang/bin/n8
 
-val("dist/n8-std") io.printLine
+val("dist/n8lang/modules/core@1.0.0/lib/n8-std")
+    io.printLine
 io.printLine("Hello!")

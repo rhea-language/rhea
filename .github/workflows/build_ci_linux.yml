@@ -39,7 +39,6 @@ jobs:
         run: |
           python -m pip install requests py-cpuinfo
           python build.py
-          python tools/build_deb.py
 
       - name: Build verification
         run: |

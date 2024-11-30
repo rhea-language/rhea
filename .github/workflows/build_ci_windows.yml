@@ -39,29 +39,29 @@ jobs:
 
       - name: Build verification
         run: |
-          dist\n8
+          dist\n8lang\bin\n8
           dir dist
           tree dist
 
       - name: Run test scripts
         run: |
-          dist\n8 test\arithmetic.n8
-          dist\n8 test\array.n8
-          dist\n8 test\digits.n8
-          dist\n8 test\error_handling.n8
-          dist\n8 test\flow.n8
-          dist\n8 test\func.n8
-          dist\n8 test\loop.n8
-          dist\n8 test\native.n8
-          dist\n8 test\parallel.n8
-          dist\n8 test\regex.n8
-          dist\n8 test\test.n8
-          dist\n8 test\types.n8
+          dist\n8lang\bin\n8 test\arithmetic.n8
+          dist\n8lang\bin\n8 test\array.n8
+          dist\n8lang\bin\n8 test\digits.n8
+          dist\n8lang\bin\n8 test\error_handling.n8
+          dist\n8lang\bin\n8 test\flow.n8
+          dist\n8lang\bin\n8 test\func.n8
+          dist\n8lang\bin\n8 test\loop.n8
+          dist\n8lang\bin\n8 test\native.n8
+          dist\n8lang\bin\n8 test\parallel.n8
+          dist\n8lang\bin\n8 test\regex.n8
+          dist\n8lang\bin\n8 test\test.n8
+          dist\n8lang\bin\n8 test\types.n8
 
       - name: Run examples
         run: |
-          dist\n8 examples\99-beers.n8
-          dist\n8 examples\hello.n8
+          dist\n8lang\bin\n8 examples\99-beers.n8
+          dist\n8lang\bin\n8 examples\hello.n8
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

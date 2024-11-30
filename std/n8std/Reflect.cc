@@ -57,7 +57,7 @@ N8_FUNC(reflect_has) {
     return DynamicObject(symtab.hasSymbol(symName));
 }
 
-N8_FUNC(reflect_type) {
+N8_FUNC(reflect_typeOf) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),

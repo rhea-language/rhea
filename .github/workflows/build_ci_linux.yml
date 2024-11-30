@@ -40,7 +40,6 @@ jobs:
           python -m pip install requests py-cpuinfo
           python build.py
           python tools/build_deb.py
-          rm -rf dist/n8lang
 
       - name: Build verification
         run: |

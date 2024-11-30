@@ -21,4 +21,5 @@ val("n8-std")
     reflect.typeOf,
     reflect.declare,
     reflect.delete,
-    reflect.invoke
+    reflect.invoke,
+    reflect.exec

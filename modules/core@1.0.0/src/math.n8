@@ -1,0 +1,91 @@
+#!/opt/n8lang/bin/n8
+# Copyright (c) 2024 - Nathanne Isip
+# This file is part of N8.
+# 
+# N8 is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published
+# by the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+# 
+# N8 is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with N8. If not, see <https://www.gnu.org/licenses/>.
+
+val("n8-std")
+    math.cos,
+    math.cosh,
+
+    math.sin,
+    math.sinh,
+
+    math.tan,
+    math.tanh,
+
+    math.acos,
+    math.acosh,
+
+    math.asin,
+    math.asinh,
+
+    math.atan,
+    math.atan2,
+    math.atanh,
+
+    math.rand,
+
+    math.pow,
+    math.pow2,
+
+    math.log,
+    math.log10,
+    math.log1p,
+    math.log2,
+
+    math.exp,
+    math.splitExponent,
+    math.combineExponent,
+    math.extractExponent,
+    math.scaleByExponent,
+
+    math.squareRoot,
+    math.cubicRoot,
+    math.inverseSqrt,
+    math.hypotenuse,
+
+    math.ceil,
+    math.floor,
+    math.round,
+
+    math.dim,
+    math.min,
+    math.max
+
+    math.errorFunc,
+    math.errorFuncComp,
+
+    math.remainder,
+    math.remQuotient,
+    math.abs,
+    math.fusedMultiplyAdd,
+
+    math.sigmoid,
+    math.sigmoidDerivative,
+    math.step,
+    math.relu,
+    math.leakyRelu,
+    math.elu,
+    math.selu,
+    math.softmax,
+    math.swish,
+    math.mish,
+    math.hardSigmoid,
+    math.hardTan,
+    math.softplus,
+    math.softsign,
+    math.gaussian,
+    math.bentIdentity,
+    math.logLogistic

@@ -1,4 +1,4 @@
-#!/bin/n8
+#!/opt/n8lang/bin/n8
 
 render! type "hello";
 render! type 3.14;

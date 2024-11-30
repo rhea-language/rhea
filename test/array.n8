@@ -1,4 +1,4 @@
-#!/bin/n8
+#!/opt/n8lang/bin/n8
 
 val nums = [1, 2, 3];
 render! nums;

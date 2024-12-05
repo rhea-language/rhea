@@ -319,21 +319,21 @@ std::shared_ptr<ASTNode> Parser::exprLiteral() {
         expr = std::make_shared<NilLiteralExpression>(
             std::make_shared<Token>(this->consume("nil"))
         );
-    else if(this->peek().getType() == TokenType::STRING) {
+    else if(!this->isAtEnd() && this->peek().getType() == TokenType::STRING) {
         Token stringToken = this->consume(TokenType::STRING);
         expr = std::make_shared<StringLiteralExpression>(
             std::make_shared<Token>(stringToken),
             stringToken.getImage()
         );
     }
-    else if(this->peek().getType() == TokenType::DIGIT) {
+    else if(!this->isAtEnd() && this->peek().getType() == TokenType::DIGIT) {
         Token digitToken = this->consume(TokenType::DIGIT);
         expr = std::make_shared<NumberLiteralExpression>(
             std::make_shared<Token>(digitToken),
             N8Util::Convert::translateDigit(digitToken.getImage())
         );
     }
-    else if(this->peek().getType() == TokenType::REGEX) {
+    else if(!this->isAtEnd() && this->peek().getType() == TokenType::REGEX) {
         Token regexToken = this->consume(TokenType::REGEX);
         std::string regExpression(regexToken.getImage());
 
@@ -342,7 +342,7 @@ std::shared_ptr<ASTNode> Parser::exprLiteral() {
             regExpression
         );
     }
-    else if(this->peek().getType() == TokenType::IDENTIFIER) {
+    else if(!this->isAtEnd() && this->peek().getType() == TokenType::IDENTIFIER) {
         Token var = this->consume(TokenType::IDENTIFIER);
         while(this->isNext(".", TokenType::OPERATOR)) {
             this->consume(".");
@@ -613,7 +613,7 @@ std::shared_ptr<ASTNode> Parser::exprPrimary() {
         expression = this->exprVal();
     else if(this->isNext("[", TokenType::OPERATOR))
         expression = this->exprArray();
-    else if(this->peek().getType() == TokenType::IDENTIFIER) {
+    else if(!this->isAtEnd() && this->peek().getType() == TokenType::IDENTIFIER) {
         Token var = this->consume(TokenType::IDENTIFIER);
         while(this->isNext(".", TokenType::OPERATOR)) {
             this->consume(".");
@@ -999,10 +999,10 @@ std::shared_ptr<ASTNode> Parser::stmtTest() {
 
 std::shared_ptr<ASTNode> Parser::stmtUse() {
     Token address = this->consume("use");
-    std::shared_ptr<ASTNode> libName = this->expression();
-    std::shared_ptr<ASTNode> libVersion = nullptr;
+    std::shared_ptr<ASTNode> libName = this->expression(),
+        libVersion = nullptr;
 
-    if(this->peek().getImage() == "@") {
+    if(!this->isAtEnd() && this->peek().getImage() == "@") {
         this->consume("@");
         libVersion = this->expression();
     }

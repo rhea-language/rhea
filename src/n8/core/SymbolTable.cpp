@@ -72,7 +72,7 @@ bool SymbolTable::hasSymbol(const std::string& name) {
 }
 
 void SymbolTable::addParallelism(std::thread par) {
-    this->threads.emplace_back(std::move(par));
+    this->threads.push_back(std::move(par));
 }
 
 void SymbolTable::waitForThreads() {

@@ -196,7 +196,7 @@ std::shared_ptr<ASTNode> Parser::exprBlock() {
     std::vector<std::shared_ptr<ASTNode>> body;
 
     while(!this->isNext("}", TokenType::OPERATOR))
-        body.emplace_back(this->expression());
+        body.push_back(this->expression());
 
     return std::make_shared<BlockExpression>(
         std::make_shared<Token>(address),
@@ -236,7 +236,7 @@ std::shared_ptr<ASTNode> Parser::exprFunctionDecl() {
         if(!parameters.empty())
             this->consume(",");
 
-        parameters.emplace_back(
+        parameters.push_back(
             std::make_shared<Token>(
                 this->consume(TokenType::IDENTIFIER)
             )
@@ -502,7 +502,7 @@ std::shared_ptr<ASTNode> Parser::exprWhen() {
             this->consume(")");
 
             std::shared_ptr<ASTNode> thenBlock = this->expression();
-            cases.emplace_back(std::make_pair(
+            cases.push_back(std::make_pair(
                 std::move(caseExpr),
                 std::move(thenBlock)
             ));
@@ -576,7 +576,7 @@ std::shared_ptr<ASTNode> Parser::exprPrimary() {
 
         while(!this->isNext("}", TokenType::OPERATOR)) {
             std::shared_ptr<ASTNode> stmt = this->statement();
-            statements.emplace_back(std::move(stmt));
+            statements.push_back(std::move(stmt));
         }
         this->consume("}");
 
@@ -652,7 +652,7 @@ std::shared_ptr<ASTNode> Parser::exprPrimary() {
                 if(!arguments.empty())
                     this->consume(",");
 
-                arguments.emplace_back(this->expression());
+                arguments.push_back(this->expression());
             }
 
             this->consume(")");

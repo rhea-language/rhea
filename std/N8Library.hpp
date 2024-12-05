@@ -28,11 +28,11 @@
 #define N8_LIB_START extern "C" {
 #define N8_LIB_END   }
 
-#define N8_FUNC(funcName)              \
-    DynamicObject funcName(               \
-        std::shared_ptr<Token> address,   \
-        SymbolTable& symtab,              \
-        std::vector<DynamicObject>& args  \
+#define N8_FUNC(funcName)                   \
+    DynamicObject funcName(                 \
+        std::shared_ptr<Token> address,     \
+        SymbolTable& symtab,                \
+        std::vector<DynamicObject>& args    \
     )
 
 #endif

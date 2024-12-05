@@ -73,7 +73,7 @@ bool Runtime::hasLoadedLibrary(std::string libName) {
 }
 
 void Runtime::addFileHash(std::string hash) {
-    Runtime::fileHashes.emplace_back(hash);
+    Runtime::fileHashes.push_back(hash);
 }
 
 bool Runtime::hasFileHash(std::string hash) {

@@ -94,13 +94,13 @@ void Tokenizer::scan() {
                 column++;
 
                 str = N8Util::replaceEscapeSequences(std::move(str));
-                this->tokens.emplace_back(
+                this->tokens.push_back(Token(
                     str,
                     fileName,
                     line,
                     startColumn,
                     TokenType::STRING
-                );
+                ));
             }
             else if(currentChar == '`') {
                 std::string str;
@@ -129,13 +129,13 @@ void Tokenizer::scan() {
                 column++;
 
                 str = N8Util::replaceEscapeSequences(std::move(str));
-                this->tokens.emplace_back(
+                this->tokens.push_back(Token(
                     str,
                     fileName,
                     line,
                     startColumn,
                     TokenType::REGEX
-                );
+                ));
             }
             else {
                 std::string op(1, currentChar);
@@ -150,13 +150,13 @@ void Tokenizer::scan() {
                     column++;
                 }
 
-                this->tokens.emplace_back(
+                this->tokens.push_back(Token(
                     op,
                     fileName,
                     line,
                     startColumn,
                     TokenType::OPERATOR
-                );
+                ));
             }
         }
         else if(this->isDigit(currentChar)) {
@@ -298,13 +298,13 @@ void Tokenizer::scan() {
                 }
             }
 
-            this->tokens.emplace_back(
+            this->tokens.push_back(Token(
                 digit,
                 fileName,
                 line,
                 startColumn,
                 TokenType::DIGIT
-            );
+            ));
         }
         else if(this->isAlphabet(currentChar)) {
             std::string token(1, currentChar);
@@ -320,13 +320,13 @@ void Tokenizer::scan() {
 
             TokenType type = this->isKeyword(token) ?
                 TokenType::KEYWORD : TokenType::IDENTIFIER;
-            this->tokens.emplace_back(
+            this->tokens.push_back(Token(
                 token,
                 fileName,
                 line,
                 startColumn,
                 type
-            );
+            ));
         }
     }
 }

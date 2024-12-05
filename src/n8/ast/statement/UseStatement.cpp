@@ -42,13 +42,21 @@ DynamicObject UseStatement::visit(
                 "' for library " + lName
         );
 
-    if(!N8Util::PathHelper::isLibraryInstalled(
-        lName, lVersion
-    )) throw ASTNodeException(
-        std::move(this->address),
-        "Library not installed: " +
-            lName + "@" + lVersion
-    );
+    try {
+        if(!N8Util::PathHelper::isLibraryInstalled(
+            lName, lVersion
+        )) throw ASTNodeException(
+            std::move(this->address),
+            "Library not installed: " +
+                lName + "@" + lVersion
+        );
+    }
+    catch(const std::exception& ex) {
+        throw ASTNodeException(
+            std::move(this->address),
+            "Some required N8 path environment variables are not found."
+        );
+    }
 
     Runtime::interpreter(symbols, N8Util::PathHelper::getLibraryFiles(
         lName,

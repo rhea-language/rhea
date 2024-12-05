@@ -28,7 +28,7 @@ N8_FUNC(array_create) {
 
     for(size_t i = 0; i < args.size(); i++) {
         DynamicObject item = args.at(i);
-        values.emplace_back(item);
+        values.push_back(item);
     }
 
     return DynamicObject(
@@ -146,7 +146,7 @@ N8_FUNC(array_last) {
 }
 
 N8_FUNC(array_add) {
-    if(args.size() > 1)
+    if(args.size() <= 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Expecting greater than 1 argument, got " +
@@ -164,7 +164,7 @@ N8_FUNC(array_add) {
     auto array = value.getArray();
     for(size_t i = 1; i < args.size(); i++) {
         DynamicObject item = args.at(i);
-        array->emplace_back(item);
+        array->push_back(item);
     }
 
     return DynamicObject(array);

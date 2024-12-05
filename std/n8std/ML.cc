@@ -105,8 +105,8 @@ N8_FUNC(ml_trendline_calculate) {
     double slope = numerator / denominator;
     std::vector<DynamicObject> returnValues;
 
-    returnValues.emplace_back(DynamicObject(slope));
-    returnValues.emplace_back(DynamicObject(y - slope * x));
+    returnValues.push_back(DynamicObject(slope));
+    returnValues.push_back(DynamicObject(y - slope * x));
 
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(
         returnValues
@@ -153,14 +153,14 @@ N8_FUNC(ml_trendline_calculateRmse) {
     #pragma omp parallel for
     for(size_t i = 0; i < paramSize; i++) {
         std::vector<DynamicObject> model;
-        model.emplace_back(regModel.at(0));
-        model.emplace_back(regModel.at(1));
+        model.push_back(regModel.at(0));
+        model.push_back(regModel.at(1));
 
         std::vector<DynamicObject> params;
-        params.emplace_back(DynamicObject(
+        params.push_back(DynamicObject(
             std::make_shared<std::vector<DynamicObject>>(model)
         ));
-        params.emplace_back(xObjArray[i]);
+        params.push_back(xObjArray[i]);
 
         double yPred = ml_trendline_predict(
             std::move(address),

@@ -431,8 +431,8 @@ N8_FUNC(math_splitExponent) {
         result = frexp(param, &n);
 
     std::vector<DynamicObject> returnValues;
-    returnValues.emplace_back(DynamicObject(result));
-    returnValues.emplace_back(DynamicObject(static_cast<float>(n)));
+    returnValues.push_back(DynamicObject(result));
+    returnValues.push_back(DynamicObject(static_cast<float>(n)));
 
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(
         returnValues
@@ -791,8 +791,8 @@ N8_FUNC(math_remQuotient) {
         result = remquo(xn, yn, &n);
 
     std::vector<DynamicObject> returnValues;
-    returnValues.emplace_back(DynamicObject(result));
-    returnValues.emplace_back(DynamicObject(static_cast<float>(n)));
+    returnValues.push_back(DynamicObject(result));
+    returnValues.push_back(DynamicObject(static_cast<float>(n)));
 
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(
         returnValues
@@ -1016,13 +1016,13 @@ N8_FUNC(math_softmax) {
     for(size_t i = 0; i < len; i++) {
         double temp = exp(values.at(i).getNumber() - max);
 
-        probabilities.emplace_back(temp);
+        probabilities.push_back(temp);
         sum += temp;
     }
 
     std::vector<DynamicObject> results;
     for(size_t i = 0; i < len; i++)
-        results.emplace_back(DynamicObject(probabilities[i] / sum));
+        results.push_back(DynamicObject(probabilities[i] / sum));
 
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(
         results

@@ -97,8 +97,8 @@ N8_FUNC(io_fileRead) {
     std::vector<DynamicObject> returnValues;
 
     if(!file) {
-        returnValues.emplace_back(DynamicObject());
-        returnValues.emplace_back(
+        returnValues.push_back(DynamicObject());
+        returnValues.push_back(
             DynamicObject("Error: Could not open the file " + fileName.toString())
         );
 
@@ -106,8 +106,8 @@ N8_FUNC(io_fileRead) {
     }
 
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-    returnValues.emplace_back(content);
-    returnValues.emplace_back(DynamicObject());
+    returnValues.push_back(content);
+    returnValues.push_back(DynamicObject());
 
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
@@ -144,16 +144,16 @@ N8_FUNC(io_fileSize) {
     std::vector<DynamicObject> returnValues;
 
     if(!file) {
-        returnValues.emplace_back(DynamicObject(0.0));
-        returnValues.emplace_back(DynamicObject(false));
+        returnValues.push_back(DynamicObject(0.0));
+        returnValues.push_back(DynamicObject(false));
 
         return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
     }
 
-    returnValues.emplace_back(DynamicObject(
+    returnValues.push_back(DynamicObject(
         static_cast<double>(file.tellg())
     ));
-    returnValues.emplace_back(DynamicObject(true));
+    returnValues.push_back(DynamicObject(true));
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
@@ -172,8 +172,8 @@ N8_FUNC(io_filePerms) {
 
     DWORD attributes = GetFileAttributes(fileName.toString().c_str());
     if(attributes == INVALID_FILE_ATTRIBUTES) {
-        returnValues.emplace_back(DynamicObject(0.0));
-        returnValues.emplace_back(DynamicObject("Could not get file attributes"));
+        returnValues.push_back(DynamicObject(0.0));
+        returnValues.push_back(DynamicObject("Could not get file attributes"));
 
         return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
     }
@@ -187,8 +187,8 @@ N8_FUNC(io_filePerms) {
 
     struct stat fileStat;
     if(stat(fileName.toString().c_str(), &fileStat) != 0) {
-        returnValues.emplace_back(DynamicObject(0.0));
-        returnValues.emplace_back(DynamicObject("Could not get file status"));
+        returnValues.push_back(DynamicObject(0.0));
+        returnValues.push_back(DynamicObject("Could not get file status"));
 
         return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
     }
@@ -206,8 +206,8 @@ N8_FUNC(io_filePerms) {
 
     #endif
 
-    returnValues.emplace_back(DynamicObject(static_cast<double>(permissions)));
-    returnValues.emplace_back(DynamicObject());
+    returnValues.push_back(DynamicObject(static_cast<double>(permissions)));
+    returnValues.push_back(DynamicObject());
 
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
@@ -225,8 +225,8 @@ N8_FUNC(io_fileCreationDate) {
     std::filesystem::path filePath(fileName.toString().c_str());
 
     if(!std::filesystem::exists(filePath)) {
-        returnValues.emplace_back(DynamicObject(0.0));
-        returnValues.emplace_back(DynamicObject("File does not exist"));
+        returnValues.push_back(DynamicObject(0.0));
+        returnValues.push_back(DynamicObject("File does not exist"));
     }
     else {
         auto creationTime = std::filesystem::last_write_time(filePath);
@@ -236,8 +236,8 @@ N8_FUNC(io_fileCreationDate) {
         );
         auto ctime = std::chrono::system_clock::to_time_t(sctp);
 
-        returnValues.emplace_back(DynamicObject(0.0));
-        returnValues.emplace_back(DynamicObject(
+        returnValues.push_back(DynamicObject(0.0));
+        returnValues.push_back(DynamicObject(
             static_cast<double>(ctime)
         ));
     }
@@ -261,12 +261,12 @@ N8_FUNC(io_fileDelete) {
     #ifdef _WIN32
 
     if(DeleteFile(fileName.toString().c_str())) {
-        returnValues.emplace_back(DynamicObject(true));
-        returnValues.emplace_back(DynamicObject());
+        returnValues.push_back(DynamicObject(true));
+        returnValues.push_back(DynamicObject());
     }
     else {
-        returnValues.emplace_back(DynamicObject(false));
-        returnValues.emplace_back(DynamicObject("Could not delete file"));
+        returnValues.push_back(DynamicObject(false));
+        returnValues.push_back(DynamicObject("Could not delete file"));
     }
 
     #else
@@ -274,17 +274,17 @@ N8_FUNC(io_fileDelete) {
     struct stat buffer;
     if(stat(fileName.toString().c_str(), &buffer) == 0) {
         if(remove(fileName.toString().c_str()) == 0) {
-            returnValues.emplace_back(DynamicObject(true));
-            returnValues.emplace_back(DynamicObject());
+            returnValues.push_back(DynamicObject(true));
+            returnValues.push_back(DynamicObject());
         }
         else {
-            returnValues.emplace_back(DynamicObject(false));
-            returnValues.emplace_back(DynamicObject("Could not delete file"));
+            returnValues.push_back(DynamicObject(false));
+            returnValues.push_back(DynamicObject("Could not delete file"));
         }
     }
     else {
-        returnValues.emplace_back(DynamicObject(false));
-        returnValues.emplace_back(DynamicObject("File does not exist"));
+        returnValues.push_back(DynamicObject(false));
+        returnValues.push_back(DynamicObject("File does not exist"));
     }
 
     #endif
@@ -305,21 +305,21 @@ N8_FUNC(io_folderCreate) {
     std::filesystem::path folderPath(folderName.toString().c_str());
 
     if(std::filesystem::exists(folderPath)) {
-        returnValues.emplace_back(DynamicObject(false));
-        returnValues.emplace_back(DynamicObject("Folder already exists"));
+        returnValues.push_back(DynamicObject(false));
+        returnValues.push_back(DynamicObject("Folder already exists"));
 
         return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
     }
 
     if(std::filesystem::create_directory(folderPath)) {
-        returnValues.emplace_back(DynamicObject(true));
-        returnValues.emplace_back(DynamicObject());
+        returnValues.push_back(DynamicObject(true));
+        returnValues.push_back(DynamicObject());
 
         return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
     }
 
-    returnValues.emplace_back(DynamicObject(false));
-    returnValues.emplace_back(DynamicObject("Could not create folder"));
+    returnValues.push_back(DynamicObject(false));
+    returnValues.push_back(DynamicObject("Could not create folder"));
 
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
@@ -338,8 +338,8 @@ N8_FUNC(io_folderSize) {
     unsigned long long totalSize = 0;
 
     if(!std::filesystem::exists(path) || !std::filesystem::is_directory(path)) {
-        returnValues.emplace_back(DynamicObject(0.0));
-        returnValues.emplace_back(DynamicObject(
+        returnValues.push_back(DynamicObject(0.0));
+        returnValues.push_back(DynamicObject(
             "Provided path is not a directory or does not exist"
         ));
 
@@ -351,8 +351,8 @@ N8_FUNC(io_folderSize) {
         if(std::filesystem::is_regular_file(entry))
             totalSize += std::filesystem::file_size(entry);
 
-    returnValues.emplace_back(DynamicObject(static_cast<double>(totalSize)));
-    returnValues.emplace_back(DynamicObject());
+    returnValues.push_back(DynamicObject(static_cast<double>(totalSize)));
+    returnValues.push_back(DynamicObject());
 
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
@@ -370,8 +370,8 @@ N8_FUNC(io_folderCreationDate) {
     std::filesystem::path filePath(folderName.toString().c_str());
 
     if(!std::filesystem::exists(filePath)) {
-        returnValues.emplace_back(DynamicObject(0.0));
-        returnValues.emplace_back(DynamicObject("File does not exist"));
+        returnValues.push_back(DynamicObject(0.0));
+        returnValues.push_back(DynamicObject("File does not exist"));
     }
     else {
         auto creationTime = std::filesystem::last_write_time(filePath);
@@ -381,8 +381,8 @@ N8_FUNC(io_folderCreationDate) {
         );
         auto ctime = std::chrono::system_clock::to_time_t(sctp);
 
-        returnValues.emplace_back(DynamicObject(0.0));
-        returnValues.emplace_back(DynamicObject(
+        returnValues.push_back(DynamicObject(0.0));
+        returnValues.push_back(DynamicObject(
             static_cast<double>(ctime)
         ));
     }
@@ -469,7 +469,7 @@ N8_FUNC(io_listAllFiles) {
 
     #pragma omp parallel for
     for(const auto& entry : std::filesystem::directory_iterator(dirPath))
-        returnValues.emplace_back(DynamicObject(
+        returnValues.push_back(DynamicObject(
             entry.path().filename().string()
         ));
 

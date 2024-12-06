@@ -152,9 +152,6 @@ try:
     subprocess.run(['dpkg-deb', '-Z', 'xz', '--build', DEB_DIR, OUTPUT_DEB], check=True)
     print(f'Package created: {OUTPUT_DEB}')
 
-    shutil.rmtree(os.path.join('dist', 'n8lang'))
-    shutil.rmtree(DEB_DIR)
-
 except Exception as e:
     print(f'Failed to build deb package: {str(e)}')
     exit(1)

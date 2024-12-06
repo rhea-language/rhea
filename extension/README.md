@@ -7,7 +7,7 @@ N8 Syntax Highlighting is a Visual Studio Code extension that provides syntax hi
 - **Icon Support**: Displays a custom icon for N8 files in the VS Code explorer.
 
 <p align="center">
-    <img alt="Screenshot" src="https://raw.githubusercontent.com/nthnn/n8/refs/heads/main/extension/assets/screenshot.png" />
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/n8lang/n8/refs/heads/main/extension/assets/screenshot.png" />
 </p>
 
 ## License

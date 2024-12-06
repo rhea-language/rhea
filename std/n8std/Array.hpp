@@ -57,6 +57,10 @@ N8_FUNC(array_join);
 N8_FUNC(array_areAllString);
 N8_FUNC(array_areAllNumber);
 N8_FUNC(array_areAllFunction);
+N8_FUNC(array_areAllBool);
+N8_FUNC(array_areAllRegex);
+N8_FUNC(array_areAllArray);
+N8_FUNC(array_areAllNil);
 
 N8_LIB_END
 

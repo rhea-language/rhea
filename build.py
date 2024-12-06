@@ -138,6 +138,7 @@ try:
         subprocess.run(lib_build_args)
 
     elif "TERMUX_VERSION" in os.environ:
+        ext_instructions.remove('-maes')
         exe_build_args= [
             'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
             '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',

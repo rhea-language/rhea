@@ -19,5 +19,5 @@ name = "core"
 version = "1.0.0-beta+001"
 author = ["Nathanne Isip <nathanneisip@gmail.com>"]
 description = "The core standard library of N8 programming language."
-repository = "https://github.com/nthnn/n8"
+repository = "https://github.com/n8lang/n8"
 platforms = ["windows", "linux", "darwin"]

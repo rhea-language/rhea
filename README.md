@@ -4,11 +4,11 @@
 <h1 align="center">N8 Programming Language</h1>
 
 <p align="center">
-    <img alt="Build CI for Linux" src="https://github.com/nthnn/n8/actions/workflows/build_ci_linux.yml/badge.svg" />
-    <img alt="Build CI for Darwin" src="https://github.com/nthnn/n8/actions/workflows/build_ci_darwin.yml/badge.svg" />
-    <img alt="Build CI for Windows" src="https://github.com/nthnn/n8/actions/workflows/build_ci_windows.yml/badge.svg" />
-    <img alt="Build CI for WebAssembly" src="https://github.com/nthnn/n8/actions/workflows/build_ci_wasm.yml/badge.svg" />
-    <img alt="VSCode Extension Build" src="https://github.com/nthnn/n8/actions/workflows/build_ci_vsce.yml/badge.svg" />
+    <img alt="Build CI for Linux" src="https://github.com/n8lang/n8/actions/workflows/build_ci_linux.yml/badge.svg" />
+    <img alt="Build CI for Darwin" src="https://github.com/n8lang/n8/actions/workflows/build_ci_darwin.yml/badge.svg" />
+    <img alt="Build CI for Windows" src="https://github.com/n8lang/n8/actions/workflows/build_ci_windows.yml/badge.svg" />
+    <img alt="Build CI for WebAssembly" src="https://github.com/n8lang/n8/actions/workflows/build_ci_wasm.yml/badge.svg" />
+    <img alt="VSCode Extension Build" src="https://github.com/n8lang/n8/actions/workflows/build_ci_vsce.yml/badge.svg" />
 </p>
 
 JIT-compiled dynamic general-purpose programming language utilizing OpenMP parallelism with built-in concurrency and unconventional expressiveness.

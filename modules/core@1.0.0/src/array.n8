@@ -18,23 +18,34 @@
 val("n8-std")
     array.create,
     array.clear,
+
     array.length,
     array.reverse,
+
     array.first,
     array.last,
+
     array.add,
     array.pushFront,
     array.pushBack,
     array.assign,
     array.slice,
+
     array.remove,
     array.removeAt,
     array.removeAll,
     array.removeSlice,
+
     array.contains,
     array.find,
-    array.at,
+
+    array.at
     array.join,
+
     array.areAllString,
     array.areAllNumber,
-    array.areAllFunction
+    array.areAllFunction,
+    array.areAllBool,
+    array.areAllRegex,
+    array.areAllArray,
+    array.areAllNil

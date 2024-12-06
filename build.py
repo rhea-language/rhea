@@ -52,7 +52,7 @@ OUTPUT_LIBRARY = os.path.join(OUTPUT_LIBRARY, 'n8-std')
 cpp_files = []
 cc_files = []
 
-lib_headers = ['-Ilib/sConf/include', '-Ilib/QuickDigest5/include']
+lib_headers = ['-Ilib/QuickDigest5/include']
 lib_source_files = []
 
 def get_ext_instructions():
@@ -89,11 +89,6 @@ for root, dirs, files in os.walk('std'):
     for file in files:
         if file.endswith('.cc'):
             cc_files.append(os.path.join(root, file))
-
-for root, dirs, files in os.walk('lib/sConf/src'):
-    for file in files:
-        if file.endswith('.cpp'):
-            lib_source_files.append(os.path.join(root, file))
 
 for root, dirs, files in os.walk('lib/QuickDigest5/src'):
     for file in files:

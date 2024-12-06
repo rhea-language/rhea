@@ -301,17 +301,181 @@ N8_FUNC(array_slice) {
     ));
 }
 
-N8_FUNC(array_remove);
+N8_FUNC(array_remove) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 arguments, got " +
+                std::to_string(args.size())
+        );
 
-N8_FUNC(array_removeAt);
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting an array argument, got " +
+                value.objectType()
+        );
 
-N8_FUNC(array_removeAll);
+    auto array = value.getArray();
+    DynamicObject item = args.at(1);
 
-N8_FUNC(array_removeSlice);
+    array->erase(std::find(array->begin(), array->end(), item));
+    return DynamicObject(array);
+}
 
-N8_FUNC(array_contains);
+N8_FUNC(array_removeAt) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 arguments, got " +
+                std::to_string(args.size())
+        );
 
-N8_FUNC(array_find);
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting an array argument, got " +
+                value.objectType()
+        );
+
+    auto array = value.getArray();
+    DynamicObject index = args.at(1);
+
+    if(!index.isString())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting a number as index argument, got " +
+                index.objectType()
+        );
+
+    array->at(static_cast<size_t>(
+        index.getNumber()
+    )) = DynamicObject();
+    return DynamicObject(array);
+}
+
+N8_FUNC(array_removeAll) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 arguments, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting an array argument, got " +
+                value.objectType()
+        );
+
+    auto array = value.getArray();
+    DynamicObject item = args.at(1);
+
+    array->erase(
+        std::remove(array->begin(), array->end(), item),
+        array->end()
+    );
+    return DynamicObject(array);
+}
+
+N8_FUNC(array_removeSlice) {
+    if(args.size() != 3)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 3 arguments, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting an array argument, got " +
+                value.objectType()
+        );
+
+    auto array = value.getArray();
+    DynamicObject from = args.at(1),
+        to = args.at(2);
+
+    if(!from.isNumber() || !to.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting number type arguments for range parameters, got " +
+                from.objectType() + " and " + to.objectType()
+        );
+
+    size_t fromNum = static_cast<size_t>(from.getNumber()),
+        toNum = static_cast<size_t>(to.getNumber());
+
+    if(fromNum > toNum)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Range end should be greater than range start."
+        );
+
+    array->erase(
+        array->begin() + fromNum,
+        array->begin() + toNum
+    );
+    return DynamicObject(array);
+}
+
+N8_FUNC(array_contains) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 arguments, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting an array argument, got " +
+                value.objectType()
+        );
+
+    auto array = value.getArray();
+    return DynamicObject(
+        std::find(
+            array->begin(),
+            array->end(),
+            value
+        ) != array->end()
+    );
+}
+
+N8_FUNC(array_find) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 arguments, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting an array argument, got " +
+                value.objectType()
+        );
+
+    auto array = value.getArray();
+    return DynamicObject(
+        static_cast<double>(std::find(
+            array->begin(),
+            array->end(),
+            value
+        ) - array->begin())
+    );
+}
 
 N8_FUNC(array_at) {
     if(args.size() != 2)
@@ -344,10 +508,194 @@ N8_FUNC(array_at) {
     return item;
 }
 
-N8_FUNC(array_join);
+N8_FUNC(array_join) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 arguments, got " +
+                std::to_string(args.size())
+        );
 
-N8_FUNC(array_areAllString);
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting an array argument, got " +
+                value.objectType()
+        );
 
-N8_FUNC(array_areAllNumber);
+    auto array = value.getArray();
+    DynamicObject bridge = args.at(1);
+    std::string output = "",
+        bridgeString = bridge.toString();
 
-N8_FUNC(array_areAllFunction);
+    for(size_t i = 0; i < array->size(); i++) {
+        if(i != 0)
+            output += bridgeString;
+
+        output += array->at(i).toString();
+    }
+
+    return DynamicObject(output);
+}
+
+N8_FUNC(array_areAllString) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 arguments, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting an array argument, got " +
+                value.objectType()
+        );
+
+    for(const auto& obj : *value.getArray())
+        if(!obj.isString())
+            return DynamicObject(false);
+
+    return DynamicObject(true);
+}
+
+N8_FUNC(array_areAllNumber) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 arguments, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting an array argument, got " +
+                value.objectType()
+        );
+
+    for(const auto& obj : *value.getArray())
+        if(!obj.isNumber())
+            return DynamicObject(false);
+
+    return DynamicObject(true);
+}
+
+N8_FUNC(array_areAllFunction) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 arguments, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting an array argument, got " +
+                value.objectType()
+        );
+
+    for(const auto& obj : *value.getArray())
+        if(!obj.isFunction())
+            return DynamicObject(false);
+
+    return DynamicObject(true);
+}
+
+N8_FUNC(array_areAllBool) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 arguments, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting an array argument, got " +
+                value.objectType()
+        );
+
+    for(const auto& obj : *value.getArray())
+        if(!obj.isBool())
+            return DynamicObject(false);
+
+    return DynamicObject(true);
+}
+
+N8_FUNC(array_areAllRegex) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 arguments, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting an array argument, got " +
+                value.objectType()
+        );
+
+    for(const auto& obj : *value.getArray())
+        if(!obj.isRegex())
+            return DynamicObject(false);
+
+    return DynamicObject(true);
+}
+
+N8_FUNC(array_areAllArray) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 arguments, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting an array argument, got " +
+                value.objectType()
+        );
+
+    for(const auto& obj : *value.getArray())
+        if(!obj.isArray())
+            return DynamicObject(false);
+
+    return DynamicObject(true);
+}
+
+N8_FUNC(array_areAllNil) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 arguments, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    if(!value.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting an array argument, got " +
+                value.objectType()
+        );
+
+    for(const auto& obj : *value.getArray())
+        if(!obj.isNil())
+            return DynamicObject(false);
+
+    return DynamicObject(true);
+}

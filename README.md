@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="assets/n8-logo.png" width="180" />
+    <img src="https://raw.githubusercontent.com/n8lang/assets/refs/heads/main/n8-logo.png" width="180" />
 </p>
 <h1 align="center">N8 Programming Language</h1>
 

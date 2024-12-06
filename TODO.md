@@ -5,10 +5,10 @@ Todo:
 - Multiplatform installer for N8.
 
 - To be developed libraries:
-    * array
+    ✓ array
     * chrono
     * crypt
-    * env
+    ✓ env
     * format
     ✓ io
     * lang

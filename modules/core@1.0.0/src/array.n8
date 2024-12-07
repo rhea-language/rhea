@@ -39,7 +39,7 @@ val("n8-std")
     array.contains,
     array.find,
 
-    array.at
+    array.at,
     array.join,
 
     array.areAllString,

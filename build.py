@@ -52,7 +52,7 @@ OUTPUT_LIBRARY = os.path.join(OUTPUT_LIBRARY, 'n8-std')
 cpp_files = []
 cc_files = []
 
-lib_headers = ['-Ilib/QuickDigest5/include']
+lib_headers = ['-Ilib/QuickDigest5/include', '-Ilib/SHA/src']
 lib_source_files = []
 
 def get_ext_instructions():
@@ -79,6 +79,16 @@ def get_ext_instructions():
                 print('not found')
 
     return supported_features
+
+def include_sha_headers():
+    global lib_source_files
+
+    for root, _, files in os.walk('lib/SHA/src'):
+        for file in files:
+            if file.endswith('.cpp'):
+                lib_source_files.append(os.path.join(root, file))
+
+    lib_source_files = [file for file in lib_source_files if not file.endswith("example.cpp")]
 
 for root, dirs, files in os.walk('src'):
     for file in files:
@@ -119,6 +129,8 @@ try:
             '-march=native', '-funroll-loops', '-ffast-math', '-static', '-static-libgcc',
             '-static-libstdc++'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
+
+        include_sha_headers()
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll'
@@ -153,6 +165,8 @@ try:
             '-std=c++20', '-fopenmp'] + ext_instructions + ['-march=native',
             '-funroll-loops', '-ffast-math', '-D__TERMUX__'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
+
+        include_sha_headers()
         lib_build_args = [
             'g++', '-Iinclude', '-Istd', '-fPIC',
             '-shared', '-o', OUTPUT_LIBRARY + '.so'
@@ -186,6 +200,8 @@ try:
             '-std=c++20', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
             '-march=native', '-funroll-loops', '-ffast-math'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
+
+        include_sha_headers()
         lib_build_args = [
             'g++', '-Iinclude', '-Istd', '-fPIC',
             '-shared', '-o', OUTPUT_LIBRARY + '.so'
@@ -221,6 +237,8 @@ try:
             '-ffast-math', '-flto=auto', '-Xpreprocessor', '-O3',
             '-Wno-header-guard', '-Wno-pessimizing-move'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
+
+        include_sha_headers()
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib'

@@ -52,7 +52,11 @@ OUTPUT_LIBRARY = os.path.join(OUTPUT_LIBRARY, 'n8-std')
 cpp_files = []
 cc_files = []
 
-lib_headers = ['-Ilib/QuickDigest5/include', '-Ilib/SHA/src']
+lib_headers = [
+    '-Ilib/QuickDigest5/include',
+    '-Ilib/MyShell/include',
+    '-Ilib/SHA/src'
+]
 lib_source_files = []
 
 def get_ext_instructions():

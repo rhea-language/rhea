@@ -19,7 +19,12 @@
 #include "n8std/Sys.hpp"
 
 #include <n8/ast/TerminativeSignal.hpp>
+#include <n8/util/RandomUtil.hpp>
+
 #include <cstdlib>
+#include <myshell.hpp>
+
+static std::map<std::string, std::shared_ptr<MyShell>> shellMap;
 
 N8_FUNC(sys_quickShell) {
     if(args.size() != 1)
@@ -35,4 +40,19 @@ N8_FUNC(sys_quickShell) {
             value.toString().c_str()
         ))
     );
+}
+
+N8_FUNC(sys_shellConnect) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    std::string uuid = N8Util::generateUuid();
+
+    shellMap[uuid] = std::make_shared<MyShell>(value.toString());
+    return DynamicObject(uuid);
 }

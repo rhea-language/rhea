@@ -38,6 +38,7 @@ N8_FUNC(sys_shellForceExit);
 N8_FUNC(sys_shellHasExited);
 N8_FUNC(sys_shellExitCode);
 N8_FUNC(sys_shellProcessId);
+N8_FUNC(sys_shellClose);
 
 N8_LIB_END
 

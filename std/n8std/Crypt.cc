@@ -22,6 +22,9 @@
 
 #include <quickdigest5.hpp>
 #include <regex>
+#include <SHA256.h>
+#include <SHA384.h>
+#include <SHA512.h>
 
 N8_FUNC(crypt_md5) {
     if(args.size() != 1)
@@ -47,10 +50,110 @@ N8_FUNC(crypt_validateMd5) {
 
     DynamicObject input = args.at(0);
     std::string md5 = input.toString();
+
     return DynamicObject(
         std::regex_match(
             md5,
             std::regex("^[a-fA-F0-9]{32}$")
         ) && md5.length() == 32
+    );
+}
+
+N8_FUNC(crypt_sha256) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    SHA256 sha256;
+    DynamicObject input = args.at(0);
+
+    return DynamicObject(sha256.hash(input.toString()));
+}
+
+N8_FUNC(crypt_validateSha256) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject input = args.at(0);
+    std::string sha256 = input.toString();
+
+    return DynamicObject(
+        std::regex_match(
+            sha256,
+            std::regex("^[a-fA-F0-9]{64}$")
+        ) && sha256.length() == 64
+    );
+}
+
+N8_FUNC(crypt_sha384) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    SHA384 sha384;
+    DynamicObject input = args.at(0);
+
+    return DynamicObject(sha384.hash(input.toString()));
+}
+
+N8_FUNC(crypt_validateSha384) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject input = args.at(0);
+    std::string sha384 = input.toString();
+
+    return DynamicObject(
+        std::regex_match(
+            sha384,
+            std::regex("^[a-fA-F0-9]{96}$")
+        ) && sha384.length() == 96
+    );
+}
+
+N8_FUNC(crypt_sha512) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    SHA512 sha512;
+    DynamicObject input = args.at(0);
+
+    return DynamicObject(sha512.hash(input.toString()));
+}
+
+N8_FUNC(crypt_validateSha512) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject input = args.at(0);
+    std::string sha512 = input.toString();
+
+    return DynamicObject(
+        std::regex_match(
+            sha512,
+            std::regex("^[a-fA-F0-9]{128}$")
+        ) && sha512.length() == 128
     );
 }

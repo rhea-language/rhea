@@ -31,6 +31,15 @@ N8_LIB_START
 N8_FUNC(crypt_md5);
 N8_FUNC(crypt_validateMd5);
 
+N8_FUNC(crypt_sha256);
+N8_FUNC(crypt_validateSha256);
+
+N8_FUNC(crypt_sha384);
+N8_FUNC(crypt_validateSha384);
+
+N8_FUNC(crypt_sha512);
+N8_FUNC(crypt_validateSha512);
+
 N8_LIB_END
 
 #ifdef __clang__

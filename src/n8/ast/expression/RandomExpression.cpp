@@ -17,7 +17,7 @@
  */
 
 #include <n8/ast/expression/RandomExpression.hpp>
-#include <n8/util/RandomBool.hpp>
+#include <n8/util/RandomUtil.hpp>
 
 DynamicObject RandomExpression::visit(SymbolTable& symbols) {
     if(N8Util::randomBoolValue())

@@ -22,7 +22,7 @@
 #include <n8/ast/ASTNode.hpp>
 #include <n8/core/DynamicObject.hpp>
 #include <n8/core/SymbolTable.hpp>
-#include <n8/util/RandomBool.hpp>
+#include <n8/util/RandomUtil.hpp>
 
 class MaybeExpression final : public ASTNode {
 public:

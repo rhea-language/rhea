@@ -4,3 +4,6 @@
 [submodule "lib/SHA"]
 	path = lib/SHA
 	url = https://github.com/pr0f3ss/SHA
+[submodule "MyShell"]
+	path = MyShell
+	url = https://github.com/nthnn/MyShell

@@ -22,6 +22,7 @@
 #include <n8/util/RandomUtil.hpp>
 
 #include <cstdlib>
+#include <map>
 #include <myshell.hpp>
 
 static std::map<std::string, std::shared_ptr<MyShell>> shellMap;

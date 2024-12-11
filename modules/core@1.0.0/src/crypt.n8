@@ -17,4 +17,13 @@
 
 val("n8-std")
     crypt.md5,
-    crypt.validateMd5
+    crypt.validateMd5,
+
+    crypt.sha256,
+    crypt.validateSha256,
+
+    crypt.sha384,
+    crypt.validateSha384,
+
+    crypt.sha512,
+    crypt.validateSha512

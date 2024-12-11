@@ -7,7 +7,7 @@ Todo:
 - To be developed libraries:
     ✓ array
     * chrono
-    * crypt
+    ✓ crypt
     ✓ env
     * format
     ✓ io

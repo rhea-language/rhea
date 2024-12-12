@@ -16,4 +16,12 @@
 # along with N8. If not, see <https://www.gnu.org/licenses/>.
 
 val("n8-std")
-    sys.quickShell
+    sys.quickShell,
+    sys.shellConnect,
+    sys.shellWrite,
+    sys.shellReadOutput,
+    sys.shellReadError,
+    sys.shellHasExited,
+    sys.shellExitCode,
+    sys.shellProcessId,
+    sys.shellClose

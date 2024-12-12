@@ -9,7 +9,7 @@ Todo:
     * chrono
     ✓ crypt
     ✓ env
-    * format
+    * fmt
     ✓ io
     * lang
     * map
@@ -19,5 +19,6 @@ Todo:
     ✓ reflect
     * regex
     * serial
-    * sys
+    * str
+    ✓ sys
     * thread

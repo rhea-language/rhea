@@ -25,6 +25,10 @@
 #include <myshell.hpp>
 #include <unordered_map>
 
+#if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+#   include <windows.h>
+#endif
+
 std::unordered_map<std::string, std::shared_ptr<MyShell>> shellMap;
 
 N8_FUNC(sys_quickShell) {
@@ -234,4 +238,28 @@ N8_FUNC(sys_shellClose) {
 
     shellMap.erase(uuid);
     return DynamicObject(uuid);
+}
+
+N8_FUNC(sys_sleep) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject value = args.at(0);
+    #if defined(_WIN32) || defined(_WIN64)
+    Sleep(
+        static_cast<DWORD>(value.getNumber())
+    );
+    #else
+    std::this_thread::sleep_for(
+        std::chrono::milliseconds(
+            static_cast<int64_t>(value.getNumber())
+        )
+    );
+    #endif
+
+    return DynamicObject();
 }

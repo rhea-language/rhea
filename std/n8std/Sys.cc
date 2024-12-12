@@ -25,7 +25,7 @@
 #include <myshell.hpp>
 #include <unordered_map>
 
-static std::unordered_map<std::string, std::shared_ptr<MyShell>> shellMap;
+inline std::unordered_map<std::string, std::shared_ptr<MyShell>> shellMap;
 
 N8_FUNC(sys_quickShell) {
     if(args.size() != 1)
@@ -55,6 +55,8 @@ N8_FUNC(sys_shellConnect) {
     std::string uuid = N8Util::generateUuid();
 
     shellMap[uuid] = std::make_shared<MyShell>(value.toString());
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+
     return DynamicObject(uuid);
 }
 
@@ -68,7 +70,7 @@ N8_FUNC(sys_shellWrite) {
 
     DynamicObject value = args.at(0),
         content = args.at(1);
-    std::string uuid = N8Util::generateUuid();
+    std::string uuid = value.toString();
 
     if(shellMap.find(uuid) == shellMap.end())
         throw TerminativeThrowSignal(
@@ -81,16 +83,15 @@ N8_FUNC(sys_shellWrite) {
 }
 
 N8_FUNC(sys_shellReadOutput) {
-    if(args.size() != 2)
+    if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
+            "Expecting 1 argument, got " +
                 std::to_string(args.size())
         );
 
-    DynamicObject value = args.at(0),
-        content = args.at(1);
-    std::string uuid = N8Util::generateUuid();
+    DynamicObject value = args.at(0);
+    std::string uuid = value.toString();
 
     if(shellMap.find(uuid) == shellMap.end())
         throw TerminativeThrowSignal(
@@ -104,16 +105,15 @@ N8_FUNC(sys_shellReadOutput) {
 }
 
 N8_FUNC(sys_shellReadError) {
-    if(args.size() != 2)
+    if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
+            "Expecting 1 argument, got " +
                 std::to_string(args.size())
         );
 
-    DynamicObject value = args.at(0),
-        content = args.at(1);
-    std::string uuid = N8Util::generateUuid();
+    DynamicObject value = args.at(0);
+    std::string uuid = value.toString();
 
     if(shellMap.find(uuid) == shellMap.end())
         throw TerminativeThrowSignal(
@@ -127,16 +127,15 @@ N8_FUNC(sys_shellReadError) {
 }
 
 N8_FUNC(sys_shellForceExit) {
-    if(args.size() != 2)
+    if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
+            "Expecting 1 argument, got " +
                 std::to_string(args.size())
         );
 
-    DynamicObject value = args.at(0),
-        content = args.at(1);
-    std::string uuid = N8Util::generateUuid();
+    DynamicObject value = args.at(0);
+    std::string uuid = value.toString();
 
     if(shellMap.find(uuid) == shellMap.end())
         throw TerminativeThrowSignal(
@@ -149,16 +148,15 @@ N8_FUNC(sys_shellForceExit) {
 }
 
 N8_FUNC(sys_shellHasExited) {
-    if(args.size() != 2)
+    if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
+            "Expecting 1 argument, got " +
                 std::to_string(args.size())
         );
 
-    DynamicObject value = args.at(0),
-        content = args.at(1);
-    std::string uuid = N8Util::generateUuid();
+    DynamicObject value = args.at(0);
+    std::string uuid = value.toString();
 
     if(shellMap.find(uuid) == shellMap.end())
         throw TerminativeThrowSignal(
@@ -170,16 +168,15 @@ N8_FUNC(sys_shellHasExited) {
 }
 
 N8_FUNC(sys_shellExitCode) {
-    if(args.size() != 2)
+    if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
+            "Expecting 1 argument, got " +
                 std::to_string(args.size())
         );
 
-    DynamicObject value = args.at(0),
-        content = args.at(1);
-    std::string uuid = N8Util::generateUuid();
+    DynamicObject value = args.at(0);
+    std::string uuid = value.toString();
 
     if(shellMap.find(uuid) == shellMap.end())
         throw TerminativeThrowSignal(
@@ -195,16 +192,15 @@ N8_FUNC(sys_shellExitCode) {
 }
 
 N8_FUNC(sys_shellProcessId) {
-    if(args.size() != 2)
+    if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
+            "Expecting 1 argument, got " +
                 std::to_string(args.size())
         );
 
-    DynamicObject value = args.at(0),
-        content = args.at(1);
-    std::string uuid = N8Util::generateUuid();
+    DynamicObject value = args.at(0);
+    std::string uuid = value.toString();
 
     if(shellMap.find(uuid) == shellMap.end())
         throw TerminativeThrowSignal(
@@ -220,16 +216,15 @@ N8_FUNC(sys_shellProcessId) {
 }
 
 N8_FUNC(sys_shellClose) {
-    if(args.size() != 2)
+    if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
+            "Expecting 1 argument, got " +
                 std::to_string(args.size())
         );
 
-    DynamicObject value = args.at(0),
-        content = args.at(1);
-    std::string uuid = N8Util::generateUuid();
+    DynamicObject value = args.at(0);
+    std::string uuid = value.toString();
 
     if(shellMap.find(uuid) == shellMap.end())
         throw TerminativeThrowSignal(

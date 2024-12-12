@@ -24,4 +24,5 @@ val("n8-std")
     sys.shellHasExited,
     sys.shellExitCode,
     sys.shellProcessId,
-    sys.shellClose
+    sys.shellClose,
+    sys.sleep

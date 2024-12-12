@@ -25,7 +25,7 @@
 #include <myshell.hpp>
 #include <unordered_map>
 
-inline std::unordered_map<std::string, std::shared_ptr<MyShell>> shellMap;
+std::unordered_map<std::string, std::shared_ptr<MyShell>> shellMap;
 
 N8_FUNC(sys_quickShell) {
     if(args.size() != 1)
@@ -54,9 +54,9 @@ N8_FUNC(sys_shellConnect) {
     DynamicObject value = args.at(0);
     std::string uuid = N8Util::generateUuid();
 
-    shellMap[uuid] = std::make_shared<MyShell>(value.toString());
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-
+    shellMap[uuid] = std::make_shared<MyShell>(
+        value.toString()
+    );
     return DynamicObject(uuid);
 }
 

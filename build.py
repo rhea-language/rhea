@@ -109,6 +109,11 @@ for root, dirs, files in os.walk('lib/QuickDigest5/src'):
         if file.endswith('.cpp'):
             lib_source_files.append(os.path.join(root, file))
 
+for root, dirs, files in os.walk('lib/MyShell/src'):
+    for file in files:
+        if file.endswith('.cpp'):
+            lib_source_files.append(os.path.join(root, file))
+
 try:
     ext_instructions = get_ext_instructions()
 

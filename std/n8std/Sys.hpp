@@ -40,6 +40,8 @@ N8_FUNC(sys_shellExitCode);
 N8_FUNC(sys_shellProcessId);
 N8_FUNC(sys_shellClose);
 
+N8_FUNC(sys_sleep);
+
 N8_LIB_END
 
 #ifdef __clang__

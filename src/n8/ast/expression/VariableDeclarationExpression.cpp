@@ -22,6 +22,8 @@
 #include <n8/core/SymbolTable.hpp>
 #include <n8/util/PathHelper.hpp>
 
+#include <filesystem>
+
 #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
 #   include <dlfcn.h>
 #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
@@ -83,6 +85,34 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         );
         #endif
     else {
+        std::filesystem::path path(library);
+        std::filesystem::path parentFolder = path.parent_path();
+
+        for(const auto& entry : std::filesystem::directory_iterator(parentFolder))
+            if(entry.is_regular_file() &&
+                #if defined(__APPLE__)
+                entry.path().extension() == ".dylib"
+                #elif defined(__unix__) || defined(__linux__)
+                entry.path().extension() == ".so"
+                #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+                entry.path().extension() == ".dll"
+                #endif
+            ) {
+                std::string entryDep = entry.path().filename().string();
+                void* depHandle;
+
+                #if defined(__APPLE__)
+                depHandle = dlopen(entryDep.c_str(), RTLD_LAZY);
+                #elif defined(__unix__) || defined(__linux__)
+                depHandle = dlopen(entryDep.c_str(), RTLD_LAZY);
+                #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+                depHandle = LoadLibraryA(entryDep.c_str());
+                #endif
+
+                if(Runtime::hasLoadedLibrary(entryDep))
+                    Runtime::addLoadedLibrary(entryDep, depHandle);
+            }
+
         #if defined(__APPLE__)
         handle = dlopen(library.c_str(), RTLD_LAZY);
         #elif defined(__unix__) || defined(__linux__)

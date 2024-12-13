@@ -100,7 +100,7 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
             MultiByteToWideChar(
                 CP_UTF8, 0,
                 parentPathStr,
-                -1, pwstr, size
+                -1, searchPath, size
             );
 
         AddDllDirectory(searchPath);

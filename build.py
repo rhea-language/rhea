@@ -60,6 +60,7 @@ cpp_files = []
 cc_files = []
 
 lib_headers = [
+    '-Ilib/glfw/include',
     '-Ilib/QuickDigest5/include',
     '-Ilib/MyShell/include',
     '-Ilib/SHA/src'
@@ -173,8 +174,6 @@ try:
             '-y', 'libglfw3-dev', 'libgl1-mesa-dev'
         ])
 
-        lib_headers += ['-Itemp/glfw-3.4']
-
     if PLATFORM == 'Windows':
         if ARCH == '64bit':
             download_file(get_glfw_file('win64'), 'glfw.zip')
@@ -212,7 +211,6 @@ try:
 
         include_sha_headers()
         glfwDll = os.path.join('temp', 'glfw-3.4', 'lib-mingw-w64', 'glfw3.dll')
-        lib_headers += ['-Itemp/glfw-3.4']
         lib_source_files += [glfwDll]
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',

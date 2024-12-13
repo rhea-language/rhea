@@ -186,10 +186,6 @@ try:
                 os.path.join('temp', 'glfw-3.4')
             )
 
-        glfwDll = os.path.join('temp', 'glfw-3.4', 'lib-mingw-w64', 'glfw3.dll')
-        lib_headers += ['-Itemp/glfw-3.4']
-        lib_source_files += [glfwDll]
-
         exe_build_args= [
             'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
             '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
@@ -212,10 +208,14 @@ try:
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
         include_sha_headers()
+        glfwDll = os.path.join('temp', 'glfw-3.4', 'lib-mingw-w64', 'glfw3.dll')
+        lib_headers += ['-Itemp/glfw-3.4']
+        lib_source_files += [glfwDll]
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
+
         os.rename(glfwDll, os.path.join(
             'dist', 'n8lang', 'modules',
             'core@1.0.0', 'lib'

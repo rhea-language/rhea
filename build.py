@@ -226,7 +226,10 @@ try:
             glfwDll
         )
 
-        lib_source_files += [glfwDll]
+        lib_source_files += [os.path.join(
+            TEMP_DIR, 'glfw-3.4',
+            'lib-mingw-w64', 'libglfw3.a'
+        )]
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll'

@@ -114,7 +114,6 @@ def download_file(url, local_filename):
                 if chunk:
                     f.write(chunk)
 
-        subprocess.run(['dir'])
         print(f"{local_filename} has been downloaded successfully.")
         unzip_and_move_contents(local_filename, "temp")
 
@@ -162,12 +161,10 @@ for root, dirs, files in os.walk('lib/MyShell/src'):
 
 try:
     print('Pulling submodules...', end='')
-    subprocess.run([
-        'git submodule update --init --recursive',
-        'git pull --recurse-submodules'
-    ])
-    ext_instructions = get_ext_instructions()
+    subprocess.run(['git', 'submodule', 'update', '--init', '--recursive'])
+    subprocess.run(['git', 'pull', '--recurse-submodules'])
 
+    ext_instructions = get_ext_instructions()
     if PLATFORM == 'Linux':
         subprocess.run([
             'sudo apt install -y libglfw3-dev libgl1-mesa-dev'

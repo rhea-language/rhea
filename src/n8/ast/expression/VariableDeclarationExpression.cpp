@@ -92,7 +92,7 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         std::wstring parentPath(path.parent_path().string().c_str());
 
         handle = LoadLibraryA(library.c_str());
-        SetDllDirectoryW(parentPath.c_str());
+        SetDllDirectoryW(static_cast<LPCWSTR>(parentPath.c_str()));
 
         #elif defined(__APPLE__)
         handle = dlopen(library.c_str(), RTLD_LAZY);

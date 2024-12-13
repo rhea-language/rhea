@@ -89,10 +89,10 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
         std::filesystem::path path(library);
-        std::wstring parentPath(path.parent_path().string().c_str());
+        std::wstring parentPath = path.parent_path().wstring();
 
         handle = LoadLibraryA(library.c_str());
-        SetDllDirectoryW(static_cast<LPCWSTR>(parentPath.c_str()));
+        SetDllDirectoryW(parentPath.c_str());
 
         #elif defined(__APPLE__)
         handle = dlopen(library.c_str(), RTLD_LAZY);

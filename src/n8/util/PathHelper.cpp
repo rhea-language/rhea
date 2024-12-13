@@ -52,15 +52,24 @@ std::string PathHelper::findSharedLibrary(std::string name) {
 
     try {
         if(fs::exists(directoryPath) &&
-            fs::is_directory(directoryPath))
-            for(const auto& entry : fs::directory_iterator(directoryPath)) {
-                std::string libPath = entry.path().string() +
-                    FS_FILE_SEPARATOR + "lib" +
-                    FS_FILE_SEPARATOR + name;
+            fs::is_directory(directoryPath)
+        ) {
+            std::string libPath = directoryPath +
+                FS_FILE_SEPARATOR + name +
+                FS_FILE_SEPARATOR + "lib" +
+                FS_FILE_SEPARATOR + name;
 
-                if(fs::exists(libPath))
-                    return libPath;
-            }
+            #if defined(__APPLE__)
+            libPath += ".dylib";
+            #elif defined(__unix__) || defined(__linux__) || defined(__APPLE__)
+            libPath += ".so";
+            #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+            libPath += ".dll";
+            #endif
+
+            if(fs::exists(libPath))
+                return libPath;
+        }
     }
     catch(const std::exception& ex) {}
 

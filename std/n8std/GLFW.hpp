@@ -28,8 +28,12 @@
 
 N8_LIB_START
 
+#ifndef __TERMUX__
+
 N8_FUNC(glfw_init);
 N8_FUNC(glfw_terminate);
+
+#endif
 
 N8_LIB_END
 

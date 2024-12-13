@@ -21,6 +21,8 @@
 #include <n8/ast/TerminativeSignal.hpp>
 #include <GLFW/glfw3.h>
 
+#ifndef __TERMUX__
+
 N8_FUNC(glfw_init) {
     return DynamicObject(glfwInit() == 1);
 }
@@ -29,3 +31,5 @@ N8_FUNC(glfw_terminate) {
     glfwTerminate();
     return DynamicObject();
 }
+
+#endif

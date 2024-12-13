@@ -167,7 +167,7 @@ try:
     ext_instructions = get_ext_instructions()
     if PLATFORM == 'Linux':
         subprocess.run([
-            'sudo apt install -y libglfw3-dev libgl1-mesa-dev'
+            'sudo', 'apt', 'install', '-y', 'libglfw3-dev', 'libgl1-mesa-dev'
         ])
 
     if PLATFORM == 'Windows':

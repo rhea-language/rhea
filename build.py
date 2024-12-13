@@ -214,6 +214,12 @@ try:
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
         include_sha_headers()
+        glfw_lib_path = os.path.join(TEMP_DIR, 'glfw-3.4', 'lib-mingw-w64')
+        lib_source_files += [
+            os.path.join(glfw_lib_path, 'libglfw3.a'),
+            os.path.join(glfw_lib_path, 'libglfw3dll.a'),
+            os.path.join(glfw_lib_path, 'glfw3.dll')
+        ]
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll',

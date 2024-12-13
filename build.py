@@ -232,7 +232,8 @@ try:
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll',
-            '-L' + os.path.join(TEMP_DIR, 'glfw-3.4', 'lib-mingw-w64')
+            '-L' + os.path.join(TEMP_DIR, 'glfw-3.4', 'lib-mingw-w64'),
+            '-lole32'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
 
         print("Executing:")

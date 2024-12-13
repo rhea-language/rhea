@@ -88,23 +88,11 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
         std::filesystem::path path(library);
-        std::filesystem::path parentFolder = path.parent_path();
+        std::string parentFolder = path
+            .parent_path()
+            .string();
 
-        std::string parentPathFolder = parentFolder.string();
-        const char* parentPathStr = parentPathFolder.c_str();
-        int size = MultiByteToWideChar(
-            CP_UTF8, 0, parentPathStr, -1, NULL, 0
-        );
-
-        PWSTR searchPath = new wchar_t[(size_t) size];
-        if(searchPath)
-            MultiByteToWideChar(
-                CP_UTF8, 0,
-                parentPathStr,
-                -1, searchPath, size
-            );
-
-        AddDllDirectory(searchPath);
+        SetDllDirectoryW(parentFolder.c_str());
         handle = LoadLibraryA(library.c_str());
 
         #elif defined(__APPLE__)

@@ -34,6 +34,7 @@ if os.path.exists(TEMP_DIR):
 
 os.makedirs(OUT_DIR)
 os.makedirs(TEMP_DIR)
+os.makedirs(os.path.join('dist', 'n8lang', 'bin'))
 
 try:
     src = 'modules'
@@ -47,14 +48,8 @@ except Exception as e:
 
 PLATFORM = platform.system()
 ARCH = platform.architecture()[0]
-OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'bin')
-OUTPUT_LIBRARY = os.path.join(OUT_DIR, 'modules', 'core@' + CORE_VERSION, 'lib')
-
-os.makedirs(OUTPUT_EXECUTABLE)
-os.makedirs(OUTPUT_LIBRARY)
-
-OUTPUT_EXECUTABLE = os.path.join(OUTPUT_EXECUTABLE, 'n8')
-OUTPUT_LIBRARY = os.path.join(OUTPUT_LIBRARY, 'n8-std')
+OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'bin', 'n8')
+OUTPUT_LIBRARY = os.path.join(OUT_DIR, 'bin', 'n8-std')
 
 cpp_files = []
 cc_files = []
@@ -219,8 +214,7 @@ try:
             os.path.join(glfw_lib_path, 'glfw3.dll'),
             os.path.join(
                 'dist', 'n8lang',
-                'modules', 'core@1.0.0',
-                'lib', 'glfw3.dll'
+                'bin', 'glfw3.dll'
             )
         )
 

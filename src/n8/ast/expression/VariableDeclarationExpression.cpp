@@ -69,6 +69,10 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         std::string(libName.c_str())
     );
 
+    std::filesystem::path path(library);
+    std::cout << "Loading module: " << library << std::endl;
+    std::cout << "Loading DLLs from: " << path.parent_path().string() << std::endl;
+
     if(Runtime::hasLoadedLibrary(library))
         #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
         handle = Runtime::getLoadedLibrary(library);
@@ -79,10 +83,6 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         #endif
     else {
         #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-
-        std::filesystem::path path(library);
-        std::cout << "Loading module: " << library << std::endl;
-        std::cout << "Loading DLLs from: " << path.parent_path().string() << std::endl;
 
         AddDllDirectory(path.parent_path().wstring().c_str());
         handle = LoadLibraryA(library.c_str());
@@ -122,7 +122,7 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         #endif
         throw ASTNodeException(
             std::move(address),
-            "Failed to load library: " + libName +
+            "Failed to load library: " + library +
             "\r\n                 " +
             #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
             dlerror()

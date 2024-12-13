@@ -59,36 +59,28 @@ DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
     return {};
 }
 #include <iostream>
-#include <locale>
 NativeFunction VariableDeclarationExpression::loadNativeFunction(
     std::string& libName,
     std::string& funcName,
     std::shared_ptr<Token> address
 ) {
     void* handle;
-    std::string library = std::string(libName.c_str());
+    std::string library = N8Util::PathHelper::findSharedLibrary(
+        std::string(libName.c_str())
+    );
 
-    #if defined(__APPLE__)
-    library += ".dylib";
-    #elif defined(__unix__) || defined(__linux__) || defined(__APPLE__)
-    library += ".so";
-    #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-    library += ".dll";
-    #endif
-
-    library = N8Util::PathHelper::findSharedLibrary(library);
-    if(Runtime::hasLoadedLibrary(libName))
+    if(Runtime::hasLoadedLibrary(library))
         #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
-        handle = Runtime::getLoadedLibrary(libName);
+        handle = Runtime::getLoadedLibrary(library);
         #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
         handle = static_cast<HMODULE>(
-            Runtime::getLoadedLibrary(libName)
+            Runtime::getLoadedLibrary(library)
         );
         #endif
     else {
         #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
-        std::filesystem::path path(library);
+        std::filesystem::path libPath(library);
         std::cout << "Loading DLLs from: " << path.parent_path().string() << std::endl;
 
         AddDllDirectory(path.parent_path().wstring().c_str());

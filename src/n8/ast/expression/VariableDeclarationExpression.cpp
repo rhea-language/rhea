@@ -110,7 +110,7 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         handle = LoadLibraryA(library.c_str());
         SetDllDirectoryW(wfolderPath);
 
-        std::wcout.imbue(std::locale("en_US.UTF-8"));
+        std::wcout.imbue(std::locale(""));
         std::cout << "Loading DLLs from: ";
         std::wcout << wfolderPath;
         std::cout << std::endl;

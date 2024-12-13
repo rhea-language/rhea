@@ -22,8 +22,6 @@
 #include <n8/core/SymbolTable.hpp>
 #include <n8/util/PathHelper.hpp>
 
-#include <filesystem>
-
 #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
 #   include <dlfcn.h>
 #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
@@ -58,8 +56,7 @@ DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
 
     return {};
 }
-#include <iostream>
-#include <locale>
+
 NativeFunction VariableDeclarationExpression::loadNativeFunction(
     std::string& libName,
     std::string& funcName,
@@ -87,13 +84,7 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         #endif
     else {
         #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-
-        std::filesystem::path path(library);
-        std::cout << "Loading DLLs from: " << path.parent_path().string().c_str() << std::endl;
-
-        AddDllDirectory(path.parent_path().string().c_str());
         handle = LoadLibraryA(library.c_str());
-
         #elif defined(__APPLE__)
         handle = dlopen(library.c_str(), RTLD_LAZY);
         #elif defined(__unix__) || defined(__linux__)

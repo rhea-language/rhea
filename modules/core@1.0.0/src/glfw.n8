@@ -15,6 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with N8. If not, see <https://www.gnu.org/licenses/>.
 
-val("n8-std")
+val("core")
     glfw.init,
     glfw.terminate

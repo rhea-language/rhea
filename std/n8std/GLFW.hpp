@@ -29,6 +29,7 @@
 N8_LIB_START
 
 N8_FUNC(glfw_init);
+N8_FUNC(glfw_terminate);
 
 N8_LIB_END
 

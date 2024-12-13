@@ -24,3 +24,8 @@
 N8_FUNC(glfw_init) {
     return DynamicObject(glfwInit() == 1);
 }
+
+N8_FUNC(glfw_terminate) {
+    glfwTerminate();
+    return DynamicObject();
+}

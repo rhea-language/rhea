@@ -17,14 +17,20 @@
 import cpuinfo
 import os
 import platform
+import requests
 import shutil
 import subprocess
+import zipfile
 
 CORE_VERSION = '1.0.0'
 OUT_DIR = 'dist'
 
 if os.path.exists(OUT_DIR):
     shutil.rmtree(OUT_DIR)
+
+if os.path.exists('temp'):
+    shutil.rmtree('temp')
+os.makedirs('temp')
 
 OUT_DIR = os.path.join(OUT_DIR, 'n8lang')
 os.makedirs(OUT_DIR)
@@ -40,6 +46,7 @@ except Exception as e:
     exit(0)
 
 PLATFORM = platform.system()
+ARCH = platform.architecture()[0]
 OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'bin')
 OUTPUT_LIBRARY = os.path.join(OUT_DIR, 'modules', 'core@' + CORE_VERSION, 'lib')
 
@@ -84,6 +91,44 @@ def get_ext_instructions():
 
     return supported_features
 
+def get_glfw_file(arch):
+    url = "https://github.com/glfw/glfw/releases/download/3.4/"
+
+    if arch == 'win32':
+        return url + 'glfw-3.4.bin.WIN32.zip'
+    elif arch == 'win64':
+        return url + 'glfw-3.4.bin.WIN64.zip'
+    elif arch == 'darwin':
+        return url + 'glfw-3.4.bin.MACOS.zip'
+    
+    raise ValueError('Invalid architecture for GLFW')
+
+def download_file(url, local_filename):
+    try:
+        response = requests.get(url, stream=True)
+        response.raise_for_status()
+
+        local_filename = os.path.join("temp", local_filename)
+        with open(local_filename, 'wb') as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
+
+        print(f"{local_filename} has been downloaded successfully.")
+        unzip_and_move_contents(local_filename, "temp/")
+
+    except requests.RequestException as e:
+        print(f"Failed to download {url}. Error: {e}")
+
+def unzip_and_move_contents(zip_file, destination):
+    if not os.path.exists(destination):
+        os.makedirs(destination)
+
+    with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+        zip_ref.extractall(destination)
+
+    print(f"Contents of {zip_file} have been extracted to {destination}")
+
 def include_sha_headers():
     global lib_source_files
 
@@ -115,9 +160,36 @@ for root, dirs, files in os.walk('lib/MyShell/src'):
             lib_source_files.append(os.path.join(root, file))
 
 try:
+    print('Pulling submodules...', end='')
+    subprocess.run([
+        'git submodule update --init --recursive',
+        'git pull --recurse-submodules'
+    ])
     ext_instructions = get_ext_instructions()
 
+    if PLATFORM == 'Linux':
+        subprocess.run([
+            'sudo apt install -y libglfw3-dev libgl1-mesa-dev'
+        ])
+
     if PLATFORM == 'Windows':
+        if ARCH == '64bit':
+            download_file(get_glfw_file('win64'), 'glfw.zip')
+            shutil.move(
+                os.path.join('temp', 'glfw-3.4.bin.WIN64'),
+                os.path.join('temp', 'glfw-3.4')
+            )
+        elif ARCH == '32bit':
+            download_file(get_glfw_file('win32'), 'glfw.zip')
+            shutil.move(
+                os.path.join('temp', 'glfw-3.4.bin.WIN32'),
+                os.path.join('temp', 'glfw-3.4')
+            )
+
+        glfwDll = os.path.join('temp', 'glfw-3.4', 'lib-mingw-w64', 'glfw3.dll')
+        lib_headers += ['-Itemp/glfw-3.4']
+        lib_source_files += [glfwDll]
+
         exe_build_args= [
             'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
             '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
@@ -144,6 +216,10 @@ try:
             'g++', '-static', '-static-libgcc', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
+        os.rename(glfwDll, os.path.join(
+            'dist', 'n8lang', 'modules',
+            'core@1.0.0', 'lib'
+        ))
 
         print("Executing:")
         print(' '.join(exe_build_args))

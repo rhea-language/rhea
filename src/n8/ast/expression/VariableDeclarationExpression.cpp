@@ -88,8 +88,11 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
         std::filesystem::path path(library);
-        std::string parentFolder = path.parent_path();
-        std::wstring searchPath = parentFolder.wstring();
+        std::filesystem::path searchFolder(path
+            .parent_path()
+            .string()
+        );
+        std::wstring searchPath = searchFolder.wstring();
 
         SetDllDirectoryW(searchPath.c_str());
         handle = LoadLibraryA(library.c_str());

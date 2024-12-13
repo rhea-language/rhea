@@ -217,8 +217,8 @@ try:
         glfw_lib_path = os.path.join(TEMP_DIR, 'glfw-3.4', 'lib-mingw-w64')
         lib_source_files += [
             os.path.join(glfw_lib_path, 'libglfw3.a'),
-            os.path.join(glfw_lib_path, 'libglfw3dll.a'),
-            os.path.join(glfw_lib_path, 'glfw3.dll')
+            # os.path.join(glfw_lib_path, 'libglfw3dll.a'),
+            # os.path.join(glfw_lib_path, 'glfw3.dll')
         ]
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',

@@ -7,3 +7,6 @@
 [submodule "lib/MyShell"]
 	path = lib/MyShell
 	url = https://github.com/nthnn/MyShell
+[submodule "lib/glfw"]
+	path = lib/glfw
+	url = https://github.com/glfw/glfw

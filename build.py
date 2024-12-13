@@ -214,19 +214,10 @@ try:
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
         include_sha_headers()
-        lib_source_files += [
-            os.path.join(
-                TEMP_DIR, 'glfw-3.4',
-                'lib-mingw-w64', 'libglfw3.a'
-            ),
-            os.path.join(
-                TEMP_DIR, 'glfw-3.4',
-                'lib-mingw-w64', 'libglfw3dll.a'
-            )
-        ]
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',
-            '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll'
+            '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll',
+            '-L' + os.path.join(TEMP_DIR, 'glfw-3.4', 'lib-mingw-w64')
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
 
         print("Executing:")

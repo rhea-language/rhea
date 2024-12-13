@@ -49,7 +49,7 @@ except Exception as e:
 PLATFORM = platform.system()
 ARCH = platform.architecture()[0]
 OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'bin', 'n8')
-OUTPUT_LIBRARY = os.path.join(OUT_DIR, 'bin', 'n8-std')
+OUTPUT_LIBRARY = os.path.join(OUT_DIR, 'modules', 'core@1.0.0', 'lib')
 
 cpp_files = []
 cc_files = []

@@ -94,8 +94,8 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         );
         std::wstring searchPath = searchFolder.wstring();
 
-        SetDllDirectoryW(searchPath.c_str());
         handle = LoadLibraryA(library.c_str());
+        SetDllDirectoryW(searchPath.c_str());
 
         #elif defined(__APPLE__)
         handle = dlopen(library.c_str(), RTLD_LAZY);

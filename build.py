@@ -23,17 +23,17 @@ import subprocess
 import zipfile
 
 CORE_VERSION = '1.0.0'
-OUT_DIR = 'dist'
+OUT_DIR = os.path.join('dist', 'n8lang')
+TEMP_DIR = 'temp'
 
 if os.path.exists(OUT_DIR):
     shutil.rmtree(OUT_DIR)
 
-if os.path.exists('temp'):
-    shutil.rmtree('temp')
-os.makedirs('temp')
+if os.path.exists(TEMP_DIR):
+    shutil.rmtree(TEMP_DIR)
 
-OUT_DIR = os.path.join(OUT_DIR, 'n8lang')
 os.makedirs(OUT_DIR)
+os.makedirs(TEMP_DIR)
 
 try:
     src = 'modules'
@@ -118,14 +118,14 @@ def download_file(url, local_filename):
         response = requests.get(url, stream=True)
         response.raise_for_status()
 
-        local_filename = os.path.join("temp", local_filename)
+        local_filename = os.path.join(TEMP_DIR, local_filename)
         with open(local_filename, 'wb') as f:
             for chunk in response.iter_content(chunk_size=8192):
                 if chunk:
                     f.write(chunk)
 
         print(f"{local_filename} has been downloaded successfully.")
-        unzip_and_move_contents(local_filename, "temp")
+        unzip_and_move_contents(local_filename, TEMP_DIR)
 
     except requests.RequestException as e:
         print(f"Failed to download {url}. Error: {e}")
@@ -170,23 +170,8 @@ for root, dirs, files in os.walk('lib/MyShell/src'):
             lib_source_files.append(os.path.join(root, file))
 
 try:
-    if ARCH == '64bit':
-        download_file(get_glfw_file('win64'), 'glfw.zip')
-        shutil.move(
-            os.path.join('temp', 'glfw-3.4.bin.WIN64'),
-            os.path.join('temp', 'glfw-3.4')
-        )
-    elif ARCH == '32bit':
-        download_file(get_glfw_file('win32'), 'glfw.zip')
-        shutil.move(
-            os.path.join('temp', 'glfw-3.4.bin.WIN32'),
-            os.path.join('temp', 'glfw-3.4')
-        )
-
     ext_instructions = get_ext_instructions()
     if PLATFORM == 'Linux':
-        subprocess.run(['sudo', 'apt', 'update'])
-        subprocess.run(['sudo', 'apt', 'upgrade'])
         subprocess.run([
             'sudo', 'apt', 'install',
             '-y', 'libglfw3-dev', 'libgl1-mesa-dev'
@@ -197,14 +182,14 @@ try:
         if ARCH == '64bit':
             download_file(get_glfw_file('win64'), 'glfw.zip')
             shutil.move(
-                os.path.join('temp', 'glfw-3.4.bin.WIN64'),
-                os.path.join('temp', 'glfw-3.4')
+                os.path.join(TEMP_DIR, 'glfw-3.4.bin.WIN64'),
+                os.path.join(TEMP_DIR, 'glfw-3.4')
             )
         elif ARCH == '32bit':
             download_file(get_glfw_file('win32'), 'glfw.zip')
             shutil.move(
-                os.path.join('temp', 'glfw-3.4.bin.WIN32'),
-                os.path.join('temp', 'glfw-3.4')
+                os.path.join(TEMP_DIR, 'glfw-3.4.bin.WIN32'),
+                os.path.join(TEMP_DIR, 'glfw-3.4')
             )
 
         exe_build_args= [
@@ -235,7 +220,7 @@ try:
         )
         os.rename(
             os.path.join(
-                'temp', 'glfw-3.4',
+                TEMP_DIR, 'glfw-3.4',
                 'lib-mingw-w64', 'glfw3.dll'
             ),
             glfwDll

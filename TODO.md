@@ -10,6 +10,7 @@ Todo:
     ✓ crypt
     ✓ env
     * fmt
+    * glfw
     ✓ io
     * lang
     * map

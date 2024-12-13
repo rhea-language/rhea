@@ -58,7 +58,7 @@ DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
 
     return {};
 }
-
+#include <iostream>
 NativeFunction VariableDeclarationExpression::loadNativeFunction(
     std::string& libName,
     std::string& funcName,
@@ -96,6 +96,7 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
 
         handle = LoadLibraryA(library.c_str());
         SetDllDirectoryW(searchPath.c_str());
+        std::cout << "Loading DLLs from: " << searchPath.c_str() << std::endl;
 
         #elif defined(__APPLE__)
         handle = dlopen(library.c_str(), RTLD_LAZY);

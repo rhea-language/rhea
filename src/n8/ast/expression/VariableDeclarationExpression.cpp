@@ -91,7 +91,7 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         std::filesystem::path path(library);
         std::wstring parentPath = path.parent_path().wstring();
 
-        SetDllDirectoryW(parentPath.c_str());
+        AddDllDirectory(parentPath.c_str());
         handle = LoadLibraryA(library.c_str());
 
         #elif defined(__APPLE__)

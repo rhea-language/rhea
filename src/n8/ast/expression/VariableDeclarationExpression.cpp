@@ -91,17 +91,20 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         std::filesystem::path parentFolder = path.parent_path();
 
         std::string parentPathFolder = parentFolder.string();
-        std::wstring wstr(parentPathFolder.begin(), parentPathFolder.end());
-
-        PWSTR searchPath = static_cast<PWSTR>(
-            CoTaskMemAlloc((wstr.size() + 1) * sizeof(wchar_t))
-        );
+        const char* parentPathStr = parentPathFolder.c_str();
+        PWSTR searchPath = new wchar_t[MultiByteToWideChar(
+            CP_UTF8, 0, parentPathStr, -1, NULL, 0
+        )];
 
         if(searchPath)
-            wcscpy_s(searchPath, wstr.size() + 1, wstr.c_str());
+            MultiByteToWideChar(
+                CP_UTF8, 0,
+                parentPathStr,
+                -1, pwstr, size
+            );
 
         AddDllDirectory(searchPath);
-        CoTaskMemFree(searchPath);
+        delete[] searchPath;
 
         handle = LoadLibraryA(library.c_str());
 

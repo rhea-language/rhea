@@ -105,8 +105,6 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
             );
 
         AddDllDirectory(searchPath);
-        delete[] searchPath;
-
         handle = LoadLibraryA(library.c_str());
 
         #elif defined(__APPLE__)

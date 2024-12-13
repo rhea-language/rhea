@@ -108,7 +108,9 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
 
         handle = LoadLibraryA(library.c_str());
         SetDllDirectoryW(wfolderPath);
-        std::cout << "Loading DLLs from: " << wfolderPath << std::endl;
+        std::cout << "Loading DLLs from: ";
+        std::wcout << wfolderPath;
+        std::cout << std::endl;
 
         #elif defined(__APPLE__)
         handle = dlopen(library.c_str(), RTLD_LAZY);

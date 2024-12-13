@@ -170,6 +170,19 @@ for root, dirs, files in os.walk('lib/MyShell/src'):
             lib_source_files.append(os.path.join(root, file))
 
 try:
+    if ARCH == '64bit':
+        download_file(get_glfw_file('win64'), 'glfw.zip')
+        shutil.move(
+            os.path.join('temp', 'glfw-3.4.bin.WIN64'),
+            os.path.join('temp', 'glfw-3.4')
+        )
+    elif ARCH == '32bit':
+        download_file(get_glfw_file('win32'), 'glfw.zip')
+        shutil.move(
+            os.path.join('temp', 'glfw-3.4.bin.WIN32'),
+            os.path.join('temp', 'glfw-3.4')
+        )
+
     ext_instructions = get_ext_instructions()
     if PLATFORM == 'Linux':
         subprocess.run(['sudo', 'apt', 'update'])
@@ -216,17 +229,23 @@ try:
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
         include_sha_headers()
-        glfwDll = os.path.join('temp', 'glfw-3.4', 'lib-mingw-w64', 'glfw3.dll')
+        glfwDll = os.path.join(
+            'dist', 'n8lang', 'modules',
+            'core@1.0.0', 'lib', 'glfw3.dll'
+        )
+        os.rename(
+            os.path.join(
+                'temp', 'glfw-3.4',
+                'lib-mingw-w64', 'glfw3.dll'
+            ),
+            glfwDll
+        )
+
         lib_source_files += [glfwDll]
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
-
-        os.rename(glfwDll, os.path.join(
-            'dist', 'n8lang', 'modules',
-            'core@1.0.0', 'lib', 'glfw3.dll'
-        ))
 
         print("Executing:")
         print(' '.join(exe_build_args))

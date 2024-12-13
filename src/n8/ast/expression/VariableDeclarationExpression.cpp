@@ -81,6 +81,7 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
         std::filesystem::path path(library);
+        std::cout << "Loading module: " << library << std::endl;
         std::cout << "Loading DLLs from: " << path.parent_path().string() << std::endl;
 
         AddDllDirectory(path.parent_path().wstring().c_str());

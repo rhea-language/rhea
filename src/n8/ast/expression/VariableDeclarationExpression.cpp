@@ -88,7 +88,10 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
         std::filesystem::path path(library);
-        const char* parentPath = path.parent_path().string();
+        const char* parentPath = path
+            .parent_path()
+            .string()
+            .c_str();
         int size = MultiByteToWideChar(
             CP_UTF8, 0,
             parentPath, -1,
@@ -104,8 +107,8 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         );
 
         handle = LoadLibraryA(library.c_str());
-        SetDllDirectoryW(searchPath.c_str());
-        std::cout << "Loading DLLs from: " << searchFolder.wstring() << std::endl;
+        SetDllDirectoryW(wfolderPath);
+        std::cout << "Loading DLLs from: " << wfolderPath << std::endl;
 
         #elif defined(__APPLE__)
         handle = dlopen(library.c_str(), RTLD_LAZY);

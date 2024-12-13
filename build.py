@@ -166,9 +166,14 @@ try:
 
     ext_instructions = get_ext_instructions()
     if PLATFORM == 'Linux':
+        subprocess.run(['sudo', 'apt', 'update'])
+        subprocess.run(['sudo', 'apt', 'upgrade'])
         subprocess.run([
-            'sudo', 'apt', 'install', '-y', 'libglfw3-dev', 'libgl1-mesa-dev'
+            'sudo', 'apt', 'install',
+            '-y', 'libglfw3-dev', 'libgl1-mesa-dev'
         ])
+
+        lib_headers += ['-Itemp/glfw-3.4']
 
     if PLATFORM == 'Windows':
         if ARCH == '64bit':

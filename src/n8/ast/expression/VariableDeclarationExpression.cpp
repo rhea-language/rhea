@@ -92,10 +92,11 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
 
         std::string parentPathFolder = parentFolder.string();
         const char* parentPathStr = parentPathFolder.c_str();
-        PWSTR searchPath = new wchar_t[MultiByteToWideChar(
+        int size = MultiByteToWideChar(
             CP_UTF8, 0, parentPathStr, -1, NULL, 0
-        )];
+        );
 
+        PWSTR searchPath = new wchar_t[(size_t) size];
         if(searchPath)
             MultiByteToWideChar(
                 CP_UTF8, 0,

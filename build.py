@@ -114,8 +114,9 @@ def download_file(url, local_filename):
                 if chunk:
                     f.write(chunk)
 
+        subprocess.run(['dir'])
         print(f"{local_filename} has been downloaded successfully.")
-        unzip_and_move_contents(local_filename, "temp/")
+        unzip_and_move_contents(local_filename, "temp")
 
     except requests.RequestException as e:
         print(f"Failed to download {url}. Error: {e}")

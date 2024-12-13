@@ -174,6 +174,7 @@ try:
             '-y', 'libglfw3-dev', 'libgl1-mesa-dev'
         ])
 
+    print('Building binaries...')
     if PLATFORM == 'Windows':
         if ARCH == '64bit':
             download_file(get_glfw_file('win64'), 'glfw.zip')

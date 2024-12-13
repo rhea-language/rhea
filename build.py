@@ -110,7 +110,7 @@ def get_glfw_file(arch):
         return url + 'glfw-3.4.bin.WIN64.zip'
     elif arch == 'darwin':
         return url + 'glfw-3.4.bin.MACOS.zip'
-    
+
     raise ValueError('Invalid architecture for GLFW')
 
 def download_file(url, local_filename):
@@ -214,22 +214,16 @@ try:
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
         include_sha_headers()
-        glfwDll = os.path.join(
-            'dist', 'n8lang', 'modules',
-            'core@1.0.0', 'lib', 'glfw3.dll'
-        )
-        os.rename(
+        lib_source_files += [
             os.path.join(
                 TEMP_DIR, 'glfw-3.4',
-                'lib-mingw-w64', 'glfw3.dll'
+                'lib-mingw-w64', 'libglfw3.a'
             ),
-            glfwDll
-        )
-
-        lib_source_files += [os.path.join(
-            TEMP_DIR, 'glfw-3.4',
-            'lib-mingw-w64', 'libglfw3.a'
-        )]
+            os.path.join(
+                TEMP_DIR, 'glfw-3.4',
+                'lib-mingw-w64', 'libglfw3dll.a'
+            )
+        ]
         lib_build_args = [
             'g++', '-static', '-static-libgcc', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll'

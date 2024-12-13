@@ -34,13 +34,21 @@ if os.path.exists(TEMP_DIR):
 
 os.makedirs(OUT_DIR)
 os.makedirs(TEMP_DIR)
-os.makedirs(os.path.join('dist', 'n8lang', 'bin'))
 
 try:
     src = 'modules'
+    shutil.copytree(
+        src,
+        os.path.join(OUT_DIR, os.path.basename(src)),
+        dirs_exist_ok=True
+    )
 
-    shutil.copytree(src, os.path.join(OUT_DIR, os.path.basename(src)), dirs_exist_ok=True)
     print(f"Successfully copied '{src}' to '{OUT_DIR}'")
+    os.makedirs(os.path.join('dist', 'n8lang', 'bin'))
+    os.makedirs(os.path.join(
+        'dist', 'n8lang', 'modules',
+        'core@1.0.0', 'lib'
+    ))
 
 except Exception as e:
     print("Failed to copy modules.")
@@ -49,7 +57,11 @@ except Exception as e:
 PLATFORM = platform.system()
 ARCH = platform.architecture()[0]
 OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'bin', 'n8')
-OUTPUT_LIBRARY = os.path.join(OUT_DIR, 'modules', 'core@1.0.0', 'lib', 'core')
+OUTPUT_LIBRARY = os.path.join(
+    OUT_DIR,
+    'modules', 'core@1.0.0',
+    'lib', 'core'
+)
 
 cpp_files = []
 cc_files = []

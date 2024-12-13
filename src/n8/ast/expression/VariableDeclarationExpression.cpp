@@ -90,7 +90,7 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         std::filesystem::path path(library);
         std::filesystem::path parentFolder = path.parent_path();
 
-        std::string parentPathFolder = path.parent_path();
+        std::string parentPathFolder = parentFolder.string();
         std::wstring wstr(parentPathFolder.begin(), parentPathFolder.end());
 
         PWSTR searchPath = static_cast<PWSTR>(
@@ -101,6 +101,8 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
             wcscpy_s(searchPath, wstr.size() + 1, wstr.c_str());
 
         AddDllDirectory(searchPath);
+        CoTaskMemFree(searchPath);
+
         handle = LoadLibraryA(library.c_str());
 
         #elif defined(__APPLE__)

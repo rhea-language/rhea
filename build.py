@@ -216,7 +216,7 @@ try:
 
         os.rename(glfwDll, os.path.join(
             'dist', 'n8lang', 'modules',
-            'core@1.0.0', 'lib'
+            'core@1.0.0', 'lib', 'glfw3.dll'
         ))
 
         print("Executing:")

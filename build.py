@@ -67,6 +67,15 @@ lib_headers = [
 ]
 lib_source_files = []
 
+try:
+    print('Pulling submodules...', end='')
+    subprocess.run(['git', 'submodule', 'update', '--init', '--recursive'])
+    subprocess.run(['git', 'pull', '--recurse-submodules'])
+
+except Exception as e:
+    print(f"Failed to pull up submodules with error: {e}")
+    exit(1)
+
 def get_ext_instructions():
     print('Checking extended instruction availability...')
     features_to_check = [
@@ -161,10 +170,6 @@ for root, dirs, files in os.walk('lib/MyShell/src'):
             lib_source_files.append(os.path.join(root, file))
 
 try:
-    print('Pulling submodules...', end='')
-    subprocess.run(['git', 'submodule', 'update', '--init', '--recursive'])
-    subprocess.run(['git', 'pull', '--recurse-submodules'])
-
     ext_instructions = get_ext_instructions()
     if PLATFORM == 'Linux':
         subprocess.run(['sudo', 'apt', 'update'])

@@ -22,18 +22,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Pull submodules
-        run: |
-          git submodule update --init --recursive
-          git pull --recurse-submodules
-
       - name: Python 3.12 Installation
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
-      - name: Get build dependencies
-        run: sudo apt install build-essential -y
 
       - name: Build N8
         run: |

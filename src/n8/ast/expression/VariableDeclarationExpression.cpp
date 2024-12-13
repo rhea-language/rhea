@@ -109,7 +109,7 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
                 depHandle = LoadLibraryA(entryDep.c_str());
                 #endif
 
-                if(Runtime::hasLoadedLibrary(entryDep))
+                if(!Runtime::hasLoadedLibrary(entryDep))
                     Runtime::addLoadedLibrary(entryDep, depHandle);
             }
 

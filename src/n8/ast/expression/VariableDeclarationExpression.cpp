@@ -59,6 +59,7 @@ DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
     return {};
 }
 #include <iostream>
+#include <locale>
 NativeFunction VariableDeclarationExpression::loadNativeFunction(
     std::string& libName,
     std::string& funcName,
@@ -108,6 +109,8 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
 
         handle = LoadLibraryA(library.c_str());
         SetDllDirectoryW(wfolderPath);
+
+        std::wcout.imbue(std::locale("en_US.UTF-8"));
         std::cout << "Loading DLLs from: ";
         std::wcout << wfolderPath;
         std::cout << std::endl;

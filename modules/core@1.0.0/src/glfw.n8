@@ -16,4 +16,5 @@
 # along with N8. If not, see <https://www.gnu.org/licenses/>.
 
 val("n8-std")
-    glfw.init
+    glfw.init,
+    glfw.terminate

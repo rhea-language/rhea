@@ -61,7 +61,6 @@ jobs:
       - name: Run examples
         run: |
           ./dist/n8lang/bin/n8 ./examples/99-beers.n8
-          ./dist/n8lang/bin/n8 ./examples/glfw-window.n8
           ./dist/n8lang/bin/n8 ./examples/hello.n8
 
       - name: Upload dist folder

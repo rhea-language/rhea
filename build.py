@@ -348,14 +348,14 @@ try:
             '-Wwrite-strings', '-Wno-return-type-c-linkage', '-pipe',
             '-std=c++17', '-fopenmp', '-march=native', '-funroll-loops',
             '-ffast-math', '-flto=auto', '-Xpreprocessor', '-O3',
-            '-Wno-header-guard', '-Wno-pessimizing-move', '-Wno-deprecated-declarations',
-            '-DGL_SILENCE_DEPRECATION'
+            '-Wno-header-guard', '-Wno-pessimizing-move'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
         include_sha_headers()
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
-            '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib'
+            '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib',
+            '-Wno-deprecated-declarations', '-DGL_SILENCE_DEPRECATION'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
             '-lglfw', '-framework', 'OpenGL'
         ]

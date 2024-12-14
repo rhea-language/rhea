@@ -35,6 +35,10 @@ jobs:
           python -m pip install requests py-cpuinfo
           python build.py
 
+      - name: Set Environment Path
+        run: |
+          export N8_PATH=$(pwd)/dist/n8lang
+
       - name: Build verification
         run: |
           ./dist/n8lang/bin/n8

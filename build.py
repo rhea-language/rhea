@@ -243,7 +243,9 @@ try:
             'g++', '-static', '-static-libgcc', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll',
             '-L' + os.path.join(TEMP_DIR, 'glfw-3.4', 'lib-mingw-w64')
-        ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + ['-lole32']
+        ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
+            '-lole32', '-lglfw', '-lGL', '-lopengl32', '-lgdi32'
+        ]
 
         print("Executing:")
         print(' '.join(exe_build_args))
@@ -346,7 +348,8 @@ try:
             '-Wwrite-strings', '-Wno-return-type-c-linkage', '-pipe',
             '-std=c++17', '-fopenmp', '-march=native', '-funroll-loops',
             '-ffast-math', '-flto=auto', '-Xpreprocessor', '-O3',
-            '-Wno-header-guard', '-Wno-pessimizing-move'
+            '-Wno-header-guard', '-Wno-pessimizing-move', '-Wno-deprecated-declarations',
+            '-DGL_SILENCE_DEPRECATION'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
         include_sha_headers()

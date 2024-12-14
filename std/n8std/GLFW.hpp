@@ -32,6 +32,13 @@ N8_LIB_START
 
 N8_FUNC(glfw_init);
 N8_FUNC(glfw_terminate);
+N8_FUNC(glfw_createWindow);
+N8_FUNC(glfw_makeContextCurrent);
+N8_FUNC(glfw_shouldCloseWindow);
+N8_FUNC(glfw_clear);
+N8_FUNC(glfw_swapBuffers);
+N8_FUNC(glfw_pollEvents);
+N8_FUNC(glfw_destroyWindow);
 
 #endif
 

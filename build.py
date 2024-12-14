@@ -180,13 +180,12 @@ try:
     ext_instructions = get_ext_instructions()
     if PLATFORM == 'Linux':
         subprocess.run([
-            'sudo', 'apt', 'install',
-            '-y', 'libglfw3-dev', 'libgl1-mesa-dev'
+            'sudo', 'apt', 'install', '-y',
+            'libglfw3-dev', 'libgl1-mesa-dev'
         ])
     elif PLATFORM == 'Darwin':
-        subprocess.run([
-            'brew', 'install', 'glfw'
-        ])
+        subprocess.run(['brew', 'install', 'glfw'])
+        subprocess.run(['brew', 'link', 'glfw'])
 
     print('Building binaries...')
     if PLATFORM == 'Windows':
@@ -355,7 +354,8 @@ try:
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib',
-            '-Wno-deprecated-declarations', '-DGL_SILENCE_DEPRECATION'
+            '-Wno-deprecated-declarations', '-DGL_SILENCE_DEPRECATION',
+            '-L/opt/homebrew/lib'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
             '-lglfw', '-framework', 'OpenGL'
         ]

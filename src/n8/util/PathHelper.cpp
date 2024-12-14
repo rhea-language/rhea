@@ -21,6 +21,8 @@
 
 #include <cstdlib>
 #include <filesystem>
+#include <iostream>
+#include <string>
 
 namespace N8Util {
 
@@ -43,37 +45,47 @@ bool PathHelper::isLibraryInstalled(
 }
 
 std::string PathHelper::findSharedLibrary(std::string name) {
-    if(std::filesystem::exists(name))
-        return name;
+    std::string
+    #if defined(__APPLE__)
+    extension = ".dylib";
+    #elif defined(__unix__) || defined(__linux__) || defined(__APPLE__)
+    extension = ".so";
+    #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+    extension = ".dll";
+    #endif
+
+    std::string rawName = name + extension;
+    if(std::filesystem::exists(rawName))
+        return rawName;
 
     namespace fs = std::filesystem;
-    std::string directoryPath = PathHelper::installationPath() +
+    std::string libPath = PathHelper::installationPath() +
         FS_FILE_SEPARATOR + "modules";
 
-    try {
-        if(fs::exists(directoryPath) &&
-            fs::is_directory(directoryPath)
-        ) {
-            std::string libPath = directoryPath +
-                FS_FILE_SEPARATOR + name +
-                FS_FILE_SEPARATOR + "lib" +
-                FS_FILE_SEPARATOR + name;
+    for(const auto& modules : std::filesystem::directory_iterator(libPath)) {
+        std::string modPath = modules.path().string() +
+            FS_FILE_SEPARATOR + "lib";
+        std::string folderName = fs::path(modules)
+            .filename()
+            .string();
 
-            #if defined(__APPLE__)
-            libPath += ".dylib";
-            #elif defined(__unix__) || defined(__linux__) || defined(__APPLE__)
-            libPath += ".so";
-            #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-            libPath += ".dll";
-            #endif
+        if(folderName.rfind(name, 0) == 0)
+            for(const auto& entry : std::filesystem::directory_iterator(modPath))
+                if(entry.is_regular_file()) {
+                    std::string filename = entry
+                        .path()
+                        .filename()
+                        .string();
+                    std::string ext = fs::path(filename)
+                        .extension()
+                        .string();
 
-            if(fs::exists(libPath))
-                return libPath;
-        }
+                    if(filename.rfind(name, 0) == 0 && ext == extension)
+                        return entry.path().string();
+                }
     }
-    catch(const std::exception& ex) {}
 
-    return "";
+    throw std::runtime_error("Cannot find shared library: " + name);
 }
 
 std::vector<std::string> PathHelper::getLibraryFiles(

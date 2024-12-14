@@ -19,6 +19,8 @@
 #ifndef N8_UTIL_PATH_HELPER_HPP
 #define N8_UTIL_PATH_HELPER_HPP
 
+#include <n8/util/SemVer.hpp>
+
 #include <string>
 #include <vector>
 

@@ -9,7 +9,7 @@ Todo:
     * chrono
     ✓ crypt
     ✓ env
-    * fmt
+    * fmt (sconf, csv, json, toml, mdif, png, jpg, xml)
     * glfw
     ✓ io
     * lang

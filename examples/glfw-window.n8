@@ -1,0 +1,24 @@
+#!/opt/n8lang/bin/n8
+
+use "core";
+
+if(!glfw.init()) {
+    render! "Failed to init GLFW.";
+    io.exit();
+};
+
+window = glfw.createWindow(300, 300, "Hello, world!");
+if(window == nil) {
+    render! "Failed to create window.";
+    io.exit();
+};
+
+glfw.makeContextCurrent(window);
+while(!glfw.shouldCloseWindow(window)) {
+    glfw.clear(0x00004000);
+    glfw.swapBuffers(window);
+    glfw.pollEvents();
+};
+
+glfw.destroyWindow(window);
+glfw.terminate();

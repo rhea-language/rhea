@@ -58,7 +58,7 @@ DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
 
     return {};
 }
-#include <iostream>
+
 NativeFunction VariableDeclarationExpression::loadNativeFunction(
     std::string& libName,
     std::string& funcName,
@@ -69,22 +69,17 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         std::string(libName.c_str())
     );
 
-    std::filesystem::path path(library);
-    std::cout << "Loading module: " << library << std::endl;
-    std::cout << "Loading DLLs from: " << path.parent_path().string() << std::endl;
-
+    std::filesystem::path searchPath(library);
     if(Runtime::hasLoadedLibrary(library))
         #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
         handle = Runtime::getLoadedLibrary(library);
         #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-        handle = static_cast<HMODULE>(
-            Runtime::getLoadedLibrary(library)
-        );
+        handle = static_cast<HMODULE>(Runtime::getLoadedLibrary(library));
         #endif
     else {
         #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
-        AddDllDirectory(path.parent_path().wstring().c_str());
+        AddDllDirectory(searchPath.parent_path().wstring().c_str());
         handle = LoadLibraryA(library.c_str());
 
         #elif defined(__APPLE__)

@@ -17,4 +17,11 @@
 
 val("core")
     glfw.init,
-    glfw.terminate
+    glfw.terminate,
+    glfw.createWindow,
+    glfw.makeContextCurrent,
+    glfw.shouldCloseWindow,
+    glfw.clear,
+    glfw.swapBuffers,
+    glfw.pollEvents,
+    glfw.destroyWindow

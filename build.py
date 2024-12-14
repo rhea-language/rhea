@@ -183,6 +183,10 @@ try:
             'sudo', 'apt', 'install',
             '-y', 'libglfw3-dev', 'libgl1-mesa-dev'
         ])
+    elif PLATFORM == 'Darwin':
+        subprocess.run([
+            'brew', 'install', 'glfw'
+        ])
 
     print('Building binaries...')
     if PLATFORM == 'Windows':
@@ -310,7 +314,9 @@ try:
         lib_build_args = [
             'g++', '-Iinclude', '-Istd', '-fPIC',
             '-shared', '-o', OUTPUT_LIBRARY + '.so'
-        ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
+        ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
+            '-lglfw', '-lGL'
+        ]
 
         print("Executing:")
         print(' '.join(exe_build_args))
@@ -347,7 +353,9 @@ try:
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib'
-        ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
+        ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
+            '-lglfw', '-framework', 'OpenGL'
+        ]
 
         print("Executing:")
         print(' '.join(exe_build_args))

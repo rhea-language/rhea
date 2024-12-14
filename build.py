@@ -243,7 +243,7 @@ try:
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll',
             '-L' + os.path.join(TEMP_DIR, 'glfw-3.4', 'lib-mingw-w64')
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
-            '-lole32', '-lglfw', '-lGL', '-lopengl32', '-lgdi32'
+            '-lole32', '-lopengl32', '-lgdi32'
         ]
 
         print("Executing:")

@@ -20,7 +20,6 @@
 #define N8_CORE_RUNTIME_HPP
 
 #include <n8/ast/ASTNode.hpp>
-
 #include <unordered_map>
 
 class Runtime final {
@@ -29,11 +28,8 @@ private:
     static std::vector<std::string> fileHashes;
     static std::unordered_map<std::string, void*> nativeLibraries;
 
-    #ifdef __EMSCRIPTEN__
-    static std::string elementId;
-    #endif
-
 public:
+
     static bool isTestMode();
     static void setTestMode(bool _testMode);
 
@@ -55,10 +51,6 @@ public:
     static void repl();
 
     #else
-
-    static void setOutputElementId(std::string id);
-    static std::string getOutputElementId();
-
     static void execute(const char* sourceCode);
     #endif
 };

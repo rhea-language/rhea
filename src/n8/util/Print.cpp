@@ -21,38 +21,10 @@
 
 #include <iostream>
 
-#ifdef __EMSCRIPTEN__
-#   include <emscripten/emscripten.h>
-#   include <emscripten/val.h>
-#endif
-
 namespace N8Util {
 
 void print(const char* text) {
-    #ifdef __EMSCRIPTEN__
-
-    emscripten::val document =
-        emscripten::val::global("document");
-    emscripten::val element =
-        document.call<emscripten::val>(
-            "getElementById",
-            std::string(Runtime::getOutputElementId())
-        );
-
-    if(!element.isNull() && !element.isUndefined()) {
-        std::string currentContent = element["innerHTML"]
-            .as<std::string>();
-        element.set(
-            "innerHTML",
-            currentContent + std::string(text)
-        );
-    }
-
-    #else
-
     std::cout << text;
-
-    #endif
 }
 
 void print(std::string text) {
@@ -60,30 +32,7 @@ void print(std::string text) {
 }
 
 void printError(const char* text) {
-    #ifdef __EMSCRIPTEN__
-
-    emscripten::val document =
-        emscripten::val::global("document");
-    emscripten::val element =
-        document.call<emscripten::val>(
-            "getElementById",
-            std::string(Runtime::getOutputElementId())
-        );
-
-    if(!element.isNull() && !element.isUndefined()) {
-        std::string currentContent = element["innerHTML"]
-            .as<std::string>();
-        element.set(
-            "innerHTML",
-            currentContent + std::string(text)
-        );
-    }
-
-    #else
-
     std::cerr << text;
-
-    #endif
 }
 
 void printError(std::string text) {

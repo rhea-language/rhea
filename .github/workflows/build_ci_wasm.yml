@@ -31,7 +31,7 @@ jobs:
       - name: Build WASM
         run: |
           mkdir dist
-          em++ --bind -Wno-header-guard -Iinclude -Ilib/QuickDigest5/include -pipe -O3 -ffast-math -std=c++17 -funroll-loops $(find lib/QuickDigest5/src -type f -name "*.cpp") $(find src -type f -name "*.cpp") -sEXPORTED_FUNCTIONS=_executeSource -sEXPORTED_RUNTIME_METHODS=ccall,cwrap -o dist/n8.js
+          em++ --bind -Wno-header-guard -Iinclude -Ilib/QuickDigest5/include -pipe -O3 -ffast-math -std=c++17 -funroll-loops $(find lib/QuickDigest5/src -type f -name "*.cpp") $(find src -type f -name "*.cpp") -sEXPORTED_FUNCTIONS=_executeSource -sEXPORTED_RUNTIME_METHODS=ccall,cwrap -fexceptions -sUSE_PTHREADS -o dist/n8.js
           ls -ral dist
 
       - name: Upload dist folder

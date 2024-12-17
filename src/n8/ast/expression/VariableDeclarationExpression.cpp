@@ -64,6 +64,8 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
     std::string& funcName,
     std::shared_ptr<Token> address
 ) {
+    #ifndef __EMSCRIPTEN__
+
     void* handle;
     std::string library = N8Util::PathHelper::findSharedLibrary(
         std::string(libName.c_str())
@@ -161,4 +163,8 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
     }
 
     return func;
+
+    #else
+    throw std::runtime_error("Loading native functions in web mode is not supported.");
+    #endif
 }

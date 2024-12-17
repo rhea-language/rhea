@@ -29,6 +29,14 @@ SymbolTable& SymbolTable::operator=(const SymbolTable& other) {
     return *this;
 }
 
+SymbolTable::~SymbolTable() {
+    for(std::thread& t : this->threads)
+        if(t.joinable())
+            t.join();
+
+    this->threads.clear();
+}
+
 DynamicObject SymbolTable::getSymbol(
     std::shared_ptr<Token> reference,
     const std::string& name
@@ -76,15 +84,14 @@ void SymbolTable::addParallelism(std::thread par) {
 }
 
 void SymbolTable::waitForThreads() {
-    if(this->threads.empty())
-        return;
+    if(!this->threads.empty()) {
+        #pragma omp parallel for
+        for(auto& thread : this->threads)
+            if(thread.joinable())
+                thread.join();
+        this->threads.clear();
+    }
 
-    #pragma omp parallel for
-    for(auto& thread : this->threads)
-        if(thread.joinable())
-            thread.join();
-
-    this->threads.clear();
     this->mtx.unlock();
 }
 

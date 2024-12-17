@@ -47,10 +47,6 @@ bool Runtime::testMode = false;
 std::unordered_map<std::string, void*> Runtime::nativeLibraries;
 std::vector<std::string> Runtime::fileHashes;
 
-#ifdef __EMSCRIPTEN__
-std::string Runtime::elementId = "";
-#endif
-
 bool Runtime::isTestMode() {
     return Runtime::testMode;
 }
@@ -60,16 +56,31 @@ void Runtime::setTestMode(bool _testMode) {
 }
 
 void Runtime::addLoadedLibrary(std::string libName, void* handle) {
+    #ifndef __EMSCRIPTEN__
     Runtime::nativeLibraries[libName] = handle;
+    #else
+    (void) libName;
+    (void) handle;
+    #endif
 }
 
 void* Runtime::getLoadedLibrary(std::string libName) {
+    #ifndef __EMSCRIPTEN__
     return Runtime::nativeLibraries[libName];
+    #else
+    (void) libName;
+    return nullptr;
+    #endif
 }
 
 bool Runtime::hasLoadedLibrary(std::string libName) {
+    #ifndef __EMSCRIPTEN__
     return Runtime::nativeLibraries.find(libName) !=
         Runtime::nativeLibraries.end();
+    #else
+    (void) libName;
+    return false;
+    #endif
 }
 
 void Runtime::addFileHash(std::string hash) {
@@ -84,6 +95,7 @@ bool Runtime::hasFileHash(std::string hash) {
 }
 
 void Runtime::cleanUp() {
+    #ifndef __EMSCRIPTEN__
     for(const auto& [key, value] : Runtime::nativeLibraries)
         if(value != nullptr)
             #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
@@ -91,6 +103,7 @@ void Runtime::cleanUp() {
             #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
             FreeLibrary((HMODULE) value);
             #endif
+    #endif
 
     Runtime::nativeLibraries.clear();
 }
@@ -355,14 +368,6 @@ void Runtime::repl() {
 }
 
 #else
-
-void Runtime::setOutputElementId(std::string id) {
-    Runtime::elementId = id;
-}
-
-std::string Runtime::getOutputElementId() {
-    return Runtime::elementId;
-}
 
 void Runtime::execute(const char* sourceCode) {
     SymbolTable symtab;

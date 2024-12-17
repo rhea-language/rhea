@@ -50,6 +50,7 @@ public:
         mtx() {}
 
     SymbolTable& operator=(const SymbolTable& other);
+    ~SymbolTable();
 
     DynamicObject getSymbol(
         std::shared_ptr<Token> reference,

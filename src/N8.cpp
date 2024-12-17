@@ -22,7 +22,18 @@
 #include <iostream>
 #include <stdexcept>
 
-#ifndef __EMSCRIPTEN__
+#ifdef __EMSCRIPTEN__
+
+extern "C" {
+
+void executeSource(const char* sourceCode) {
+    Runtime::execute(sourceCode);
+    std::cout << std::flush;
+}
+
+}
+
+#else
 
 auto printBanner(N8Util::ArgumentParser argParse) -> void {
     std::cout << N8_MAIN_BANNER << std::endl;
@@ -82,17 +93,6 @@ auto main(int argc, char** argv) -> int {
 
     printBanner(argParse);
     return 0;
-}
-
-#else
-
-extern "C" {
-
-void executeSource(const char* outputElement, const char* sourceCode) {
-    Runtime::setOutputElementId(std::string(outputElement));
-    Runtime::execute(sourceCode);
-}
-
 }
 
 #endif

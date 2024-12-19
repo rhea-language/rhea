@@ -1,6 +1,9 @@
 Todo:
 ---
 
+- `with` statement for DynamicObject deletion outside of the block.
+- `delete` for DynamicObject deletion from SymbolTable.
+- `lock` lock an object while inside the block.
 - Vector operators such as (.+, .-, etc)
 - Multiplatform installer for N8.
 

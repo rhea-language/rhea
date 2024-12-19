@@ -47,6 +47,7 @@
 
 #include <n8/ast/statement/BreakStatement.hpp>
 #include <n8/ast/statement/ContinueStatement.hpp>
+#include <n8/ast/statement/EmptyStatement.hpp>
 #include <n8/ast/statement/HaltStatement.hpp>
 #include <n8/ast/statement/ReturnStatement.hpp>
 #include <n8/ast/statement/TestStatement.hpp>
@@ -1049,9 +1050,12 @@ std::shared_ptr<ASTNode> Parser::statement() {
         return this->stmtUse();
     else if(this->isNext("wait", TokenType::KEYWORD))
         return this->stmtWait();
+    else if(this->isNext(";", TokenType::OPERATOR))
+        return std::make_shared<EmptyStatement>(
+            std::make_shared<Token>(this->consume(";"))
+        );
 
     std::shared_ptr<ASTNode> expr = this->expression();
-
     if(this->isNext(";", TokenType::OPERATOR))
         this->consume(";");
 

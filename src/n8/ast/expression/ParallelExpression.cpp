@@ -34,6 +34,8 @@
 #include <thread>
 
 DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
+    #ifndef __EMSCRIPTEN__
+
     std::thread task(
         std::bind([
             expr = std::move(this->expression),
@@ -137,5 +139,12 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
     );
 
     symbols.addParallelism(std::move(task));
+
+    #else
+
+    this->expression->visit(symbols);
+
+    #endif
+
     return {};
 }

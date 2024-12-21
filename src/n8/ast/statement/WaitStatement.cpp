@@ -19,6 +19,6 @@
 #include <n8/ast/statement/WaitStatement.hpp>
 
 DynamicObject WaitStatement::visit(SymbolTable& symbols) {
-    symbols.waitForThreads();
+    symbols.waitForTasks();
     return {};
 }

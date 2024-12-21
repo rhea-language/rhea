@@ -22,27 +22,30 @@
 #include <n8/parser/Token.hpp>
 
 DynamicObject CatchHandleExpression::visit(SymbolTable& symbols) {
+    SymbolTable localTable(symbols);
     DynamicObject object = {};
+
     try {
-        object = this->catchBlock->visit(symbols);
+        object = this->catchBlock->visit(localTable);
     }
     catch(const TerminativeThrowSignal& throwSig) {
         std::string handleName = this->handler->getImage();
-        if(symbols.hasSymbol(handleName))
-            #ifdef _MSC_VER
-            #   pragma warning(disable : 5272)
-            #endif
+        if(localTable.hasSymbol(handleName))
             throw ASTNodeException(
                 std::move(this->address),
                 "Handle name for catch-handle is already in-use."
             );
 
-        symbols.setSymbol(handleName, throwSig.getObject());
-        object = this->handleBlock->visit(symbols);
+        localTable.setSymbol(
+            std::move(this->handler),
+            throwSig.getObject(),
+            true
+        );
+        object = this->handleBlock->visit(localTable);
     }
 
     if(this->finalBlock)
-        this->finalBlock->visit(symbols);
+        this->finalBlock->visit(localTable);
 
     return object;
 }

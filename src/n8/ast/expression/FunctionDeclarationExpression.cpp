@@ -65,8 +65,7 @@ DynamicObject FunctionDeclarationExpression::call(
     for(size_t i = 0; i < args.size(); ++i)
         localSymbols.setSymbol(
             this->parameters[i],
-            std::move(args).at(i),
-            true
+            std::move(args).at(i)
         );
 
     return this->body->visit(localSymbols);

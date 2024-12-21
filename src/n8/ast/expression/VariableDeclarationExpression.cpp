@@ -46,8 +46,7 @@ DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
 
             symbols.setSymbol(
                 std::make_shared<Token>(key),
-                std::move(func),
-                true
+                std::move(func)
             );
         }
 
@@ -57,8 +56,7 @@ DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
     for(const auto& [key, value] : this->declarations)
         symbols.setSymbol(
             std::make_shared<Token>(key),
-            value->visit(symbols),
-            true
+            value->visit(symbols)
         );
 
     return {};

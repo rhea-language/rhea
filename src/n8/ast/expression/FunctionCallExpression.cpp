@@ -23,9 +23,6 @@
 DynamicObject FunctionCallExpression::visit(SymbolTable& symbols) {
     auto func = this->callable->visit(symbols);
     if(!func.isFunction() && !func.isNative())
-        #ifdef _MSC_VER
-        #   pragma warning(disable : 5272)
-        #endif
         throw ASTNodeException(
             std::move(this->address),
             "Expression is not a function."
@@ -41,9 +38,6 @@ DynamicObject FunctionCallExpression::visit(SymbolTable& symbols) {
         auto nativeFunc = func.getNativeFunction();
 
         if(nativeFunc == nullptr)
-            #ifdef _MSC_VER
-            #   pragma warning(disable : 5272)
-            #endif
             throw ASTNodeException(
                 std::move(this->address),
                 "Native function is nil."

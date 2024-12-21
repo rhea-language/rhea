@@ -24,9 +24,6 @@
 
 DynamicObject UseStatement::visit(
     SymbolTable& symbols
-    #ifndef _MSC_VER
-    __attribute__((unused))
-    #endif
 ) {
     #ifndef __EMSCRIPTEN__
     DynamicObject libName = this->libraryName->visit(symbols),

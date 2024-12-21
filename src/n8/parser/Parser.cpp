@@ -26,6 +26,7 @@
 #include <n8/ast/expression/FunctionCallExpression.hpp>
 #include <n8/ast/expression/GroupedExpression.hpp>
 #include <n8/ast/expression/IfElseExpression.hpp>
+#include <n8/ast/expression/LockExpression.hpp>
 #include <n8/ast/expression/LoopExpression.hpp>
 #include <n8/ast/expression/MaybeExpression.hpp>
 #include <n8/ast/expression/NilCoalescingExpression.hpp>
@@ -92,9 +93,6 @@ Token Parser::previous() {
 
 Token Parser::peek() {
     if(this->isAtEnd())
-        #ifdef _MSC_VER
-        #   pragma warning(disable : 5272)
-        #endif
         throw ParserException(
             std::make_shared<Token>(this->previous()),
             "Encountered end-of-file."
@@ -121,9 +119,6 @@ Token Parser::current() {
 
 Token Parser::consume(const std::string& image) {
     if(this->isAtEnd())
-        #ifdef _MSC_VER
-        #   pragma warning(disable : 5272)
-        #endif
         throw ParserException(
             std::make_shared<Token>(this->previous()),
             "Expecting \"" + image +
@@ -132,9 +127,6 @@ Token Parser::consume(const std::string& image) {
 
     Token token = this->peek();
     if(token.getImage() != image)
-        #ifdef _MSC_VER
-        #   pragma warning(disable : 5272)
-        #endif
         throw ParserException(
             std::make_shared<Token>(this->previous()),
             "Expecting \"" + image +
@@ -147,9 +139,6 @@ Token Parser::consume(const std::string& image) {
 
 Token Parser::consume(TokenType type) {
     if(this->isAtEnd())
-        #ifdef _MSC_VER
-        #   pragma warning(disable : 5272)
-        #endif
         throw ParserException(
             std::make_shared<Token>(this->previous()),
             "Expecting token type, encountered end-of-code."
@@ -157,9 +146,6 @@ Token Parser::consume(TokenType type) {
 
     Token token = this->peek();
     if(token.getType() != type)
-        #ifdef _MSC_VER
-        #   pragma warning(disable : 5272)
-        #endif
         throw ParserException(
             std::make_shared<Token>(this->current()),
             "Expecting " + tokenTypeToString(type) +
@@ -373,10 +359,6 @@ std::shared_ptr<ASTNode> Parser::exprLiteral() {
 
     if(!expr) {
         auto address = this->current();
-
-        #ifdef _MSC_VER
-        #   pragma warning(disable : 5272)
-        #endif
         throw ParserException(
             std::make_shared<Token>(address),
             "Expecting expression, encountered " +
@@ -447,6 +429,21 @@ std::shared_ptr<ASTNode> Parser::exprSize() {
     );
 }
 
+std::shared_ptr<ASTNode> Parser::exprLock() {
+    Token address = this->consume("lock");
+    this->consume("(");
+
+    Token variable = this->consume(TokenType::IDENTIFIER);
+    this->consume(")");
+
+    std::shared_ptr<ASTNode> expression = this->expression();
+    return std::make_shared<LockExpression>(
+        std::make_shared<Token>(address),
+        std::make_shared<Token>(variable),
+        std::move(expression)
+    );
+}
+
 std::shared_ptr<ASTNode> Parser::exprType() {
     Token address = this->consume("type");
     std::shared_ptr<ASTNode> expression = this->expression();
@@ -510,9 +507,6 @@ std::shared_ptr<ASTNode> Parser::exprWhen() {
         }
         else if(this->isNext("else", TokenType::KEYWORD)) {
             if(defaultCase)
-                #ifdef _MSC_VER
-                #   pragma warning(disable : 5272)
-                #endif
                 throw ParserException(
                     std::make_shared<Token>(address),
                     "Cannot have more than one (1) else for when expression."
@@ -610,6 +604,8 @@ std::shared_ptr<ASTNode> Parser::exprPrimary() {
         expression = this->exprSize();
     else if(this->isNext("parallel", TokenType::KEYWORD))
         expression = this->exprParallel();
+    else if(this->isNext("lock", TokenType::KEYWORD))
+        expression = this->exprLock();
     else if(this->isNext("val", TokenType::KEYWORD))
         expression = this->exprVal();
     else if(this->isNext("[", TokenType::OPERATOR))

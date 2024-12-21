@@ -1,0 +1,12 @@
+#!/opt/n8lang/bin/n8
+
+val x = 3.14
+lock(x) {
+    render! "Value of x inside lock is: " + x
+    x = 2.71
+    render! "Value of x inside lock after attempted update is: " + x
+}
+
+render! "Value of x outside lock is: " + x
+x = 1.61
+render! "Value of x outside lock after attempted update is: " + x

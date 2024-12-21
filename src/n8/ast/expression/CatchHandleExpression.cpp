@@ -38,8 +38,7 @@ DynamicObject CatchHandleExpression::visit(SymbolTable& symbols) {
 
         localTable.setSymbol(
             std::move(this->handler),
-            throwSig.getObject(),
-            true
+            throwSig.getObject()
         );
         object = this->handleBlock->visit(localTable);
     }

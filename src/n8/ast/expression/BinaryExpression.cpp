@@ -64,7 +64,7 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
         DynamicObject value = this->right->visit(symbols);
         symbols.setSymbol(
             std::make_shared<Token>(varAccess->getName()),
-            value, false
+            value
         );
 
         return value;

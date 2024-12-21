@@ -55,21 +55,18 @@ DynamicObject FunctionDeclarationExpression::call(
     const std::vector<DynamicObject>& args
 ) {
     if(args.size() != this->parameters.size())
-        #ifdef _MSC_VER
-        #   pragma warning(disable : 5272)
-        #endif
         throw ASTNodeException(
             std::move(this->address),
             "Argument count mismatch"
         );
 
     SymbolTable localSymbols(const_cast<SymbolTable&>(symbols));
-
     #pragma omp parallel for
     for(size_t i = 0; i < args.size(); ++i)
         localSymbols.setSymbol(
-            this->parameters[i]->getImage(),
-            std::move(args).at(i)
+            this->parameters[i],
+            std::move(args).at(i),
+            true
         );
 
     return this->body->visit(localSymbols);

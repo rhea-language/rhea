@@ -44,7 +44,11 @@ DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
                 )
             );
 
-            symbols.setSymbol(name, std::move(func));
+            symbols.setSymbol(
+                std::make_shared<Token>(key),
+                std::move(func),
+                true
+            );
         }
 
         return {};
@@ -52,8 +56,9 @@ DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
 
     for(const auto& [key, value] : this->declarations)
         symbols.setSymbol(
-            key.getImage(),
-            value->visit(symbols)
+            std::make_shared<Token>(key),
+            value->visit(symbols),
+            true
         );
 
     return {};
@@ -114,9 +119,6 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         LocalFree(messageBuffer);
         #endif
 
-        #ifdef _MSC_VER
-        #   pragma warning(disable : 5272)
-        #endif
         throw ASTNodeException(
             std::move(address),
             "Failed to load library: " + library +
@@ -137,19 +139,12 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
     auto func = reinterpret_cast<NativeFunction>(dlsym(handle, name.c_str()));
 
     #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-    #   ifndef _MSC_VER
-    #       pragma GCC diagnostic push
-    #       pragma GCC diagnostic ignored "-Wcast-function-type"
-    #endif
 
     auto func = reinterpret_cast<NativeFunction>(GetProcAddress(
         (HMODULE) handle,
         name.c_str()
     ));
 
-    #   ifndef _MSC_VER
-    #       pragma GCC diagnostic pop
-    #   endif
     #endif
 
     if(!func) {

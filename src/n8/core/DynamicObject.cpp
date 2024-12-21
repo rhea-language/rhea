@@ -27,6 +27,9 @@
 DynamicObject& DynamicObject::operator=(const DynamicObject& other) {
     if(this != &other) {
         this->type = other.type;
+        this->isLocked = other.isLocked;
+        this->owner = other.owner;
+
         this->numberValue = other.numberValue;
         this->boolValue = other.boolValue;
         this->stringValue = other.stringValue;
@@ -43,6 +46,8 @@ DynamicObject& DynamicObject::operator=(const DynamicObject& other) {
 DynamicObject& DynamicObject::operator=(DynamicObject&& other) {
     if(this != &other) {
         this->type = std::move(other.type);
+        this->isLocked = std::move(other.isLocked);
+        this->owner = std::move(other.owner);
         this->arrayValue = std::move(other.arrayValue);
         this->numberValue = std::move(other.numberValue);
         this->stringValue = std::move(other.stringValue);
@@ -167,18 +172,12 @@ void DynamicObject::setArrayElement(
     std::shared_ptr<DynamicObject> object
 ) {
     if(!this->isArray())
-        #ifdef _MSC_VER
-        #   pragma warning(disable : 5272)
-        #endif
         throw ASTNodeException(
             std::move(reference),
             "Subject value not an array."
         );
 
     if(index >= this->arrayValue->size())
-        #ifdef _MSC_VER
-        #   pragma warning(disable : 5272)
-        #endif
         throw ASTNodeException(
             std::move(reference),
             "Index is out of bounds."
@@ -199,6 +198,26 @@ DynamicObject DynamicObject::callFromNative(
             symtab,
             args
         );
+}
+
+void DynamicObject::lock() {
+    this->isLocked = true;
+}
+
+void DynamicObject::unlock() {
+    this->isLocked = false;
+}
+
+bool DynamicObject::hasLock() {
+    return this->isLocked;
+}
+
+std::string DynamicObject::ownerId() const {
+    return this->owner;
+}
+
+void DynamicObject::own(std::string ownerUuid) {
+    this->owner = ownerUuid;
 }
 
 std::string DynamicObject::objectType() {

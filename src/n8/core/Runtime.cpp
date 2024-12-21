@@ -96,6 +96,9 @@ bool Runtime::hasFileHash(std::string hash) {
 
 void Runtime::cleanUp() {
     #ifndef __EMSCRIPTEN__
+    if(Runtime::nativeLibraries.empty())
+        return;
+
     for(const auto& [key, value] : Runtime::nativeLibraries)
         if(value != nullptr)
             #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
@@ -103,9 +106,10 @@ void Runtime::cleanUp() {
             #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
             FreeLibrary((HMODULE) value);
             #endif
-    #endif
 
     Runtime::nativeLibraries.clear();
+    #endif
+
 }
 
 static inline bool isBalanced(const std::string& input) {
@@ -149,11 +153,10 @@ int Runtime::interpreter(SymbolTable& symbols, std::vector<std::string> files) {
                 statement->visit(symbols);
         }
 
-        symbols.detachParallelNodes();
         return 0;
     }
     catch(const std::system_error& exc) {
-        symbols.waitForThreads();
+        symbols.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError("[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m");
@@ -161,7 +164,7 @@ int Runtime::interpreter(SymbolTable& symbols, std::vector<std::string> files) {
         N8Util::printError("\u001b[0m\r\n");
     }
     catch(const ASTNodeException& nodeExc) {
-        symbols.waitForThreads();
+        symbols.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
@@ -171,7 +174,7 @@ int Runtime::interpreter(SymbolTable& symbols, std::vector<std::string> files) {
         N8Util::printError("\r\n");
     }
     catch(const LexicalAnalysisException& lexAnlExc) {
-        symbols.waitForThreads();
+        symbols.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError("[\u001b[1;31mLexical Error\u001b[0m]:\r\n\t");
@@ -179,7 +182,7 @@ int Runtime::interpreter(SymbolTable& symbols, std::vector<std::string> files) {
         N8Util::printError("\r\n");
     }
     catch(const ParserException& parserExc) {
-        symbols.waitForThreads();
+        symbols.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError("[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m");
@@ -189,7 +192,7 @@ int Runtime::interpreter(SymbolTable& symbols, std::vector<std::string> files) {
         N8Util::printError("\r\n");
     }
     catch(const TerminativeBreakSignal& breakExc) {
-        symbols.waitForThreads();
+        symbols.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError(
@@ -201,7 +204,7 @@ int Runtime::interpreter(SymbolTable& symbols, std::vector<std::string> files) {
         N8Util::printError("\r\n");
     }
     catch(const TerminativeContinueSignal& continueExc) {
-        symbols.waitForThreads();
+        symbols.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError(
@@ -213,7 +216,7 @@ int Runtime::interpreter(SymbolTable& symbols, std::vector<std::string> files) {
         N8Util::printError("\r\n");
     }
     catch(const TerminativeReturnSignal& retExc) {
-        symbols.waitForThreads();
+        symbols.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError("\u001b[0;93m");
@@ -221,7 +224,7 @@ int Runtime::interpreter(SymbolTable& symbols, std::vector<std::string> files) {
         N8Util::printError("\u001b[0m\r\n");
     }
     catch(const TerminativeThrowSignal& throwExc) {
-        symbols.waitForThreads();
+        symbols.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError("[\u001b[1;31mUncaught Error\u001b[0m]: \u001b[3;37m");
@@ -231,7 +234,7 @@ int Runtime::interpreter(SymbolTable& symbols, std::vector<std::string> files) {
         N8Util::printError("\r\n");
     }
     catch(const std::exception& exc) {
-        symbols.waitForThreads();
+        symbols.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
@@ -268,11 +271,9 @@ void Runtime::repl() {
 
                 for(const auto& statement : parser.getGlobalStatements())
                     statement->visit(symtab);
-
-                symtab.detachParallelNodes();
             }
             catch(const std::system_error& exc) {
-                symtab.waitForThreads();
+                symtab.waitForTasks();
                 Runtime::cleanUp();
 
                 N8Util::printError("[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m");
@@ -280,7 +281,7 @@ void Runtime::repl() {
                 N8Util::printError("\u001b[0m\r\n");
             }
             catch(const ASTNodeException& nodeExc) {
-                symtab.waitForThreads();
+                symtab.waitForTasks();
                 Runtime::cleanUp();
 
                 N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
@@ -290,7 +291,7 @@ void Runtime::repl() {
                 N8Util::printError("\r\n");
             }
             catch(const LexicalAnalysisException& lexAnlExc) {
-                symtab.waitForThreads();
+                symtab.waitForTasks();
                 Runtime::cleanUp();
 
                 N8Util::printError("[\u001b[1;31mLexical Error\u001b[0m]:\r\n\t");
@@ -298,7 +299,7 @@ void Runtime::repl() {
                 N8Util::printError("\r\n");
             }
             catch(const ParserException& parserExc) {
-                symtab.waitForThreads();
+                symtab.waitForTasks();
                 Runtime::cleanUp();
 
                 N8Util::printError("[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m");
@@ -308,7 +309,7 @@ void Runtime::repl() {
                 N8Util::printError("\r\n");
             }
             catch(const TerminativeBreakSignal& breakExc) {
-                symtab.waitForThreads();
+                symtab.waitForTasks();
                 Runtime::cleanUp();
 
                 N8Util::printError(
@@ -320,7 +321,7 @@ void Runtime::repl() {
                 N8Util::printError("\r\n");
             }
             catch(const TerminativeContinueSignal& continueExc) {
-                symtab.waitForThreads();
+                symtab.waitForTasks();
                 Runtime::cleanUp();
 
                 N8Util::printError(
@@ -332,7 +333,7 @@ void Runtime::repl() {
                 N8Util::printError("\r\n");
             }
             catch(const TerminativeReturnSignal& retExc) {
-                symtab.waitForThreads();
+                symtab.waitForTasks();
                 Runtime::cleanUp();
 
                 N8Util::printError("\u001b[0;93m");
@@ -340,7 +341,7 @@ void Runtime::repl() {
                 N8Util::printError("\u001b[0m\r\n");
             }
             catch(const TerminativeThrowSignal& throwExc) {
-                symtab.waitForThreads();
+                symtab.waitForTasks();
                 Runtime::cleanUp();
 
                 N8Util::printError("[\u001b[1;31mUncaught Error\u001b[0m]: \u001b[3;37m");
@@ -350,7 +351,7 @@ void Runtime::repl() {
                 N8Util::printError("\r\n");
             }
             catch(const std::exception& exc) {
-                symtab.waitForThreads();
+                symtab.waitForTasks();
                 Runtime::cleanUp();
 
                 N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
@@ -367,6 +368,44 @@ void Runtime::repl() {
     }
 }
 
+void Runtime::catchSegfault() {
+    struct sigaction sa;
+
+    std::memset(&sa, 0, sizeof(struct sigaction));
+    sigemptyset(&sa.sa_mask);
+
+    sa.sa_sigaction = Runtime::segfaultHandler;
+    sa.sa_flags = SA_SIGINFO;
+
+    sigaction(SIGSEGV, &sa, NULL);
+}
+
+void Runtime::segfaultHandler(
+    int signal,
+    siginfo_t *si,
+    void *arg
+    #ifndef _MSC_VER
+    __attribute__((unused))
+    #endif
+) {
+    std::cout << "\u001b[1;31mSegmentation fault\u001b[0m" << std::endl << std::endl;
+    std::cout << "\u001b[1;31mCaught signal:\t\t0x"
+              << std::hex << std::setw(2) << std::setfill('0') << signal << std::dec << "\n";
+    std::cout << "\u001b[1;31mFaulting address:\t0x"
+              << std::hex << reinterpret_cast<std::uintptr_t>(si->si_addr) << std::dec << "\n";
+    std::cout << "\u001b[1;31mSignal code\u001b[0m:\t\t" << si->si_code << "\n";
+    std::cout << "\u001b[1;31mSending process ID\u001b[0m:\t" << si->si_pid << "\n";
+    std::cout << "\u001b[1;31mReal user ID\u001b[0m:\t\t" << si->si_uid << "\n";
+    std::cout << "\u001b[1;31mExit value\u001b[0m:\t\t\t" << si->si_status << "\n";
+    std::cout << "\u001b[1;31mTimer overrun\u001b[0m:\t\t" << si->si_overrun << "\n";
+    std::cout << "\u001b[1;31mTimer ID\u001b[0m:\t\t\t" << si->si_timerid << "\n";
+    std::cout << "\u001b[1;31mBand event\u001b[0m:\t\t\t" << si->si_band << "\n";
+    std::cout << "\u001b[1;31mFile descriptor\u001b[0m:\t" << si->si_fd << "\n";
+    std::cout << "\u001b[1;31mFaulting address\u001b[0m:\t" << si->si_addr << "\n";
+
+    std::exit(1);
+}
+
 #else
 
 void Runtime::execute(const char* sourceCode) {
@@ -380,11 +419,9 @@ void Runtime::execute(const char* sourceCode) {
 
         for(const auto& statement : parser.getGlobalStatements())
             statement->visit(symtab);
-
-        symtab.detachParallelNodes();
     }
     catch(const std::system_error& exc) {
-        symtab.waitForThreads();
+        symtab.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError("[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m");
@@ -392,7 +429,7 @@ void Runtime::execute(const char* sourceCode) {
         N8Util::printError("\u001b[0m\r\n");
     }
     catch(const ASTNodeException& nodeExc) {
-        symtab.waitForThreads();
+        symtab.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
@@ -402,7 +439,7 @@ void Runtime::execute(const char* sourceCode) {
         N8Util::printError("\r\n");
     }
     catch(const LexicalAnalysisException& lexAnlExc) {
-        symtab.waitForThreads();
+        symtab.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError("[\u001b[1;31mLexical Error\u001b[0m]:\r\n\t");
@@ -410,7 +447,7 @@ void Runtime::execute(const char* sourceCode) {
         N8Util::printError("\r\n");
     }
     catch(const ParserException& parserExc) {
-        symtab.waitForThreads();
+        symtab.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError("[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m");
@@ -420,7 +457,7 @@ void Runtime::execute(const char* sourceCode) {
         N8Util::printError("\r\n");
     }
     catch(const TerminativeBreakSignal& breakExc) {
-        symtab.waitForThreads();
+        symtab.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError(
@@ -432,7 +469,7 @@ void Runtime::execute(const char* sourceCode) {
         N8Util::printError("\r\n");
     }
     catch(const TerminativeContinueSignal& continueExc) {
-        symtab.waitForThreads();
+        symtab.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError(
@@ -444,7 +481,7 @@ void Runtime::execute(const char* sourceCode) {
         N8Util::printError("\r\n");
     }
     catch(const TerminativeReturnSignal& retExc) {
-        symtab.waitForThreads();
+        symtab.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError("\u001b[0;93m");
@@ -452,7 +489,7 @@ void Runtime::execute(const char* sourceCode) {
         N8Util::printError("\u001b[0m\r\n");
     }
     catch(const TerminativeThrowSignal& throwExc) {
-        symtab.waitForThreads();
+        symtab.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError("[\u001b[1;31mUncaught Error\u001b[0m]: \u001b[3;37m");
@@ -462,7 +499,7 @@ void Runtime::execute(const char* sourceCode) {
         N8Util::printError("\r\n");
     }
     catch(const std::exception& exc) {
-        symtab.waitForThreads();
+        symtab.waitForTasks();
         Runtime::cleanUp();
 
         N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");

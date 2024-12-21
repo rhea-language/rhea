@@ -20,57 +20,116 @@
 #include <n8/core/Runtime.hpp>
 #include <n8/core/SymbolTable.hpp>
 
+void SymbolTable::reset() {
+    this->id.clear();
+    this->table.clear();
+
+    if(this->parent != nullptr) {
+        this->parent->reset();
+        this->parent.reset();
+    }
+}
+
+SymbolTable& SymbolTable::operator=(SymbolTable&& other) noexcept {
+    if(this != &other) {
+        parent = std::move(other.parent);
+        id = std::move(other.id);
+        table = std::move(other.table);
+        tasks = std::move(other.tasks);
+    }
+
+    return *this;
+}
+
 SymbolTable& SymbolTable::operator=(const SymbolTable& other) {
     if(this != &other) {
-        this->parent = std::move(other.parent);
-        this->table = std::move(other.table);
+        this->parent = other.parent;
+        this->table = other.table;
+        this->id = N8Util::generateUuid();
+
+        this->tasks.clear();
     }
 
     return *this;
 }
 
 SymbolTable::~SymbolTable() {
-    for(std::thread& t : this->threads)
-        if(t.joinable())
-            t.join();
+    this->waitForTasks();
+    this->reset();
+}
 
-    this->threads.clear();
+std::string SymbolTable::getTableId() const {
+    return this->id;
+}
+
+void SymbolTable::reassignUuid() {
+    this->id = N8Util::generateUuid();
 }
 
 DynamicObject SymbolTable::getSymbol(
     std::shared_ptr<Token> reference,
     const std::string& name
 ) {
-    if(this->hasSymbol(name))
-        return std::move(this->table[name]);
-    else if(this->parent)
+    if(this->parent && this->parent->hasSymbol(name))
         return this->parent->getSymbol(
             std::move(reference),
             name
         );
 
-    #ifdef _MSC_VER
-    #   pragma warning(disable : 5272)
-    #endif
+    if(this->hasSymbol(name))
+        return this->table[name];
+
     throw ASTNodeException(
         std::move(reference),
         "Cannot resolve symbol: " + name
     );
 }
 
-void SymbolTable::setSymbol(const std::string& name, DynamicObject value) {
-    std::lock_guard<std::mutex> lock(this->mtx);
+void SymbolTable::setSymbol(
+    std::shared_ptr<Token> reference,
+    DynamicObject value,
+    bool isDeclaration
+) {
+    std::string name = reference->getImage();
+    if(isDeclaration) {
+        if(!this->hasSymbol(name))
+            this->table[name] = std::move(value);
+        else throw ASTNodeException(
+            std::move(reference),
+            "Symbol already declared: " + name
+        );
 
-    if(this->hasSymbol(name))
-        this->table[name] = std::move(value);
-    else if(this->parent && this->parent->hasSymbol(name))
-        this->parent->setSymbol(name, std::move(value));
+        return;
+    }
 
-    this->table[name] = std::move(value);
+    if(!this->hasSymbol(name))
+        throw ASTNodeException(
+            std::move(reference),
+            "Cannot set symbol: " + name
+        );
+
+    if(this->table.find(name) != this->table.end()) {
+        DynamicObject& current = this->table[name];
+        if(current.hasLock())
+            return;
+
+        current = std::move(value);
+    }
+    else if(this->parent)
+        this->parent->setSymbol(
+            std::move(reference),
+            std::move(value),
+            isDeclaration
+        );
 }
 
 void SymbolTable::removeSymbol(const std::string& name) {
-    if(this->hasSymbol(name))
+    if(this->parent && this->parent->hasSymbol(name)) {
+        this->parent->removeSymbol(name);
+        return;
+    }
+
+    if(this->hasSymbol(name) && !this->table[name].hasLock())
         this->table.erase(name);
 }
 
@@ -79,32 +138,46 @@ bool SymbolTable::hasSymbol(const std::string& name) {
         (this->parent && this->parent->hasSymbol(name));
 }
 
-void SymbolTable::addParallelism(std::thread par) {
-    this->threads.push_back(std::move(par));
+void SymbolTable::addParallelism(std::future<void> par) {
+    this->tasks.push_back(std::move(par));
 }
 
-void SymbolTable::waitForThreads() {
-    if(!this->threads.empty()) {
-        #pragma omp parallel for
-        for(auto& thread : this->threads)
-            if(thread.joinable())
-                thread.join();
-        this->threads.clear();
+void SymbolTable::waitForTasks() {
+    if(!this->tasks.empty()) {
+        for(auto& task : this->tasks)
+            if(task.valid())
+                task.get();
+
+        this->tasks.clear();
     }
 
-    this->mtx.unlock();
+    if(this->parent)
+        this->parent->waitForTasks();
 }
 
-void SymbolTable::detachParallelNodes() {
-    if(this->threads.empty())
+void SymbolTable::lock(std::string name, SymbolTable& requestOrigin) {
+    if(!this->hasSymbol(name))
         return;
 
-    #pragma omp parallel for
-    for(auto& thread : this->threads)
-        thread.detach();
+    if(this->table.find(name) != this->table.end()) {
+        DynamicObject& current = this->table[name];
 
-    this->threads.clear();
-    this->mtx.unlock();
+        current.own(requestOrigin.id);
+        current.lock();
+    }
+    else if(this->parent)
+        this->parent->lock(name, requestOrigin);
+}
 
-    Runtime::cleanUp();
+void SymbolTable::unlock(std::string name, SymbolTable& requestOrigin) {
+    if(!this->hasSymbol(name))
+        return;
+
+    if(this->table.find(name) != this->table.end()) {
+        DynamicObject& current = this->table[name];
+        if(current.ownerId() == requestOrigin.id)
+            current.unlock();
+    }
+    else if(this->parent)
+        this->parent->unlock(name, requestOrigin);
 }

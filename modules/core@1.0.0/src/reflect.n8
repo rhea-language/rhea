@@ -19,7 +19,6 @@ val("core")
     reflect.get,
     reflect.has,
     reflect.typeOf,
-    reflect.declare,
-    reflect.delete,
+    reflect.remove,
     reflect.invoke,
     reflect.exec

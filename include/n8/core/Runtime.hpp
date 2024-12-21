@@ -44,12 +44,14 @@ public:
 
     static void cleanUp();
 
+    #if defined(__linux__) || defined(__APPLE__)
     static void catchSegfault();
     static void segfaultHandler(
         int signal,
         siginfo_t *si,
         void *arg
     );
+    #endif
 
     #ifndef __EMSCRIPTEN__
 

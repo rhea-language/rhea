@@ -19,9 +19,6 @@
 #include <n8/ast/statement/ThrowStatement.hpp>
 
 DynamicObject ThrowStatement::visit(SymbolTable& symbols) {
-    #ifdef _MSC_VER
-    #   pragma warning(disable : 5272)
-    #endif
     throw TerminativeThrowSignal(
         std::move(this->address),
         this->expression->visit(symbols)

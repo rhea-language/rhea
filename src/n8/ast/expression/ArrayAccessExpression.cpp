@@ -33,9 +33,6 @@ ASTNode* ArrayAccessExpression::getIndexExpression() const {
 DynamicObject ArrayAccessExpression::visit(SymbolTable& symbols) {
     DynamicObject origin = this->array->visit(symbols);
     if(!origin.isArray() && !origin.isString())
-        #ifdef _MSC_VER
-        #   pragma warning(disable : 5272)
-        #endif
         throw ASTNodeException(
             std::move(this->address),
             "Accessing non-array and non-string object is invalid."

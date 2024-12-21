@@ -368,49 +368,6 @@ void Runtime::repl() {
     }
 }
 
-void Runtime::catchSegfault() {
-    struct sigaction sa;
-
-    std::memset(&sa, 0, sizeof(struct sigaction));
-    sigemptyset(&sa.sa_mask);
-
-    sa.sa_sigaction = Runtime::segfaultHandler;
-    sa.sa_flags = SA_SIGINFO;
-
-    sigaction(SIGSEGV, &sa, NULL);
-}
-
-#if defined(__linux__) || defined(__APPLE__)
-void Runtime::segfaultHandler(
-    int signal,
-    siginfo_t *si,
-    void *arg
-    #ifndef _MSC_VER
-    __attribute__((unused))
-    #endif
-) {
-    std::cout << "\u001b[1;31mSegmentation fault\u001b[0m" << std::endl << std::endl;
-    std::cout << "\u001b[1;31mCaught signal:\t\t0x"
-              << std::hex << std::setw(2) << std::setfill('0') << signal << std::dec << "\n";
-    std::cout << "\u001b[1;31mFaulting address:\t0x"
-              << std::hex << reinterpret_cast<std::uintptr_t>(si->si_addr) << std::dec << "\n";
-    std::cout << "\u001b[1;31mSignal code\u001b[0m:\t\t" << si->si_code << "\n";
-    std::cout << "\u001b[1;31mSending process ID\u001b[0m:\t" << si->si_pid << "\n";
-    std::cout << "\u001b[1;31mReal user ID\u001b[0m:\t\t" << si->si_uid << "\n";
-    std::cout << "\u001b[1;31mExit value\u001b[0m:\t\t\t" << si->si_status << "\n";
-    std::cout << "\u001b[1;31mBand event\u001b[0m:\t\t\t" << si->si_band << "\n";
-    std::cout << "\u001b[1;31mFaulting address\u001b[0m:\t" << si->si_addr << "\n";
-
-    #ifndef __APPLE__
-    std::cout << "\u001b[1;31mTimer overrun\u001b[0m:\t\t" << si->si_overrun << "\n";
-    std::cout << "\u001b[1;31mTimer ID\u001b[0m:\t\t\t" << si->si_timerid << "\n";
-    std::cout << "\u001b[1;31mFile descriptor\u001b[0m:\t" << si->si_fd << "\n";
-    #endif
-
-    std::exit(1);
-}
-#endif
-
 #else
 
 void Runtime::execute(const char* sourceCode) {
@@ -511,6 +468,51 @@ void Runtime::execute(const char* sourceCode) {
         N8Util::printError(exc.what());
         N8Util::printError("\u001b[0m\r\n");
     }
+}
+
+#endif
+
+#if defined(__linux__) || defined(__APPLE__) || defined(__EMSCRIPTEN__)
+
+void Runtime::segfaultHandler(
+    int signal,
+    siginfo_t *si,
+    void *arg
+    #ifndef _MSC_VER
+    __attribute__((unused))
+    #endif
+) {
+    std::cout << "\u001b[1;31mSegmentation fault\u001b[0m" << std::endl << std::endl;
+    std::cout << "\u001b[1;31mCaught signal:\t\t0x"
+              << std::hex << std::setw(2) << std::setfill('0') << signal << std::dec << "\n";
+    std::cout << "\u001b[1;31mFaulting address:\t0x"
+              << std::hex << reinterpret_cast<std::uintptr_t>(si->si_addr) << std::dec << "\n";
+    std::cout << "\u001b[1;31mSignal code\u001b[0m:\t\t" << si->si_code << "\n";
+    std::cout << "\u001b[1;31mSending process ID\u001b[0m:\t" << si->si_pid << "\n";
+    std::cout << "\u001b[1;31mReal user ID\u001b[0m:\t\t" << si->si_uid << "\n";
+    std::cout << "\u001b[1;31mExit value\u001b[0m:\t\t\t" << si->si_status << "\n";
+    std::cout << "\u001b[1;31mBand event\u001b[0m:\t\t\t" << si->si_band << "\n";
+    std::cout << "\u001b[1;31mFaulting address\u001b[0m:\t" << si->si_addr << "\n";
+
+    #ifndef __APPLE__
+    std::cout << "\u001b[1;31mTimer overrun\u001b[0m:\t\t" << si->si_overrun << "\n";
+    std::cout << "\u001b[1;31mTimer ID\u001b[0m:\t\t\t" << si->si_timerid << "\n";
+    std::cout << "\u001b[1;31mFile descriptor\u001b[0m:\t" << si->si_fd << "\n";
+    #endif
+
+    std::exit(1);
+}
+
+void Runtime::catchSegfault() {
+    struct sigaction sa;
+
+    std::memset(&sa, 0, sizeof(struct sigaction));
+    sigemptyset(&sa.sa_mask);
+
+    sa.sa_sigaction = Runtime::segfaultHandler;
+    sa.sa_flags = SA_SIGINFO;
+
+    sigaction(SIGSEGV, &sa, NULL);
 }
 
 #endif

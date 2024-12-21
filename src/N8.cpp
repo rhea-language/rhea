@@ -68,7 +68,9 @@ auto printBanner(N8Util::ArgumentParser argParse) -> void {
 }
 
 auto main(int argc, char** argv) -> int {
+    #if defined(__linux__) || defined(__APPLE__)
     Runtime::catchSegfault();
+    #endif
 
     N8Util::ArgumentParser argParse(argc, argv);
     argParse.defineParameter("h", "help", "Show this help banner.");

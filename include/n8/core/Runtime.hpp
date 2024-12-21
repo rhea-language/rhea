@@ -20,6 +20,8 @@
 #define N8_CORE_RUNTIME_HPP
 
 #include <n8/ast/ASTNode.hpp>
+
+#include <csignal>
 #include <unordered_map>
 
 class Runtime final {
@@ -41,6 +43,13 @@ public:
     static bool hasFileHash(std::string hash);
 
     static void cleanUp();
+
+    static void catchSegfault();
+    static void segfaultHandler(
+        int signal,
+        siginfo_t *si,
+        void *arg
+    );
 
     #ifndef __EMSCRIPTEN__
 

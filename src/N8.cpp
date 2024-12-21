@@ -27,7 +27,9 @@
 extern "C" {
 
 void executeSource(const char* sourceCode) {
+    Runtime::catchSegfault();
     Runtime::execute(sourceCode);
+
     std::cout << std::flush;
 }
 
@@ -66,6 +68,8 @@ auto printBanner(N8Util::ArgumentParser argParse) -> void {
 }
 
 auto main(int argc, char** argv) -> int {
+    Runtime::catchSegfault();
+
     N8Util::ArgumentParser argParse(argc, argv);
     argParse.defineParameter("h", "help", "Show this help banner.");
     argParse.defineParameter("r", "repl", "Interative interpreter mode (REPL).");

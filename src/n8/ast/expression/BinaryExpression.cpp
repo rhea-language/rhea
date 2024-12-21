@@ -35,9 +35,6 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
 
         DynamicObject arrayVal = arrayExpr->visit(symbols);
         if(!arrayVal.isArray())
-            #ifdef _MSC_VER
-            #   pragma warning(disable : 5272)
-            #endif
             throw ASTNodeException(
                 std::move(this->address),
                 "Object is not an array, cannot update value in specified index."
@@ -65,7 +62,10 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
     auto* varAccess = dynamic_cast<VariableAccessExpression*>(this->left.get());
     if(varAccess && this->op == "=") {
         DynamicObject value = this->right->visit(symbols);
-        symbols.setSymbol(varAccess->getName().getImage(), value);        
+        symbols.setSymbol(
+            std::make_shared<Token>(varAccess->getName()),
+            value, false
+        );
 
         return value;
     }

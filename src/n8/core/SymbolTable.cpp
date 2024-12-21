@@ -20,16 +20,6 @@
 #include <n8/core/Runtime.hpp>
 #include <n8/core/SymbolTable.hpp>
 
-void SymbolTable::reset() {
-    this->id.clear();
-    this->table.clear();
-
-    if(this->parent != nullptr) {
-        this->parent->reset();
-        this->parent.reset();
-    }
-}
-
 SymbolTable& SymbolTable::operator=(SymbolTable&& other) noexcept {
     if(this != &other) {
         parent = std::move(other.parent);
@@ -53,19 +43,6 @@ SymbolTable& SymbolTable::operator=(const SymbolTable& other) {
     return *this;
 }
 
-SymbolTable::~SymbolTable() {
-    this->waitForTasks();
-    this->reset();
-}
-
-std::string SymbolTable::getTableId() const {
-    return this->id;
-}
-
-void SymbolTable::reassignUuid() {
-    this->id = N8Util::generateUuid();
-}
-
 DynamicObject SymbolTable::getSymbol(
     std::shared_ptr<Token> reference,
     const std::string& name
@@ -87,27 +64,9 @@ DynamicObject SymbolTable::getSymbol(
 
 void SymbolTable::setSymbol(
     std::shared_ptr<Token> reference,
-    DynamicObject value,
-    bool isDeclaration
+    DynamicObject value
 ) {
     std::string name = reference->getImage();
-    if(isDeclaration) {
-        if(!this->hasSymbol(name))
-            this->table[name] = std::move(value);
-        else throw ASTNodeException(
-            std::move(reference),
-            "Symbol already declared: " + name
-        );
-
-        return;
-    }
-
-    if(!this->hasSymbol(name))
-        throw ASTNodeException(
-            std::move(reference),
-            "Cannot set symbol: " + name
-        );
-
     if(this->table.find(name) != this->table.end()) {
         DynamicObject& current = this->table[name];
         if(current.hasLock())
@@ -115,12 +74,9 @@ void SymbolTable::setSymbol(
 
         current = std::move(value);
     }
-    else if(this->parent)
-        this->parent->setSymbol(
-            std::move(reference),
-            std::move(value),
-            isDeclaration
-        );
+    else if(this->parent && this->parent->hasSymbol(name))
+        this->parent->setSymbol(std::move(reference), std::move(value));
+    else this->table[name] = std::move(value);
 }
 
 void SymbolTable::removeSymbol(const std::string& name) {
@@ -134,8 +90,8 @@ void SymbolTable::removeSymbol(const std::string& name) {
 }
 
 bool SymbolTable::hasSymbol(const std::string& name) {
-    return this->table.find(name) != this->table.end() ||
-        (this->parent && this->parent->hasSymbol(name));
+    return (this->parent && this->parent->hasSymbol(name)) ||
+        this->table.find(name) != this->table.end();
 }
 
 void SymbolTable::addParallelism(std::future<void> par) {
@@ -160,10 +116,8 @@ void SymbolTable::lock(std::string name, SymbolTable& requestOrigin) {
         return;
 
     if(this->table.find(name) != this->table.end()) {
-        DynamicObject& current = this->table[name];
-
-        current.own(requestOrigin.id);
-        current.lock();
+        this->table[name].own(requestOrigin.id);
+        this->table[name].lock();
     }
     else if(this->parent)
         this->parent->lock(name, requestOrigin);
@@ -173,11 +127,9 @@ void SymbolTable::unlock(std::string name, SymbolTable& requestOrigin) {
     if(!this->hasSymbol(name))
         return;
 
-    if(this->table.find(name) != this->table.end()) {
-        DynamicObject& current = this->table[name];
-        if(current.ownerId() == requestOrigin.id)
-            current.unlock();
-    }
+    if(this->table.find(name) != this->table.end() &&
+        this->table[name].ownerId() == requestOrigin.id)
+        this->table[name].unlock();
     else if(this->parent)
         this->parent->unlock(name, requestOrigin);
 }

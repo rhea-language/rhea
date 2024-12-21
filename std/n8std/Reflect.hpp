@@ -31,9 +31,7 @@ N8_LIB_START
 N8_FUNC(reflect_get);
 N8_FUNC(reflect_has);
 N8_FUNC(reflect_typeOf);
-
-N8_FUNC(reflect_declare);
-N8_FUNC(reflect_delete);
+N8_FUNC(reflect_remove);
 N8_FUNC(reflect_invoke);
 
 N8_FUNC(reflect_exec);

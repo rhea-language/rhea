@@ -380,6 +380,7 @@ void Runtime::catchSegfault() {
     sigaction(SIGSEGV, &sa, NULL);
 }
 
+#if defined(__linux__) || defined(__APPLE__)
 void Runtime::segfaultHandler(
     int signal,
     siginfo_t *si,
@@ -397,14 +398,18 @@ void Runtime::segfaultHandler(
     std::cout << "\u001b[1;31mSending process ID\u001b[0m:\t" << si->si_pid << "\n";
     std::cout << "\u001b[1;31mReal user ID\u001b[0m:\t\t" << si->si_uid << "\n";
     std::cout << "\u001b[1;31mExit value\u001b[0m:\t\t\t" << si->si_status << "\n";
+    std::cout << "\u001b[1;31mBand event\u001b[0m:\t\t\t" << si->si_band << "\n";
+    std::cout << "\u001b[1;31mFaulting address\u001b[0m:\t" << si->si_addr << "\n";
+
+    #ifndef __APPLE__
     std::cout << "\u001b[1;31mTimer overrun\u001b[0m:\t\t" << si->si_overrun << "\n";
     std::cout << "\u001b[1;31mTimer ID\u001b[0m:\t\t\t" << si->si_timerid << "\n";
-    std::cout << "\u001b[1;31mBand event\u001b[0m:\t\t\t" << si->si_band << "\n";
     std::cout << "\u001b[1;31mFile descriptor\u001b[0m:\t" << si->si_fd << "\n";
-    std::cout << "\u001b[1;31mFaulting address\u001b[0m:\t" << si->si_addr << "\n";
+    #endif
 
     std::exit(1);
 }
+#endif
 
 #else
 

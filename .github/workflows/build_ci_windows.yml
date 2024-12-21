@@ -50,11 +50,12 @@ jobs:
           dist\n8lang\bin\n8 test\error_handling.n8
           dist\n8lang\bin\n8 test\flow.n8
           dist\n8lang\bin\n8 test\func.n8
+          dist\n8lang\bin\n8 test\lock.n8
           dist\n8lang\bin\n8 test\loop.n8
           dist\n8lang\bin\n8 test\native.n8
           dist\n8lang\bin\n8 test\parallel.n8
           dist\n8lang\bin\n8 test\regex.n8
-          dist\n8lang\bin\n8 test\test.n8
+          dist\n8lang\bin\n8 test\test.n8 -t
           dist\n8lang\bin\n8 test\types.n8
 
       - name: Run examples

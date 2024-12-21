@@ -61,6 +61,7 @@ private:
     std::shared_ptr<ASTNode> exprParallel();
     std::shared_ptr<ASTNode> exprVal();
     std::shared_ptr<ASTNode> exprSize();
+    std::shared_ptr<ASTNode> exprLock();
 
     std::shared_ptr<ASTNode> stmtBreak();
     std::shared_ptr<ASTNode> stmtContinue();

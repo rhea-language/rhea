@@ -47,6 +47,8 @@ using NativeFunction = DynamicObject(
 class DynamicObject final {
 private:
     DynamicObjectType type;
+    bool isLocked;
+    std::string owner;
 
     std::shared_ptr<FunctionDeclarationExpression> functionValue;
     std::shared_ptr<std::vector<DynamicObject>> arrayValue;
@@ -59,6 +61,8 @@ private:
 public:
     DynamicObject(std::shared_ptr<FunctionDeclarationExpression> value) :
         type(DynamicObjectType::FUNCTION),
+        isLocked(false),
+        owner(""),
         functionValue(std::move(value)),
         arrayValue(nullptr),
         regexValue(nullptr),
@@ -69,6 +73,8 @@ public:
 
     DynamicObject(std::shared_ptr<RegexWrapper> value) :
         type(DynamicObjectType::REGEX),
+        isLocked(false),
+        owner(""),
         functionValue(nullptr),
         arrayValue(nullptr),
         regexValue(std::move(value)),
@@ -79,6 +85,8 @@ public:
 
     DynamicObject(std::shared_ptr<std::vector<DynamicObject>> value) :
         type(DynamicObjectType::ARRAY),
+        isLocked(false),
+        owner(""),
         functionValue(nullptr),
         arrayValue(std::move(value)),
         regexValue(nullptr),
@@ -89,6 +97,8 @@ public:
 
     DynamicObject(std::string value) :
         type(DynamicObjectType::STRING),
+        isLocked(false),
+        owner(""),
         functionValue(nullptr),
         arrayValue(nullptr),
         regexValue(nullptr),
@@ -99,6 +109,8 @@ public:
 
     DynamicObject(double value) :
         type(DynamicObjectType::NUMBER),
+        isLocked(false),
+        owner(""),
         functionValue(nullptr),
         arrayValue(nullptr),
         regexValue(nullptr),
@@ -109,6 +121,8 @@ public:
 
     DynamicObject(bool value) :
         type(DynamicObjectType::BOOL),
+        isLocked(false),
+        owner(""),
         functionValue(nullptr),
         arrayValue(nullptr),
         regexValue(nullptr),
@@ -119,6 +133,8 @@ public:
 
     DynamicObject(NativeFunction value) :
         type(DynamicObjectType::NATIVE),
+        isLocked(false),
+        owner(""),
         functionValue(nullptr),
         arrayValue(nullptr),
         regexValue(nullptr),
@@ -129,6 +145,8 @@ public:
 
     DynamicObject() :
         type(DynamicObjectType::NIL),
+        isLocked(false),
+        owner(""),
         functionValue(nullptr),
         arrayValue(nullptr),
         regexValue(nullptr),
@@ -139,6 +157,8 @@ public:
 
     DynamicObject(const DynamicObject& other) :
         type(other.type),
+        isLocked(false),
+        owner(""),
         functionValue(other.functionValue),
         arrayValue(other.arrayValue),
         regexValue(other.regexValue),
@@ -181,6 +201,14 @@ public:
         SymbolTable& symtab,
         std::vector<DynamicObject> args
     );
+
+    void lock();
+    void unlock();
+
+    bool hasLock();
+    std::string ownerId() const;
+
+    void own(std::string ownerUuid);
 
     std::string objectType();
     std::string toString();

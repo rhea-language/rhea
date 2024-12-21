@@ -35,34 +35,27 @@ private:
     std::unordered_map<std::string, DynamicObject> table;
     std::vector<std::future<void>> tasks;
 
-    void reset();
-
 public:
     explicit SymbolTable(std::string _id, std::shared_ptr<SymbolTable> _parent = nullptr) :
-        parent(_parent),
-        id(_id),
+        parent(std::move(_parent)),
+        id(std::move(_id)),
         table({}),
         tasks() {}
 
     explicit SymbolTable(std::shared_ptr<SymbolTable> _parent = nullptr) :
-        parent(_parent),
+        parent(std::move(_parent)),
         id(N8Util::generateUuid()),
         table({}),
         tasks() {}
 
     SymbolTable(const SymbolTable& other) :
         parent(other.parent),
-        id(N8Util::generateUuid()),
+        id(other.id),
         table(other.table),
         tasks() {}
 
     SymbolTable& operator=(SymbolTable&& other) noexcept;
     SymbolTable& operator=(const SymbolTable& other);
-
-    ~SymbolTable();
-
-    std::string getTableId() const;
-    void reassignUuid();
 
     DynamicObject getSymbol(
         std::shared_ptr<Token> reference,
@@ -71,8 +64,7 @@ public:
 
     void setSymbol(
         std::shared_ptr<Token> reference,
-        DynamicObject value,
-        bool isDeclaration
+        DynamicObject value
     );
 
     void removeSymbol(const std::string& name);

@@ -21,49 +21,68 @@
 
 #include <n8/ast/ASTNode.hpp>
 #include <n8/core/DynamicObject.hpp>
+#include <n8/util/RandomUtil.hpp>
 
-#include <functional>
+#include <future>
 #include <memory>
-#include <mutex>
-#include <thread>
 #include <unordered_map>
 #include <vector>
 
 class SymbolTable final {
 private:
-    SymbolTable* parent;
+    std::shared_ptr<SymbolTable> parent;
+    std::string id;
     std::unordered_map<std::string, DynamicObject> table;
-    std::vector<std::thread> threads;
-    mutable std::mutex mtx;
+    std::vector<std::future<void>> tasks;
+
+    void reset();
 
 public:
-    explicit SymbolTable(SymbolTable* _parent = nullptr) :
+    explicit SymbolTable(std::string _id, std::shared_ptr<SymbolTable> _parent = nullptr) :
         parent(_parent),
+        id(_id),
         table({}),
-        threads(),
-        mtx() {}
+        tasks() {}
 
-    explicit SymbolTable(const SymbolTable& other) :
-        parent(std::move(other.parent)),
-        table(std::move(other.table)),
-        threads(),
-        mtx() {}
+    explicit SymbolTable(std::shared_ptr<SymbolTable> _parent = nullptr) :
+        parent(_parent),
+        id(N8Util::generateUuid()),
+        table({}),
+        tasks() {}
 
+    SymbolTable(const SymbolTable& other) :
+        parent(other.parent),
+        id(N8Util::generateUuid()),
+        table(other.table),
+        tasks() {}
+
+    SymbolTable& operator=(SymbolTable&& other) noexcept;
     SymbolTable& operator=(const SymbolTable& other);
+
     ~SymbolTable();
+
+    std::string getTableId() const;
+    void reassignUuid();
 
     DynamicObject getSymbol(
         std::shared_ptr<Token> reference,
         const std::string& name
     );
 
-    void setSymbol(const std::string& name, DynamicObject value);
+    void setSymbol(
+        std::shared_ptr<Token> reference,
+        DynamicObject value,
+        bool isDeclaration
+    );
+
     void removeSymbol(const std::string& name);
     bool hasSymbol(const std::string& name);
 
-    void addParallelism(std::thread par);
-    void waitForThreads();
-    void detachParallelNodes();
+    void addParallelism(std::future<void> par);
+    void waitForTasks();
+
+    void lock(std::string name, SymbolTable& requestOrigin);
+    void unlock(std::string name, SymbolTable& requestOrigin);
 };
 
 #endif

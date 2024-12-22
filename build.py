@@ -278,7 +278,7 @@ try:
 
         include_sha_headers()
         lib_build_args = [
-            'g++', '-Iinclude', '-Istd', '-fPIC',
+            'g++', '-Iinclude', '-Istd', '-fPIC', '-D__TERMUX__',
             '-shared', '-o', OUTPUT_LIBRARY + '.so'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
 

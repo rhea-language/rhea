@@ -138,10 +138,10 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
 
     #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
-    auto func = reinterpret_cast<NativeFunction>(GetProcAddress(
+    auto func = (NativeFunction) GetProcAddress(
         (HMODULE) handle,
         name.c_str()
-    ));
+    );
 
     #endif
 

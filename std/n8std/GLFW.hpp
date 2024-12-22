@@ -19,6 +19,8 @@
 #ifndef N8_STDLIB_GL_CC
 #define N8_STDLIB_GL_CC
 
+#ifndef __TERMUX__
+
 #ifdef __clang__
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
@@ -46,6 +48,8 @@ N8_LIB_END
 
 #ifdef __clang__
 #   pragma clang diagnostic pop
+#endif
+
 #endif
 
 #endif

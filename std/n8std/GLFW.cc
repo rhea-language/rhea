@@ -16,6 +16,8 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#ifndef __TERMUX__
+
 #include "n8std/GLFW.hpp"
 
 #include <n8/ast/TerminativeSignal.hpp>
@@ -194,3 +196,6 @@ N8_FUNC(glfw_destroyWindow) {
 }
 
 #endif
+
+#endif
+

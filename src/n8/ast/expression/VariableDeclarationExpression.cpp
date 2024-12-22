@@ -22,6 +22,7 @@
 #include <n8/core/SymbolTable.hpp>
 #include <n8/util/PathHelper.hpp>
 
+#include <bit>
 #include <filesystem>
 
 #if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
@@ -138,10 +139,10 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
 
     #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
-    auto func = (NativeFunction) GetProcAddress(
+    auto func = std::bit_cast<NativeFunction>(GetProcAddress(
         (HMODULE) handle,
         name.c_str()
-    );
+    ));
 
     #endif
 

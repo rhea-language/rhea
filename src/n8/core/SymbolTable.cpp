@@ -116,8 +116,12 @@ void SymbolTable::lock(std::string name, SymbolTable& requestOrigin) {
         return;
 
     if(this->table.find(name) != this->table.end()) {
-        this->table[name].own(requestOrigin.id);
-        this->table[name].lock();
+        DynamicObject& current = this->table[name];
+	if(current.hasLock())
+            return;
+
+        current.own(requestOrigin.id);
+        current.lock();
     }
     else if(this->parent)
         this->parent->lock(name, requestOrigin);

@@ -139,10 +139,14 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
 
     #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
-    auto func = std::bit_cast<NativeFunction>(GetProcAddress(
-        (HMODULE) handle,
-        name.c_str()
-    ));
+    union FunctionCaster {
+        FARPROC proc;
+        NativeFunction func;
+    };
+
+    FunctionCaster caster;
+    caster.proc = GetProcAddress(static_cast<HMODULE>(handle), name.c_str());
+    auto func = caster.func;
 
     #endif
 

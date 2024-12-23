@@ -48,6 +48,7 @@
 
 #include <n8/ast/statement/BreakStatement.hpp>
 #include <n8/ast/statement/ContinueStatement.hpp>
+#include <n8/ast/statement/DeleteStatement.hpp>
 #include <n8/ast/statement/EmptyStatement.hpp>
 #include <n8/ast/statement/HaltStatement.hpp>
 #include <n8/ast/statement/ReturnStatement.hpp>
@@ -938,6 +939,34 @@ std::shared_ptr<ASTNode> Parser::stmtContinue() {
     );
 }
 
+std::shared_ptr<ASTNode> Parser::stmtDelete() {
+    Token address = this->consume("delete");
+    std::vector<std::shared_ptr<Token>> variables;
+
+    variables.push_back(
+        std::make_shared<Token>(
+            this->consume(TokenType::IDENTIFIER)
+        )
+    );
+
+    while(this->isNext(",", TokenType::OPERATOR)) {
+        this->consume(",");
+        variables.push_back(
+            std::make_shared<Token>(
+                this->consume(TokenType::IDENTIFIER)
+            )
+        );
+    }
+
+    if(this->isNext(";", TokenType::OPERATOR))
+        this->consume(";");
+
+    return std::make_shared<DeleteStatement>(
+        std::make_shared<Token>(address),
+        variables
+    );
+}
+
 std::shared_ptr<ASTNode> Parser::stmtHalt() {
     Token address = this->consume("halt");
 
@@ -1034,6 +1063,8 @@ std::shared_ptr<ASTNode> Parser::statement() {
         return this->stmtBreak();
     else if(this->isNext("continue", TokenType::KEYWORD))
         return this->stmtContinue();
+    else if(this->isNext("delete", TokenType::KEYWORD))
+        return this->stmtDelete();
     else if(this->isNext("halt", TokenType::KEYWORD))
         return this->stmtHalt();
     else if(this->isNext("ret", TokenType::KEYWORD))

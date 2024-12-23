@@ -218,7 +218,7 @@ try:
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-Ofast', '-s',
-            '-std=c++17', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
+            '-std=c++20', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
             '-march=native', '-funroll-loops', '-ffast-math', '-static', '-static-libgcc',
             '-static-libstdc++'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
@@ -345,7 +345,7 @@ try:
             '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
             '-Wwrite-strings', '-Wno-return-type-c-linkage', '-pipe',
-            '-std=c++17', '-fopenmp', '-march=native', '-funroll-loops',
+            '-std=c++20', '-fopenmp', '-march=native', '-funroll-loops',
             '-ffast-math', '-flto=auto', '-Xpreprocessor', '-O3',
             '-Wno-header-guard', '-Wno-pessimizing-move'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]

@@ -79,14 +79,22 @@ void SymbolTable::setSymbol(
     else this->table[name] = std::move(value);
 }
 
-void SymbolTable::removeSymbol(const std::string& name) {
-    if(this->parent && this->parent->hasSymbol(name)) {
+void SymbolTable::removeSymbol(std::shared_ptr<Token> name) {
+    std::string symbol = name->getImage();
+    if(this->parent && this->parent->hasSymbol(symbol)) {
         this->parent->removeSymbol(name);
         return;
     }
 
-    if(this->hasSymbol(name) && !this->table[name].hasLock())
-        this->table.erase(name);
+    if(this->hasSymbol(symbol) && !this->table[symbol].hasLock()) {
+        this->table.erase(symbol);
+        return;
+    }
+
+    throw ASTNodeException(
+        std::move(name),
+        "Cannot remove symbol: " + symbol
+    );
 }
 
 bool SymbolTable::hasSymbol(const std::string& name) {

@@ -67,7 +67,7 @@ public:
         DynamicObject value
     );
 
-    void removeSymbol(const std::string& name);
+    void removeSymbol(std::shared_ptr<Token> name);
     bool hasSymbol(const std::string& name);
 
     void addParallelism(std::future<void> par);

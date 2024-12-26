@@ -79,6 +79,16 @@ void SymbolTable::setSymbol(
     else this->table[name] = std::move(value);
 }
 
+void SymbolTable::removeSymbol(std::string name) {
+    if(this->parent && this->parent->hasSymbol(name)) {
+        this->parent->removeSymbol(name);
+        return;
+    }
+
+    if(this->hasSymbol(name) && !this->table[name].hasLock())
+        this->table.erase(name);
+}
+
 void SymbolTable::removeSymbol(std::shared_ptr<Token> name) {
     std::string symbol = name->getImage();
     if(this->parent && this->parent->hasSymbol(symbol)) {

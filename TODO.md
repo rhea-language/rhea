@@ -2,13 +2,12 @@ Todo:
 ---
 
 - `with` statement for DynamicObject deletion outside of the block.
-- `delete` for DynamicObject deletion from SymbolTable.
 - Vector operators such as (.+, .-, etc)
 - Multiplatform installer for N8.
 
 - To be developed libraries:
     ✓ array
-    * chrono
+    ✓ chrono
     ✓ crypt
     ✓ env
     * fmt (sconf, csv, json, toml, mdif, png, jpg, xml)
@@ -20,8 +19,7 @@ Todo:
     * ml
     * net
     ✓ reflect
-    * regex
-    * serial
+    * regex 
     * str
     ✓ sys
     * thread

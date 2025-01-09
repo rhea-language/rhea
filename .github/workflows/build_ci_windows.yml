@@ -41,38 +41,35 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: 'pip'
 
       - name: Build N8
         run: |
           where g++
+          python -m pip install --upgrade pip
           python -m pip install requests py-cpuinfo
           python build.py
 
       - name: Set Environment Path
+        shell: bash
         run: |
-          set N8_PATH=%cd%\dist\n8lang
+          echo "N8_PATH=$PWD/dist/n8lang" >> $GITHUB_ENV
 
       - name: Build verification
+        shell: bash
         run: |
-          dist\n8lang\bin\n8
-          dir dist
-          tree dist
+          ./dist/n8lang/bin/n8
+          ls -R dist
 
       - name: Run test scripts
+        shell: bash
         run: |
-          dist\n8lang\bin\n8 test\arithmetic.n8
-          dist\n8lang\bin\n8 test\array.n8
-          dist\n8lang\bin\n8 test\digits.n8
-          dist\n8lang\bin\n8 test\error_handling.n8
-          dist\n8lang\bin\n8 test\flow.n8
-          dist\n8lang\bin\n8 test\func.n8
-          dist\n8lang\bin\n8 test\lock.n8
-          dist\n8lang\bin\n8 test\loop.n8
-          dist\n8lang\bin\n8 test\native.n8
-          dist\n8lang\bin\n8 test\parallel.n8
-          dist\n8lang\bin\n8 test\regex.n8
+          for test in test/*.n8; do
+            if [[ "$test" != "test/test.n8" ]]; then
+              ./dist/n8lang/bin/n8 "$test"
+            fi
+          done
           dist\n8lang\bin\n8 test\test.n8 -t
-          dist\n8lang\bin\n8 test\types.n8
 
       - name: Run examples
         run: |

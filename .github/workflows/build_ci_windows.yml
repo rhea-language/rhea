@@ -35,6 +35,7 @@ jobs:
             mingw-w64-x86_64-glew
             mingw-w64-x86_64-python-py-cpuinfo
             mingw-w64-x86_64-python-requests
+            git
 
       - name: Checkout code
         run:

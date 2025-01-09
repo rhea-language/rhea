@@ -44,6 +44,7 @@ jobs:
       - name: Build N8
         run: |
           cd n8
+          pwd
           where g++
           python build.py
 
@@ -77,5 +78,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: n8-windows-dist
-          path: dist/
+          path: D:\a\_temp\msys64\home\a\n8\dist
           retention-days: 1

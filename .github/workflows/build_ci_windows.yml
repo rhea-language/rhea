@@ -36,13 +36,12 @@ jobs:
             mingw-w64-x86_64-openssl
             mingw-w64-x86_64-glfw
             mingw-w64-x86_64-glew
-            python-pip
+            mingw-w64-x86_64-python-py-cpuinfo
+            mingw-w64-x86_64-python-requests
 
       - name: Build N8
         run: |
           where g++
-          python -m pip install --upgrade pip
-          python -m pip install requests py-cpuinfo
           python build.py
 
       - name: Set Environment Path

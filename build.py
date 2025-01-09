@@ -145,7 +145,7 @@ try:
             'libglfw3-dev', 'libgl1-mesa-dev'
         ])
     elif PLATFORM == 'Darwin':
-        subprocess.run(['brew', 'install', 'glfw'])
+        subprocess.run(['brew', 'install', 'glfw', 'glfw3', 'glew'])
         subprocess.run(['brew', 'link', 'glfw'])
 
     print('Building binaries...')

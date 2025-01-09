@@ -36,7 +36,7 @@ jobs:
             mingw-w64-x86_64-openssl
             mingw-w64-x86_64-glfw
             mingw-w64-x86_64-glew
-            mingw-w64-python-pip
+            python-pip
 
       - name: Build N8
         run: |

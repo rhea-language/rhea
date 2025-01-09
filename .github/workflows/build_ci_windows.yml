@@ -36,11 +36,7 @@ jobs:
             mingw-w64-x86_64-openssl
             mingw-w64-x86_64-glfw
             mingw-w64-x86_64-glew
-
-      - name: Python 3.12 Installation
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+            mingw-w64-python-pip
 
       - name: Build N8
         run: |

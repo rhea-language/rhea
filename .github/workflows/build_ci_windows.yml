@@ -23,19 +23,19 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-    - name: Setup MSYS2
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: MINGW64
-        update: true
-        install: >-
-          mingw-w64-x86_64-toolchain
-          mingw-w64-x86_64-curl
-          mingw-w64-x86_64-openssl
-          mingw-w64-x86_64-glfw
-          mingw-w64-x86_64-glew
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-curl
+            mingw-w64-x86_64-openssl
+            mingw-w64-x86_64-glfw
+            mingw-w64-x86_64-glew
 
       - name: Python 3.12 Installation
         uses: actions/setup-python@v5
@@ -69,12 +69,12 @@ jobs:
               ./dist/n8lang/bin/n8 "$test"
             fi
           done
-          dist\n8lang\bin\n8 test\test.n8 -t
+          ./dist/n8lang/bin/n8 test/test.n8 -t
 
       - name: Run examples
         run: |
-          dist\n8lang\bin\n8 examples\99-beers.n8
-          dist\n8lang\bin\n8 examples\hello.n8
+          ./dist/n8lang/bin/n8 examples/99-beers.n8
+          ./dist/n8lang/bin/n8 examples/hello.n8
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

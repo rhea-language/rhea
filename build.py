@@ -146,7 +146,7 @@ try:
         ])
     elif PLATFORM == 'Darwin':
         subprocess.run(['brew', 'install', 'glfw', 'glfw3', 'glew'])
-        subprocess.run(['brew', 'link', 'glfw'])
+        subprocess.run(['brew', 'link', 'glfw', 'glfw3', 'glew'])
 
     print('Building binaries...')
     if PLATFORM == 'Windows':

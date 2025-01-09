@@ -43,6 +43,8 @@ jobs:
 
       - name: Build N8
         run: |
+          cd n8
+          where g++
           python build.py
 
       - name: Set Environment Path

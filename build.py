@@ -67,7 +67,6 @@ cpp_files = []
 cc_files = []
 
 lib_headers = [
-    '-Ilib/glfw/include',
     '-Ilib/QuickDigest5/include',
     '-Ilib/MyShell/include',
     '-Ilib/SHA/src'
@@ -107,44 +106,6 @@ def get_ext_instructions():
                 print('not found')
 
     return supported_features
-
-def get_glfw_file(arch):
-    url = "https://github.com/glfw/glfw/releases/download/3.4/"
-
-    if arch == 'win32':
-        return url + 'glfw-3.4.bin.WIN32.zip'
-    elif arch == 'win64':
-        return url + 'glfw-3.4.bin.WIN64.zip'
-    elif arch == 'darwin':
-        return url + 'glfw-3.4.bin.MACOS.zip'
-
-    raise ValueError('Invalid architecture for GLFW')
-
-def download_file(url, local_filename):
-    try:
-        response = requests.get(url, stream=True)
-        response.raise_for_status()
-
-        local_filename = os.path.join(TEMP_DIR, local_filename)
-        with open(local_filename, 'wb') as f:
-            for chunk in response.iter_content(chunk_size=8192):
-                if chunk:
-                    f.write(chunk)
-
-        print(f"{local_filename} has been downloaded successfully.")
-        unzip_and_move_contents(local_filename, TEMP_DIR)
-
-    except requests.RequestException as e:
-        print(f"Failed to download {url}. Error: {e}")
-
-def unzip_and_move_contents(zip_file, destination):
-    if not os.path.exists(destination):
-        os.makedirs(destination)
-
-    with zipfile.ZipFile(zip_file, 'r') as zip_ref:
-        zip_ref.extractall(destination)
-
-    print(f"Contents of {zip_file} have been extracted to {destination}")
 
 def include_sha_headers():
     global lib_source_files
@@ -189,19 +150,14 @@ try:
 
     print('Building binaries...')
     if PLATFORM == 'Windows':
-        if ARCH == '64bit':
-            download_file(get_glfw_file('win64'), 'glfw.zip')
-            shutil.move(
-                os.path.join(TEMP_DIR, 'glfw-3.4.bin.WIN64'),
-                os.path.join(TEMP_DIR, 'glfw-3.4')
-            )
-        elif ARCH == '32bit':
-            download_file(get_glfw_file('win32'), 'glfw.zip')
-            shutil.move(
-                os.path.join(TEMP_DIR, 'glfw-3.4.bin.WIN32'),
-                os.path.join(TEMP_DIR, 'glfw-3.4')
-            )
-
+        win_libs = [
+            '-static', '-static-libgcc', '-static-libstdc++',
+            '-lglfw3', '-lglew32', '-lopengl32', '-lgdi32', '-lwinmm',
+            '-limm32', '-lole32', '-loleaut32', '-lversion',
+            '-luuid', '-ldinput8', '-ldxguid', '-lsetupapi',
+            '-lshell32', '-lssl', '-lcrypto', '-lcrypt32',
+            '-lws2_32', '-luser32', '-lkernel32'
+        ]
         exe_build_args= [
             'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
             '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
@@ -219,32 +175,13 @@ try:
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-Ofast', '-s',
             '-std=c++17', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
-            '-march=native', '-funroll-loops', '-ffast-math', '-static', '-static-libgcc',
-            '-static-libstdc++'
-        ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
+            '-march=native', '-funroll-loops', '-ffast-math'
+        ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + win_libs
 
         include_sha_headers()
-        glfw_lib_path = os.path.join(TEMP_DIR, 'glfw-3.4', 'lib-mingw-w64')
-        shutil.copy(
-            os.path.join(glfw_lib_path, 'glfw3.dll'),
-            os.path.join(
-                'dist', 'n8lang',
-                'bin', 'glfw3.dll'
-            )
-        )
-
-        lib_source_files += [
-            os.path.join(glfw_lib_path, 'libglfw3.a'),
-            os.path.join(glfw_lib_path, 'libglfw3dll.a'),
-            os.path.join(glfw_lib_path, 'glfw3.dll')
-        ]
         lib_build_args = [
-            'g++', '-static', '-static-libgcc', '-Iinclude',
-            '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll',
-            '-L' + os.path.join(TEMP_DIR, 'glfw-3.4', 'lib-mingw-w64')
-        ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
-            '-lole32', '-lopengl32', '-lgdi32'
-        ]
+            'g++', '-Iinclude', '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll'
+        ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + win_libs
 
         print("Executing:")
         print(' '.join(exe_build_args))

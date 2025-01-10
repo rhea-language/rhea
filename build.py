@@ -147,6 +147,7 @@ try:
     elif PLATFORM == 'Darwin':
         subprocess.run(['brew', 'install', 'glfw'])
         subprocess.run(['brew', 'link', 'glfw'])
+        subprocess.run(['brew', 'info', 'glfw'])
 
     print('Building binaries...')
     if PLATFORM == 'Windows':
@@ -175,32 +176,13 @@ try:
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-Ofast', '-s',
             '-std=c++17', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
-            '-march=native', '-funroll-loops', '-ffast-math', '-static', '-static-libgcc',
-            '-static-libstdc++'
-        ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
+            '-march=native', '-funroll-loops', '-ffast-math'
+        ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + win_libs
 
         include_sha_headers()
-        glfw_lib_path = os.path.join(TEMP_DIR, 'glfw-3.4', 'lib-mingw-w64')
-        shutil.copy(
-            os.path.join(glfw_lib_path, 'glfw3.dll'),
-            os.path.join(
-                'dist', 'n8lang',
-                'bin', 'glfw3.dll'
-            )
-        )
-
-        lib_source_files += [
-            os.path.join(glfw_lib_path, 'libglfw3.a'),
-            os.path.join(glfw_lib_path, 'libglfw3dll.a'),
-            os.path.join(glfw_lib_path, 'glfw3.dll')
-        ]
         lib_build_args = [
-            'g++', '-static', '-static-libgcc', '-Iinclude',
-            '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll',
-            '-L' + os.path.join(TEMP_DIR, 'glfw-3.4', 'lib-mingw-w64')
-        ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
-            '-lole32', '-lopengl32', '-lgdi32'
-        ]
+            'g++', '-Iinclude', '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll'
+        ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + win_libs
 
         print("Executing:")
         print(' '.join(exe_build_args))

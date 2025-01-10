@@ -87,6 +87,35 @@ N8_FUNC(str_find) {
     ));
 }
 
+N8_FUNC(str_fromBuffer) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject obj = args.at(0);
+    if(!obj.isArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Buffer parameter must be of number array type"
+        );
+
+    std::string stream;
+    for(const DynamicObject& object : *obj.getArray()) {
+        if(!object.isNumber())
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "One of the buffer item array is not a number"
+            );
+
+        stream += '0' + static_cast<int>(object.getNumber());
+    }
+
+    return DynamicObject(stream);
+}
+
 N8_FUNC(str_occurence) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(

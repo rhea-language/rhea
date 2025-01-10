@@ -28,8 +28,14 @@
 
 N8_LIB_START
 
+N8_FUNC(crypt_md4);
+N8_FUNC(crypt_validateMd4);
+
 N8_FUNC(crypt_md5);
 N8_FUNC(crypt_validateMd5);
+
+N8_FUNC(crypt_sha224);
+N8_FUNC(crypt_validateSha224);
 
 N8_FUNC(crypt_sha256);
 N8_FUNC(crypt_validateSha256);

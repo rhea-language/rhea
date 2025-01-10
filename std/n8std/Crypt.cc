@@ -39,6 +39,52 @@ std::string toHex(const unsigned char* hash, size_t length) {
     return ss.str();
 }
 
+N8_FUNC(crypt_md4) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject input = args.at(0);
+    std::string str = input.getString();
+
+    MD4_CTX ctx;
+    unsigned char hash[MD4_DIGEST_LENGTH];
+
+    MD4_Init(&ctx);
+    MD4_Update(
+        &ctx,
+        str.c_str(),
+        str.size()
+    );
+    MD4_Final(hash, &ctx);
+
+    return DynamicObject(
+        toHex(hash, MD4_DIGEST_LENGTH)
+    );
+}
+
+N8_FUNC(crypt_validateMd4) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject input = args.at(0);
+    std::string md4 = input.toString();
+
+    return DynamicObject(
+        std::regex_match(
+            md4,
+            std::regex("^[a-fA-F0-9]{32}$")
+        ) && md4.length() == 16
+    );
+}
+
 N8_FUNC(crypt_md5) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
@@ -82,6 +128,52 @@ N8_FUNC(crypt_validateMd5) {
             md5,
             std::regex("^[a-fA-F0-9]{32}$")
         ) && md5.length() == 32
+    );
+}
+
+N8_FUNC(crypt_sha224) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject input = args.at(0);
+    std::string str = input.getString();
+
+    SHA256_CTX ctx;
+    unsigned char hash[SHA224_DIGEST_LENGTH];
+
+    SHA224_Init(&ctx);
+    SHA224_Update(
+        &ctx,
+        str.c_str(),
+        str.size()
+    );
+    SHA224_Final(hash, &ctx);
+
+    return DynamicObject(
+        toHex(hash, SHA224_DIGEST_LENGTH)
+    );
+}
+
+N8_FUNC(crypt_validateSha224) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject input = args.at(0);
+    std::string sha224 = input.toString();
+
+    return DynamicObject(
+        std::regex_match(
+            sha224,
+            std::regex("^[a-fA-F0-9]{64}$")
+        ) && sha224.length() == 28
     );
 }
 

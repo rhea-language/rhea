@@ -22,6 +22,10 @@
 #include <iostream>
 #include <stdexcept>
 
+#if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+#include <windows.h>
+#endif
+
 #ifdef __EMSCRIPTEN__
 
 extern "C" {
@@ -70,6 +74,16 @@ auto printBanner(N8Util::ArgumentParser argParse) -> void {
 auto main(int argc, char** argv) -> int {
     #if defined(__linux__) || defined(__APPLE__)
     Runtime::catchSegfault();
+    #endif
+
+    #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+    HANDLE handleOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD consoleMode;
+    GetConsoleMode(handleOut , &consoleMode);
+
+    consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    consoleMode |= DISABLE_NEWLINE_AUTO_RETURN;            
+    SetConsoleMode(handleOut , consoleMode);
     #endif
 
     N8Util::ArgumentParser argParse(argc, argv);

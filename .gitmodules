@@ -1,9 +1,6 @@
 [submodule "lib/QuickDigest5"]
 	path = lib/QuickDigest5
 	url = https://github.com/nthnn/QuickDigest5
-[submodule "lib/SHA"]
-	path = lib/SHA
-	url = https://github.com/pr0f3ss/SHA
 [submodule "lib/MyShell"]
 	path = lib/MyShell
 	url = https://github.com/nthnn/MyShell

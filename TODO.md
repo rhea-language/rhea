@@ -1,7 +1,6 @@
 Todo:
 ---
 
-- `with` statement for DynamicObject deletion outside of the block.
 - Vector operators such as (.+, .-, etc)
 - Multiplatform installer for N8.
 

@@ -16,8 +16,14 @@
 # along with N8. If not, see <https://www.gnu.org/licenses/>.
 
 val("core")
+    crypt.md4,
+    crypt.validateMd4,
+
     crypt.md5,
     crypt.validateMd5,
+
+    crypt.sha224,
+    crypt.validateSha224,
 
     crypt.sha256,
     crypt.validateSha256,

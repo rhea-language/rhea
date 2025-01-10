@@ -62,8 +62,7 @@ cc_files = []
 
 lib_headers = [
     '-Ilib/QuickDigest5/include',
-    '-Ilib/MyShell/include',
-    '-Ilib/SHA/src'
+    '-Ilib/MyShell/include'
 ]
 lib_source_files = []
 
@@ -100,16 +99,6 @@ def get_ext_instructions():
                 print('not found')
 
     return supported_features
-
-def include_sha_headers():
-    global lib_source_files
-
-    for root, _, files in os.walk('lib/SHA/src'):
-        for file in files:
-            if file.endswith('.cpp'):
-                lib_source_files.append(os.path.join(root, file))
-
-    lib_source_files = [file for file in lib_source_files if not file.endswith("example.cpp")]
 
 for root, dirs, files in os.walk('src'):
     for file in files:
@@ -167,15 +156,15 @@ try:
             '-Wstrict-aliasing=2', '-Wswitch', '-Wswitch-default', '-Wswitch-enum',
             '-Wtrigraphs', '-Wuninitialized', '-Wunknown-pragmas', '-Wunreachable-code',
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
-            '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
+            '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-Wno-deprecated-declarations',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-Ofast', '-s',
             '-std=c++17', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
             '-march=native', '-funroll-loops', '-ffast-math'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + win_libs
 
-        include_sha_headers()
         lib_build_args = [
-            'g++', '-Iinclude', '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll'
+            'g++', '-Iinclude', '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll',
+            '-Wno-deprecated-declarations'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + win_libs
 
         print("Executing:")
@@ -194,7 +183,7 @@ try:
             '-Wchar-subscripts', '-Wcomment', '-Wconversion', '-Werror',
             '-Wfloat-equal', '-Wformat', '-Wformat=2', '-Wformat-nonliteral',
             '-Wformat-security', '-Wformat-y2k', '-Wimport', '-Winit-self',
-            '-Winvalid-pch', '-Wno-header-guard', '-Wlong-long',
+            '-Winvalid-pch', '-Wno-header-guard', '-Wlong-long', '-Wno-deprecated-declarations',
             '-Wmissing-braces', '-Wmissing-field-initializers', '-Wmissing-format-attribute',
             '-Wmissing-include-dirs', '-Weffc++', '-Wpacked', '-Wparentheses',
             '-Wpointer-arith', '-Wredundant-decls', '-Wreturn-type', '-Wsequence-point',
@@ -208,10 +197,10 @@ try:
             '-funroll-loops', '-ffast-math', '-D__TERMUX__'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
-        include_sha_headers()
         lib_build_args = [
             'g++', '-Iinclude', '-Istd', '-fPIC', '-D__TERMUX__',
-            '-shared', '-o', OUTPUT_LIBRARY + '.so'
+            '-shared', '-o', OUTPUT_LIBRARY + '.so',
+            '-Wno-deprecated-declarations'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
 
         print("Executing:")
@@ -226,7 +215,7 @@ try:
         exe_build_args= [
             'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
             '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
-            '-Wchar-subscripts', '-Wcomment', '-Wconversion', '-Werror',
+            '-Wchar-subscripts', '-Wcomment', '-Wconversion', '-Werror', '-Wno-deprecated-declarations',
             '-Wfloat-equal', '-Wformat', '-Wformat=2', '-Wformat-nonliteral',
             '-Wformat-security', '-Wformat-y2k', '-Wimport', '-Winit-self',
             '-Winvalid-pch', '-Wunsafe-loop-optimizations', '-Wlong-long',
@@ -243,10 +232,10 @@ try:
             '-march=native', '-funroll-loops', '-ffast-math'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
-        include_sha_headers()
         lib_build_args = [
             'g++', '-Iinclude', '-Istd', '-fPIC',
-            '-shared', '-o', OUTPUT_LIBRARY + '.so'
+            '-shared', '-o', OUTPUT_LIBRARY + '.so',
+            '-Wno-deprecated-declarations'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
             '-lglfw', '-lGL'
         ]
@@ -273,7 +262,7 @@ try:
             '-Wsequence-point', '-Wshadow', '-Wsign-compare', '-Wstack-protector',
             '-Wstrict-aliasing', '-Wstrict-aliasing=2', '-Wswitch',
             '-Wswitch-default', '-Wswitch-enum', '-Wtrigraphs', '-Wuninitialized',
-            '-Wunknown-pragmas', '-Wunreachable-code', '-Wunused',
+            '-Wunknown-pragmas', '-Wunreachable-code', '-Wunused', '-Wno-deprecated-declarations',
             '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
             '-Wwrite-strings', '-Wno-return-type-c-linkage', '-pipe',
@@ -282,12 +271,12 @@ try:
             '-Wno-header-guard', '-Wno-pessimizing-move'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
-        include_sha_headers()
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib',
             '-Wno-deprecated-declarations', '-DGL_SILENCE_DEPRECATION',
-            '-L/opt/homebrew/lib', '-I/opt/homebrew/Cellar/glfw/3.4/include/GLFW'
+            '-L/opt/homebrew/lib', '-I/opt/homebrew/Cellar/glfw/3.4/include/GLFW',
+            '-Wno-deprecated-declarations'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
             '-lglfw', '-framework', 'OpenGL'
         ]

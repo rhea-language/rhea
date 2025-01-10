@@ -63,3 +63,7 @@ std::string Token::toString() const {
 void Token::appendToImage(std::string str) {
     this->image += str;
 }
+
+void Token::modifyImage(std::string str) {
+    this->image = str;
+}

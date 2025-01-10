@@ -51,17 +51,20 @@ jobs:
       - name: Set Environment Path
         shell: bash
         run: |
+          cd n8
           echo "N8_PATH=$PWD/dist/n8lang" >> $GITHUB_ENV
 
       - name: Build verification
         shell: bash
         run: |
+          cd n8
           ./dist/n8lang/bin/n8
           ls -R dist
 
       - name: Run test scripts
         shell: bash
         run: |
+          cd n8
           for test in test/*.n8; do
             if [[ "$test" != "test/test.n8" ]]; then
               ./dist/n8lang/bin/n8 "$test"
@@ -71,6 +74,7 @@ jobs:
 
       - name: Run examples
         run: |
+          cd n8
           ./dist/n8lang/bin/n8 examples/99-beers.n8
           ./dist/n8lang/bin/n8 examples/hello.n8
 

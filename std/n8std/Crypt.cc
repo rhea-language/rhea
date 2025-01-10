@@ -142,7 +142,7 @@ N8_FUNC(crypt_sha384) {
     DynamicObject input = args.at(0);
     std::string str = input.getString();
 
-    SHA384_CTX ctx;
+    SHA512_CTX ctx;
     unsigned char hash[SHA384_DIGEST_LENGTH];
 
     SHA384_Init(&ctx);

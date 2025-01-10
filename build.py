@@ -24,16 +24,10 @@ import zipfile
 
 CORE_VERSION = '1.0.0'
 OUT_DIR = os.path.join('dist', 'n8lang')
-TEMP_DIR = 'temp'
 
 if os.path.exists(OUT_DIR):
     shutil.rmtree(OUT_DIR)
-
-if os.path.exists(TEMP_DIR):
-    shutil.rmtree(TEMP_DIR)
-
 os.makedirs(OUT_DIR)
-os.makedirs(TEMP_DIR)
 
 try:
     src = 'modules'

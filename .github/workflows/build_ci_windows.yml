@@ -82,5 +82,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: n8-windows-dist
-          path: D:\a\_temp\msys64\home\a\n8\dist
+          path: n8/dist
           retention-days: 1

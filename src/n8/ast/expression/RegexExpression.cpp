@@ -20,9 +20,7 @@
 
 DynamicObject RegexExpression::visit(
     SymbolTable& symbols
-    #ifndef _MSC_VER
     __attribute__((unused))
-    #endif
 ) {
     return DynamicObject(std::make_shared<RegexWrapper>(this->regExpression));
 }

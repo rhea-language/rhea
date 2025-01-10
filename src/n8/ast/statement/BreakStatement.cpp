@@ -20,9 +20,7 @@
 
 DynamicObject BreakStatement::visit(
     SymbolTable& symbols
-    #ifndef _MSC_VER
     __attribute__((unused))
-    #endif
 ) {
     throw TerminativeBreakSignal(*this->address);
 }

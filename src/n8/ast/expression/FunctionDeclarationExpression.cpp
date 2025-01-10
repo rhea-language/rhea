@@ -35,9 +35,7 @@ FunctionDeclarationExpression& FunctionDeclarationExpression::operator=(
 
 DynamicObject FunctionDeclarationExpression::visit(
     SymbolTable& symbols
-    #ifndef _MSC_VER
     __attribute__((unused))
-    #endif
 ) {
     return DynamicObject(
         std::make_shared<FunctionDeclarationExpression>(

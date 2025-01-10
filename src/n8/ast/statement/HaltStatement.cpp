@@ -20,9 +20,7 @@
 
 DynamicObject HaltStatement::visit(
     SymbolTable& symbols
-    #ifndef _MSC_VER
     __attribute__((unused))
-    #endif
 ) {
     exit(0);
 }

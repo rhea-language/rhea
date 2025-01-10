@@ -475,12 +475,8 @@ void Runtime::execute(const char* sourceCode) {
 #if defined(__linux__) || defined(__APPLE__) || defined(__EMSCRIPTEN__)
 
 void Runtime::segfaultHandler(
-    int signal,
-    siginfo_t *si,
-    void *arg
-    #ifndef _MSC_VER
-    __attribute__((unused))
-    #endif
+    int signal, siginfo_t *si,
+    void *arg __attribute__((unused))
 ) {
     std::cout << "\u001b[1;31mSegmentation fault\u001b[0m" << std::endl << std::endl;
     std::cout << "\u001b[1;31mCaught signal:\t\t0x"

@@ -1,6 +1,7 @@
 Todo:
 ---
 
+- Listing via `enum`
 - Vector operators such as (.+, .-, etc)
 - Multiplatform installer for N8.
 
@@ -21,7 +22,7 @@ Todo:
     ✓ reflect
     * regex
     * sqlite3
-    * str
+    ✓ str
     ✓ sys
     * thread
     * zip

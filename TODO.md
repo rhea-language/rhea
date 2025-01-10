@@ -16,9 +16,12 @@ Todo:
     * map
     ✓ math
     * ml
+    * mysql
     * net
     ✓ reflect
-    * regex 
+    * regex
+    * sqlite3
     * str
     ✓ sys
     * thread
+    * zip

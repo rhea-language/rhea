@@ -242,24 +242,35 @@ std::shared_ptr<ASTNode> Parser::exprFunctionDecl() {
 
 std::shared_ptr<ASTNode> Parser::exprLoop() {
     Token address = this->consume("loop");
-    this->consume("(");
+    if(this->isNext("(", TokenType::OPERATOR)) {
+        this->consume("(");
 
-    std::shared_ptr<ASTNode> initial = this->expression();
-    this->consume(";");
+        std::shared_ptr<ASTNode> initial = this->expression();
+        this->consume(";");
 
-    std::shared_ptr<ASTNode> condition = this->expression();
-    this->consume(";");
+        std::shared_ptr<ASTNode> condition = this->expression();
+        this->consume(";");
 
-    std::shared_ptr<ASTNode> postexpr = this->expression();
-    this->consume(")");
+        std::shared_ptr<ASTNode> postexpr = this->expression();
+        this->consume(")");
 
-    std::shared_ptr<ASTNode> body = this->expression();
-    return std::make_shared<LoopExpression>(
+        std::shared_ptr<ASTNode> body = this->expression();
+        return std::make_shared<LoopExpression>(
+            std::make_shared<Token>(address),
+            std::move(initial),
+            std::move(condition),
+            std::move(postexpr),
+            std::move(body)
+        );
+    }
+
+    return std::make_shared<WhileExpression>(
         std::make_shared<Token>(address),
-        std::move(initial),
-        std::move(condition),
-        std::move(postexpr),
-        std::move(body)
+        std::make_shared<BooleanLiteralExpression>(
+            std::make_shared<Token>(address),
+            true
+        ),
+        this->expression()
     );
 }
 

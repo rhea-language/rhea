@@ -32,6 +32,7 @@ N8_FUNC(str_append);
 N8_FUNC(str_at);
 N8_FUNC(str_contains);
 N8_FUNC(str_find);
+N8_FUNC(str_fromBuffer);
 N8_FUNC(str_occurence);
 N8_FUNC(str_pop);
 N8_FUNC(str_replace);

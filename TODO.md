@@ -1,9 +1,9 @@
 Todo:
 ---
 
-- Listing via `enum`
 - Vector operators such as (.+, .-, etc)
 - Multiplatform installer for N8.
+- Operators on DynamicObject class.
 
 - To be developed libraries:
     ✓ array

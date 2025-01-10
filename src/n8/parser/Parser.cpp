@@ -50,6 +50,7 @@
 #include <n8/ast/statement/ContinueStatement.hpp>
 #include <n8/ast/statement/DeleteStatement.hpp>
 #include <n8/ast/statement/EmptyStatement.hpp>
+#include <n8/ast/statement/EnumStatement.hpp>
 #include <n8/ast/statement/HaltStatement.hpp>
 #include <n8/ast/statement/ReturnStatement.hpp>
 #include <n8/ast/statement/TestStatement.hpp>
@@ -897,7 +898,7 @@ std::shared_ptr<ASTNode> Parser::exprVal() {
         while(this->isNext(".", TokenType::OPERATOR)) {
             this->consume(".");
             variable.appendToImage(
-                std::string(".") +
+                "." +
                 this->consume(TokenType::IDENTIFIER)
                     .getImage()
             );
@@ -975,6 +976,42 @@ std::shared_ptr<ASTNode> Parser::stmtDelete() {
     return std::make_shared<DeleteStatement>(
         std::make_shared<Token>(address),
         variables
+    );
+}
+
+std::shared_ptr<ASTNode> Parser::stmtEnum() {
+    Token address = this->consume("enum"),
+        name = this->consume(TokenType::IDENTIFIER);
+
+    while(!this->isAtEnd() && this->isNext(".", TokenType::OPERATOR)) {
+        this->consume(".");
+        name.appendToImage(
+            "." + this->consume(TokenType::IDENTIFIER)
+                .getImage()
+        );
+    }
+    this->consume("{");
+
+    std::map<std::shared_ptr<Token>, std::shared_ptr<ASTNode>> list;
+    while(!this->isAtEnd() && !this->isNext("}", TokenType::OPERATOR)) {
+        if(!list.empty())
+            this->consume(",");
+
+        Token item = this->consume(TokenType::IDENTIFIER);
+        this->consume("=");
+
+        std::shared_ptr<ASTNode> expression = this->expression();
+        list.insert({
+            std::make_shared<Token>(item),
+            std::move(expression)
+        });
+    }
+
+    this->consume("}");
+    return std::make_shared<EnumStatement>(
+        std::make_shared<Token>(address),
+        std::make_shared<Token>(name),
+        std::move(list)
     );
 }
 
@@ -1076,6 +1113,8 @@ std::shared_ptr<ASTNode> Parser::statement() {
         return this->stmtContinue();
     else if(this->isNext("delete", TokenType::KEYWORD))
         return this->stmtDelete();
+    else if(this->isNext("enum", TokenType::KEYWORD))
+        return this->stmtEnum();
     else if(this->isNext("halt", TokenType::KEYWORD))
         return this->stmtHalt();
     else if(this->isNext("ret", TokenType::KEYWORD))

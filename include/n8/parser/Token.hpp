@@ -58,6 +58,7 @@ public:
     std::string toString() const;
 
     void appendToImage(std::string str);
+    void modifyImage(std::string str);
 };
 
 #endif

@@ -20,6 +20,7 @@ val("core")
     str.at,
     str.contains,
     str.find,
+    str.fromBuffer,
     str.occurence,
     str.pop,
     str.replace,

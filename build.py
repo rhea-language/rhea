@@ -293,7 +293,7 @@ try:
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib',
             '-Wno-deprecated-declarations', '-DGL_SILENCE_DEPRECATION',
-            '-L/opt/homebrew/lib'
+            '-L/opt/homebrew/lib', '-L/opt/homebrew/Cellar/glfw/3.4/include/GLFW'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
             '-lglfw', '-framework', 'OpenGL'
         ]

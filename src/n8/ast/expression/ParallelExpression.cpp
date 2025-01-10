@@ -35,7 +35,7 @@
 #include <thread>
 
 DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
-    #ifdef __EMSCRIPTEN__
+    #ifndef __EMSCRIPTEN__
     symbols.addParallelism(std::async(std::launch::async, [
         expr = this->expression,
         symbols
@@ -130,7 +130,7 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
             N8Util::printError(exc.what());
             N8Util::printError("\u001b[0m\r\n");
         }
-    #ifdef __EMSCRIPTEN__
+    #ifndef __EMSCRIPTEN__
     }));
     #endif
 

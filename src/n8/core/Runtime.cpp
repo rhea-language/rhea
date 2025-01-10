@@ -490,8 +490,8 @@ void Runtime::segfaultHandler(
     std::cout << "\u001b[1;31mSignal code\u001b[0m:\t\t" << si->si_code << "\n";
     std::cout << "\u001b[1;31mSending process ID\u001b[0m:\t" << si->si_pid << "\n";
     std::cout << "\u001b[1;31mReal user ID\u001b[0m:\t\t" << si->si_uid << "\n";
-    std::cout << "\u001b[1;31mExit value\u001b[0m:\t\t\t" << si->si_status << "\n";
-    std::cout << "\u001b[1;31mBand event\u001b[0m:\t\t\t" << si->si_band << "\n";
+    std::cout << "\u001b[1;31mExit value\u001b[0m:\t\t" << si->si_status << "\n";
+    std::cout << "\u001b[1;31mBand event\u001b[0m:\t\t" << si->si_band << "\n";
     std::cout << "\u001b[1;31mFaulting address\u001b[0m:\t" << si->si_addr << "\n";
 
     #ifndef __APPLE__
@@ -500,7 +500,7 @@ void Runtime::segfaultHandler(
     std::cout << "\u001b[1;31mFile descriptor\u001b[0m:\t" << si->si_fd << "\n";
     #endif
 
-    std::exit(1);
+    std::exit(si->si_status);
 }
 
 void Runtime::catchSegfault() {

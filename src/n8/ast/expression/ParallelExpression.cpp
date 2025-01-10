@@ -42,7 +42,11 @@ DynamicObject ParallelExpression::visit(SymbolTable& symbols) {
     ]() mutable {
     #endif
         try {
+            #ifndef __EMSCRIPTEN__
             expr->visit(symbols);
+            #else
+            this->expression->visit(symbols);
+            #endif
         }
         catch(const std::system_error& exc) {
             symbols.waitForTasks();

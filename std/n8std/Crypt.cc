@@ -21,21 +21,73 @@
 #include <n8/ast/TerminativeSignal.hpp>
 
 #include <iomanip>
-#include <openssl/md4.h>
-#include <openssl/md5.h>
-#include <openssl/sha.h>
+#include <openssl/evp.h>
 #include <regex>
 #include <sstream>
 #include <string>
 
-std::string toHex(const unsigned char* hash, size_t length) {
-    std::stringstream ss;
-    for(size_t i = 0; i < length; ++i)
-        ss << std::hex <<
-            std::setw(2) <<
-            std::setfill('0') <<
-            static_cast<int>(hash[i]);
+enum class CryptAlgorithm {
+    MD4,
+    MD5,
+    SHA224,
+    SHA256,
+    SHA384,
+    SHA512
+};
 
+const EVP_MD* getHashAlgorithm(CryptAlgorithm algo) {
+    switch (algo) {
+        case CryptAlgorithm::MD4:
+            return EVP_md4();
+        case CryptAlgorithm::MD5:
+            return EVP_md5();
+        case CryptAlgorithm::SHA224:
+            return EVP_sha224();
+        case CryptAlgorithm::SHA256:
+            return EVP_sha256();
+        case CryptAlgorithm::SHA384:
+            return EVP_sha384();
+        case CryptAlgorithm::SHA512:
+            return EVP_sha512();
+        default:
+            return nullptr;
+    }
+}
+
+std::string calculateHash(const std::string& input, CryptAlgorithm algo) {
+    const EVP_MD* md = getHashAlgorithm(algo);
+    if(!md)
+        throw std::runtime_error(
+            "Failed to initialize hash algorithm"
+        );
+
+    EVP_MD_CTX* ctx = EVP_MD_CTX_new();
+    if(!ctx)
+        throw std::runtime_error(
+            "Failed to create hash context"
+        );
+
+    if(EVP_DigestInit_ex(ctx, md, nullptr) != 1)
+        throw std::runtime_error(
+            "Failed to initialize digest"
+        );
+
+    if(EVP_DigestUpdate(ctx, input.c_str(), input.length()) != 1)
+        throw std::runtime_error("Failed to update digest");
+
+    unsigned char hash[EVP_MAX_MD_SIZE];
+    unsigned int hashLen;
+
+    if(EVP_DigestFinal_ex(ctx, hash, &hashLen) != 1)
+        throw std::runtime_error("Failed to finalize digest");
+
+    std::stringstream ss;
+    ss << std::hex << std::setfill('0');
+
+    for(unsigned int i = 0; i < hashLen; ++i)
+        ss << std::setw(2) << static_cast<int>(hash[i]);
+
+    EVP_MD_CTX_free(ctx);
     return ss.str();
 }
 
@@ -48,22 +100,10 @@ N8_FUNC(crypt_md4) {
         );
 
     DynamicObject input = args.at(0);
-    std::string str = input.getString();
-
-    MD4_CTX ctx;
-    unsigned char hash[MD4_DIGEST_LENGTH];
-
-    MD4_Init(&ctx);
-    MD4_Update(
-        &ctx,
-        str.c_str(),
-        str.size()
-    );
-    MD4_Final(hash, &ctx);
-
-    return DynamicObject(
-        toHex(hash, MD4_DIGEST_LENGTH)
-    );
+    return DynamicObject(calculateHash(
+        input.toString(),
+        CryptAlgorithm::MD4
+    ));
 }
 
 N8_FUNC(crypt_validateMd4) {
@@ -94,22 +134,10 @@ N8_FUNC(crypt_md5) {
         );
 
     DynamicObject input = args.at(0);
-    std::string str = input.getString();
-
-    MD5_CTX ctx;
-    unsigned char hash[MD5_DIGEST_LENGTH];
-
-    MD5_Init(&ctx);
-    MD5_Update(
-        &ctx,
-        str.c_str(),
-        str.size()
-    );
-    MD5_Final(hash, &ctx);
-
-    return DynamicObject(
-        toHex(hash, MD5_DIGEST_LENGTH)
-    );
+    return DynamicObject(calculateHash(
+        input.toString(),
+        CryptAlgorithm::MD5
+    ));
 }
 
 N8_FUNC(crypt_validateMd5) {
@@ -140,22 +168,10 @@ N8_FUNC(crypt_sha224) {
         );
 
     DynamicObject input = args.at(0);
-    std::string str = input.getString();
-
-    SHA256_CTX ctx;
-    unsigned char hash[SHA224_DIGEST_LENGTH];
-
-    SHA224_Init(&ctx);
-    SHA224_Update(
-        &ctx,
-        str.c_str(),
-        str.size()
-    );
-    SHA224_Final(hash, &ctx);
-
-    return DynamicObject(
-        toHex(hash, SHA224_DIGEST_LENGTH)
-    );
+    return DynamicObject(calculateHash(
+        input.toString(),
+        CryptAlgorithm::SHA224
+    ));
 }
 
 N8_FUNC(crypt_validateSha224) {
@@ -186,22 +202,10 @@ N8_FUNC(crypt_sha256) {
         );
 
     DynamicObject input = args.at(0);
-    std::string str = input.getString();
-
-    SHA256_CTX ctx;
-    unsigned char hash[SHA256_DIGEST_LENGTH];
-
-    SHA256_Init(&ctx);
-    SHA256_Update(
-        &ctx,
-        str.c_str(),
-        str.size()
-    );
-    SHA256_Final(hash, &ctx);
-
-    return DynamicObject(
-        toHex(hash, SHA256_DIGEST_LENGTH)
-    );
+    return DynamicObject(calculateHash(
+        input.toString(),
+        CryptAlgorithm::SHA256
+    ));
 }
 
 N8_FUNC(crypt_validateSha256) {
@@ -232,22 +236,10 @@ N8_FUNC(crypt_sha384) {
         );
 
     DynamicObject input = args.at(0);
-    std::string str = input.getString();
-
-    SHA512_CTX ctx;
-    unsigned char hash[SHA384_DIGEST_LENGTH];
-
-    SHA384_Init(&ctx);
-    SHA384_Update(
-        &ctx,
-        str.c_str(),
-        str.size()
-    );
-    SHA384_Final(hash, &ctx);
-
-    return DynamicObject(
-        toHex(hash, SHA384_DIGEST_LENGTH)
-    );
+    return DynamicObject(calculateHash(
+        input.toString(),
+        CryptAlgorithm::SHA384
+    ));
 }
 
 N8_FUNC(crypt_validateSha384) {
@@ -278,22 +270,10 @@ N8_FUNC(crypt_sha512) {
         );
 
     DynamicObject input = args.at(0);
-    std::string str = input.getString();
-
-    SHA512_CTX ctx;
-    unsigned char hash[SHA512_DIGEST_LENGTH];
-
-    SHA512_Init(&ctx);
-    SHA512_Update(
-        &ctx,
-        str.c_str(),
-        str.size()
-    );
-    SHA512_Final(hash, &ctx);
-
-    return DynamicObject(
-        toHex(hash, SHA512_DIGEST_LENGTH)
-    );
+    return DynamicObject(calculateHash(
+        input.toString(),
+        CryptAlgorithm::SHA512
+    ));
 }
 
 N8_FUNC(crypt_validateSha512) {

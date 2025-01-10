@@ -22,9 +22,7 @@
 
 DynamicObject BooleanLiteralExpression::visit(
     SymbolTable& symbols
-    #ifndef _MSC_VER
     __attribute__((unused))
-    #endif
 ) {
     return DynamicObject(this->value);
 }

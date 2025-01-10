@@ -30,6 +30,8 @@ jobs:
 
       - name: Build N8
         run: |
+          export CPATH=/opt/homebrew/include
+          export LIBRARY_PATH=/opt/homebrew/lib
           python -m pip install requests py-cpuinfo
           python build.py
 

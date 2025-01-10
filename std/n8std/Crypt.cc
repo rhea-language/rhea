@@ -20,11 +20,24 @@
 
 #include <n8/ast/TerminativeSignal.hpp>
 
-#include <quickdigest5.hpp>
+#include <iomanip>
+#include <openssl/md4.h>
+#include <openssl/md5.h>
+#include <openssl/sha.h>
 #include <regex>
-#include <SHA256.h>
-#include <SHA384.h>
-#include <SHA512.h>
+#include <sstream>
+#include <string>
+
+std::string toHex(const unsigned char* hash, size_t length) {
+    std::stringstream ss;
+    for(size_t i = 0; i < length; ++i)
+        ss << std::hex <<
+            std::setw(2) <<
+            std::setfill('0') <<
+            static_cast<int>(hash[i]);
+
+    return ss.str();
+}
 
 N8_FUNC(crypt_md5) {
     if(args.size() != 1)
@@ -35,8 +48,21 @@ N8_FUNC(crypt_md5) {
         );
 
     DynamicObject input = args.at(0);
+    std::string str = input.getString();
+
+    MD5_CTX ctx;
+    unsigned char hash[MD5_DIGEST_LENGTH];
+
+    MD5_Init(&ctx);
+    MD5_Update(
+        &ctx,
+        str.c_str(),
+        str.size()
+    );
+    MD5_Final(hash, &ctx);
+
     return DynamicObject(
-        QuickDigest5::toHash(input.toString())
+        toHex(hash, MD5_DIGEST_LENGTH)
     );
 }
 
@@ -67,10 +93,23 @@ N8_FUNC(crypt_sha256) {
                 std::to_string(args.size())
         );
 
-    SHA256 sha256;
     DynamicObject input = args.at(0);
+    std::string str = input.getString();
 
-    return DynamicObject(sha256.hash(input.toString()));
+    SHA256_CTX ctx;
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+
+    SHA256_Init(&ctx);
+    SHA256_Update(
+        &ctx,
+        str.c_str(),
+        str.size()
+    );
+    SHA256_Final(hash, &ctx);
+
+    return DynamicObject(
+        toHex(hash, SHA256_DIGEST_LENGTH)
+    );
 }
 
 N8_FUNC(crypt_validateSha256) {
@@ -100,10 +139,23 @@ N8_FUNC(crypt_sha384) {
                 std::to_string(args.size())
         );
 
-    SHA384 sha384;
     DynamicObject input = args.at(0);
+    std::string str = input.getString();
 
-    return DynamicObject(sha384.hash(input.toString()));
+    SHA384_CTX ctx;
+    unsigned char hash[SHA384_DIGEST_LENGTH];
+
+    SHA384_Init(&ctx);
+    SHA384_Update(
+        &ctx,
+        str.c_str(),
+        str.size()
+    );
+    SHA384_Final(hash, &ctx);
+
+    return DynamicObject(
+        toHex(hash, SHA384_DIGEST_LENGTH)
+    );
 }
 
 N8_FUNC(crypt_validateSha384) {
@@ -133,10 +185,23 @@ N8_FUNC(crypt_sha512) {
                 std::to_string(args.size())
         );
 
-    SHA512 sha512;
     DynamicObject input = args.at(0);
+    std::string str = input.getString();
 
-    return DynamicObject(sha512.hash(input.toString()));
+    SHA512_CTX ctx;
+    unsigned char hash[SHA512_DIGEST_LENGTH];
+
+    SHA512_Init(&ctx);
+    SHA512_Update(
+        &ctx,
+        str.c_str(),
+        str.size()
+    );
+    SHA512_Final(hash, &ctx);
+
+    return DynamicObject(
+        toHex(hash, SHA512_DIGEST_LENGTH)
+    );
 }
 
 N8_FUNC(crypt_validateSha512) {

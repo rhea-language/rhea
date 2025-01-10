@@ -19,8 +19,6 @@
 #ifndef N8_STDLIB_GL_CC
 #define N8_STDLIB_GL_CC
 
-#ifndef __TERMUX__
-
 #ifdef __clang__
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
@@ -29,8 +27,6 @@
 #include "N8Library.hpp"
 
 N8_LIB_START
-
-#ifndef __TERMUX__
 
 N8_FUNC(glfw_init);
 N8_FUNC(glfw_terminate);
@@ -42,14 +38,10 @@ N8_FUNC(glfw_swapBuffers);
 N8_FUNC(glfw_pollEvents);
 N8_FUNC(glfw_destroyWindow);
 
-#endif
-
 N8_LIB_END
 
 #ifdef __clang__
 #   pragma clang diagnostic pop
-#endif
-
 #endif
 
 #endif

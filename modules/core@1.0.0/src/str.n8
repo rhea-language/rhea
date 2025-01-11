@@ -15,18 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with N8. If not, see <https://www.gnu.org/licenses/>.
 
-val("core")
-    str.append,
-    str.at,
-    str.contains,
-    str.find,
-    str.fromBuffer,
-    str.occurence,
-    str.pop,
-    str.replace,
-    str.replaceAll,
-    str.split,
-    str.substring,
-    str.toArray,
-    str.toBytes,
-    str.trim
+import str {
+    append,         at,             contains,
+    find,           fromBuffer,     occurence,
+    pop,            replace,        replaceAll,
+    split,          substring,      toArray,
+    toBytes,        trim
+} from "core"

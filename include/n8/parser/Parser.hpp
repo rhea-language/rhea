@@ -68,6 +68,8 @@ private:
     std::shared_ptr<ASTNode> stmtDelete();
     std::shared_ptr<ASTNode> stmtEnum();
     std::shared_ptr<ASTNode> stmtHalt();
+    std::shared_ptr<ASTNode> stmtImport();
+    std::shared_ptr<ASTNode> stmtMod();
     std::shared_ptr<ASTNode> stmtRet();
     std::shared_ptr<ASTNode> stmtUse();
     std::shared_ptr<ASTNode> stmtThrow();

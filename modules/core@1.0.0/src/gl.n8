@@ -16,12 +16,12 @@
 # along with N8. If not, see <https://www.gnu.org/licenses/>.
 
 val("core")
-    glfw.init,
-    glfw.terminate,
-    glfw.createWindow,
-    glfw.makeContextCurrent,
-    glfw.shouldCloseWindow,
-    glfw.clear,
-    glfw.swapBuffers,
-    glfw.pollEvents,
-    glfw.destroyWindow
+    gl.init,
+    gl.terminate,
+    gl.createWindow,
+    gl.makeContextCurrent,
+    gl.shouldCloseWindow,
+    gl.clear,
+    gl.swapBuffers,
+    gl.pollEvents,
+    gl.destroyWindow

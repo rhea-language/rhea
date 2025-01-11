@@ -17,8 +17,14 @@
 
 import gl {
     init,
+    initHint,
+
+    versionString,
     terminate,
     createWindow,
+
+    getError,
+    setErrorCallback,
 
     makeContextCurrent,
     shouldCloseWindow,

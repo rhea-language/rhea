@@ -16,9 +16,7 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef __TERMUX__
-
-#include "n8std/GLFW.hpp"
+#include "n8std/GL.hpp"
 
 #include <n8/ast/TerminativeSignal.hpp>
 #include <n8/util/RandomUtil.hpp>
@@ -26,20 +24,18 @@
 #include <GLFW/glfw3.h>
 #include <unordered_map>
 
-#ifndef __TERMUX__
-
 std::unordered_map<std::string, GLFWwindow*> windowMap;
 
-N8_FUNC(glfw_init) {
+N8_FUNC(gl_init) {
     return DynamicObject(glfwInit() == 1);
 }
 
-N8_FUNC(glfw_terminate) {
+N8_FUNC(gl_terminate) {
     glfwTerminate();
     return DynamicObject();
 }
 
-N8_FUNC(glfw_createWindow) {
+N8_FUNC(gl_createWindow) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -79,7 +75,7 @@ N8_FUNC(glfw_createWindow) {
     return DynamicObject(uuid);
 }
 
-N8_FUNC(glfw_makeContextCurrent) {
+N8_FUNC(gl_makeContextCurrent) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -99,7 +95,7 @@ N8_FUNC(glfw_makeContextCurrent) {
     return DynamicObject(uuidStr);
 }
 
-N8_FUNC(glfw_shouldCloseWindow) {
+N8_FUNC(gl_shouldCloseWindow) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -123,7 +119,7 @@ N8_FUNC(glfw_shouldCloseWindow) {
     );
 }
 
-N8_FUNC(glfw_clear) {
+N8_FUNC(gl_clear) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -143,7 +139,7 @@ N8_FUNC(glfw_clear) {
     return DynamicObject();
 }
 
-N8_FUNC(glfw_swapBuffers) {
+N8_FUNC(gl_swapBuffers) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -163,7 +159,7 @@ N8_FUNC(glfw_swapBuffers) {
     return DynamicObject(uuidStr);
 }
 
-N8_FUNC(glfw_pollEvents) {
+N8_FUNC(gl_pollEvents) {
     if(args.size() != 0)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -175,7 +171,7 @@ N8_FUNC(glfw_pollEvents) {
     return DynamicObject();
 }
 
-N8_FUNC(glfw_destroyWindow) {
+N8_FUNC(gl_destroyWindow) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -194,8 +190,3 @@ N8_FUNC(glfw_destroyWindow) {
     glfwDestroyWindow(windowMap[uuidStr]);
     return DynamicObject(uuidStr);
 }
-
-#endif
-
-#endif
-

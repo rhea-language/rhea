@@ -24,15 +24,15 @@ const std::vector<std::string> OperatorsAndKeys::operators = {
     "(", ")", "[", "]", "{", "}",
     "=", "==", ":", ";", "'", "\"",
     "<", "<<", "<=", ">", ">>", ">=",
-    ",", ".", "?", "::", "!:"
+    ",", ".", "?", "::", "!:", "=>"
 };
 
 const std::unordered_set<std::string> OperatorsAndKeys::keywords = {
     "break", "catch", "continue", "delete",
-    "else", "enum", "false", "func", "halt",
-    "handle", "if", "lock", "loop", "maybe",
-    "nil", "parallel", "random", "render",
-    "ret", "size", "test", "then", "throw",
-    "true", "type", "unless", "use", "val",
-    "wait", "when", "while"
+    "else", "enum", "false", "from", "func",
+    "halt", "handle", "import", "if", "lock",
+    "loop", "maybe", "mod", "nil", "parallel",
+    "random", "render", "ret", "size", "test",
+    "then", "throw", "true", "type", "unless",
+    "use", "val", "wait", "when", "while"
 };

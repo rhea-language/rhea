@@ -841,7 +841,7 @@ N8_FUNC(math_fusedMultiplyAdd) {
     ));
 }
 
-N8_FUNC(math_sigmoid) {
+N8_FUNC(math_activation_sigmoid) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -859,7 +859,7 @@ N8_FUNC(math_sigmoid) {
     return DynamicObject(1 / (1 + exp(-value.getNumber())));
 }
 
-N8_FUNC(math_sigmoidDerivative) {
+N8_FUNC(math_activation_sigmoidDerivative) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -878,7 +878,7 @@ N8_FUNC(math_sigmoidDerivative) {
     return DynamicObject(num * (1 - num));
 }
 
-N8_FUNC(math_step) {
+N8_FUNC(math_activation_step) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -897,7 +897,7 @@ N8_FUNC(math_step) {
     return DynamicObject(num >= 0 ? 1.0 : 0.0);
 }
 
-N8_FUNC(math_relu) {
+N8_FUNC(math_activation_relu) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -916,7 +916,7 @@ N8_FUNC(math_relu) {
     return DynamicObject(num > 0 ? num : 0);
 }
 
-N8_FUNC(math_leakyRelu) {
+N8_FUNC(math_activation_leakyRelu) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -936,7 +936,7 @@ N8_FUNC(math_leakyRelu) {
     return DynamicObject(xn > 0 ? xn : y.getNumber() * xn);
 }
 
-N8_FUNC(math_elu) {
+N8_FUNC(math_activation_elu) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -958,7 +958,7 @@ N8_FUNC(math_elu) {
     );
 }
 
-N8_FUNC(math_selu) {
+N8_FUNC(math_activation_selu) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -984,7 +984,7 @@ N8_FUNC(math_selu) {
     );
 }
 
-N8_FUNC(math_softmax) {
+N8_FUNC(math_activation_softmax) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1029,7 +1029,7 @@ N8_FUNC(math_softmax) {
     ));
 }
 
-N8_FUNC(math_swish) {
+N8_FUNC(math_activation_swish) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1048,7 +1048,7 @@ N8_FUNC(math_swish) {
     return DynamicObject(num / (1.0 + exp(-num)));
 }
 
-N8_FUNC(math_mish) {
+N8_FUNC(math_activation_mish) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1067,7 +1067,7 @@ N8_FUNC(math_mish) {
     return DynamicObject(num * tanh(log1p(exp(num))));
 }
 
-N8_FUNC(math_hardSigmoid) {
+N8_FUNC(math_activation_hardSigmoid) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1087,7 +1087,7 @@ N8_FUNC(math_hardSigmoid) {
     );
 }
 
-N8_FUNC(math_hardTan) {
+N8_FUNC(math_activation_hardTan) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1107,7 +1107,7 @@ N8_FUNC(math_hardTan) {
     );
 }
 
-N8_FUNC(math_softplus) {
+N8_FUNC(math_activation_softplus) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1127,7 +1127,7 @@ N8_FUNC(math_softplus) {
     );
 }
 
-N8_FUNC(math_softsign) {
+N8_FUNC(math_activation_softsign) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1146,7 +1146,7 @@ N8_FUNC(math_softsign) {
     return DynamicObject(num / (1.0 + fabs(num)));
 }
 
-N8_FUNC(math_gaussian) {
+N8_FUNC(math_activation_gaussian) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1165,7 +1165,7 @@ N8_FUNC(math_gaussian) {
     return DynamicObject(exp(-num * num));
 }
 
-N8_FUNC(math_bentIdentity) {
+N8_FUNC(math_activation_bentIdentity) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1184,7 +1184,7 @@ N8_FUNC(math_bentIdentity) {
     return DynamicObject((sqrt(fma(num, num, 1.0) - 1.0) / 2.0) + num);
 }
 
-N8_FUNC(math_logLogistic) {
+N8_FUNC(math_activation_logLogistic) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),

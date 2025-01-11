@@ -25,6 +25,8 @@
 #include <unordered_map>
 
 std::unordered_map<std::string, GLFWwindow*> windowMap;
+std::unordered_map<std::string, GLFWmonitor*> monitorMap;
+std::unordered_map<std::string, GLFWcursor*> cursorMap;
 
 N8_FUNC(gl_init) {
     return DynamicObject(glfwInit() == 1);

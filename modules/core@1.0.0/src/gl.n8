@@ -28,3 +28,386 @@ import gl {
     pollEvents,
     destroyWindow
 } from "core"
+
+enum gl.input.key {
+    RELEASE = 0,
+    PRESS   = 1,
+    REPEAT  = 2,
+    UNKNOWN = -1
+}
+
+enum gl.input.hat {
+    CENTERED        = 0,
+    UP              = 1,
+    RIGHT           = 2,
+    DOWN            = 4,
+    LEFT            = 8,
+    RIGHT_UP        = (gl.input.hat.RIGHT | gl.input.hat.UP),
+    RIGHT_DOWN      = (gl.input.hat.RIGHT | gl.input.hat.DOWN),
+    LEFT_UP         = (gl.input.hat.LEFT | gl.input.hat.UP),
+    LEFT_DOWN       = (gl.input.hat.LEFT | gl.input.hat.DOWN)
+}
+
+enum gl.input.kb {
+    SPACE           = 32,
+    APOSTROPHE      = 39,
+    COMMA           = 44,
+    MINUS           = 45,
+    PERIOD          = 46,
+    SLASH           = 47,
+    NUM_0           = 48,
+    NUM_1           = 49,
+    NUM_2           = 50,
+    NUM_3           = 51,
+    NUM_4           = 52,
+    NUM_5           = 53,
+    NUM_6           = 54,
+    NUM_7           = 55,
+    NUM_8           = 56,
+    NUM_9           = 57,
+    SEMICOLON       = 59,
+    EQUAL           = 61,
+    A               = 65,
+    B               = 66,
+    C               = 67,
+    D               = 68,
+    E               = 69,
+    F               = 70,
+    G               = 71,
+    H               = 72,
+    I               = 73,
+    J               = 74,
+    K               = 75,
+    L               = 76,
+    M               = 77,
+    N               = 78,
+    O               = 79,
+    P               = 80,
+    Q               = 81,
+    R               = 82,
+    S               = 83,
+    T               = 84,
+    U               = 85,
+    V               = 86,
+    W               = 87,
+    X               = 88,
+    Y               = 89,
+    Z               = 90,
+    LEFT_BRACKET    = 91,
+    BACKSLASH       = 92,
+    RIGHT_BRACKET   = 93,
+    GRAVE_ACCENT    = 96,
+    WORLD_1         = 1,
+    WORLD_2         = 2,
+    ESCAPE          = 256,
+    ENTER           = 257,
+    TAB             = 258,
+    BACKSPACE       = 259,
+    INSERT          = 260,
+    DELETE          = 261,
+    RIGHT           = 262,
+    LEFT            = 263,
+    DOWN            = 264,
+    UP              = 265,
+    PAGE_UP         = 266,
+    PAGE_DOWN       = 267,
+    HOME            = 268,
+    END             = 269,
+    CAPS_LOCK       = 280,
+    SCROLL_LOCK     = 281,
+    NUM_LOCK        = 282,
+    PRINT_SCREEN    = 283,
+    PAUSE           = 284,
+    F1              = 290,
+    F2              = 291,
+    F3              = 292,
+    F4              = 293,
+    F5              = 294,
+    F6              = 295,
+    F7              = 296,
+    F8              = 297,
+    F9              = 298,
+    F10             = 299,
+    F11             = 300,
+    F12             = 301,
+    F13             = 302,
+    F14             = 303,
+    F15             = 304,
+    F16             = 305,
+    F17             = 306,
+    F18             = 307,
+    F19             = 308,
+    F20             = 309,
+    F21             = 310,
+    F22             = 311,
+    F23             = 312,
+    F24             = 313,
+    F25             = 314,
+    KP_0            = 320,
+    KP_1            = 321,
+    KP_2            = 322,
+    KP_3            = 323,
+    KP_4            = 324,
+    KP_5            = 325,
+    KP_6            = 326,
+    KP_7            = 327,
+    KP_8            = 328,
+    KP_9            = 329,
+    KP_DECIMAL      = 330,
+    KP_DIVIDE       = 331,
+    KP_MULTIPLY     = 332,
+    KP_SUBTRACT     = 333,
+    KP_ADD          = 334,
+    KP_ENTER        = 335,
+    KP_EQUAL        = 336,
+    LEFT_SHIFT      = 340,
+    LEFT_CONTROL    = 341,
+    LEFT_ALT        = 342,
+    LEFT_SUPER      = 343,
+    RIGHT_SHIFT     = 344,
+    RIGHT_CONTROL   = 345,
+    RIGHT_ALT       = 346,
+    RIGHT_SUPER     = 347,
+    RIGHT_MENU      = 348
+}
+
+enum gl.input.modKey {
+    SHIFT       = 0x0001,
+    CONTROL     = 0x0002,
+    ALT         = 0x0004,
+    SUPER       = 0x0008,
+    CAPS_LOCK   = 0x0010,
+    NUM_LOCK    = 0x0020
+}
+
+enum gl.input.mouse {
+    BTN_1       = 0,
+    BTN_2       = 1,
+    BTN_3       = 2,
+    BTN_4       = 3,
+    BTN_5       = 4,
+    BTN_6       = 5,
+    BTN_7       = 6,
+    BTN_8       = 7,
+
+    BTN_LEFT    = gl.input.mouse.BTN_1,
+    BTN_RIGHT   = gl.input.mouse.BTN_2,
+    BTN_MIDDLE  = gl.input.mouse.BTN_3
+}
+
+enum gl.input.joystick {
+    JS_1    = 0,
+    JS_2    = 1,
+    JS_3    = 2,
+    JS_4    = 3,
+    JS_5    = 4,
+    JS_6    = 5,
+    JS_7    = 6,
+    JS_8    = 7,
+    JS_9    = 8,
+    JS_10   = 9,
+    JS_11   = 10,
+    JS_12   = 11,
+    JS_13   = 12,
+    JS_14   = 13,
+    JS_15   = 14,
+    JS_16   = 15
+}
+
+enum gl.input.gamepad {
+    A               = 0,
+    B               = 1,
+    X               = 2,
+    Y               = 3,
+    LEFT_BUMPER     = 4,
+    RIGHT_BUMPER    = 5,
+    BACK            = 6,
+    START           = 7,
+    GUIDE           = 8,
+    LEFT_THUMB      = 9,
+    RIGHT_THUMB     = 10,
+    DPAD_UP         = 11,
+    DPAD_RIGHT      = 12,
+    DPAD_DOWN       = 13,
+    DPAD_LEFT       = 14,
+    CROSS           = gl.input.gamepad.A,
+    CIRCLE          = gl.input.gamepad.B,
+    SQUARE          = gl.input.gamepad.X,
+    TRIANGLE        = gl.input.gamepad.Y,
+
+    AXIS_LEFT_X     = 0,
+    AXIS_LEFT_Y     = 1,
+    AXIS_RIGHT_X    = 2,
+    AXIS_RIGHT_Y    = 3,
+    AXIS_LEFT_TRIG  = 4,
+    AXIS_RIGHT_TRIG = 5
+}
+
+enum gl.error {
+    NO_ERROR            = 0,
+    NOT_INITIALIZED     = 0x00010001,
+    NO_CURRENT_CTX      = 0x00010002,
+    INVALID_ENUM        = 0x00010003,
+    INVALID_VALUE       = 0x00010004,
+    OUT_OF_MEMORY       = 0x00010005,
+    API_UNAVAILABLE     = 0x00010006,
+    VER_UNAVAILABLE     = 0x00010007,
+    PLATFORM_ERROR      = 0x00010008,
+    FMT_UNAVAILABLE     = 0x00010009,
+    NO_WINDOW_CTX       = 0x0001000A,
+    NO_CURSOR_AVAIL     = 0x0001000B,
+    FEATURE_UNAVAIL     = 0x0001000C,
+    FEATURE_UNIMPL      = 0x0001000D,
+    PLATFORM_UNAVAIL    = 0x0001000E
+}
+
+enum gl.window {
+    FOCUSED                 = 0x00020001,
+    ICONIFIED               = 0x00020002,
+    RESIZABLE               = 0x00020003,
+    VISIBLE                 = 0x00020004,
+    DECORATED               = 0x00020005,
+    AUTO_ICONIFY            = 0x00020006,
+    FLOATING                = 0x00020007,
+    MAXIMIZED               = 0x00020008,
+    CENTER_CURSOR           = 0x00020009,
+    TRANSPARENT_FRAMEBUF    = 0x0002000A,
+    HOVERED                 = 0x0002000B,
+    FOCUS_ON_SHOW           = 0x0002000C,
+    MOUSE_PASSTHROUGH       = 0x0002000D,
+    POSITION_X              = 0x0002000E,
+    POSITION_Y              = 0x0002000F
+}
+
+enum gl.hint {
+    RED_BITS                    = 0x00021001,
+    GREEN_BITS                  = 0x00021002,
+    BLUE_BITS                   = 0x00021003,
+    ALPHA_BITS                  = 0x00021004,
+    DEPTH_BITS                  = 0x00021005,
+    STENCIL_BITS                = 0x00021006,
+    ACCUM_RED_BITS              = 0x00021007,
+    ACCUM_GREEN_BITS            = 0x00021008,
+    ACCUM_BLUE_BITS             = 0x00021009,
+    ACCUM_ALPHA_BITS            = 0x0002100A,
+    AUX_BUFFERS                 = 0x0002100B,
+    STEREO                      = 0x0002100C,
+    SAMPLES                     = 0x0002100D,
+    SRGB_CAPABLE                = 0x0002100E,
+    REFRESH_RATE                = 0x0002100F,
+    DOUBLE_BUFFER               = 0x00021010,
+    CLIENT_API                  = 0x00022001,
+    CTX_VER_MAJOR               = 0x00022002,
+    CTX_VER_MINOR               = 0x00022003,
+    CTX_REVISION                = 0x00022004,
+    CTX_ROBUSTNESS              = 0x00022005,
+    OGL_FORWARD_COMPAT          = 0x00022006,
+    CTX_DEBUG                   = 0x00022007,
+    OPENGL_PROFILE              = 0x00022008,
+    CTX_RELEASE_BHVR            = 0x00022009,
+    CTX_NO_ERROR                = 0x0002200A,
+    CTX_CREATION_API            = 0x0002200B,
+    SCALE_TO_MONITOR            = 0x0002200C,
+    SCALE_FRAME_BUFFER          = 0x0002200D,
+    COCOA_RETINA_FRMBUF         = 0x00023001,
+    COCOA_FRAME_NAME            = 0x00023002,
+    COCOA_GRAPHICS_SWITCHING    = 0x00023003,
+    X11_CLASS_NAME              = 0x00024001,
+    X11_INSTANCE_NAME           = 0x00024002,
+    WIN32_KEYBOARD_MENU         = 0x00025001,
+    WAYLAND_APP_ID              = 0x00026001
+}
+
+enum gl.api {
+    NO_API          = 0,
+    OPENGL_API      = 0x00030001,
+    OPENGL_ES_API   = 0x00030002
+}
+
+enum gl.context {
+    NO_ROBUSTNESS       = 0,
+    NO_RESET_NOTIF      = 0x00031001,
+    LOSE_CTX_ON_RESET   = 0x00031002,
+
+    NATIVE_CTX_API      = 0x00036001,
+    EGL_CTX_API         = 0x00036002,
+    OSMESA_CTX_API      = 0x00036003
+}
+
+enum gl.profile {
+    ANY     = 0,
+    CORE    = 0x00032001,
+    COMPAT  = 0x00032002
+}
+
+enum gl.keys {
+    CURSOR              = 0x00033001,
+    STICKY_KEYS         = 0x00033002,
+    STICKY_MOUSE_BTN    = 0x00033003,
+    LOCK_KEY_MODS       = 0x00033004,
+    RAW_MOUSE_MOTION    = 0x00033005,
+    UNLI_MOUSE_BTN      = 0x00033006,
+
+    CURSOR_NORMAL       = 0x00034001,
+    CURSOR_HIDDEN       = 0x00034002,
+    CURSOR_DISABLED     = 0x00034003,
+    CURSOR_CAPTURED     = 0x00034004
+}
+
+enum gl.release {
+    ANY_RELELEASE   = 0,
+    RELEASE_FLUSH   = 0x00035001,
+    RELEASE_NONE    = 0x00035002
+}
+
+enum gl.anglePlatform {
+    NONE        = 0x00037001,
+    OPENGL      = 0x00037002,
+    OPENGLES    = 0x00037003,
+    D3D9        = 0x00037004,
+    D3D11       = 0x00037005,
+    VULKAN      = 0x00037007,
+    METAL       = 0x00037008
+}
+
+enum gl.wayland {
+    PREFER_LIBDECOR     = 0x00038001,
+    DISABLE_LIBDECOR    = 0x00038002
+}
+
+enum gl.cursor {
+    ARROW       = 0x00036001,
+    IBEAM       = 0x00036002,
+    CROSSHAIR   = 0x00036003
+    HAND        = 0x00036004,
+    RESIZE_EW   = 0x00036005,
+    RESIZE_NS   = 0x00036006,
+    RESIZE_NWSE = 0x00036007,
+    RESIZE_NESW = 0x00036008,
+    RESIZE_ALL  = 0x00036009,
+    NOT_ALLOWED = 0x0003600A
+}
+
+enum gl.connection {
+    CONNECTED       = 0x00040001,
+    DISCONNECTED    = 0x00040002
+}
+
+enum gl.init {
+    JOYSTICK_HAT_BTN    = 0x00050001,
+    ANGLE_PLATFORM      = 0x00050002,
+    PLATFORM            = 0x00050003,
+    COCOA_CHDIR_RES     = 0x00051001,
+    COCOA_MENUBAR       = 0x00051002,
+    X11_XCB_VULKAN_SURF = 0x00052001,
+    WAYLAND_LIBDECOR    = 0x00053001
+}
+
+enum gl.platform {
+    ANY     = 0x00060000,
+    WIN32   = 0x00060001,
+    COCOA   = 0x00060002,
+    WAYLAND = 0x00060003,
+    X11     = 0x00060004,
+    NULL    = 0x00060005
+}

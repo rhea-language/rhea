@@ -19,6 +19,7 @@
 #include "n8std/GL.hpp"
 
 #include <n8/ast/TerminativeSignal.hpp>
+#include <n8/ast/expression/FunctionDeclarationExpression.hpp>
 #include <n8/util/RandomUtil.hpp>
 
 #include <GLFW/glfw3.h>
@@ -30,6 +31,97 @@ std::unordered_map<std::string, GLFWcursor*> cursorMap;
 
 N8_FUNC(gl_init) {
     return DynamicObject(glfwInit() == 1);
+}
+
+N8_FUNC(gl_initHint) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject hint = args.at(0),
+        value = args.at(1);
+
+    if(!hint.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting number argument for hint, got " +
+                hint.objectType()
+        );
+
+    if(!value.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting number argument for value, got " +
+                value.objectType()
+        );
+
+    glfwInitHint(
+        static_cast<int>(hint.getNumber()),
+        static_cast<int>(value.getNumber())
+    );
+    return DynamicObject();
+}
+
+N8_FUNC(gl_versionString) {
+    return DynamicObject(glfwGetVersionString());
+}
+
+N8_FUNC(gl_getError) {
+    std::vector<DynamicObject> values;
+    const char* errorMessage;
+
+    values.emplace_back(DynamicObject(
+        static_cast<double>(glfwGetError(&errorMessage))
+    ));
+
+    if(errorMessage == NULL)
+        values.emplace_back(DynamicObject(""));
+    else values.emplace_back(
+        DynamicObject(std::string(errorMessage))
+    );
+
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(
+            values
+        )
+    );
+}
+
+N8_FUNC(gl_setErrorCallback) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject callback = args.at(0);
+    if(!callback.isFunction())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting callback parameter to be of function type, "
+                "got " + callback.objectType() + " instead"
+        );
+
+    static auto errorCallback = callback.getCallable().get();
+    static SymbolTable& symbols = symtab;
+
+    glfwSetErrorCallback([](int error, const char* description) {
+        std::vector<DynamicObject> params;
+        params.emplace_back(DynamicObject(
+            static_cast<double>(error)
+        ));
+        params.emplace_back(DynamicObject(
+            std::string(description)
+        ));
+
+        errorCallback->call(symbols, params);
+    });
+
+    return DynamicObject();
 }
 
 N8_FUNC(gl_terminate) {

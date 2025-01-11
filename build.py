@@ -248,6 +248,11 @@ try:
         subprocess.run(lib_build_args)
 
     elif PLATFORM == 'Darwin':
+        lib_headers += [
+            '-I/opt/homebrew/opt/openssl@3/include',
+            '-I/opt/homebrew/Cellar/glfw/3.4/include/GLFW'
+        ]
+
         exe_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude', '-Wall',
             '-pedantic', '-Wdisabled-optimization', '-pedantic-errors',
@@ -274,7 +279,7 @@ try:
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib',
             '-Wno-deprecated-declarations', '-DGL_SILENCE_DEPRECATION',
-            '-L/opt/homebrew/lib', '-I/opt/homebrew/Cellar/glfw/3.4/include/GLFW',
+            '-L/opt/homebrew/lib', '-L/opt/homebrew/opt/openssl@3/lib',
             '-Wno-deprecated-declarations'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
             '-lglfw', '-framework', 'OpenGL'

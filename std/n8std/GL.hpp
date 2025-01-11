@@ -28,15 +28,15 @@
 
 N8_LIB_START
 
-N8_FUNC(glfw_init);
-N8_FUNC(glfw_terminate);
-N8_FUNC(glfw_createWindow);
-N8_FUNC(glfw_makeContextCurrent);
-N8_FUNC(glfw_shouldCloseWindow);
-N8_FUNC(glfw_clear);
-N8_FUNC(glfw_swapBuffers);
-N8_FUNC(glfw_pollEvents);
-N8_FUNC(glfw_destroyWindow);
+N8_FUNC(gl_init);
+N8_FUNC(gl_terminate);
+N8_FUNC(gl_createWindow);
+N8_FUNC(gl_makeContextCurrent);
+N8_FUNC(gl_shouldCloseWindow);
+N8_FUNC(gl_clear);
+N8_FUNC(gl_swapBuffers);
+N8_FUNC(gl_pollEvents);
+N8_FUNC(gl_destroyWindow);
 
 N8_LIB_END
 

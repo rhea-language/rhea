@@ -37,15 +37,17 @@ enum gl.input.key {
 }
 
 enum gl.input.hat {
-    CENTERED        = 0,
     UP              = 1,
-    RIGHT           = 2,
     DOWN            = 4,
+    CENTERED        = 0,
+
+    RIGHT           = 2,
+    RIGHT_UP        = 3,
+    RIGHT_DOWN      = 6,
+
     LEFT            = 8,
-    RIGHT_UP        = (gl.input.hat.RIGHT | gl.input.hat.UP),
-    RIGHT_DOWN      = (gl.input.hat.RIGHT | gl.input.hat.DOWN),
-    LEFT_UP         = (gl.input.hat.LEFT | gl.input.hat.UP),
-    LEFT_DOWN       = (gl.input.hat.LEFT | gl.input.hat.DOWN)
+    LEFT_UP         = 9,
+    LEFT_DOWN       = 12
 }
 
 enum gl.input.kb {
@@ -190,9 +192,9 @@ enum gl.input.mouse {
     BTN_7       = 6,
     BTN_8       = 7,
 
-    BTN_LEFT    = gl.input.mouse.BTN_1,
-    BTN_RIGHT   = gl.input.mouse.BTN_2,
-    BTN_MIDDLE  = gl.input.mouse.BTN_3
+    BTN_LEFT    = 0,
+    BTN_RIGHT   = 1,
+    BTN_MIDDLE  = 2
 }
 
 enum gl.input.joystick {
@@ -219,26 +221,33 @@ enum gl.input.gamepad {
     B               = 1,
     X               = 2,
     Y               = 3,
+
     LEFT_BUMPER     = 4,
     RIGHT_BUMPER    = 5,
+
     BACK            = 6,
     START           = 7,
     GUIDE           = 8,
+
     LEFT_THUMB      = 9,
     RIGHT_THUMB     = 10,
+
     DPAD_UP         = 11,
     DPAD_RIGHT      = 12,
     DPAD_DOWN       = 13,
     DPAD_LEFT       = 14,
-    CROSS           = gl.input.gamepad.A,
-    CIRCLE          = gl.input.gamepad.B,
-    SQUARE          = gl.input.gamepad.X,
-    TRIANGLE        = gl.input.gamepad.Y,
+
+    CROSS           = 0,
+    CIRCLE          = 1,
+    SQUARE          = 2,
+    TRIANGLE        = 3,
 
     AXIS_LEFT_X     = 0,
     AXIS_LEFT_Y     = 1,
+
     AXIS_RIGHT_X    = 2,
     AXIS_RIGHT_Y    = 3,
+
     AXIS_LEFT_TRIG  = 4,
     AXIS_RIGHT_TRIG = 5
 }
@@ -378,7 +387,7 @@ enum gl.wayland {
 enum gl.cursor {
     ARROW       = 0x00036001,
     IBEAM       = 0x00036002,
-    CROSSHAIR   = 0x00036003
+    CROSSHAIR   = 0x00036003,
     HAND        = 0x00036004,
     RESIZE_EW   = 0x00036005,
     RESIZE_NS   = 0x00036006,

@@ -22,3 +22,22 @@ import str {
     split,          substring,      toArray,
     toBytes,        trim
 } from "core"
+
+enum str {
+    newline     = "\n",
+    carriageRet = "\r",
+    tab         = "\t",
+    alert       = "\a",
+    backspace   = "\b",
+    formFeed    = "\f",
+    escape      = "\e",
+    verticalTab = "\v",
+
+    empty       = ""
+}
+
+mod str {
+    concat: func(x, y) {
+        ret x + y
+    }
+}

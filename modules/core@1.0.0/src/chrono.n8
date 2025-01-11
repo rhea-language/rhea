@@ -15,20 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with N8. If not, see <https://www.gnu.org/licenses/>.
 
-val("core")
-    chrono.now,
-    chrono.since,
+import chrono {
+    ms,         seconds,        minutes,
+    hour,       day,            year,
+    month,      since,          now,
 
-    chrono.ms,
-    chrono.seconds,
-    chrono.minutes,
-    chrono.hour,
-    chrono.day,
-    chrono.month,
-    chrono.year,
-
-    chrono.dayNum,
-    chrono.dayFromStart,
-
-    chrono.clock,
-    chrono.format
+    dayNum,     dayFromStart,
+    clock,      format
+} from "core"

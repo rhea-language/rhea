@@ -1,5 +1,5 @@
 #!/opt/n8lang/bin/n8
-# Copyright (c) 2024 - Nathanne Isip
+# Copyright (c) 2025 - Nathanne Isip
 # This file is part of N8.
 # 
 # N8 is free software: you can redistribute it and/or modify
@@ -15,37 +15,14 @@
 # You should have received a copy of the GNU General Public License
 # along with N8. If not, see <https://www.gnu.org/licenses/>.
 
-val("core")
-    array.create,
-    array.clear,
-
-    array.length,
-    array.reverse,
-
-    array.first,
-    array.last,
-
-    array.add,
-    array.pushFront,
-    array.pushBack,
-    array.assign,
-    array.slice,
-
-    array.remove,
-    array.removeAt,
-    array.removeAll,
-    array.removeSlice,
-
-    array.contains,
-    array.find,
-
-    array.at,
-    array.join,
-
-    array.areAllString,
-    array.areAllNumber,
-    array.areAllFunction,
-    array.areAllBool,
-    array.areAllRegex,
-    array.areAllArray,
-    array.areAllNil
+import array {
+    create,         clear,          length,
+    reverse,        first,          last,
+    add,            pushFront,      pushBack,
+    assign,         slice,          contains,
+    remove,         removeAt,       removeAll,
+    removeSlice,    find,           at,
+    join,           areAllString,   areAllNumber,
+    areAllFunction, areAllBool,     areAllRegex,
+    areAllArray,    areAllNil
+} from "core"

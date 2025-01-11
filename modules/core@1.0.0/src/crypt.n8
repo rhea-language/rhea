@@ -15,21 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with N8. If not, see <https://www.gnu.org/licenses/>.
 
-val("core")
-    crypt.md4,
-    crypt.validateMd4,
-
-    crypt.md5,
-    crypt.validateMd5,
-
-    crypt.sha224,
-    crypt.validateSha224,
-
-    crypt.sha256,
-    crypt.validateSha256,
-
-    crypt.sha384,
-    crypt.validateSha384,
-
-    crypt.sha512,
-    crypt.validateSha512
+import crypt {
+    md4,    validateMd4,
+    md5,    validateMd5,
+    sha224, validateSha224,
+    sha256, validateSha256,
+    sha384, validateSha384,
+    sha512, validateSha512
+} from "core"

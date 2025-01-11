@@ -1,5 +1,5 @@
 #!/opt/n8lang/bin/n8
-# Copyright (c) 2024 - Nathanne Isip
+# Copyright (c) 2025 - Nathanne Isip
 # This file is part of N8.
 # 
 # N8 is free software: you can redistribute it and/or modify
@@ -15,14 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with N8. If not, see <https://www.gnu.org/licenses/>.
 
-val("core")
-    sys.quickShell,
-    sys.shellConnect,
-    sys.shellWrite,
-    sys.shellReadOutput,
-    sys.shellReadError,
-    sys.shellHasExited,
-    sys.shellExitCode,
-    sys.shellProcessId,
-    sys.shellClose,
-    sys.sleep
+import sys {
+    quickShell,
+    shellConnect,
+    shellWrite,
+    shellReadOutput,
+    shellReadError,
+    shellHasExited,
+    shellExitCode,
+    shellProcessId,
+    shellClose,
+    sleep
+} from "core"

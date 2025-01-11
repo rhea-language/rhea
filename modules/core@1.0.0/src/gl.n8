@@ -15,13 +15,16 @@
 # You should have received a copy of the GNU General Public License
 # along with N8. If not, see <https://www.gnu.org/licenses/>.
 
-val("core")
-    gl.init,
-    gl.terminate,
-    gl.createWindow,
-    gl.makeContextCurrent,
-    gl.shouldCloseWindow,
-    gl.clear,
-    gl.swapBuffers,
-    gl.pollEvents,
-    gl.destroyWindow
+import gl {
+    init,
+    terminate,
+    createWindow,
+
+    makeContextCurrent,
+    shouldCloseWindow,
+
+    clear,
+    swapBuffers,
+    pollEvents,
+    destroyWindow
+} from "core"

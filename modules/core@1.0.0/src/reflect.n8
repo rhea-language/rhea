@@ -1,5 +1,5 @@
 #!/opt/n8lang/bin/n8
-# Copyright (c) 2024 - Nathanne Isip
+# Copyright (c) 2025 - Nathanne Isip
 # This file is part of N8.
 # 
 # N8 is free software: you can redistribute it and/or modify
@@ -15,10 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with N8. If not, see <https://www.gnu.org/licenses/>.
 
-val("core")
-    reflect.get,
-    reflect.has,
-    reflect.typeOf,
-    reflect.remove,
-    reflect.invoke,
-    reflect.exec
+import reflect {
+    get,        has,        typeOf,
+    remove,     invoke,     exec
+} from "core"

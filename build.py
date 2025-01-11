@@ -282,7 +282,7 @@ try:
             '-L/opt/homebrew/lib', '-L/opt/homebrew/opt/openssl@3/lib',
             '-Wno-deprecated-declarations'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
-            '-lglfw', '-framework', 'OpenGL'
+            '-lcrypto', '-lglfw', '-framework', 'OpenGL'
         ]
 
         print("Executing:")

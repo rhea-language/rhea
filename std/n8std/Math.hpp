@@ -84,23 +84,23 @@ N8_FUNC(math_remQuotient);
 N8_FUNC(math_abs);
 N8_FUNC(math_fusedMultiplyAdd);
 
-N8_FUNC(math_sigmoid);
-N8_FUNC(math_sigmoidDerivative);
-N8_FUNC(math_step);
-N8_FUNC(math_relu);
-N8_FUNC(math_leakyRelu);
-N8_FUNC(math_elu);
-N8_FUNC(math_selu);
-N8_FUNC(math_softmax);
-N8_FUNC(math_swish);
-N8_FUNC(math_mish);
-N8_FUNC(math_hardSigmoid);
-N8_FUNC(math_hardTan);
-N8_FUNC(math_softplus);
-N8_FUNC(math_softsign);
-N8_FUNC(math_gaussian);
-N8_FUNC(math_bentIdentity);
-N8_FUNC(math_logLogistic);
+N8_FUNC(math_activation_sigmoid);
+N8_FUNC(math_activation_sigmoidDerivative);
+N8_FUNC(math_activation_step);
+N8_FUNC(math_activation_relu);
+N8_FUNC(math_activation_leakyRelu);
+N8_FUNC(math_activation_elu);
+N8_FUNC(math_activation_selu);
+N8_FUNC(math_activation_softmax);
+N8_FUNC(math_activation_swish);
+N8_FUNC(math_activation_mish);
+N8_FUNC(math_activation_hardSigmoid);
+N8_FUNC(math_activation_hardTan);
+N8_FUNC(math_activation_softplus);
+N8_FUNC(math_activation_softsign);
+N8_FUNC(math_activation_gaussian);
+N8_FUNC(math_activation_bentIdentity);
+N8_FUNC(math_activation_logLogistic);
 
 N8_LIB_END
 

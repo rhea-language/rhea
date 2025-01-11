@@ -29,6 +29,10 @@
 N8_LIB_START
 
 N8_FUNC(gl_init);
+N8_FUNC(gl_initHint);
+N8_FUNC(gl_versionString);
+N8_FUNC(gl_getError);
+N8_FUNC(gl_setErrorCallback);
 N8_FUNC(gl_terminate);
 N8_FUNC(gl_createWindow);
 N8_FUNC(gl_makeContextCurrent);

@@ -2,7 +2,6 @@ Todo:
 ---
 
 - Vector operators such as (.+, .-, etc)
-- Multiplatform installer for N8.
 - Operators on DynamicObject class.
 
 - To be developed libraries:
@@ -11,7 +10,7 @@ Todo:
     ✓ crypt
     ✓ env
     * fmt (sconf, csv, json, toml, mdif, png, jpg, xml)
-    * glfw
+    * gl
     ✓ io
     * lang
     * map

@@ -36,3 +36,106 @@ import io {
 
     exit
 } from "core"
+
+enum logType {
+    info    = "INFO",
+    error   = "ERR",
+    warning = "WARN"
+}
+
+enum console.colors {
+    fgNone    = "0",
+    fgBlack   = "30",
+    fgRed     = "31",
+    fgGreen   = "32",
+    fgYellow  = "33",
+    fgBlue    = "34",
+    fgMagenta = "35",
+    fgCyan    = "36",
+    fgWhite   = "37",
+
+    bgNone    = "0",
+    bgBlack   = "40",
+    bgRed     = "41",
+    bgGreen   = "42",
+    bgYellow  = "43",
+    bgBlue    = "44",
+    bgMagenta = "45",
+    bgCyan    = "46",
+    bgWhite   = "47"
+}
+
+enum console.styles {
+    bold      = "1",
+    italic    = "3",
+    underline = "4"
+}
+
+mod console {
+    stylize: func(style, message) {
+        ret "\e[" + style + "m" + message + "\e[0m"
+    }
+
+    colorize: func(bgColor, fgColor, message) {
+        if(bgColor == console.colors.bgNone) {
+            ret("\e[" + fgColor + "m" + message + "\e[0m")
+        }
+        else {
+            ret("\e[" + fgColor + ";" + bgColor + "m" + message + "\e[0m")
+        }
+    }
+
+    log: func(message) {
+        io.print(message)
+    }
+}
+
+mod console.log {
+    info: func(message) {
+        render console.stylize(
+            console.styles.italic,
+            chrono.format(chrono.now(), "%d/%m/%Y %H:%M:%S ")
+        )
+        render console.colorize(
+            console.colors.bgCyan,
+            console.colors.fgWhite,
+            console.stylize(
+                console.styles.bold,
+                "[" + logType.info + "]"
+            )
+        )
+        render! " :: " + message
+    }
+
+    error: func(message) {
+        render console.stylize(
+            console.styles.italic,
+            chrono.format(chrono.now(), "%d/%m/%Y %H:%M:%S ")
+        )
+        render console.colorize(
+            console.colors.bgRed,
+            console.colors.fgWhite,
+            console.stylize(
+                console.styles.bold,
+                "[" + logType.error + " ]"
+            )
+        )
+        render! " :: " + message
+    }
+
+    warn: func(message) {
+        render console.stylize(
+            console.styles.italic,
+            chrono.format(chrono.now(), "%d/%m/%Y %H:%M:%S ")
+        )
+        render console.colorize(
+            console.colors.bgYellow,
+            console.colors.fgWhite,
+            console.stylize(
+                console.styles.bold,
+                "[" + logType.warning + "]"
+            )
+        )
+        render! " :: " + message
+    }
+}

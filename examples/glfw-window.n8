@@ -2,23 +2,23 @@
 
 use "core";
 
-if(!glfw.init()) {
-    render! "Failed to init GLFW.";
+if(!gl.init()) {
+    render! "Failed to init gl.";
     io.exit();
 };
 
-window = glfw.createWindow(300, 300, "Hello, world!");
+window = gl.createWindow(300, 300, "Hello, world!");
 if(window == nil) {
     render! "Failed to create window.";
     io.exit();
 };
 
-glfw.makeContextCurrent(window);
-while(!glfw.shouldCloseWindow(window)) {
-    glfw.clear(0x00004000);
-    glfw.swapBuffers(window);
-    glfw.pollEvents();
+gl.makeContextCurrent(window);
+while(!gl.shouldCloseWindow(window)) {
+    gl.clear(0x00004000);
+    gl.swapBuffers(window);
+    gl.pollEvents();
 };
 
-glfw.destroyWindow(window);
-glfw.terminate();
+gl.destroyWindow(window);
+gl.terminate();

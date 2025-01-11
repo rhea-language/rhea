@@ -23,3 +23,13 @@ import chrono {
     dayNum,     dayFromStart,
     clock,      format
 } from "core"
+
+mod chrono {
+    toGmt: func(unix, gmt) {
+        ret unix + (gmt * 3600)
+    }
+
+    nowForGmt: func(gmt) {
+        ret chrono.toGmt(chrono.now(), gmt)
+    }
+}

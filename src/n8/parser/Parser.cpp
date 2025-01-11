@@ -52,6 +52,7 @@
 #include <n8/ast/statement/EmptyStatement.hpp>
 #include <n8/ast/statement/EnumStatement.hpp>
 #include <n8/ast/statement/HaltStatement.hpp>
+#include <n8/ast/statement/ModStatement.hpp>
 #include <n8/ast/statement/ReturnStatement.hpp>
 #include <n8/ast/statement/TestStatement.hpp>
 #include <n8/ast/statement/ThrowStatement.hpp>
@@ -1026,6 +1027,114 @@ std::shared_ptr<ASTNode> Parser::stmtHalt() {
     );
 }
 
+std::shared_ptr<ASTNode> Parser::stmtImport() {
+    Token address = this->consume("import");
+    std::string name = "";
+
+    if(this->peek().getType() == TokenType::IDENTIFIER) {
+        name = this->consume(TokenType::IDENTIFIER)
+            .getImage();
+
+        while(this->isNext(".", TokenType::OPERATOR)) {
+            this->consume(".");
+
+            name += "." + this->consume(TokenType::IDENTIFIER)
+                .getImage();
+        }
+    }
+
+    std::map<Token, std::shared_ptr<ASTNode>> declarations;
+    if(this->isNext("{", TokenType::OPERATOR)) {
+        this->consume("{");
+
+        while(true) {
+            if(!declarations.empty())
+                this->consume(",");
+
+            Token variable = this->consume(TokenType::IDENTIFIER);
+            while(this->isNext(".", TokenType::OPERATOR)) {
+                this->consume(".");
+                variable.appendToImage(
+                    "." +
+                    this->consume(TokenType::IDENTIFIER)
+                        .getImage()
+                );
+            }
+
+            variable.modifyImage(name + "." + variable.getImage());
+            declarations.insert({
+                variable,
+                std::make_shared<NilLiteralExpression>(
+                    std::make_shared<Token>(variable)
+                )
+            });
+
+            if(!this->isNext(",", TokenType::OPERATOR))
+                break;
+        }
+
+        this->consume("}");
+    }
+    else {
+        Token variable = this->consume(TokenType::IDENTIFIER);
+        while(this->isNext(".", TokenType::OPERATOR)) {
+            this->consume(".");
+            variable.appendToImage(
+                "." +
+                this->consume(TokenType::IDENTIFIER)
+                    .getImage()
+            );
+        }
+
+        declarations.insert({
+            variable,
+            std::make_shared<NilLiteralExpression>(
+                std::make_shared<Token>(variable)
+            )
+        });
+    }
+
+    this->consume("from");
+    return std::make_shared<VariableDeclarationExpression>(
+        std::make_shared<Token>(address),
+        std::move(declarations),
+        this->consume(TokenType::STRING).getImage()
+    );
+}
+
+std::shared_ptr<ASTNode> Parser::stmtMod() {
+    Token address = this->consume("mod"),
+        name = this->consume(TokenType::IDENTIFIER);
+
+    while(!this->isAtEnd() && this->isNext(".", TokenType::OPERATOR)) {
+        this->consume(".");
+        name.appendToImage(
+            "." + this->consume(TokenType::IDENTIFIER)
+                .getImage()
+        );
+    }
+    this->consume("{");
+
+    std::map<std::shared_ptr<Token>, std::shared_ptr<ASTNode>> list;
+    while(!this->isAtEnd() && !this->isNext("}", TokenType::OPERATOR)) {
+        Token item = this->consume(TokenType::IDENTIFIER);
+        this->consume(":");
+
+        std::shared_ptr<ASTNode> expression = this->expression();
+        list.insert({
+            std::make_shared<Token>(item),
+            std::move(expression)
+        });
+    }
+
+    this->consume("}");
+    return std::make_shared<ModStatement>(
+        std::make_shared<Token>(address),
+        std::make_shared<Token>(name),
+        std::move(list)
+    );
+}
+
 std::shared_ptr<ASTNode> Parser::stmtRet() {
     Token address = this->consume("ret");
     std::shared_ptr<ASTNode> expression = this->expression();
@@ -1117,6 +1226,10 @@ std::shared_ptr<ASTNode> Parser::statement() {
         return this->stmtEnum();
     else if(this->isNext("halt", TokenType::KEYWORD))
         return this->stmtHalt();
+    else if(this->isNext("import", TokenType::KEYWORD))
+        return this->stmtImport();
+    else if(this->isNext("mod", TokenType::KEYWORD))
+        return this->stmtMod();
     else if(this->isNext("ret", TokenType::KEYWORD))
         return this->stmtRet();
     else if(this->isNext("throw", TokenType::KEYWORD))

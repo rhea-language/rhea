@@ -17,10 +17,9 @@
 import cpuinfo
 import os
 import platform
-import requests
 import shutil
 import subprocess
-import zipfile
+import time
 
 CORE_VERSION = '1.0.0'
 OUT_DIR = os.path.join('dist', 'n8lang')
@@ -133,6 +132,8 @@ try:
 
     print('Building binaries...')
     if PLATFORM == 'Windows':
+        now = time.time()
+
         win_libs = [
             '-static', '-static-libgcc', '-static-libstdc++',
             '-lglfw3', '-lglew32', '-lopengl32', '-lgdi32', '-lwinmm',
@@ -141,6 +142,7 @@ try:
             '-lshell32', '-lssl', '-lcrypto', '-lcrypt32',
             '-lws2_32', '-luser32', '-lkernel32'
         ]
+
         exe_build_args= [
             'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
             '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
@@ -161,20 +163,29 @@ try:
             '-march=native', '-funroll-loops', '-ffast-math'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + win_libs
 
+        print("Executing:")
+        print(' '.join(exe_build_args))
+        subprocess.run(exe_build_args)
+
+        end = time.time() - now
+        print(f"Finished in {end:.6f} seconds")
+
+        now = time.time()
         lib_build_args = [
             'g++', '-Iinclude', '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll',
             '-Wno-deprecated-declarations'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + win_libs
 
         print("Executing:")
-        print(' '.join(exe_build_args))
-        subprocess.run(exe_build_args)
-
-        print("Executing:")
         print(' '.join(lib_build_args))
         subprocess.run(lib_build_args)
 
+        end = time.time() - now
+        print(f"Finished in {end:.6f} seconds")
+
     elif "TERMUX_VERSION" in os.environ:
+        now = time.time()
+
         ext_instructions.remove('-maes')
         exe_build_args= [
             'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
@@ -196,6 +207,14 @@ try:
             '-funroll-loops', '-ffast-math', '-D__TERMUX__'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
+        print("Executing:")
+        print(' '.join(exe_build_args))
+        subprocess.run(exe_build_args)
+
+        end = time.time() - now
+        print(f"Finished in {end:.6f} seconds")
+
+        now = time.time()
         lib_build_args = [
             'g++', '-Iinclude', '-Istd', '-fPIC', '-D__TERMUX__',
             '-shared', '-o', OUTPUT_LIBRARY + '.so',
@@ -203,14 +222,15 @@ try:
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
 
         print("Executing:")
-        print(' '.join(exe_build_args))
-        subprocess.run(exe_build_args)
-
-        print("Executing:")
         print(' '.join(lib_build_args))
         subprocess.run(lib_build_args)
 
+        end = time.time() - now
+        print(f"Finished in {end:.6f} seconds")
+
     elif PLATFORM == 'Linux':
+        now = time.time()
+
         exe_build_args= [
             'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
             '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
@@ -231,6 +251,14 @@ try:
             '-march=native', '-funroll-loops', '-ffast-math'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
+        print("Executing:")
+        print(' '.join(exe_build_args))
+        subprocess.run(exe_build_args)
+
+        end = time.time() - now
+        print(f"Finished in {end:.6f} seconds")
+
+        now = time.time()
         lib_build_args = [
             'g++', '-Iinclude', '-Istd', '-fPIC',
             '-shared', '-o', OUTPUT_LIBRARY + '.so',
@@ -240,14 +268,15 @@ try:
         ]
 
         print("Executing:")
-        print(' '.join(exe_build_args))
-        subprocess.run(exe_build_args)
-
-        print("Executing:")
         print(' '.join(lib_build_args))
         subprocess.run(lib_build_args)
 
+        end = time.time() - now
+        print(f"Finished in {end:.6f} seconds")
+
     elif PLATFORM == 'Darwin':
+        now = time.time()
+
         lib_headers += [
             '-I/opt/homebrew/opt/openssl@3/include',
             '-I/opt/homebrew/Cellar/glfw/3.4/include/GLFW'
@@ -275,6 +304,14 @@ try:
             '-Wno-header-guard', '-Wno-pessimizing-move'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
+        print("Executing:")
+        print(' '.join(exe_build_args))
+        subprocess.run(exe_build_args)
+
+        end = time.time() - now
+        print(f"Finished in {end:.6f} seconds")
+
+        now = time.time()
         lib_build_args = [
             '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib',
@@ -286,12 +323,11 @@ try:
         ]
 
         print("Executing:")
-        print(' '.join(exe_build_args))
-        subprocess.run(exe_build_args)
-
-        print("Executing:")
         print(' '.join(lib_build_args))
         subprocess.run(lib_build_args)
+
+        end = time.time() - now
+        print(f"Finished in {end:.6f} seconds")
 
 except Exception as e:
     print(f"Compilation failed with error: {e}")

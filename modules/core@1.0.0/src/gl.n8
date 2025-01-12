@@ -30,9 +30,22 @@ import gl {
     shouldCloseWindow,
 
     clear,
+    clearColor,
+
     swapBuffers,
     pollEvents,
-    destroyWindow
+    destroyWindow,
+
+    getMonitors,
+    primaryMonitor,
+    monitorPosition,
+    monitorWorkarea,
+    monitorPhysicalSize,
+    monitorContentScale,
+    monitorName,
+    setMonitorCallback,
+    getVideoModes,
+    getVideoMode
 } from "core"
 
 enum gl.input.key {

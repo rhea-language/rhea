@@ -16,6 +16,7 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <N8.hpp>
 #include <n8/ast/ASTNodeException.hpp>
 #include <n8/core/Runtime.hpp>
 #include <n8/core/SymbolTable.hpp>
@@ -118,7 +119,7 @@ void SymbolTable::addParallelism(std::future<void> par) {
 
 void SymbolTable::waitForTasks() {
     if(!this->tasks.empty()) {
-        for(auto& task : this->tasks)
+        parsync(auto& task : this->tasks)
             if(task.valid())
                 task.get();
 

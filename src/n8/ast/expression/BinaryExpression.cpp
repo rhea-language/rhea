@@ -16,6 +16,7 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <N8.hpp>
 #include <n8/ast/ASTNodeException.hpp>
 #include <n8/ast/expression/ArrayAccessExpression.hpp>
 #include <n8/ast/expression/BinaryExpression.hpp>
@@ -158,8 +159,7 @@ DynamicObject BinaryExpression::applyStringOp(DynamicObject& lValue, DynamicObje
             str = lValue.getString();
         }
 
-        #pragma omp parallel for
-        for(unsigned long i = 0; i < count; i++)
+        parsync(unsigned long i = 0; i < count; i++)
             output += str;
         return DynamicObject(output);
     }
@@ -247,16 +247,14 @@ DynamicObject BinaryExpression::applyRegexOp(DynamicObject& lValue, DynamicObjec
 }
 
 DynamicObject BinaryExpression::applyArrayOp(DynamicObject& lValue, DynamicObject& rValue) {
-    #pragma omp parallel for
-    for(auto& object : *lValue.getArray())
+    parsync(auto& object : *lValue.getArray())
         if(!object.isNumber())
             throw ASTNodeException(
                 std::move(this->address),
                 "Unsupported binary operation for array that contains non-numbers."
             );
 
-    #pragma omp parallel for
-    for(auto& object : *rValue.getArray())
+    parsync(auto& object : *rValue.getArray())
         if(!object.isNumber())
             throw ASTNodeException(
                 std::move(this->address),

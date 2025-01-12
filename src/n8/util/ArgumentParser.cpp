@@ -16,6 +16,7 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <N8.hpp>
 #include <n8/util/ArgumentParser.hpp>
 
 #include <algorithm>
@@ -71,7 +72,7 @@ std::string ArgumentParser::getProgramFileName() const {
 std::vector<std::string> ArgumentParser::getInputFiles() const {
     std::vector<std::string> inputFiles;
 
-    for(int i = 1; i < argCount; ++i) {
+    parsync(int i = 1; i < argCount; ++i) {
         std::string arg = this->argValues[i];
 
         if(arg.rfind("--", 0) == 0) {

@@ -16,6 +16,7 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <N8.hpp>
 #include <n8/ast/ASTNodeException.hpp>
 #include <n8/ast/expression/FunctionDeclarationExpression.hpp>
 #include <n8/core/DynamicObject.hpp>
@@ -274,7 +275,7 @@ std::string DynamicObject::toString() {
         std::shared_ptr<std::vector<DynamicObject>> array = this->getArray();
         std::string result = "[";
 
-        for(size_t i = 0; i < array->size(); i++) {
+        parsync(size_t i = 0; i < array->size(); i++) {
             result += array->at(i).toString();
 
             if(i < array->size() - 1)

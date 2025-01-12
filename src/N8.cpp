@@ -26,6 +26,10 @@
 #include <windows.h>
 #endif
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 #ifdef __EMSCRIPTEN__
 
 extern "C" {
@@ -68,12 +72,26 @@ auto printBanner(N8Util::ArgumentParser argParse) -> void {
         << "License along with N8. If not, see:"
             << std::endl
         << "<https://www.gnu.org/licenses/>.\u001b[0m"
+            << std::endl << std::endl;
+
+    #ifdef _OPENMP
+    std::cout
+        << "This binary is using \u001b[1mOpenMP\u001b[0m."
             << std::endl;
+    #endif
 }
 
 auto main(int argc, char** argv) -> int {
+    std::set_terminate(Runtime::terminateHandler);
+
     #if defined(__linux__) || defined(__APPLE__)
     Runtime::catchSegfault();
+    #endif
+
+    #ifdef _OPENMP
+    omp_set_num_threads(
+        std::thread::hardware_concurrency()
+    );
     #endif
 
     #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)

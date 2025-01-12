@@ -65,4 +65,6 @@
 #   define FS_FILE_SEPARATOR "/"
 #endif
 
+#define parsync _Pragma("omp parallel for") for
+
 #endif

@@ -32,7 +32,7 @@ jobs:
 
       - name: Build N8
         run: |
-          python -m pip install requests py-cpuinfo
+          python -m pip install py-cpuinfo
           python build.py
 
       - name: Set Environment Path

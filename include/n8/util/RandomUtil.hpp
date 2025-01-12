@@ -54,7 +54,10 @@ inline static std::string uniqueKey() {
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<uint32_t> dis(0, characters.size() - 1);
+    std::uniform_int_distribution<uint32_t> dis(
+        static_cast<uint32_t>(0),
+        static_cast<uint32_t>(characters.size() - 1)
+    );
 
     #if defined(__RDRND__) && defined(__RDSEED__)
     uint32_t rand, seed, genSeed;
@@ -66,6 +69,7 @@ inline static std::string uniqueKey() {
     gen.seed(genSeed);
     #endif
 
+    #pragma omp parallel for
     for(size_t i = 0; i < 8; ++i)
         randomString += characters[
             static_cast<uint32_t>(dis(gen))

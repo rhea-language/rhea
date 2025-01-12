@@ -44,7 +44,7 @@ public:
 
     explicit SymbolTable(std::shared_ptr<SymbolTable> _parent = nullptr) :
         parent(std::move(_parent)),
-        id(N8Util::generateUuid()),
+        id(N8Util::uniqueKey()),
         table({}),
         tasks() {}
 

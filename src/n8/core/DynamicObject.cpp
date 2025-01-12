@@ -275,7 +275,7 @@ std::string DynamicObject::toString() {
         std::shared_ptr<std::vector<DynamicObject>> array = this->getArray();
         std::string result = "[";
 
-        parsync(size_t i = 0; i < array->size(); i++) {
+        for(size_t i = 0; i < array->size(); i++) {
             result += array->at(i).toString();
 
             if(i < array->size() - 1)

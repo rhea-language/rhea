@@ -38,9 +38,20 @@ N8_FUNC(gl_createWindow);
 N8_FUNC(gl_makeContextCurrent);
 N8_FUNC(gl_shouldCloseWindow);
 N8_FUNC(gl_clear);
+N8_FUNC(gl_clearColor);
 N8_FUNC(gl_swapBuffers);
 N8_FUNC(gl_pollEvents);
 N8_FUNC(gl_destroyWindow);
+N8_FUNC(gl_getMonitors);
+N8_FUNC(gl_primaryMonitor);
+N8_FUNC(gl_monitorPosition);
+N8_FUNC(gl_monitorWorkarea);
+N8_FUNC(gl_monitorPhysicalSize);
+N8_FUNC(gl_monitorContentScale);
+N8_FUNC(gl_monitorName);
+N8_FUNC(gl_setMonitorCallback);
+N8_FUNC(gl_getVideoModes);
+N8_FUNC(gl_getVideoMode);
 
 N8_LIB_END
 

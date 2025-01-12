@@ -35,7 +35,7 @@ SymbolTable& SymbolTable::operator=(const SymbolTable& other) {
     if(this != &other) {
         this->parent = other.parent;
         this->table = other.table;
-        this->id = N8Util::generateUuid();
+        this->id = N8Util::uniqueKey();
 
         this->tasks.clear();
     }

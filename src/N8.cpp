@@ -90,7 +90,9 @@ auto main(int argc, char** argv) -> int {
 
     #ifdef _OPENMP
     omp_set_num_threads(
-        std::thread::hardware_concurrency()
+        static_cast<int>(
+            std::thread::hardware_concurrency()
+        )
     );
     #endif
 

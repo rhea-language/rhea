@@ -16,6 +16,7 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <N8.hpp>
 #include <n8/util/VectorMath.hpp>
 
 namespace N8Util {
@@ -23,8 +24,7 @@ namespace N8Util {
 DynamicObject vector2Object(const std::vector<double>& vec) {
     std::vector<DynamicObject> objects(vec.size());
 
-    #pragma omp parallel for
-    for(size_t i = 0; i < vec.size(); ++i)
+    parsync(size_t i = 0; i < vec.size(); ++i)
         objects[i] = DynamicObject(vec[i]);
 
     return DynamicObject(
@@ -37,8 +37,7 @@ std::vector<double> object2Vector(const DynamicObject object) {
     size_t objSize = objects.size();
     std::vector<double> values(objSize);
 
-    #pragma omp parallel for
-    for(long i = 0; i < (long) objSize; ++i)
+    parsync(long i = 0; i < (long) objSize; ++i)
         values[(size_t) i] = objects[(size_t) i].getNumber();
 
     return values;
@@ -54,8 +53,7 @@ std::vector<double> N8Util::VectorMath::add(
 
     std::vector<double> result(size);
 
-    #pragma omp parallel for
-    for(size_t i = 0; i < size; ++i)
+    parsync(size_t i = 0; i < size; ++i)
         result[i] = left[i] + right[i];
     return result;
 }
@@ -70,8 +68,7 @@ std::vector<double> N8Util::VectorMath::sub(
 
     std::vector<double> result(size);
 
-    #pragma omp parallel for
-    for(size_t i = 0; i < size; ++i)
+    parsync(size_t i = 0; i < size; ++i)
         result[i] = left[i] - right[i];
     return result;
 }
@@ -86,8 +83,7 @@ std::vector<double> N8Util::VectorMath::div(
 
     std::vector<double> result(size);
 
-    #pragma omp parallel for
-    for(size_t i = 0; i < size; ++i)
+    parsync(size_t i = 0; i < size; ++i)
         result[i] = left[i] / right[i];
     return result;
 }
@@ -102,8 +98,7 @@ std::vector<double> N8Util::VectorMath::mul(
 
     std::vector<double> result(size);
 
-    #pragma omp parallel for
-    for(size_t i = 0; i < size; ++i)
+    parsync(size_t i = 0; i < size; ++i)
         result[i] = left[i] * right[i];
     return result;
 }
@@ -118,8 +113,7 @@ std::vector<double> N8Util::VectorMath::rem(
 
     std::vector<double> result(size);
 
-    #pragma omp parallel for
-    for(size_t i = 0; i < size; ++i)
+    parsync(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] % (long) right[i]);
     return result;
 }
@@ -134,8 +128,7 @@ std::vector<double> N8Util::VectorMath::bitwiseAnd(
 
     std::vector<double> result(size);
 
-    #pragma omp parallel for
-    for(size_t i = 0; i < size; ++i)
+    parsync(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] & (long) right[i]);
     return result;
 }
@@ -150,8 +143,7 @@ std::vector<double> N8Util::VectorMath::bitwiseOr(
 
     std::vector<double> result(size);
 
-    #pragma omp parallel for
-    for(size_t i = 0; i < size; ++i)
+    parsync(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] | (long) right[i]);
     return result;
 }
@@ -166,8 +158,7 @@ std::vector<double> N8Util::VectorMath::bitwiseXor(
 
     std::vector<double> result(size);
 
-    #pragma omp parallel for
-    for(size_t i = 0; i < size; ++i)
+    parsync(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] ^ (long) right[i]);
     return result;
 }
@@ -182,8 +173,7 @@ std::vector<double> N8Util::VectorMath::shiftLeft(
 
     std::vector<double> result(size);
 
-    #pragma omp parallel for
-    for(size_t i = 0; i < size; ++i)
+    parsync(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] << (long) right[i]);
     return result;
 }
@@ -198,8 +188,7 @@ std::vector<double> N8Util::VectorMath::shiftRight(
 
     std::vector<double> result(size);
 
-    #pragma omp parallel for
-    for(size_t i = 0; i < size; ++i)
+    parsync(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] >> (long) right[i]);
     return result;
 }

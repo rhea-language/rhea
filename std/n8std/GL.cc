@@ -160,13 +160,13 @@ N8_FUNC(gl_createWindow) {
         title.toString().c_str(),
         NULL, NULL
     );
-    std::string uuid = N8Util::uniqueKey();
+    std::string key = N8Util::uniqueKey();
 
     if(!window)
         return DynamicObject();
 
-    windowMap[uuid] = window;
-    return DynamicObject(uuid);
+    windowMap[key] = window;
+    return DynamicObject(key);
 }
 
 N8_FUNC(gl_makeContextCurrent) {
@@ -177,16 +177,16 @@ N8_FUNC(gl_makeContextCurrent) {
                 std::to_string(args.size())
         );
 
-    DynamicObject uuid = args.at(0);
-    std::string uuidStr = uuid.toString();
-    if(windowMap.find(uuidStr) == windowMap.end())
+    DynamicObject key = args.at(0);
+    std::string keyStr = key.toString();
+    if(windowMap.find(keyStr) == windowMap.end())
         throw TerminativeThrowSignal(
             std::move(address),
-            "Window UUID does not exist"
+            "Window key does not exist"
         );
 
-    glfwMakeContextCurrent(windowMap[uuidStr]);
-    return DynamicObject(uuidStr);
+    glfwMakeContextCurrent(windowMap[keyStr]);
+    return DynamicObject(keyStr);
 }
 
 N8_FUNC(gl_shouldCloseWindow) {
@@ -197,18 +197,18 @@ N8_FUNC(gl_shouldCloseWindow) {
                 std::to_string(args.size())
         );
 
-    DynamicObject uuid = args.at(0);
-    std::string uuidStr = uuid.toString();
+    DynamicObject key = args.at(0);
+    std::string keyStr = key.toString();
 
-    if(windowMap.find(uuidStr) == windowMap.end())
+    if(windowMap.find(keyStr) == windowMap.end())
         throw TerminativeThrowSignal(
             std::move(address),
-            "Window UUID does not exist"
+            "Window key does not exist"
         );
 
     return DynamicObject(
         static_cast<bool>(
-            glfwWindowShouldClose(windowMap[uuidStr])
+            glfwWindowShouldClose(windowMap[keyStr])
         )
     );
 }
@@ -233,6 +233,56 @@ N8_FUNC(gl_clear) {
     return DynamicObject();
 }
 
+N8_FUNC(gl_clearColor) {
+    if(args.size() != 4)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 4 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject red = args.at(0),
+        green = args.at(1),
+        blue = args.at(2),
+        alpha = args.at(3);
+
+    if(!red.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Parameter for red should be of number type, "
+                "got " + red.objectType() + " instead"
+        );
+
+    if(!green.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Parameter for green should be of number type, "
+                "got " + green.objectType() + " instead"
+        );
+
+    if(!blue.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Parameter for blue should be of number type, "
+                "got " + blue.objectType() + " instead"
+        );
+
+    if(!alpha.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Parameter for alpha should be of number type, "
+                "got " + alpha.objectType() + " instead"
+        );
+
+    glClearColor(
+        red.getNumber(),
+        green.getNumber(),
+        blue.getNumber(),
+        alpha.getNumber()
+    );
+    return DynamicObject();
+}
+
 N8_FUNC(gl_swapBuffers) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
@@ -241,16 +291,16 @@ N8_FUNC(gl_swapBuffers) {
                 std::to_string(args.size())
         );
 
-    DynamicObject uuid = args.at(0);
-    std::string uuidStr = uuid.toString();
-    if(windowMap.find(uuidStr) == windowMap.end())
+    DynamicObject key = args.at(0);
+    std::string keyStr = key.toString();
+    if(windowMap.find(keyStr) == windowMap.end())
         throw TerminativeThrowSignal(
             std::move(address),
-            "Window UUID does not exist"
+            "Window key does not exist"
         );
 
-    glfwSwapBuffers(windowMap[uuidStr]);
-    return DynamicObject(uuidStr);
+    glfwSwapBuffers(windowMap[keyStr]);
+    return DynamicObject(keyStr);
 }
 
 N8_FUNC(gl_pollEvents) {
@@ -273,14 +323,349 @@ N8_FUNC(gl_destroyWindow) {
                 std::to_string(args.size())
         );
 
-    DynamicObject uuid = args.at(0);
-    std::string uuidStr = uuid.toString();
-    if(windowMap.find(uuidStr) == windowMap.end())
+    DynamicObject key = args.at(0);
+    std::string keyStr = key.toString();
+    if(windowMap.find(keyStr) == windowMap.end())
         throw TerminativeThrowSignal(
             std::move(address),
-            "Window UUID does not exist"
+            "Window key does not exist"
         );
 
-    glfwDestroyWindow(windowMap[uuidStr]);
-    return DynamicObject(uuidStr);
+    glfwDestroyWindow(windowMap[keyStr]);
+    return DynamicObject(keyStr);
+}
+
+N8_FUNC(gl_getMonitors) {
+    int count = 0;
+    GLFWmonitor** monitors = glfwGetMonitors(&count);
+
+    std::vector<DynamicObject> results;
+    for(size_t i = 0; i < (size_t) count; i++) {
+        std::string key = N8Util::uniqueKey();
+
+        monitorMap[key] = monitors[i];
+        results.emplace_back(DynamicObject(key));
+    }
+
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(
+            results
+        )
+    );
+}
+
+N8_FUNC(gl_primaryMonitor) {
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    std::string key = N8Util::uniqueKey();
+
+    monitorMap[key] = monitor;
+    return DynamicObject(key);
+}
+
+N8_FUNC(gl_monitorPosition) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0);
+    std::string keyStr = key.toString();
+
+    if(monitorMap.find(keyStr) == monitorMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Monitor key does not exist"
+        );
+
+    GLFWmonitor* monitor = monitorMap[keyStr];
+    int x = 0, y = 0;
+    glfwGetMonitorPos(monitor, &x, &y);
+
+    std::vector<DynamicObject> results;
+    results.emplace_back(DynamicObject(
+        static_cast<double>(x)
+    ));
+    results.emplace_back(DynamicObject(
+        static_cast<double>(y)
+    ));
+
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(
+            results
+        )
+    );
+}
+
+N8_FUNC(gl_monitorWorkarea) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0);
+    std::string keyStr = key.toString();
+
+    if(monitorMap.find(keyStr) == monitorMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Monitor key does not exist"
+        );
+
+    GLFWmonitor* monitor = monitorMap[keyStr];
+    int x = 0, y = 0, width = 0, height = 0;
+    glfwGetMonitorWorkarea(monitor, &x, &y, &width, &height);
+
+    std::vector<DynamicObject> results;
+    results.emplace_back(DynamicObject(
+        static_cast<double>(x)
+    ));
+    results.emplace_back(DynamicObject(
+        static_cast<double>(y)
+    ));
+    results.emplace_back(DynamicObject(
+        static_cast<double>(width)
+    ));
+    results.emplace_back(DynamicObject(
+        static_cast<double>(height)
+    ));
+
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(
+            results
+        )
+    );
+}
+
+N8_FUNC(gl_monitorPhysicalSize) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0);
+    std::string keyStr = key.toString();
+
+    if(monitorMap.find(keyStr) == monitorMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Monitor key does not exist"
+        );
+
+    GLFWmonitor* monitor = monitorMap[keyStr];
+    int width = 0, height = 0;
+    glfwGetMonitorPhysicalSize(monitor, &width, &height);
+
+    std::vector<DynamicObject> results;
+    results.emplace_back(DynamicObject(
+        static_cast<double>(width)
+    ));
+    results.emplace_back(DynamicObject(
+        static_cast<double>(height)
+    ));
+
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(
+            results
+        )
+    );
+}
+
+N8_FUNC(gl_monitorContentScale) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0);
+    std::string keyStr = key.toString();
+
+    if(monitorMap.find(keyStr) == monitorMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Monitor key does not exist"
+        );
+
+    GLFWmonitor* monitor = monitorMap[keyStr];
+    float width = 0, height = 0;
+    glfwGetMonitorContentScale(monitor, &width, &height);
+
+    std::vector<DynamicObject> results;
+    results.emplace_back(DynamicObject(width));
+    results.emplace_back(DynamicObject(height));
+
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(
+            results
+        )
+    );
+}
+
+N8_FUNC(gl_monitorName) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0);
+    std::string keyStr = key.toString();
+
+    if(monitorMap.find(keyStr) == monitorMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Monitor key does not exist"
+        );
+
+    GLFWmonitor* monitor = monitorMap[keyStr];
+    return DynamicObject(std::string(
+        glfwGetMonitorName(monitor)
+    ));
+}
+
+N8_FUNC(gl_setMonitorCallback) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject callback = args.at(0);
+    if(!callback.isFunction())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting callback parameter to be of function type, "
+                "got " + callback.objectType() + " instead"
+        );
+
+    static auto cbFunction = callback.getCallable().get();
+    static SymbolTable& symbols = symtab;
+
+    glfwSetMonitorCallback([](GLFWmonitor* monitor, int event) {
+        std::string monitorKey = N8Util::uniqueKey();
+        monitorMap[monitorKey] = monitor;
+
+        std::vector<DynamicObject> params;
+        params.emplace_back(DynamicObject(monitorKey));
+        params.emplace_back(DynamicObject(
+            static_cast<double>(event)
+        ));
+
+        cbFunction->call(symbols, params);
+    });
+
+    return callback;
+}
+
+N8_FUNC(gl_getVideoModes) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0);
+    std::string keyStr = key.toString();
+
+    if(monitorMap.find(keyStr) == monitorMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Monitor key does not exist"
+        );
+
+    int count = 0;
+    GLFWmonitor* monitor = monitorMap[keyStr];
+    const GLFWvidmode* modes = glfwGetVideoModes(monitor, &count);
+
+    std::vector<DynamicObject> results;
+    for(size_t i = 0; i < (size_t) count; i++) {
+        std::vector<DynamicObject> item;
+        item.emplace_back(DynamicObject(
+            static_cast<double>(modes[i].width)
+        ));
+        item.emplace_back(DynamicObject(
+            static_cast<double>(modes[i].height)
+        ));
+        item.emplace_back(DynamicObject(
+            static_cast<double>(modes[i].redBits)
+        ));
+        item.emplace_back(DynamicObject(
+            static_cast<double>(modes[i].greenBits)
+        ));
+        item.emplace_back(DynamicObject(
+            static_cast<double>(modes[i].blueBits)
+        ));
+        item.emplace_back(DynamicObject(
+            static_cast<double>(modes[i].refreshRate)
+        ));
+
+        results.emplace_back(
+            std::make_shared<std::vector<DynamicObject>>(
+                item
+            )
+        );
+    }
+
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(
+            results
+        )
+    );
+}
+
+N8_FUNC(gl_getVideoMode) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0);
+    std::string keyStr = key.toString();
+
+    if(monitorMap.find(keyStr) == monitorMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Monitor key does not exist"
+        );
+
+    GLFWmonitor* monitor = monitorMap[keyStr];
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+    std::vector<DynamicObject> results;
+    results.emplace_back(DynamicObject(
+        static_cast<double>(mode->width)
+    ));
+    results.emplace_back(DynamicObject(
+        static_cast<double>(mode->height)
+    ));
+    results.emplace_back(DynamicObject(
+        static_cast<double>(mode->redBits)
+    ));
+    results.emplace_back(DynamicObject(
+        static_cast<double>(mode->greenBits)
+    ));
+    results.emplace_back(DynamicObject(
+        static_cast<double>(mode->blueBits)
+    ));
+    results.emplace_back(DynamicObject(
+        static_cast<double>(mode->refreshRate)
+    ));
+
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(
+            results
+        )
+    );
 }

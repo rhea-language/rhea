@@ -18,6 +18,7 @@
 
 #include "n8std/Array.hpp"
 
+#include <N8.hpp>
 #include <n8/ast/TerminativeSignal.hpp>
 
 #include <algorithm>
@@ -43,7 +44,7 @@ N8_FUNC(array_clear) {
             "Expecting more than or equal 1 argument"
         );
 
-    for(size_t i = 0; i < args.size(); i++) {
+    parsync(size_t i = 0; i < args.size(); i++) {
         DynamicObject item = args.at(i);
 
         if(item.isArray())

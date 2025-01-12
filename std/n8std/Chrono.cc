@@ -22,6 +22,7 @@
 
 #include <chrono>
 #include <ctime>
+#include <iomanip>
 #include <sstream>
 
 N8_FUNC(chrono_now) {

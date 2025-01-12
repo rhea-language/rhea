@@ -66,6 +66,8 @@ public:
     #else
     static void execute(const char* sourceCode);
     #endif
+
+    static void terminateHandler();
 };
 
 #endif

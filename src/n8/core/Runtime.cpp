@@ -140,7 +140,7 @@ int Runtime::interpreter(SymbolTable& symbols, std::vector<std::string> files) {
     try {
         std::vector<std::string>::iterator iterator;
 
-        for(iterator = files.begin(); iterator != files.end(); iterator++) {
+        parsync(iterator = files.begin(); iterator != files.end(); iterator++) {
             std::string fileHash = QuickDigest5::fileToHash(*iterator);
             if(Runtime::hasFileHash(fileHash))
                 continue;
@@ -512,3 +512,89 @@ void Runtime::catchSegfault() {
 }
 
 #endif
+
+void Runtime::terminateHandler() {
+    std::exception_ptr eptr = std::current_exception();
+    try {
+        std::rethrow_exception(eptr);
+    }
+    catch(const std::system_error& exc) {
+        Runtime::cleanUp();
+
+        N8Util::printError("[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m");
+        N8Util::printError(exc.what());
+        N8Util::printError("\u001b[0m\r\n");
+    }
+    catch(const ASTNodeException& nodeExc) {
+        Runtime::cleanUp();
+
+        N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
+        N8Util::printError(nodeExc.what());
+        N8Util::printError("\u001b[0m\r\n                 ");
+        N8Util::printError(nodeExc.getAddress()->toString());
+        N8Util::printError("\r\n");
+    }
+    catch(const LexicalAnalysisException& lexAnlExc) {
+        Runtime::cleanUp();
+
+        N8Util::printError("[\u001b[1;31mLexical Error\u001b[0m]:\r\n\t");
+        N8Util::printError(lexAnlExc.what());
+        N8Util::printError("\r\n");
+    }
+    catch(const ParserException& parserExc) {
+        Runtime::cleanUp();
+
+        N8Util::printError("[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m");
+        N8Util::printError(parserExc.what());
+        N8Util::printError("\u001b[0m\r\n                 ");
+        N8Util::printError(parserExc.getAddress()->toString());
+        N8Util::printError("\r\n");
+    }
+    catch(const TerminativeBreakSignal& breakExc) {
+        Runtime::cleanUp();
+
+        N8Util::printError(
+            "[\u001b[1;31mRuntime Error\u001b[0m]: "
+            "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
+            "\r\n                 "
+        );
+        N8Util::printError(breakExc.getAddress().toString());
+        N8Util::printError("\r\n");
+    }
+    catch(const TerminativeContinueSignal& continueExc) {
+        Runtime::cleanUp();
+
+        N8Util::printError(
+            "[\u001b[1;31mRuntime Error\u001b[0m]: "
+            "\u001b[3;37mInvalid continue statement signal caught.\u001b[0m"
+            "\r\n                 "
+        );
+        N8Util::printError(continueExc.getAddress().toString());
+        N8Util::printError("\r\n");
+    }
+    catch(const TerminativeReturnSignal& retExc) {
+        Runtime::cleanUp();
+
+        N8Util::printError("\u001b[0;93m");
+        N8Util::printError(retExc.getObject().toString());
+        N8Util::printError("\u001b[0m\r\n");
+    }
+    catch(const TerminativeThrowSignal& throwExc) {
+        Runtime::cleanUp();
+
+        N8Util::printError("[\u001b[1;31mUncaught Error\u001b[0m]: \u001b[3;37m");
+        N8Util::printError(throwExc.getObject().toString());
+        N8Util::printError("\u001b[0m\r\n                  ");
+        N8Util::printError(throwExc.getAddress()->toString());
+        N8Util::printError("\r\n");
+    }
+    catch(const std::exception& exc) {
+        Runtime::cleanUp();
+
+        N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
+        N8Util::printError(exc.what());
+        N8Util::printError("\u001b[0m\r\n");
+    }
+
+    std::abort();
+}

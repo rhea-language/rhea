@@ -1,28 +1,29 @@
 #!/opt/n8lang/bin/n8
 
-use "core";
+use "core"
 
 if(!gl.init()) {
-    render! "Failed to init gl.";
-    io.exit();
-};
+    render! "Failed to init gl."
+    io.exit()
+}
 
 gl.setErrorCallback(func(error, message) {
-    console.log.error(message + " (" + error + ")");
-});
+    console.log.error(message + " (" + error + ")")
+})
 
-window = gl.createWindow(300, 300, "Hello, world!");
+window = gl.createWindow(300, 300, "Hello, world!")
 if(window == nil) {
-    render! "Failed to create window.";
-    io.exit();
-};
+    render! "Failed to create window."
+    io.exit()
+}
 
-gl.makeContextCurrent(window);
+gl.makeContextCurrent(window)
 while(!gl.shouldCloseWindow(window)) {
-    gl.clear(0x00004000);
-    gl.swapBuffers(window);
-    gl.pollEvents();
-};
+    gl.clear(0x00004000)
+    gl.clearColor(0.2, 0.3, 0.3, 1.0)
+    gl.swapBuffers(window)
+    gl.pollEvents()
+}
 
-gl.destroyWindow(window);
-gl.terminate();
+gl.destroyWindow(window)
+gl.terminate()

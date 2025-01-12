@@ -59,6 +59,7 @@
 #include <n8/ast/statement/UseStatement.hpp>
 #include <n8/ast/statement/WaitStatement.hpp>
 
+#include <n8/core/Runtime.hpp>
 #include <n8/core/SymbolTable.hpp>
 
 #include <n8/parser/Parser.hpp>
@@ -1173,10 +1174,14 @@ std::shared_ptr<ASTNode> Parser::stmtTest() {
     if(this->isNext(";", TokenType::OPERATOR))
         this->consume(";");
 
-    return std::make_shared<TestStatement>(
-        std::make_shared<Token>(address),
-        std::move(testName),
-        std::move(testBody)
+    if(Runtime::isTestMode())
+        return std::make_shared<TestStatement>(
+            std::make_shared<Token>(address),
+            std::move(testName),
+            std::move(testBody)
+        );
+    else return std::make_shared<EmptyStatement>(
+        std::make_shared<Token>(address)
     );
 }
 

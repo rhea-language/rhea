@@ -32,7 +32,7 @@ jobs:
         run: |
           export CPATH=/opt/homebrew/include
           export LIBRARY_PATH=/opt/homebrew/lib
-          python -m pip install requests py-cpuinfo
+          python -m pip install py-cpuinfo
           python build.py
 
       - name: Set Environment Path

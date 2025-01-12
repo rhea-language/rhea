@@ -160,7 +160,7 @@ N8_FUNC(gl_createWindow) {
         title.toString().c_str(),
         NULL, NULL
     );
-    std::string uuid = N8Util::generateUuid();
+    std::string uuid = N8Util::uniqueKey();
 
     if(!window)
         return DynamicObject();

@@ -56,7 +56,7 @@ N8_FUNC(sys_shellConnect) {
         );
 
     DynamicObject value = args.at(0);
-    std::string uuid = N8Util::generateUuid();
+    std::string uuid = N8Util::uniqueKey();
 
     shellMap[uuid] = std::make_shared<MyShell>(
         value.toString()

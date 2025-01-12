@@ -25,5 +25,11 @@ import sys {
     shellExitCode,
     shellProcessId,
     shellClose,
+
+    arch,
+    platform,
+    wordSize,
+    endianess,
+    cpuFeatures,
     sleep
 } from "core"

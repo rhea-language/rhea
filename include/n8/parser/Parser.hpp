@@ -85,6 +85,7 @@ private:
     Token current();
     Token consume(const std::string& image);
     Token consume(TokenType type);
+    Token getIdentifier();
 
     void advance();
     bool isAtEnd() const;

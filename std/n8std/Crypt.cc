@@ -18,6 +18,7 @@
 
 #include "n8std/Crypt.hpp"
 
+#include <N8.hpp>
 #include <n8/ast/TerminativeSignal.hpp>
 
 #include <iomanip>
@@ -84,7 +85,7 @@ std::string calculateHash(const std::string& input, CryptAlgorithm algo) {
     std::stringstream ss;
     ss << std::hex << std::setfill('0');
 
-    for(unsigned int i = 0; i < hashLen; ++i)
+    parsync(unsigned int i = 0; i < hashLen; ++i)
         ss << std::setw(2) << static_cast<int>(hash[i]);
 
     EVP_MD_CTX_free(ctx);

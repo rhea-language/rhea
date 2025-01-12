@@ -18,6 +18,7 @@
 
 #include "n8std/ML.hpp"
 
+#include <N8.hpp>
 #include <n8/ast/TerminativeSignal.hpp>
 
 #include <cmath>
@@ -30,8 +31,7 @@ static inline std::vector<double> arrayToDoubleVector(
 ) {
     std::vector<double> values(array.size());
 
-    #pragma omp parallel for
-    for(size_t i = 0; i < array.size(); i++) {
+    parsync(size_t i = 0; i < array.size(); i++) {
         if(!array[i].isNumber())
             throw TerminativeThrowSignal(
                 std::move(address),
@@ -55,8 +55,7 @@ static inline double calculateMean(
     size_t arraySize = array.size();
     double sum = 0.0;
 
-    #pragma omp parallel for reduction(+:sum)
-    for(size_t i = 0; i < arraySize; i++)
+    parsync(size_t i = 0; i < arraySize; i++)
         sum += values[i];
 
     return sum / arraySize;
@@ -93,8 +92,7 @@ N8_FUNC(ml_trendline_calculate) {
         numerator = 0.0,
         denominator = 0.0;
 
-    #pragma omp parallel for
-    for(size_t i = 0; i < xObjArray.size(); i++) {
+    parsync(size_t i = 0; i < xObjArray.size(); i++) {
         numerator += (xObjArray[i].getNumber() - x) *
             (yObjArray[i].getNumber() - y);
 
@@ -150,7 +148,6 @@ N8_FUNC(ml_trendline_calculateRmse) {
     double sumSquaredErrs = 0.0;
     size_t paramSize = xObjArray.size();
 
-    #pragma omp parallel for
     for(size_t i = 0; i < paramSize; i++) {
         std::vector<DynamicObject> model;
         model.push_back(regModel.at(0));

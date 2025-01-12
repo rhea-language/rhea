@@ -18,6 +18,7 @@
 
 #include "n8std/Math.hpp"
 
+#include <N8.hpp>
 #include <n8/ast/TerminativeSignal.hpp>
 
 #include <cmath>
@@ -1005,7 +1006,7 @@ N8_FUNC(math_activation_softmax) {
         return DynamicObject();
 
     double max = values.at(0).getNumber(), sum = 0.0;
-    for(size_t i = 1; i < len; i++) {
+    parsync(size_t i = 1; i < len; i++) {
         double j = values.at(i).getNumber();
 
         if(j > max)

@@ -18,6 +18,7 @@
 
 #include "n8std/IO.hpp"
 
+#include <N8.hpp>
 #include <n8/ast/TerminativeSignal.hpp>
 
 #include <chrono>
@@ -51,7 +52,7 @@ N8_FUNC(io_printLine) {
     if(args.size() == 0)
         return {};
 
-    for(size_t i = 0; i < args.size(); i++) {
+    parsync(size_t i = 0; i < args.size(); i++) {
         DynamicObject arg = args.at(i);
         std::cout << arg.toString() << std::endl;
     }
@@ -346,7 +347,6 @@ N8_FUNC(io_folderSize) {
         return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
     }
 
-    #pragma omp parallel for
     for(const auto& entry : std::filesystem::recursive_directory_iterator(path))
         if(std::filesystem::is_regular_file(entry))
             totalSize += std::filesystem::file_size(entry);

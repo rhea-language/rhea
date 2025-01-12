@@ -1,0 +1,215 @@
+binary                  := "0b" ("0" - "1")
+trinary                 := "0t" ("0" - "2")
+octa                    := "0c" ("0" - "7")
+decimal                 := "0" - "9"
+hexa                    := "0x" (decimal | "a" - "f" | "A" - "F")
+
+digits                  :=
+    binary              |
+    trinary             |
+    octa                |
+    decimal             |
+    hexa
+
+string                  := "\"" <ANY> "\"" | "'" <ANY> "'"
+boolean                 := "true" | "false" | "maybe"
+nil                     := "nil"
+identifier              := <ID> ("." <ID>)*
+
+statement               :=
+    (
+        breakStmt       |
+        continueStmt    |
+        deleteStmt      |
+        enumStmt        |
+        haltStmt        |
+        importStmt      |
+        modStmt         |
+        retStmt         |
+        throwStmt       |
+        testStmt        |
+        useStmt         |
+        waitStmt        |
+        emptyStmt       |
+        expression
+    ) [";"]
+
+breakStmt               := "break"
+continueStmt            := "continue"
+
+deleteStmt              :=
+    "delete" identifier
+        ("," identifier)*
+
+enumStmt                :=
+    "enum" identifier "{"
+        [
+            <ID> "=" expression
+            ("," <ID> "=" expression)*
+        ]
+    "}"
+
+haltStmt                := "halt"
+
+importStmt              :=
+    "import" [
+        "{" (identifier)* "}" |
+        identifier
+    ] "from" <string>
+
+modStmt                 :=
+    "mod" identifier "{"
+        (
+            <ID> ":" expression
+        )*
+    "}"
+
+retStmt                 :=
+    "ret" expression
+
+throwStmt               :=
+    "throw" expression
+
+testStmt                :=
+    "test" "(" expression ")"
+        expression
+
+useStmt                 :=
+    "use" expression ["@" expression]
+
+waitStmt                :=
+    "wait"
+
+emptyStmt               :=
+    ";"
+
+expression              :=
+    logicOrExpr
+
+logicOrExpr             :=
+    logicAndExpr ("||" logicAndExpr)*
+
+logicAndExpr            :=
+    bitwiseOrExpr ("&&" bitwiseOrExpr)*
+
+bitwiseOrExpr           :=
+    bitwiseXorExpr ("|" bitwiseXorExpr)*
+
+bitwiseXorExpr          :=
+    bitwiseAndExpr ("^" bitwiseAndExpr)*
+
+bitwiseAndExpr          :=
+    nilCoalescingExpr ("&" nilCoalescingExpr)*
+
+nilCoalescingExpr       :=
+    equalityExpr ("?" equalityExpr)*
+
+equalityExpr            :=
+    comparisonExpr (("==" | "!=" | "=" | "::" | "!:") comparisonExpr)*
+
+comparisonExpr          :=
+    shiftExpr (("<" | "<=" | ">" | ">=") shiftExpr)*
+
+shiftExpr               :=
+    termExpr (("<<" | ">>") termExpr)*
+
+termExpr                :=
+    factorExpr (("+" | "-") factorExpr)*
+
+factorExpr              :=
+    primaryExpr (("*" | "/" | "\\" | "%") primaryExpr)*
+
+primaryExpr             :=
+    (
+        ("+" | "-" | "~" | "!") expression  |
+        "(" expression ")"                  |
+        blockExpr                           |
+        renderExpr                          |
+        catchHandleExpr                     |
+        ifElseExpr                          |
+        whileExpr                           |
+        loopExpr                            |
+        unlessExpr                          |
+        randomExpr                          |
+        whenExpr                            |
+        funcDeclarationExpr                 |
+        typeExpr                            |
+        sizeExpr                            |
+        parallelExpr                        |
+        lockExpr                            |
+        valueExpr                           |
+        arrayExpr                           |
+        literalExpr                         |
+        identifier
+    ) ("(" expression ")" | "[" expression "]")*
+
+blockExpr               :=
+    "{" (statement)* "}"
+
+renderExpr              :=
+    "render" ["!"] expression
+
+catchHandleExpr         :=
+    "catch" expression
+    "handle" identifier expression
+    ["then" expression]
+
+ifElseExpr              :=
+    "if" "(" expression ")" expression
+    ["else" expression]
+
+whileExpr               :=
+    "while" "(" expression ")" expression
+
+loopExpr                :=
+    "loop" [
+        "(" expression ";" expression ";" expression ")"
+    ] expression
+
+unlessExpr              :=
+    "unless" "(" expression ")" expression
+    ["else" expression]
+
+randomExpr              :=
+    "random" expression
+    ["else" expression]
+
+whenExpr                :=
+    "when" "(" expression ")" "{"
+        ("if" "(" expression ")" expression)*
+        ["else" expression]
+    "}"
+
+funcDeclarationExpr     :=
+    "func" "(" [identifier ("," identifier)*] ")"
+        expression
+
+typeExpr                :=
+    "type" expression
+
+sizeExpr                :=
+    "size" expression
+
+parallelExpr            :=
+    "parallel" expression
+
+lockExpr                :=
+    "lock" "(" identifier ")"
+        expression
+
+valueExpr               :=
+    "val" ["(" string ")"]
+        <ID> "=" expression
+        ("," <ID> "=" expression)*
+
+arrayExpr               :=
+    "[" [expression ("," expression)*] "]"
+
+literalExpr             :=
+    string                                  |
+    digits                                  |
+    boolean                                 |
+    nil
+
+start                   :=
+    (statement)*

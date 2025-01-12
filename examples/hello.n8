@@ -1,5 +1,5 @@
 #!/opt/n8lang/bin/n8
 
 val greet = func(name)
-    render! "Hello, " + name + "!";
-greet("world");
+    render! "Hello, " + name + "!"
+greet("world")

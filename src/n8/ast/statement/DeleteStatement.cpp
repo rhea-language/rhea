@@ -16,10 +16,11 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <N8.hpp>
 #include <n8/ast/statement/DeleteStatement.hpp>
 
 DynamicObject DeleteStatement::visit(SymbolTable& symbols) {
-    for(const auto& variable : this->variables)
+    parsync(const auto& variable : this->variables)
         symbols.removeSymbol(variable);
 
     return {};

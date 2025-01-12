@@ -160,6 +160,20 @@ Token Parser::consume(TokenType type) {
     return token;
 }
 
+Token Parser::getIdentifier() {
+    Token token = this->consume(TokenType::IDENTIFIER);
+    while(this->isNext(".", TokenType::OPERATOR)) {
+        this->consume(".");
+
+        token.appendToImage(
+            "." + this->consume(TokenType::IDENTIFIER)
+                .getImage()
+        );
+    }
+
+    return token;
+}
+
 const std::vector<std::shared_ptr<ASTNode>>& Parser::getGlobalStatements() const {
     return this->globalStatements;
 }
@@ -200,7 +214,7 @@ std::shared_ptr<ASTNode> Parser::exprCatchHandle() {
     std::shared_ptr<ASTNode> catchExpr = this->expression();
     this->consume("handle");
 
-    Token handler = this->consume(TokenType::IDENTIFIER);
+    Token handler = this->getIdentifier();
     std::shared_ptr<ASTNode> handleExpr = this->expression();
 
     std::shared_ptr<ASTNode> finalExpr = nullptr;
@@ -229,7 +243,7 @@ std::shared_ptr<ASTNode> Parser::exprFunctionDecl() {
 
         parameters.push_back(
             std::make_shared<Token>(
-                this->consume(TokenType::IDENTIFIER)
+                this->getIdentifier()
             )
         );
     }
@@ -345,16 +359,7 @@ std::shared_ptr<ASTNode> Parser::exprLiteral() {
         );
     }
     else if(!this->isAtEnd() && this->peek().getType() == TokenType::IDENTIFIER) {
-        Token var = this->consume(TokenType::IDENTIFIER);
-        while(this->isNext(".", TokenType::OPERATOR)) {
-            this->consume(".");
-            var.appendToImage(
-                "." +
-                this->consume(TokenType::IDENTIFIER)
-                    .getImage()
-            );
-        }
-
+        Token var = this->getIdentifier();
         expr = std::make_shared<VariableAccessExpression>(
             std::make_shared<Token>(var)
         );
@@ -448,7 +453,7 @@ std::shared_ptr<ASTNode> Parser::exprLock() {
     Token address = this->consume("lock");
     this->consume("(");
 
-    Token variable = this->consume(TokenType::IDENTIFIER);
+    Token variable = this->getIdentifier();
     this->consume(")");
 
     std::shared_ptr<ASTNode> expression = this->expression();
@@ -625,33 +630,10 @@ std::shared_ptr<ASTNode> Parser::exprPrimary() {
         expression = this->exprVal();
     else if(this->isNext("[", TokenType::OPERATOR))
         expression = this->exprArray();
-    else if(!this->isAtEnd() && this->peek().getType() == TokenType::IDENTIFIER) {
-        Token var = this->consume(TokenType::IDENTIFIER);
-        while(this->isNext(".", TokenType::OPERATOR)) {
-            this->consume(".");
-            var.appendToImage(
-                "." +
-                this->consume(TokenType::IDENTIFIER)
-                    .getImage()
-            );
-        }
-
+    else if(!this->isAtEnd() && this->peek().getType() == TokenType::IDENTIFIER)
         expression = std::make_shared<VariableAccessExpression>(
-            std::make_shared<Token>(var)
+            std::make_shared<Token>(this->getIdentifier())
         );
-
-        while(this->isNext("[", TokenType::OPERATOR)) {
-            Token address = this->consume("[");
-            std::shared_ptr<ASTNode> indexExpr = this->expression();
-
-            this->consume("]");
-            expression = std::make_shared<ArrayAccessExpression>(
-                std::make_shared<Token>(address),
-                std::move(expression),
-                std::move(indexExpr)
-            );
-        }
-    }
     else expression = this->exprLiteral();
 
     while(this->isNext("(", TokenType::OPERATOR) ||
@@ -896,15 +878,7 @@ std::shared_ptr<ASTNode> Parser::exprVal() {
             this->consume(",");
 
         std::shared_ptr<ASTNode> value;
-        Token variable = this->consume(TokenType::IDENTIFIER);
-        while(this->isNext(".", TokenType::OPERATOR)) {
-            this->consume(".");
-            variable.appendToImage(
-                "." +
-                this->consume(TokenType::IDENTIFIER)
-                    .getImage()
-            );
-        }
+        Token variable = this->getIdentifier();
 
         if(nativePath == "") {
             this->consume("=");
@@ -915,7 +889,6 @@ std::shared_ptr<ASTNode> Parser::exprVal() {
         );
 
         declarations.insert({variable, std::move(value)});
-
         if(!this->isNext(",", TokenType::OPERATOR))
             break;
     }
@@ -959,7 +932,7 @@ std::shared_ptr<ASTNode> Parser::stmtDelete() {
 
     variables.push_back(
         std::make_shared<Token>(
-            this->consume(TokenType::IDENTIFIER)
+            this->getIdentifier()
         )
     );
 
@@ -967,7 +940,7 @@ std::shared_ptr<ASTNode> Parser::stmtDelete() {
         this->consume(",");
         variables.push_back(
             std::make_shared<Token>(
-                this->consume(TokenType::IDENTIFIER)
+                this->getIdentifier()
             )
         );
     }
@@ -983,15 +956,7 @@ std::shared_ptr<ASTNode> Parser::stmtDelete() {
 
 std::shared_ptr<ASTNode> Parser::stmtEnum() {
     Token address = this->consume("enum"),
-        name = this->consume(TokenType::IDENTIFIER);
-
-    while(!this->isAtEnd() && this->isNext(".", TokenType::OPERATOR)) {
-        this->consume(".");
-        name.appendToImage(
-            "." + this->consume(TokenType::IDENTIFIER)
-                .getImage()
-        );
-    }
+        name = this->getIdentifier();
     this->consume("{");
 
     std::map<std::shared_ptr<Token>, std::shared_ptr<ASTNode>> list;
@@ -1032,17 +997,8 @@ std::shared_ptr<ASTNode> Parser::stmtImport() {
     Token address = this->consume("import");
     std::string name = "";
 
-    if(this->peek().getType() == TokenType::IDENTIFIER) {
-        name = this->consume(TokenType::IDENTIFIER)
-            .getImage();
-
-        while(this->isNext(".", TokenType::OPERATOR)) {
-            this->consume(".");
-
-            name += "." + this->consume(TokenType::IDENTIFIER)
-                .getImage();
-        }
-    }
+    if(this->peek().getType() == TokenType::IDENTIFIER)
+        name = this->getIdentifier().getImage();
 
     std::map<Token, std::shared_ptr<ASTNode>> declarations;
     if(this->isNext("{", TokenType::OPERATOR)) {
@@ -1052,16 +1008,7 @@ std::shared_ptr<ASTNode> Parser::stmtImport() {
             if(!declarations.empty())
                 this->consume(",");
 
-            Token variable = this->consume(TokenType::IDENTIFIER);
-            while(this->isNext(".", TokenType::OPERATOR)) {
-                this->consume(".");
-                variable.appendToImage(
-                    "." +
-                    this->consume(TokenType::IDENTIFIER)
-                        .getImage()
-                );
-            }
-
+            Token variable = this->getIdentifier();
             variable.modifyImage(name + "." + variable.getImage());
             declarations.insert({
                 variable,
@@ -1077,16 +1024,7 @@ std::shared_ptr<ASTNode> Parser::stmtImport() {
         this->consume("}");
     }
     else {
-        Token variable = this->consume(TokenType::IDENTIFIER);
-        while(this->isNext(".", TokenType::OPERATOR)) {
-            this->consume(".");
-            variable.appendToImage(
-                "." +
-                this->consume(TokenType::IDENTIFIER)
-                    .getImage()
-            );
-        }
-
+        Token variable = this->getIdentifier();
         declarations.insert({
             variable,
             std::make_shared<NilLiteralExpression>(
@@ -1105,15 +1043,7 @@ std::shared_ptr<ASTNode> Parser::stmtImport() {
 
 std::shared_ptr<ASTNode> Parser::stmtMod() {
     Token address = this->consume("mod"),
-        name = this->consume(TokenType::IDENTIFIER);
-
-    while(!this->isAtEnd() && this->isNext(".", TokenType::OPERATOR)) {
-        this->consume(".");
-        name.appendToImage(
-            "." + this->consume(TokenType::IDENTIFIER)
-                .getImage()
-        );
-    }
+        name = this->getIdentifier();
     this->consume("{");
 
     std::map<std::shared_ptr<Token>, std::shared_ptr<ASTNode>> list;

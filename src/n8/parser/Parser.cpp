@@ -1110,7 +1110,8 @@ std::shared_ptr<ASTNode> Parser::stmtTest() {
             std::move(testName),
             std::move(testBody)
         );
-    else return std::make_shared<EmptyStatement>(
+
+    return std::make_shared<EmptyStatement>(
         std::make_shared<Token>(address)
     );
 }

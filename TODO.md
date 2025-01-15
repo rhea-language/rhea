@@ -3,6 +3,7 @@ Todo:
 
 - Vector operators such as (.+, .-, etc)
 - Operators on DynamicObject class.
+- `unsafe` expression
 
 - To be developed libraries:
     ✓ array

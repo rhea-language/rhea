@@ -21,6 +21,14 @@
 
 namespace N8Util {
 
+bool isNumberArray(std::vector<DynamicObject> vec) {
+    for(size_t i = 0; i < vec.size(); i++)
+        if(!vec[i].isNumber())
+            return false;
+
+    return true;
+}
+
 DynamicObject vector2Object(const std::vector<double>& vec) {
     std::vector<DynamicObject> objects(vec.size());
 

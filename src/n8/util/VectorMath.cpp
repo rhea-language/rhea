@@ -43,8 +43,8 @@ DynamicObject vector2Object(const std::vector<double>& vec) {
 std::vector<double> object2Vector(const DynamicObject object) {
     std::vector<DynamicObject> objects = *object.getArray();
     size_t objSize = objects.size();
-    std::vector<double> values(objSize);
 
+    std::vector<double> values(objSize);
     parsync(long i = 0; i < (long) objSize; ++i)
         values[(size_t) i] = objects[(size_t) i].getNumber();
 
@@ -60,9 +60,22 @@ std::vector<double> N8Util::VectorMath::add(
         throw std::invalid_argument("Vectors must be of the same size.");
 
     std::vector<double> result(size);
-
     parsync(size_t i = 0; i < size; ++i)
         result[i] = left[i] + right[i];
+
+    return result;
+}
+
+std::vector<double> N8Util::VectorMath::addSingle(
+    double value,
+    std::vector<double> array
+) {
+    size_t size = array.size();
+    std::vector<double> result(size);
+
+    parsync(size_t i = 0; i < size; ++i)
+        result[i] = array[i] + value;
+
     return result;
 }
 
@@ -75,9 +88,22 @@ std::vector<double> N8Util::VectorMath::sub(
         throw std::invalid_argument("Vectors must be of the same size.");
 
     std::vector<double> result(size);
-
     parsync(size_t i = 0; i < size; ++i)
         result[i] = left[i] - right[i];
+
+    return result;
+}
+
+std::vector<double> N8Util::VectorMath::subSingle(
+    double value,
+    std::vector<double> array
+) {
+    size_t size = array.size();
+    std::vector<double> result(size);
+
+    parsync(size_t i = 0; i < size; ++i)
+        result[i] = array[i] - value;
+
     return result;
 }
 
@@ -90,9 +116,22 @@ std::vector<double> N8Util::VectorMath::div(
         throw std::invalid_argument("Vectors must be of the same size.");
 
     std::vector<double> result(size);
-
     parsync(size_t i = 0; i < size; ++i)
         result[i] = left[i] / right[i];
+
+    return result;
+}
+
+std::vector<double> N8Util::VectorMath::divSingle(
+    double value,
+    std::vector<double> array
+) {
+    size_t size = array.size();
+    std::vector<double> result(size);
+
+    parsync(size_t i = 0; i < size; ++i)
+        result[i] = array[i] / value;
+
     return result;
 }
 
@@ -105,9 +144,22 @@ std::vector<double> N8Util::VectorMath::mul(
         throw std::invalid_argument("Vectors must be of the same size.");
 
     std::vector<double> result(size);
-
     parsync(size_t i = 0; i < size; ++i)
         result[i] = left[i] * right[i];
+
+    return result;
+}
+
+std::vector<double> N8Util::VectorMath::mulSingle(
+    double value,
+    std::vector<double> array
+) {
+    size_t size = array.size();
+    std::vector<double> result(size);
+
+    parsync(size_t i = 0; i < size; ++i)
+        result[i] = array[i] * value;
+
     return result;
 }
 
@@ -120,9 +172,25 @@ std::vector<double> N8Util::VectorMath::rem(
         throw std::invalid_argument("Vectors must be of the same size.");
 
     std::vector<double> result(size);
-
     parsync(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] % (long) right[i]);
+
+    return result;
+}
+
+std::vector<double> N8Util::VectorMath::remSingle(
+    double value,
+    std::vector<double> array
+) {
+    size_t size = array.size();
+    std::vector<double> result(size);
+
+    parsync(size_t i = 0; i < size; ++i)
+        result[i] = static_cast<double>(
+            static_cast<long>(array[i]) %
+                static_cast<long>(value)
+        );
+
     return result;
 }
 
@@ -135,9 +203,25 @@ std::vector<double> N8Util::VectorMath::bitwiseAnd(
         throw std::invalid_argument("Vectors must be of the same size.");
 
     std::vector<double> result(size);
-
     parsync(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] & (long) right[i]);
+
+    return result;
+}
+
+std::vector<double> N8Util::VectorMath::bitwiseAndSingle(
+    double value,
+    std::vector<double> array
+) {
+    size_t size = array.size();
+    std::vector<double> result(size);
+
+    parsync(size_t i = 0; i < size; ++i)
+        result[i] = static_cast<double>(
+            static_cast<long>(array[i]) &
+                static_cast<long>(value)
+        );
+
     return result;
 }
 
@@ -150,9 +234,25 @@ std::vector<double> N8Util::VectorMath::bitwiseOr(
         throw std::invalid_argument("Vectors must be of the same size.");
 
     std::vector<double> result(size);
-
     parsync(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] | (long) right[i]);
+
+    return result;
+}
+
+std::vector<double> N8Util::VectorMath::bitwiseOrSingle(
+    double value,
+    std::vector<double> array
+) {
+    size_t size = array.size();
+    std::vector<double> result(size);
+
+    parsync(size_t i = 0; i < size; ++i)
+        result[i] = static_cast<double>(
+            static_cast<long>(array[i]) |
+                static_cast<long>(value)
+        );
+
     return result;
 }
 
@@ -165,9 +265,25 @@ std::vector<double> N8Util::VectorMath::bitwiseXor(
         throw std::invalid_argument("Vectors must be of the same size.");
 
     std::vector<double> result(size);
-
     parsync(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] ^ (long) right[i]);
+
+    return result;
+}
+
+std::vector<double> N8Util::VectorMath::bitwiseXorSingle(
+    double value,
+    std::vector<double> array
+) {
+    size_t size = array.size();
+    std::vector<double> result(size);
+
+    parsync(size_t i = 0; i < size; ++i)
+        result[i] = static_cast<double>(
+            static_cast<long>(array[i]) ^
+                static_cast<long>(value)
+        );
+
     return result;
 }
 
@@ -180,9 +296,25 @@ std::vector<double> N8Util::VectorMath::shiftLeft(
         throw std::invalid_argument("Vectors must be of the same size.");
 
     std::vector<double> result(size);
-
     parsync(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] << (long) right[i]);
+
+    return result;
+}
+
+std::vector<double> N8Util::VectorMath::shiftLeftSingle(
+    double value,
+    std::vector<double> array
+) {
+    size_t size = array.size();
+    std::vector<double> result(size);
+
+    parsync(size_t i = 0; i < size; ++i)
+        result[i] = static_cast<double>(
+            static_cast<long>(array[i]) <<
+                static_cast<long>(value)
+        );
+
     return result;
 }
 
@@ -195,9 +327,25 @@ std::vector<double> N8Util::VectorMath::shiftRight(
         throw std::invalid_argument("Vectors must be of the same size.");
 
     std::vector<double> result(size);
-
     parsync(size_t i = 0; i < size; ++i)
         result[i] = (double) ((long) left[i] >> (long) right[i]);
+
+    return result;
+}
+
+std::vector<double> N8Util::VectorMath::shiftRightSingle(
+    double value,
+    std::vector<double> array
+) {
+    size_t size = array.size();
+    std::vector<double> result(size);
+
+    parsync(size_t i = 0; i < size; ++i)
+        result[i] = static_cast<double>(
+            static_cast<long>(array[i]) >>
+                static_cast<long>(value)
+        );
+
     return result;
 }
 

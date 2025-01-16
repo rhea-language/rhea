@@ -93,13 +93,13 @@ logicAndExpr            :=
     bitwiseOrExpr ("&&" bitwiseOrExpr)*
 
 bitwiseOrExpr           :=
-    bitwiseXorExpr ("|" bitwiseXorExpr)*
+    bitwiseXorExpr (("|" | ".|") bitwiseXorExpr)*
 
 bitwiseXorExpr          :=
-    bitwiseAndExpr ("^" bitwiseAndExpr)*
+    bitwiseAndExpr (("^" | ".^") bitwiseAndExpr)*
 
 bitwiseAndExpr          :=
-    nilCoalescingExpr ("&" nilCoalescingExpr)*
+    nilCoalescingExpr (("&" | ".&") nilCoalescingExpr)*
 
 nilCoalescingExpr       :=
     equalityExpr ("?" equalityExpr)*
@@ -111,13 +111,13 @@ comparisonExpr          :=
     shiftExpr (("<" | "<=" | ">" | ">=") shiftExpr)*
 
 shiftExpr               :=
-    termExpr (("<<" | ">>") termExpr)*
+    termExpr (("<<" | ">>" | ".<<" | ".>>") termExpr)*
 
 termExpr                :=
-    factorExpr (("+" | "-") factorExpr)*
+    factorExpr (("+" | "-" | ".+" | ".-") factorExpr)*
 
 factorExpr              :=
-    primaryExpr (("*" | "/" | "\\" | "%") primaryExpr)*
+    primaryExpr (("*" | "/" | "\\" | "%" | ".*" | "./" | ".%") primaryExpr)*
 
 primaryExpr             :=
     (

@@ -708,7 +708,8 @@ std::shared_ptr<ASTNode> Parser::exprLogicAnd() {
 std::shared_ptr<ASTNode> Parser::exprBitwiseOr() {
     std::shared_ptr<ASTNode> expression = this->exprBitwiseXor();
 
-    while(this->isNext("|", TokenType::OPERATOR)) {
+    while(this->isNext("|", TokenType::OPERATOR) ||
+        this->isNext(".|", TokenType::OPERATOR)) {
         Token address = this->consume("|");
         expression = std::make_shared<BinaryExpression>(
             std::make_shared<Token>(address),
@@ -724,7 +725,8 @@ std::shared_ptr<ASTNode> Parser::exprBitwiseOr() {
 std::shared_ptr<ASTNode> Parser::exprBitwiseXor() {
     std::shared_ptr<ASTNode> expression = this->exprBitwiseAnd();
 
-    while(this->isNext("^", TokenType::OPERATOR)) {
+    while(this->isNext("^", TokenType::OPERATOR) ||
+        this->isNext(".^", TokenType::OPERATOR)) {
         Token address = this->consume("^");
         expression = std::make_shared<BinaryExpression>(
             std::make_shared<Token>(address),
@@ -740,7 +742,8 @@ std::shared_ptr<ASTNode> Parser::exprBitwiseXor() {
 std::shared_ptr<ASTNode> Parser::exprBitwiseAnd() {
     std::shared_ptr<ASTNode> expression = this->exprNilCoalescing();
 
-    while(this->isNext("&", TokenType::OPERATOR)) {
+    while(this->isNext("&", TokenType::OPERATOR) ||
+        this->isNext(".&", TokenType::OPERATOR)) {
         Token address = this->consume("&");
         expression = std::make_shared<BinaryExpression>(
             std::make_shared<Token>(address),
@@ -812,7 +815,9 @@ std::shared_ptr<ASTNode> Parser::exprShift() {
     std::shared_ptr<ASTNode> expression = this->exprTerm();
 
     while(this->isNext("<<", TokenType::OPERATOR) ||
-        this->isNext(">>", TokenType::OPERATOR)) {
+        this->isNext(">>", TokenType::OPERATOR) ||
+        this->isNext(".<<", TokenType::OPERATOR) ||
+        this->isNext(".>>", TokenType::OPERATOR)) {
         Token op = this->consume(TokenType::OPERATOR);
         expression = std::make_shared<BinaryExpression>(
             std::make_shared<Token>(op),
@@ -829,7 +834,9 @@ std::shared_ptr<ASTNode> Parser::exprTerm() {
     std::shared_ptr<ASTNode> expression = this->exprFactor();
 
     while(this->isNext("+", TokenType::OPERATOR) ||
-        this->isNext("-", TokenType::OPERATOR)) {
+        this->isNext("-", TokenType::OPERATOR) ||
+        this->isNext(".+", TokenType::OPERATOR) ||
+        this->isNext(".-", TokenType::OPERATOR)) {
         Token op = this->consume(TokenType::OPERATOR);
         expression = std::make_shared<BinaryExpression>(
             std::make_shared<Token>(op),
@@ -848,7 +855,10 @@ std::shared_ptr<ASTNode> Parser::exprFactor() {
     while(this->isNext("*", TokenType::OPERATOR) ||
         this->isNext("/", TokenType::OPERATOR) ||
         this->isNext("\\", TokenType::OPERATOR) ||
-        this->isNext("%", TokenType::OPERATOR)) {
+        this->isNext("%", TokenType::OPERATOR) ||
+        this->isNext(".*", TokenType::OPERATOR) ||
+        this->isNext("./", TokenType::OPERATOR) ||
+        this->isNext(".%", TokenType::OPERATOR)) {
         Token op = this->consume(TokenType::OPERATOR);
         expression = std::make_shared<BinaryExpression>(
             std::make_shared<Token>(op),

@@ -1106,7 +1106,7 @@ DynamicObject DynamicObject::vectorAdd(DynamicObject arrayVal) {
     else if(!this->isNumber())
         throw std::runtime_error("Single value is not of number type.");
 
-    if(N8Util::isNumberArray(*arrayVal.getArray()))
+    if(!N8Util::isNumberArray(*arrayVal.getArray()))
         throw std::runtime_error("Object elements are not of number array type.");
 
     return DynamicObject(N8Util::vector2Object(
@@ -1123,7 +1123,7 @@ DynamicObject DynamicObject::vectorSub(DynamicObject arrayVal) {
     else if(!this->isNumber())
         throw std::runtime_error("Single value is not of number type.");
 
-    if(N8Util::isNumberArray(*arrayVal.getArray()))
+    if(!N8Util::isNumberArray(*arrayVal.getArray()))
         throw std::runtime_error("Object elements are not of number array type.");
 
     return DynamicObject(N8Util::vector2Object(
@@ -1140,7 +1140,7 @@ DynamicObject DynamicObject::vectorDiv(DynamicObject arrayVal) {
     else if(!this->isNumber())
         throw std::runtime_error("Single value is not of number type.");
 
-    if(N8Util::isNumberArray(*arrayVal.getArray()))
+    if(!N8Util::isNumberArray(*arrayVal.getArray()))
         throw std::runtime_error("Object elements are not of number array type.");
 
     return DynamicObject(N8Util::vector2Object(
@@ -1157,7 +1157,7 @@ DynamicObject DynamicObject::vectorMul(DynamicObject arrayVal) {
     else if(!this->isNumber())
         throw std::runtime_error("Single value is not of number type.");
 
-    if(N8Util::isNumberArray(*arrayVal.getArray()))
+    if(!N8Util::isNumberArray(*arrayVal.getArray()))
         throw std::runtime_error("Object elements are not of number array type.");
 
     return DynamicObject(N8Util::vector2Object(
@@ -1174,7 +1174,7 @@ DynamicObject DynamicObject::vectorRem(DynamicObject arrayVal) {
     else if(!this->isNumber())
         throw std::runtime_error("Single value is not of number type.");
 
-    if(N8Util::isNumberArray(*arrayVal.getArray()))
+    if(!N8Util::isNumberArray(*arrayVal.getArray()))
         throw std::runtime_error("Object elements are not of number array type.");
 
     return DynamicObject(N8Util::vector2Object(
@@ -1191,7 +1191,7 @@ DynamicObject DynamicObject::vectorBitwiseAnd(DynamicObject arrayVal) {
     else if(!this->isNumber())
         throw std::runtime_error("Single value is not of number type.");
 
-    if(N8Util::isNumberArray(*arrayVal.getArray()))
+    if(!N8Util::isNumberArray(*arrayVal.getArray()))
         throw std::runtime_error("Object elements are not of number array type.");
 
     return DynamicObject(N8Util::vector2Object(
@@ -1208,7 +1208,7 @@ DynamicObject DynamicObject::vectorBitwiseOr(DynamicObject arrayVal) {
     else if(!this->isNumber())
         throw std::runtime_error("Single value is not of number type.");
 
-    if(N8Util::isNumberArray(*arrayVal.getArray()))
+    if(!N8Util::isNumberArray(*arrayVal.getArray()))
         throw std::runtime_error("Object elements are not of number array type.");
 
     return DynamicObject(N8Util::vector2Object(
@@ -1225,7 +1225,7 @@ DynamicObject DynamicObject::vectorBitwiseXor(DynamicObject arrayVal) {
     else if(!this->isNumber())
         throw std::runtime_error("Single value is not of number type.");
 
-    if(N8Util::isNumberArray(*arrayVal.getArray()))
+    if(!N8Util::isNumberArray(*arrayVal.getArray()))
         throw std::runtime_error("Object elements are not of number array type.");
 
     return DynamicObject(N8Util::vector2Object(
@@ -1242,7 +1242,7 @@ DynamicObject DynamicObject::vectorShiftLeft(DynamicObject arrayVal) {
     else if(!this->isNumber())
         throw std::runtime_error("Single value is not of number type.");
 
-    if(N8Util::isNumberArray(*arrayVal.getArray()))
+    if(!N8Util::isNumberArray(*arrayVal.getArray()))
         throw std::runtime_error("Object elements are not of number array type.");
 
     return DynamicObject(N8Util::vector2Object(
@@ -1259,7 +1259,7 @@ DynamicObject DynamicObject::vectorShiftRight(DynamicObject arrayVal) {
     else if(!this->isNumber())
         throw std::runtime_error("Single value is not of number type.");
 
-    if(N8Util::isNumberArray(*arrayVal.getArray()))
+    if(!N8Util::isNumberArray(*arrayVal.getArray()))
         throw std::runtime_error("Object elements are not of number array type.");
 
     return DynamicObject(N8Util::vector2Object(

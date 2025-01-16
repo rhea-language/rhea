@@ -24,7 +24,9 @@ const std::vector<std::string> OperatorsAndKeys::operators = {
     "(", ")", "[", "]", "{", "}",
     "=", "==", ":", ";", "'", "\"",
     "<", "<<", "<=", ">", ">>", ">=",
-    ",", ".", "?", "::", "!:", "=>"
+    ",", ".", "?", "::", "!:", "=>",
+    ".+", ".-", ".*", "./", ".%",
+    ".|", ".&", ".^", ".<<", ".>>"
 };
 
 const std::unordered_set<std::string> OperatorsAndKeys::keywords = {

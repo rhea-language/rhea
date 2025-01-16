@@ -212,6 +212,102 @@ public:
 
     std::string objectType();
     std::string toString();
+
+    friend DynamicObject operator+(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    friend DynamicObject operator-(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    friend DynamicObject operator/(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    friend DynamicObject operator*(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    friend DynamicObject operator%(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    friend DynamicObject operator<(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    friend DynamicObject operator>(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    friend DynamicObject operator<=(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    friend DynamicObject operator>=(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    friend DynamicObject operator<<(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    friend DynamicObject operator>>(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    friend DynamicObject operator&(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    friend DynamicObject operator|(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    friend DynamicObject operator^(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Weffc++"
+
+    friend DynamicObject operator&&(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    friend DynamicObject operator||(
+        DynamicObject left,
+        DynamicObject right
+    );
+
+    #pragma GCC diagnostic pop
+
+    DynamicObject vectorAdd(DynamicObject arrayValue);
+    DynamicObject vectorSub(DynamicObject arrayValue);
+    DynamicObject vectorDiv(DynamicObject arrayValue);
+    DynamicObject vectorMul(DynamicObject arrayValue);
+    DynamicObject vectorRem(DynamicObject arrayValue);
+    DynamicObject vectorBitwiseAnd(DynamicObject arrayValue);
+    DynamicObject vectorBitwiseOr(DynamicObject arrayValue);
+    DynamicObject vectorBitwiseXor(DynamicObject arrayValue);
+    DynamicObject vectorShiftLeft(DynamicObject arrayValue);
+    DynamicObject vectorShiftRight(DynamicObject arrayValue);
 };
 
 #endif

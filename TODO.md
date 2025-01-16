@@ -1,10 +1,6 @@
 Todo:
 ---
 
-- Vector operators such as (.+, .-, etc)
-- Operators on DynamicObject class.
-- `unsafe` expression
-
 - To be developed libraries:
     ✓ array
     ✓ chrono
@@ -25,4 +21,5 @@ Todo:
     ✓ str
     ✓ sys
     * thread
+    * unsafe
     * zip

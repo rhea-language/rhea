@@ -82,11 +82,11 @@ auto printBanner(N8Util::ArgumentParser argParse) -> void {
 }
 
 auto main(int argc, char** argv) -> int {
-    std::set_terminate(Runtime::terminateHandler);
-
     #if defined(__linux__) || defined(__APPLE__)
     Runtime::catchSegfault();
     #endif
+
+    std::set_terminate(Runtime::terminateHandler);
 
     #ifdef _OPENMP
     omp_set_num_threads(

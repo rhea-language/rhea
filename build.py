@@ -158,9 +158,9 @@ try:
             '-Wtrigraphs', '-Wuninitialized', '-Wunknown-pragmas', '-Wunreachable-code',
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-Wno-deprecated-declarations',
-            '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-Ofast', '-s',
+            '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-s',
             '-std=c++17', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
-            '-march=native', '-funroll-loops', '-ffast-math'
+            '-march=native', '-ffast-math'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + win_libs
 
         print("Executing:")
@@ -201,10 +201,10 @@ try:
             '-Wstrict-aliasing=2', '-Wswitch', '-Wswitch-default', '-Wswitch-enum',
             '-Wtrigraphs', '-Wuninitialized', '-Wunknown-pragmas', '-Wunreachable-code',
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
-            '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-O3',
+            '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-O2',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-ffast-math', '-s',
             '-std=c++20', '-fopenmp'] + ext_instructions + ['-march=native',
-            '-funroll-loops', '-ffast-math', '-D__TERMUX__'
+            '-ffast-math', '-D__TERMUX__'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
         print("Executing:")
@@ -245,10 +245,10 @@ try:
             '-Wstrict-aliasing=2', '-Wswitch', '-Wswitch-default', '-Wswitch-enum',
             '-Wtrigraphs', '-Wuninitialized', '-Wunknown-pragmas', '-Wunreachable-code',
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
-            '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-O3',
+            '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-O2',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-ffast-math', '-s',
             '-std=c++20', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
-            '-march=native', '-funroll-loops', '-ffast-math'
+            '-march=native', '-ffast-math'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
         print("Executing:")
@@ -299,9 +299,9 @@ try:
             '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
             '-Wwrite-strings', '-Wno-return-type-c-linkage', '-pipe',
-            '-std=c++17', '-fopenmp', '-march=native', '-funroll-loops',
-            '-ffast-math', '-flto=auto', '-Xpreprocessor', '-O3',
-            '-Wno-header-guard', '-Wno-pessimizing-move'
+            '-std=c++17', '-fopenmp', '-march=native', '-ffast-math',
+            '-flto=auto', '-Xpreprocessor', '-O2', '-Wno-header-guard',
+            '-Wno-pessimizing-move'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
         print("Executing:")

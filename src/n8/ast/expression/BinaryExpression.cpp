@@ -139,6 +139,66 @@ DynamicObject BinaryExpression::visit(SymbolTable& symbols) {
                 rValue.getRegex()->getRegex()
             ));
     }
+    else if(this->op == ".+") {
+        if(lValue.isNumber() && rValue.isArray())
+            return lValue.vectorAdd(rValue);
+        else if(lValue.isArray() && rValue.isNumber())
+            return rValue.vectorAdd(lValue);
+    }
+    else if(this->op == ".-") {
+        if(lValue.isNumber() && rValue.isArray())
+            return lValue.vectorSub(rValue);
+        else if(lValue.isArray() && rValue.isNumber())
+            return rValue.vectorSub(lValue);
+    }
+    else if(this->op == "./") {
+        if(lValue.isNumber() && rValue.isArray())
+            return lValue.vectorDiv(rValue);
+        else if(lValue.isArray() && rValue.isNumber())
+            return rValue.vectorDiv(lValue);
+    }
+    else if(this->op == ".*") {
+        if(lValue.isNumber() && rValue.isArray())
+            return lValue.vectorMul(rValue);
+        else if(lValue.isArray() && rValue.isNumber())
+            return rValue.vectorMul(lValue);
+    }
+    else if(this->op == ".%") {
+        if(lValue.isNumber() && rValue.isArray())
+            return lValue.vectorRem(rValue);
+        else if(lValue.isArray() && rValue.isNumber())
+            return rValue.vectorRem(lValue);
+    }
+    else if(this->op == ".|") {
+        if(lValue.isNumber() && rValue.isArray())
+            return lValue.vectorBitwiseOr(rValue);
+        else if(lValue.isArray() && rValue.isNumber())
+            return rValue.vectorBitwiseOr(lValue);
+    }
+    else if(this->op == ".&") {
+        if(lValue.isNumber() && rValue.isArray())
+            return lValue.vectorBitwiseAnd(rValue);
+        else if(lValue.isArray() && rValue.isNumber())
+            return rValue.vectorBitwiseAnd(lValue);
+    }
+    else if(this->op == ".^") {
+        if(lValue.isNumber() && rValue.isArray())
+            return lValue.vectorBitwiseXor(rValue);
+        else if(lValue.isArray() && rValue.isNumber())
+            return rValue.vectorBitwiseXor(lValue);
+    }
+    else if(this->op == ".<<") {
+        if(lValue.isNumber() && rValue.isArray())
+            return lValue.vectorShiftLeft(rValue);
+        else if(lValue.isArray() && rValue.isNumber())
+            return rValue.vectorShiftLeft(lValue);
+    }
+    else if(this->op == ".>>") {
+        if(lValue.isNumber() && rValue.isArray())
+            return lValue.vectorShiftRight(rValue);
+        else if(lValue.isArray() && rValue.isNumber())
+            return rValue.vectorShiftRight(lValue);
+    }
 
     throw ASTNodeException(
         std::move(this->address),

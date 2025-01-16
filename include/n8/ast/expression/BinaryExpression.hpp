@@ -31,12 +31,6 @@ private:
     std::shared_ptr<ASTNode> right;
     std::string op;
 
-    DynamicObject applyStringOp(DynamicObject& lValue, DynamicObject& rValue);
-    DynamicObject applyNumOp(DynamicObject& lValue, DynamicObject& rValue);
-    DynamicObject applyBoolOp(DynamicObject& lValue, DynamicObject& rValue);
-    DynamicObject applyRegexOp(DynamicObject& lValue, DynamicObject& rValue);
-    DynamicObject applyArrayOp(DynamicObject& lValue, DynamicObject& rValue);
-
 public:
     explicit BinaryExpression(
         std::shared_ptr<Token> _address,

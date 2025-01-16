@@ -35,9 +35,19 @@ public:
         std::vector<double> right
     );
 
+    static std::vector<double> addSingle(
+        double value,
+        std::vector<double> array
+    );
+
     static std::vector<double> sub(
         std::vector<double> left,
         std::vector<double> right
+    );
+
+    static std::vector<double> subSingle(
+        double value,
+        std::vector<double> array
     );
 
     static std::vector<double> div(
@@ -45,9 +55,19 @@ public:
         std::vector<double> right
     );
 
+    static std::vector<double> divSingle(
+        double value,
+        std::vector<double> array
+    );
+
     static std::vector<double> mul(
         std::vector<double> left,
         std::vector<double> right
+    );
+
+    static std::vector<double> mulSingle(
+        double value,
+        std::vector<double> array
     );
 
     static std::vector<double> rem(
@@ -55,9 +75,19 @@ public:
         std::vector<double> right
     );
 
+    static std::vector<double> remSingle(
+        double value,
+        std::vector<double> array
+    );
+
     static std::vector<double> bitwiseAnd(
         std::vector<double> left,
         std::vector<double> right
+    );
+
+    static std::vector<double> bitwiseAndSingle(
+        double value,
+        std::vector<double> array
     );
 
     static std::vector<double> bitwiseOr(
@@ -65,14 +95,34 @@ public:
         std::vector<double> right
     );
 
+    static std::vector<double> bitwiseOrSingle(
+        double value,
+        std::vector<double> array
+    );
+
     static std::vector<double> bitwiseXor(
         std::vector<double> left,
         std::vector<double> right
     );
 
+    static std::vector<double> bitwiseXorSingle(
+        double value,
+        std::vector<double> array
+    );
+
+    static std::vector<double> shiftLeftSingle(
+        double value,
+        std::vector<double> array
+    );
+
     static std::vector<double> shiftLeft(
         std::vector<double> left,
         std::vector<double> right
+    );
+
+    static std::vector<double> shiftRightSingle(
+        double value,
+        std::vector<double> array
     );
 
     static std::vector<double> shiftRight(

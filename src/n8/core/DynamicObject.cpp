@@ -22,8 +22,10 @@
 #include <n8/core/DynamicObject.hpp>
 #include <n8/core/RegexWrapper.hpp>
 #include <n8/core/SymbolTable.hpp>
+#include <n8/util/VectorMath.hpp>
 
 #include <cmath>
+#include <string>
 
 DynamicObject& DynamicObject::operator=(const DynamicObject& other) {
     if(this != &other) {
@@ -289,4 +291,981 @@ std::string DynamicObject::toString() {
         return "{{native_func}}";
 
     return "{untyped}";
+}
+
+DynamicObject operator+(
+    DynamicObject left,
+    DynamicObject right
+) {
+    if(left.isNumber() && right.isNumber())
+        return DynamicObject(left.getNumber() + right.getNumber());
+    else if(left.isNumber() && right.isString())
+        return DynamicObject(left.toString() + right.toString());
+    else if((left.isNumber() && right.isArray()) ||
+        (left.isString() && right.isArray()) ||
+        (left.isRegex() && right.isArray()) ||
+        (left.isBool() && right.isArray()) ||
+        (left.isFunction() && right.isArray()) ||
+        (left.isNil() && right.isArray())) {
+        std::shared_ptr<std::vector<DynamicObject>> array = right.getArray();
+
+        array->emplace_back(left);
+        return DynamicObject(std::move(array));
+    }
+    else if(left.isNumber() && right.isRegex())
+        return DynamicObject(std::make_shared<RegexWrapper>(
+            std::string(std::to_string(left.getNumber())) +
+                right.toString()
+        ));
+    else if((left.isString() && right.isNumber()) ||
+        (left.isString() && right.isBool()) ||
+        (left.isString() && right.isString()))
+        return DynamicObject(
+            left.toString() + right.toString()
+        );
+    else if(left.isString() && right.isRegex())
+        return DynamicObject(std::make_shared<RegexWrapper>(
+            left.toString() + right.getRegex()->getPattern()
+        )
+    );
+    else if(left.isArray() && right.isArray()) {
+        if(N8Util::isNumberArray(*left.getArray()) &&
+            N8Util::isNumberArray(*right.getArray())) {
+            return DynamicObject(
+                N8Util::vector2Object(N8Util::VectorMath::add(
+                    N8Util::object2Vector(left),
+                    N8Util::object2Vector(right)
+                )
+            ));
+        }
+
+        throw std::runtime_error(
+            "Add operation for two (2) arrays cannot be done; "
+            "not all elements are of number type."
+        );
+    }
+    else if(left.isArray() && (
+        right.isBool() ||
+        right.isFunction() ||
+        right.isNil() ||
+        right.isNumber() ||
+        right.isRegex() ||
+        right.isString())
+    ) {
+        std::shared_ptr<std::vector<DynamicObject>> array = left.getArray();
+
+        array->emplace_back(right);
+        return DynamicObject(std::move(array));
+    }
+    else if((left.isRegex() && right.isNumber()) ||
+        (left.isRegex() && right.isString()))
+        return DynamicObject(std::make_shared<RegexWrapper>(
+            left.getRegex()->getPattern() + right.toString()
+        ));
+    else if(left.isRegex() && right.isRegex())
+        return DynamicObject(std::make_shared<RegexWrapper>(
+            left.getRegex()->getPattern() +
+            right.getRegex()->getPattern()
+        ));
+    else if(left.isBool() && right.isBool())
+        return DynamicObject(static_cast<double>(
+            static_cast<double>(left.getBool()) +
+                static_cast<double>(right.getBool())
+        ));
+    else if(left.isBool() && right.isString())
+        return DynamicObject(
+            left.toString() + right.toString()
+        );
+    else if(left.isBool() && right.isNumber())
+        return DynamicObject(static_cast<double>(
+            static_cast<double>(left.getBool()) +
+                right.getNumber()
+        ));
+    else if(left.isBool() && right.isRegex())
+        return DynamicObject(std::make_shared<RegexWrapper>(
+            left.toString() +
+                right.getRegex()->getPattern()
+        ));
+    else if((left.isRegex() && right.isNil()) ||
+        (left.isBool() && right.isNil()) ||
+        (left.isFunction() && right.isNil()) ||
+        (left.isNative() && right.isNil()) ||
+        (left.isNumber() && right.isNil()) ||
+        (left.isString() && right.isNil()))
+        return left;
+
+    throw std::runtime_error(
+        "Invalid '+' operator for object types; " +
+            left.objectType() + " and " + right.objectType()
+    );
+}
+
+DynamicObject operator-(
+    DynamicObject left,
+    DynamicObject right
+) {
+    if(left.isNil())
+        return right;
+    else if(right.isNil())
+        return left;
+    else if(left.isNumber() && right.isNumber())
+        return DynamicObject(
+            left.getNumber() -
+                right.getNumber()
+        );
+    else if(left.isNumber() && right.isBool())
+        return DynamicObject(
+            left.getNumber() -
+                static_cast<double>(right.getBool())
+        );
+    else if(left.isBool() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(left.getBool())
+                - right.getNumber()
+        );
+    else if(((left.isString() || left.isRegex()) && right.isNumber()) ||
+        (left.isNumber() && (right.isString() || right.isRegex())) ||
+        (left.isString() && right.isString())) {
+        std::string leftVal = left.toString(),
+            rightVal = right.toString();
+
+        std::string subject, object;
+        if(leftVal.size() >= rightVal.size()) {
+            subject = leftVal;
+            object = rightVal;
+        }
+        else {
+            subject = rightVal;
+            object = leftVal;
+        }
+
+        size_t index = 0;
+        while((index = subject.find(subject, index)) != std::string::npos) {
+            subject.replace(index, rightVal.size(), "");
+            index++;
+        }
+
+        return DynamicObject(subject);
+    }
+    else if(left.isArray() && right.isArray()) {
+        if(N8Util::isNumberArray(*left.getArray()) &&
+            N8Util::isNumberArray(*right.getArray())) {
+            return DynamicObject(
+                N8Util::vector2Object(N8Util::VectorMath::sub(
+                    N8Util::object2Vector(left),
+                    N8Util::object2Vector(right)
+                )
+            ));
+        }
+
+        throw std::runtime_error(
+            "Subtraction operation for two (2) arrays cannot be done; "
+            "not all elements are of number type."
+        );
+    }
+
+    throw std::runtime_error(
+        "Invalid '-' operator for object types; " +
+            left.objectType() + " and " + right.objectType()
+    );
+}
+
+DynamicObject operator/(
+    DynamicObject left,
+    DynamicObject right
+) {
+    if(left.isNumber() && right.isNumber())
+        return DynamicObject(
+            left.getNumber() /
+                right.getNumber()
+        );
+    else if(left.isNumber() && right.isBool())
+        return DynamicObject(
+            left.getNumber() /
+                static_cast<double>(right.getBool())
+        );
+    else if(left.isBool() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(left.getBool()) /
+                right.getNumber()
+        );
+    else if(left.isBool() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(left.getBool()) /
+                right.getBool()
+        );
+    else if(left.isArray() && right.isArray()) {
+        if(N8Util::isNumberArray(*left.getArray()) &&
+            N8Util::isNumberArray(*right.getArray())) {
+            return DynamicObject(
+                N8Util::vector2Object(N8Util::VectorMath::div(
+                    N8Util::object2Vector(left),
+                    N8Util::object2Vector(right)
+                )
+            ));
+        }
+
+        throw std::runtime_error(
+            "Division operation for two (2) arrays cannot be done; "
+            "not all elements are of number type."
+        );
+    }
+
+    throw std::runtime_error(
+        "Invalid '/' operator for object types; " +
+            left.objectType() + " and " + right.objectType()
+    );
+}
+
+DynamicObject operator*(
+    DynamicObject left,
+    DynamicObject right
+) {
+    if(left.isNumber() && right.isNumber())
+        return DynamicObject(
+            left.getNumber() *
+                right.getNumber()
+        );
+    else if(left.isNumber() && right.isBool())
+        return DynamicObject(
+            left.getNumber() *
+                static_cast<double>(right.getBool())
+        );
+    else if(left.isBool() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(left.getBool()) *
+                right.getNumber()
+        );
+    else if(left.isBool() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(left.getBool()) *
+                right.getNumber()
+        );
+    else if(left.isString() && right.isNumber()) {
+        std::string str = left.getString();
+        long count = static_cast<long>(right.getNumber());
+
+        for(long i = 1; i < count; i++)
+            str += str;
+
+        return DynamicObject(str);
+    }
+    else if(left.isNumber() && right.isString()) {
+        std::string str = right.getString();
+        long count = static_cast<long>(left.getNumber());
+
+        for(long i = 1; i < count; i++)
+            str += str;
+
+        return DynamicObject(str);
+    }
+    else if(left.isArray() && right.isArray()) {
+        if(N8Util::isNumberArray(*left.getArray()) &&
+            N8Util::isNumberArray(*right.getArray())) {
+            return DynamicObject(
+                N8Util::vector2Object(N8Util::VectorMath::mul(
+                    N8Util::object2Vector(left),
+                    N8Util::object2Vector(right)
+                )
+            ));
+        }
+
+        throw std::runtime_error(
+            "Multiplication operation for two (2) arrays cannot be done; "
+            "not all elements are of number type."
+        );
+    }
+
+    throw std::runtime_error(
+        "Invalid '*' operator for object types; " +
+            left.objectType() + " and " + right.objectType()
+    );
+}
+
+DynamicObject operator%(
+    DynamicObject left,
+    DynamicObject right
+) {
+    if(left.isNumber() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getNumber()) %
+                    static_cast<long>(right.getNumber())
+            )
+        );
+    else if(left.isNumber() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getNumber()) %
+                    static_cast<long>(right.getBool())
+            )
+        );
+    else if(left.isBool() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getBool()) %
+                    static_cast<long>(right.getNumber())
+            )
+        );
+    else if(left.isBool() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getBool()) %
+                    static_cast<long>(right.getBool())
+            )
+        );
+    else if(left.isArray() && right.isArray()) {
+        if(N8Util::isNumberArray(*left.getArray()) &&
+            N8Util::isNumberArray(*right.getArray())) {
+            return DynamicObject(
+                N8Util::vector2Object(N8Util::VectorMath::rem(
+                    N8Util::object2Vector(left),
+                    N8Util::object2Vector(right)
+                )
+            ));
+        }
+
+        throw std::runtime_error(
+            "Remainder operation for two (2) arrays cannot be done; "
+            "not all elements are of number type."
+        );
+    }
+
+    throw std::runtime_error(
+        "Invalid '%' operator for object types; " +
+            left.objectType() + " and " + right.objectType()
+    );
+}
+
+DynamicObject operator<(
+    DynamicObject left,
+    DynamicObject right
+) {
+    if(left.isNumber() && right.isNumber())
+        return DynamicObject(
+            left.getNumber() <
+                right.getNumber()
+        );
+    else if(left.isNumber() && right.isBool())
+        return DynamicObject(
+            left.getNumber() <
+                static_cast<double>(right.getBool())
+        );
+    else if(left.isBool() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(left.getBool()) <
+                right.getNumber()
+        );
+    else if(left.isBool() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(left.getBool()) <
+                right.getBool()
+        );
+    else if(left.isString() && right.isNumber())
+        return DynamicObject(
+            left.getString().size() <
+                static_cast<std::size_t>(right.getNumber())
+        );
+    else if(left.isNumber() && right.isString())
+        return DynamicObject(
+            static_cast<std::size_t>(left.getNumber()) <
+                right.getString().size()
+        );
+
+    throw std::runtime_error(
+        "Invalid '<' operator for object types; " +
+            left.objectType() + " and " + right.objectType()
+    );
+}
+
+DynamicObject operator>(
+    DynamicObject left,
+    DynamicObject right
+) {
+    if(left.isNumber() && right.isNumber())
+        return DynamicObject(
+            left.getNumber() >
+                right.getNumber()
+        );
+    else if(left.isNumber() && right.isBool())
+        return DynamicObject(
+            left.getNumber() >
+                static_cast<double>(right.getBool())
+        );
+    else if(left.isBool() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(left.getBool()) >
+                right.getNumber()
+        );
+    else if(left.isBool() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(left.getBool()) >
+                right.getBool()
+        );
+    else if(left.isString() && right.isNumber())
+        return DynamicObject(
+            left.getString().size() >
+                static_cast<std::size_t>(right.getNumber())
+        );
+    else if(left.isNumber() && right.isString())
+        return DynamicObject(
+            static_cast<std::size_t>(left.getNumber()) >
+                right.getString().size()
+        );
+
+    throw std::runtime_error(
+        "Invalid '>' operator for object types; " +
+            left.objectType() + " and " + right.objectType()
+    );
+}
+
+DynamicObject operator<=(
+    DynamicObject left,
+    DynamicObject right
+) {
+    if(left.isNumber() && right.isNumber())
+        return DynamicObject(
+            left.getNumber() <=
+                right.getNumber()
+        );
+    else if(left.isNumber() && right.isBool())
+        return DynamicObject(
+            left.getNumber() <=
+                static_cast<double>(right.getBool())
+        );
+    else if(left.isBool() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(left.getBool()) <=
+                right.getNumber()
+        );
+    else if(left.isBool() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(left.getBool()) <=
+                right.getBool()
+        );
+    else if(left.isString() && right.isNumber())
+        return DynamicObject(
+            left.getString().size() <=
+                static_cast<std::size_t>(right.getNumber())
+        );
+    else if(left.isNumber() && right.isString())
+        return DynamicObject(
+            static_cast<std::size_t>(left.getNumber()) <=
+                right.getString().size()
+        );
+
+    throw std::runtime_error(
+        "Invalid '<=' operator for object types; " +
+            left.objectType() + " and " + right.objectType()
+    );
+}
+
+DynamicObject operator>=(
+    DynamicObject left,
+    DynamicObject right
+) {
+    if(left.isNumber() && right.isNumber())
+        return DynamicObject(
+            left.getNumber() >=
+                right.getNumber()
+        );
+    else if(left.isNumber() && right.isBool())
+        return DynamicObject(
+            left.getNumber() >=
+                static_cast<double>(right.getBool())
+        );
+    else if(left.isBool() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(left.getBool()) >=
+                right.getNumber()
+        );
+    else if(left.isBool() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(left.getBool()) >=
+                right.getBool()
+        );
+    else if(left.isString() && right.isNumber())
+        return DynamicObject(
+            left.getString().size() >=
+                static_cast<std::size_t>(right.getNumber())
+        );
+    else if(left.isNumber() && right.isString())
+        return DynamicObject(
+            static_cast<std::size_t>(left.getNumber()) >=
+                right.getString().size()
+        );
+
+    throw std::runtime_error(
+        "Invalid '>=' operator for object types; " +
+            left.objectType() + " and " + right.objectType()
+    );
+}
+
+DynamicObject operator<<(
+    DynamicObject left,
+    DynamicObject right
+) {
+    if(left.isNumber() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getNumber()) <<
+                    static_cast<long>(right.getNumber())
+            )
+        );
+    else if(left.isNumber() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getNumber()) <<
+                    static_cast<long>(right.getBool())
+            )
+        );
+    else if(left.isBool() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getBool()) <<
+                    static_cast<long>(right.getNumber())
+            )
+        );
+    else if(left.isBool() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getBool()) <<
+                    static_cast<long>(right.getBool())
+            )
+        );
+    else if(left.isArray() && right.isArray()) {
+        if(N8Util::isNumberArray(*left.getArray()) &&
+            N8Util::isNumberArray(*right.getArray())) {
+            return DynamicObject(
+                N8Util::vector2Object(N8Util::VectorMath::shiftLeft(
+                    N8Util::object2Vector(left),
+                    N8Util::object2Vector(right)
+                )
+            ));
+        }
+
+        throw std::runtime_error(
+            "Shift left operation for two (2) arrays cannot be done; "
+            "not all elements are of number type."
+        );
+    }
+
+    throw std::runtime_error(
+        "Invalid '<<' operator for object types; " +
+            left.objectType() + " and " + right.objectType()
+    );
+}
+
+DynamicObject operator>>(
+    DynamicObject left,
+    DynamicObject right
+) {
+    if(left.isNumber() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getNumber()) >>
+                    static_cast<long>(right.getNumber())
+            )
+        );
+    else if(left.isNumber() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getNumber()) >>
+                    static_cast<long>(right.getBool())
+            )
+        );
+    else if(left.isBool() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getBool()) >>
+                    static_cast<long>(right.getNumber())
+            )
+        );
+    else if(left.isBool() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getBool()) >>
+                    static_cast<long>(right.getBool())
+            )
+        );
+    else if(left.isArray() && right.isArray()) {
+        if(N8Util::isNumberArray(*left.getArray()) &&
+            N8Util::isNumberArray(*right.getArray())) {
+            return DynamicObject(
+                N8Util::vector2Object(N8Util::VectorMath::shiftRight(
+                    N8Util::object2Vector(left),
+                    N8Util::object2Vector(right)
+                )
+            ));
+        }
+
+        throw std::runtime_error(
+            "Right shift operation for two (2) arrays cannot be done; "
+            "not all elements are of number type."
+        );
+    }
+
+    throw std::runtime_error(
+        "Invalid '>>' operator for object types; " +
+            left.objectType() + " and " + right.objectType()
+    );
+}
+
+DynamicObject operator&(
+    DynamicObject left,
+    DynamicObject right
+) {
+    if(left.isNumber() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getNumber()) &
+                    static_cast<long>(right.getNumber())
+            )
+        );
+    else if(left.isNumber() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getNumber()) &
+                    static_cast<long>(right.getBool())
+            )
+        );
+    else if(left.isBool() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getBool()) &
+                    static_cast<long>(right.getNumber())
+            )
+        );
+    else if(left.isBool() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getBool()) &
+                    static_cast<long>(right.getBool())
+            )
+        );
+    else if(left.isArray() && right.isArray()) {
+        if(N8Util::isNumberArray(*left.getArray()) &&
+            N8Util::isNumberArray(*right.getArray())) {
+            return DynamicObject(
+                N8Util::vector2Object(N8Util::VectorMath::bitwiseAnd(
+                    N8Util::object2Vector(left),
+                    N8Util::object2Vector(right)
+                )
+            ));
+        }
+
+        throw std::runtime_error(
+            "Bitwise AND operation for two (2) arrays cannot be done; "
+            "not all elements are of number type."
+        );
+    }
+    throw std::runtime_error(
+        "Invalid '&' operator for object types; " +
+            left.objectType() + " and " + right.objectType()
+    );
+}
+
+DynamicObject operator|(
+    DynamicObject left,
+    DynamicObject right
+) {
+    if(left.isNumber() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getNumber()) |
+                    static_cast<long>(right.getNumber())
+            )
+        );
+    else if(left.isNumber() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getNumber()) |
+                    static_cast<long>(right.getBool())
+            )
+        );
+    else if(left.isBool() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getBool()) |
+                    static_cast<long>(right.getNumber())
+            )
+        );
+    else if(left.isBool() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getBool()) |
+                    static_cast<long>(right.getBool())
+            )
+        );
+    else if(left.isArray() && right.isArray()) {
+        if(N8Util::isNumberArray(*left.getArray()) &&
+            N8Util::isNumberArray(*right.getArray())) {
+            return DynamicObject(
+                N8Util::vector2Object(N8Util::VectorMath::bitwiseOr(
+                    N8Util::object2Vector(left),
+                    N8Util::object2Vector(right)
+                )
+            ));
+        }
+
+        throw std::runtime_error(
+            "Bitwise OR operation for two (2) arrays cannot be done; "
+            "not all elements are of number type."
+        );
+    }
+
+    throw std::runtime_error(
+        "Invalid '|' operator for object types; " +
+            left.objectType() + " and " + right.objectType()
+    );
+}
+
+DynamicObject operator^(
+    DynamicObject left,
+    DynamicObject right
+) {
+    if(left.isNumber() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getNumber()) ^
+                    static_cast<long>(right.getNumber())
+            )
+        );
+    else if(left.isNumber() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getNumber()) ^
+                    static_cast<long>(right.getBool())
+            )
+        );
+    else if(left.isBool() && right.isNumber())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getBool()) ^
+                    static_cast<long>(right.getNumber())
+            )
+        );
+    else if(left.isBool() && right.isBool())
+        return DynamicObject(
+            static_cast<double>(
+                static_cast<long>(left.getBool()) ^
+                    static_cast<long>(right.getBool())
+            )
+        );
+    else if(left.isArray() && right.isArray()) {
+        if(N8Util::isNumberArray(*left.getArray()) &&
+            N8Util::isNumberArray(*right.getArray())) {
+            return DynamicObject(
+                N8Util::vector2Object(N8Util::VectorMath::bitwiseXor(
+                    N8Util::object2Vector(left),
+                    N8Util::object2Vector(right)
+                )
+            ));
+        }
+
+        throw std::runtime_error(
+            "Bitwise XOR operation for two (2) arrays cannot be done; "
+            "not all elements are of number type."
+        );
+    }
+
+    throw std::runtime_error(
+        "Invalid '^' operator for object types; " +
+            left.objectType() + " and " + right.objectType()
+    );
+}
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
+
+DynamicObject operator&&(
+    DynamicObject left,
+    DynamicObject right
+) {
+    return DynamicObject(
+        left.booleanEquivalent() &&
+            right.booleanEquivalent()
+    );
+}
+
+DynamicObject operator||(
+    DynamicObject left,
+    DynamicObject right
+) {
+    return DynamicObject(
+        left.booleanEquivalent() ||
+            right.booleanEquivalent()
+    );
+}
+
+#pragma GCC diagnostic pop
+
+DynamicObject DynamicObject::vectorAdd(DynamicObject arrayVal) {
+    if(!arrayVal.isArray())
+        throw std::runtime_error("Object value is not of array type.");
+    else if(!this->isNumber())
+        throw std::runtime_error("Single value is not of number type.");
+
+    if(N8Util::isNumberArray(*arrayVal.getArray()))
+        throw std::runtime_error("Object elements are not of number array type.");
+
+    return DynamicObject(N8Util::vector2Object(
+        N8Util::VectorMath::addSingle(
+            this->getNumber(),
+            N8Util::object2Vector(arrayVal)
+        )
+    ));
+}
+
+DynamicObject DynamicObject::vectorSub(DynamicObject arrayVal) {
+    if(!arrayVal.isArray())
+        throw std::runtime_error("Object value is not of array type.");
+    else if(!this->isNumber())
+        throw std::runtime_error("Single value is not of number type.");
+
+    if(N8Util::isNumberArray(*arrayVal.getArray()))
+        throw std::runtime_error("Object elements are not of number array type.");
+
+    return DynamicObject(N8Util::vector2Object(
+        N8Util::VectorMath::subSingle(
+            this->getNumber(),
+            N8Util::object2Vector(arrayVal)
+        )
+    ));
+}
+
+DynamicObject DynamicObject::vectorDiv(DynamicObject arrayVal) {
+    if(!arrayVal.isArray())
+        throw std::runtime_error("Object value is not of array type.");
+    else if(!this->isNumber())
+        throw std::runtime_error("Single value is not of number type.");
+
+    if(N8Util::isNumberArray(*arrayVal.getArray()))
+        throw std::runtime_error("Object elements are not of number array type.");
+
+    return DynamicObject(N8Util::vector2Object(
+        N8Util::VectorMath::divSingle(
+            this->getNumber(),
+            N8Util::object2Vector(arrayVal)
+        )
+    ));
+}
+
+DynamicObject DynamicObject::vectorMul(DynamicObject arrayVal) {
+    if(!arrayVal.isArray())
+        throw std::runtime_error("Object value is not of array type.");
+    else if(!this->isNumber())
+        throw std::runtime_error("Single value is not of number type.");
+
+    if(N8Util::isNumberArray(*arrayVal.getArray()))
+        throw std::runtime_error("Object elements are not of number array type.");
+
+    return DynamicObject(N8Util::vector2Object(
+        N8Util::VectorMath::mulSingle(
+            this->getNumber(),
+            N8Util::object2Vector(arrayVal)
+        )
+    ));
+}
+
+DynamicObject DynamicObject::vectorRem(DynamicObject arrayVal) {
+    if(!arrayVal.isArray())
+        throw std::runtime_error("Object value is not of array type.");
+    else if(!this->isNumber())
+        throw std::runtime_error("Single value is not of number type.");
+
+    if(N8Util::isNumberArray(*arrayVal.getArray()))
+        throw std::runtime_error("Object elements are not of number array type.");
+
+    return DynamicObject(N8Util::vector2Object(
+        N8Util::VectorMath::remSingle(
+            this->getNumber(),
+            N8Util::object2Vector(arrayVal)
+        )
+    ));
+}
+
+DynamicObject DynamicObject::vectorBitwiseAnd(DynamicObject arrayVal) {
+    if(!arrayVal.isArray())
+        throw std::runtime_error("Object value is not of array type.");
+    else if(!this->isNumber())
+        throw std::runtime_error("Single value is not of number type.");
+
+    if(N8Util::isNumberArray(*arrayVal.getArray()))
+        throw std::runtime_error("Object elements are not of number array type.");
+
+    return DynamicObject(N8Util::vector2Object(
+        N8Util::VectorMath::bitwiseAndSingle(
+            this->getNumber(),
+            N8Util::object2Vector(arrayVal)
+        )
+    ));
+}
+
+DynamicObject DynamicObject::vectorBitwiseOr(DynamicObject arrayVal) {
+    if(!arrayVal.isArray())
+        throw std::runtime_error("Object value is not of array type.");
+    else if(!this->isNumber())
+        throw std::runtime_error("Single value is not of number type.");
+
+    if(N8Util::isNumberArray(*arrayVal.getArray()))
+        throw std::runtime_error("Object elements are not of number array type.");
+
+    return DynamicObject(N8Util::vector2Object(
+        N8Util::VectorMath::bitwiseOrSingle(
+            this->getNumber(),
+            N8Util::object2Vector(arrayVal)
+        )
+    ));
+}
+
+DynamicObject DynamicObject::vectorBitwiseXor(DynamicObject arrayVal) {
+    if(!arrayVal.isArray())
+        throw std::runtime_error("Object value is not of array type.");
+    else if(!this->isNumber())
+        throw std::runtime_error("Single value is not of number type.");
+
+    if(N8Util::isNumberArray(*arrayVal.getArray()))
+        throw std::runtime_error("Object elements are not of number array type.");
+
+    return DynamicObject(N8Util::vector2Object(
+        N8Util::VectorMath::bitwiseXorSingle(
+            this->getNumber(),
+            N8Util::object2Vector(arrayVal)
+        )
+    ));
+}
+
+DynamicObject DynamicObject::vectorShiftLeft(DynamicObject arrayVal) {
+    if(!arrayVal.isArray())
+        throw std::runtime_error("Object value is not of array type.");
+    else if(!this->isNumber())
+        throw std::runtime_error("Single value is not of number type.");
+
+    if(N8Util::isNumberArray(*arrayVal.getArray()))
+        throw std::runtime_error("Object elements are not of number array type.");
+
+    return DynamicObject(N8Util::vector2Object(
+        N8Util::VectorMath::shiftLeftSingle(
+            this->getNumber(),
+            N8Util::object2Vector(arrayVal)
+        )
+    ));
+}
+
+DynamicObject DynamicObject::vectorShiftRight(DynamicObject arrayVal) {
+    if(!arrayVal.isArray())
+        throw std::runtime_error("Object value is not of array type.");
+    else if(!this->isNumber())
+        throw std::runtime_error("Single value is not of number type.");
+
+    if(N8Util::isNumberArray(*arrayVal.getArray()))
+        throw std::runtime_error("Object elements are not of number array type.");
+
+    return DynamicObject(N8Util::vector2Object(
+        N8Util::VectorMath::shiftRightSingle(
+            this->getNumber(),
+            N8Util::object2Vector(arrayVal)
+        )
+    ));
 }

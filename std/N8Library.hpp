@@ -20,6 +20,7 @@
 #define N8_STD_LIB_CC
 
 #include <n8/core/DynamicObject.hpp>
+#include <n8/core/Runtime.hpp>
 #include <n8/core/SymbolTable.hpp>
 #include <n8/parser/Token.hpp>
 
@@ -34,5 +35,11 @@
         SymbolTable& symtab,                \
         std::vector<DynamicObject>& args    \
     )
+
+#define N8_FUNC_REQUIRE_UNSAFE if(!Runtime::isUnsafeMode()) \
+    throw TerminativeThrowSignal(                           \
+        std::move(address),                                 \
+        "Function requires unsafe mode turned on"           \
+    );                                                      \
 
 #endif

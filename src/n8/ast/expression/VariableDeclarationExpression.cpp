@@ -36,6 +36,28 @@
 DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
     if(!this->nativePath.empty()) {
         for(const auto& [key, value] : this->declarations) {
+            std::string platform = "any";
+            #if defined(__TERMUX__)
+                platform = "termux";
+            #elif defined(__linux__)
+                platform = "linux";
+            #elif defined(__APPLE__)
+                platform = "darwin";
+            #elif defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+                platform = "windows";
+            #endif
+
+            if(value.first.size() != 0) {
+                std::vector<std::string> platforms = value.first;
+
+                if(std::find(
+                    platforms.begin(),
+                    platforms.end(),
+                    platform
+                ) == platforms.end())
+                    continue;
+            }
+
             std::string name = key.getImage();
             DynamicObject func = DynamicObject(
                 VariableDeclarationExpression::loadNativeFunction(
@@ -57,7 +79,7 @@ DynamicObject VariableDeclarationExpression::visit(SymbolTable& symbols) {
     for(const auto& [key, value] : this->declarations)
         symbols.setSymbol(
             std::make_shared<Token>(key),
-            value->visit(symbols)
+            value.second->visit(symbols)
         );
 
     return {};

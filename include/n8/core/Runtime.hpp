@@ -26,14 +26,16 @@
 
 class Runtime final {
 private:
-    static bool testMode;
+    static bool testMode, unsafeMode;
     static std::vector<std::string> fileHashes;
     static std::unordered_map<std::string, void*> nativeLibraries;
 
 public:
-
     static bool isTestMode();
     static void setTestMode(bool _testMode);
+
+    static bool isUnsafeMode();
+    static void setUnsafeMode(bool _unsafeMode);
 
     static void addLoadedLibrary(std::string libName, void* handle);
     static void* getLoadedLibrary(std::string libName);

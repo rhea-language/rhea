@@ -1,4 +1,4 @@
-# Copyright (c) 2024 - Nathanne Isip
+# Copyright (c) 2025 - Nathanne Isip
 # This file is part of N8.
 # 
 # N8 is free software: you can redistribute it and/or modify
@@ -59,10 +59,7 @@ OUTPUT_LIBRARY = os.path.join(
 cpp_files = []
 cc_files = []
 
-lib_headers = [
-    '-Ilib/QuickDigest5/include',
-    '-Ilib/MyShell/include'
-]
+lib_headers = []
 lib_source_files = []
 
 try:
@@ -99,6 +96,16 @@ def get_ext_instructions():
 
     return supported_features
 
+def include_local_lib(lib_name):
+    global lib_headers
+    global lib_source_files
+
+    lib_headers += ['-Ilib/' + lib_name + '/include']
+    for root, dirs, files in os.walk('lib/' + lib_name + '/src'):
+        for file in files:
+            if file.endswith('.cpp') or file.endswith('.c'):
+                lib_source_files.append(os.path.join(root, file))
+
 for root, dirs, files in os.walk('src'):
     for file in files:
         if file.endswith('.cpp'):
@@ -109,15 +116,9 @@ for root, dirs, files in os.walk('std'):
         if file.endswith('.cc'):
             cc_files.append(os.path.join(root, file))
 
-for root, dirs, files in os.walk('lib/QuickDigest5/src'):
-    for file in files:
-        if file.endswith('.cpp'):
-            lib_source_files.append(os.path.join(root, file))
-
-for root, dirs, files in os.walk('lib/MyShell/src'):
-    for file in files:
-        if file.endswith('.cpp'):
-            lib_source_files.append(os.path.join(root, file))
+include_local_lib('QuickDigest5')
+include_local_lib('MyShell')
+include_local_lib('unsafe_ops')
 
 try:
     ext_instructions = get_ext_instructions()
@@ -143,7 +144,7 @@ try:
             '-lws2_32', '-luser32', '-lkernel32'
         ]
 
-        exe_build_args= [
+        exe_build_args = [
             'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
             '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
             '-Wchar-subscripts', '-Wcomment', '-Wconversion', '-Werror',
@@ -159,7 +160,7 @@ try:
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-Wno-deprecated-declarations',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-s',
-            '-std=c++17', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
+            '-std=c++23', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
             '-march=native', '-ffast-math'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + win_libs
 
@@ -173,7 +174,7 @@ try:
         now = time.time()
         lib_build_args = [
             'g++', '-Iinclude', '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll',
-            '-Wno-deprecated-declarations'
+            '-std=c++23', '-Wno-deprecated-declarations'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + win_libs
 
         print("Executing:")
@@ -203,7 +204,7 @@ try:
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-O2',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-ffast-math', '-s',
-            '-std=c++20', '-fopenmp'] + ext_instructions + ['-march=native',
+            '-std=c++23', '-fopenmp'] + ext_instructions + ['-march=native',
             '-ffast-math', '-D__TERMUX__'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
@@ -218,7 +219,7 @@ try:
         lib_build_args = [
             'g++', '-Iinclude', '-Istd', '-fPIC', '-D__TERMUX__',
             '-shared', '-o', OUTPUT_LIBRARY + '.so',
-            '-Wno-deprecated-declarations'
+            '-std=c++23', '-Wno-deprecated-declarations'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
 
         print("Executing:")
@@ -247,7 +248,7 @@ try:
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-O2',
             '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-ffast-math', '-s',
-            '-std=c++20', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
+            '-std=c++23', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
             '-march=native', '-ffast-math'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
@@ -262,7 +263,7 @@ try:
         lib_build_args = [
             'g++', '-Iinclude', '-Istd', '-fPIC',
             '-shared', '-o', OUTPUT_LIBRARY + '.so',
-            '-Wno-deprecated-declarations'
+            '-std=c++23', '-Wno-deprecated-declarations'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
             '-lglfw', '-lGL'
         ]
@@ -299,7 +300,7 @@ try:
             '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
             '-Wwrite-strings', '-Wno-return-type-c-linkage', '-pipe',
-            '-std=c++17', '-fopenmp', '-march=native', '-ffast-math',
+            '-std=c++23', '-fopenmp', '-march=native', '-ffast-math',
             '-flto=auto', '-Xpreprocessor', '-O2', '-Wno-header-guard',
             '-Wno-pessimizing-move'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
@@ -317,7 +318,7 @@ try:
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib',
             '-Wno-deprecated-declarations', '-DGL_SILENCE_DEPRECATION',
             '-L/opt/homebrew/lib', '-L/opt/homebrew/opt/openssl@3/lib',
-            '-Wno-deprecated-declarations'
+            '-std=c++23', '-Wno-deprecated-declarations'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
             '-lcrypto', '-lglfw', '-framework', 'OpenGL'
         ]

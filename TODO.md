@@ -32,5 +32,5 @@ Todo:
     ✓ sys
     * termux
     * thread
-    * unsafe
+    ✓ unsafe
     * zip

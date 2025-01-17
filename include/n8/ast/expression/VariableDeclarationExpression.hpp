@@ -27,13 +27,25 @@
 
 class VariableDeclarationExpression final : public ASTNode {
 private:
-    std::map<Token, std::shared_ptr<ASTNode>> declarations;
+    std::map<
+        Token,
+        std::pair<
+            std::vector<std::string>,
+            std::shared_ptr<ASTNode>
+        >
+    > declarations;
     std::string nativePath;
 
 public:
     explicit VariableDeclarationExpression(
         std::shared_ptr<Token> _address,
-        std::map<Token, std::shared_ptr<ASTNode>> _declarations,
+        std::map<
+            Token,
+            std::pair<
+                std::vector<std::string>,
+                std::shared_ptr<ASTNode>
+            >
+        > _declarations,
         std::string _nativePath
     ) : declarations(std::move(_declarations)),
         nativePath(_nativePath) {

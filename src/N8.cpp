@@ -110,6 +110,7 @@ auto main(int argc, char** argv) -> int {
     argParse.defineParameter("h", "help", "Show this help banner.");
     argParse.defineParameter("r", "repl", "Interative interpreter mode (REPL).");
     argParse.defineParameter("t", "test", "Run the script files in test mode.");
+    argParse.defineParameter("u", "unsafe", "Run the script files in unsafe mode.");
 
     if(argParse.hasParameter("h")) {
         printBanner(argParse);
@@ -118,6 +119,9 @@ auto main(int argc, char** argv) -> int {
 
     if(argParse.hasParameter("t"))
         Runtime::setTestMode(true);
+
+    if(argParse.hasParameter("u"))
+        Runtime::setUnsafeMode(true);
 
     if(argParse.hasParameter("r")) {
         Runtime::repl();

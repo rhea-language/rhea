@@ -8,6 +8,7 @@ Todo:
     ✓ env
     * fmt (sconf, csv, json, toml, mdif, png, jpg, xml)
     * gl
+    * gpio
     ✓ io
     * lang
     * map
@@ -20,6 +21,7 @@ Todo:
     * sqlite3
     ✓ str
     ✓ sys
+    * termux
     * thread
     * unsafe
     * zip

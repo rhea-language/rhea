@@ -1106,6 +1106,8 @@ std::shared_ptr<ASTNode> Parser::stmtImport() {
         this->consume("}");
     }
     else {
+        this->consume(":");
+
         Token variable = this->getIdentifier();
         declarations.insert({
             variable,

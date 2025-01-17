@@ -121,7 +121,7 @@ for root, dirs, files in os.walk('lib/MyShell/src'):
 
 try:
     ext_instructions = get_ext_instructions()
-    if PLATFORM == 'Linux':
+    if "TERMUX_VERSION" not in os.environ and PLATFORM == 'Linux':
         subprocess.run([
             'sudo', 'apt', 'install', '-y',
             'libglfw3-dev', 'libgl1-mesa-dev'

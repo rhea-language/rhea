@@ -230,3 +230,11 @@ N8_FUNC(reflect_exec) {
 
     return DynamicObject();
 }
+
+N8_FUNC(reflect_isTest) {
+    return DynamicObject(Runtime::isTestMode());
+}
+
+N8_FUNC(reflect_isUnsafe) {
+    return DynamicObject(Runtime::isUnsafeMode());
+}

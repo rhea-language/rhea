@@ -43,7 +43,7 @@
 #   error "Unsupported architecture for shared objects or dynamic libraries."
 #endif
 
-bool Runtime::testMode = false;
+bool Runtime::testMode = false, Runtime::unsafeMode = false;
 std::unordered_map<std::string, void*> Runtime::nativeLibraries;
 std::vector<std::string> Runtime::fileHashes;
 
@@ -53,6 +53,14 @@ bool Runtime::isTestMode() {
 
 void Runtime::setTestMode(bool _testMode) {
     Runtime::testMode = _testMode;
+}
+
+bool Runtime::isUnsafeMode() {
+    return Runtime::unsafeMode;
+}
+
+void Runtime::setUnsafeMode(bool _unsafeMode) {
+    Runtime::unsafeMode = _unsafeMode;
 }
 
 void Runtime::addLoadedLibrary(std::string libName, void* handle) {

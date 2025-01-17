@@ -17,5 +17,7 @@
 
 import reflect {
     get,        has,        typeOf,
-    remove,     invoke,     exec
+    remove,     invoke,     exec,
+
+    isTest,     isUnsafe
 } from "core"

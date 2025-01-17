@@ -18,6 +18,8 @@
 
 #include "n8std/GL.hpp"
 
+#ifndef __TERMUX__
+
 #include <n8/ast/TerminativeSignal.hpp>
 #include <n8/ast/expression/FunctionDeclarationExpression.hpp>
 #include <n8/util/RandomUtil.hpp>
@@ -669,3 +671,5 @@ N8_FUNC(gl_getVideoMode) {
         )
     );
 }
+
+#endif

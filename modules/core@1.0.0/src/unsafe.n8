@@ -1,0 +1,54 @@
+#!/opt/n8lang/bin/n8
+# Copyright (c) 2025 - Nathanne Isip
+# This file is part of N8.
+# 
+# N8 is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published
+# by the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+# 
+# N8 is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with N8. If not, see <https://www.gnu.org/licenses/>.
+
+import unsafe {
+    volatileRead8,
+    volatileRead16,
+    volatileRead32,
+
+    volatileWrite8,
+    volatileWrite16,
+    volatileWrite32,
+
+    registerSetBits,
+    registerClearBits,
+    registerToggleBits,
+    registerTestBits,
+
+    registerReadField,
+    registerWriteField,
+
+    memoryBarrier,
+    readBarrier,
+    writeBarrier,
+
+    memoryFenceAcquire,
+    memoryFenceRelease,
+    memoryFenceSequential,
+
+    enableInterrupts,
+    disableInterrupts,
+    setCpuAffinity,
+
+    portRead8,
+    portRead16,
+    portRead32,
+
+    portWrite8,
+    portWrite16,
+    portWrite32,
+} from "core"

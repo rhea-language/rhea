@@ -52,10 +52,10 @@ enumStmt                :=
 haltStmt                := "halt"
 
 importStmt              :=
-    "import" [
-        "{" (identifier)* "}" |
-        identifier
-    ] "from" <string>
+    "import" identifier
+    ["[" [<STRING> ("," <STRING>)*] "]"]
+    ("{" (<ID>)* "}" | ":" <ID>)
+    "from" <string>
 
 modStmt                 :=
     "mod" identifier "{"
@@ -199,6 +199,7 @@ lockExpr                :=
 
 valueExpr               :=
     "val" ["(" string ")"]
+        ["[" [<STRING> ("," <STRING>)*] "]"]
         <ID> "=" expression
         ("," <ID> "=" expression)*
 

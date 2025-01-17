@@ -35,6 +35,8 @@ N8_FUNC(reflect_remove);
 N8_FUNC(reflect_invoke);
 
 N8_FUNC(reflect_exec);
+N8_FUNC(reflect_isTest);
+N8_FUNC(reflect_isUnsafe);
 
 N8_LIB_END
 

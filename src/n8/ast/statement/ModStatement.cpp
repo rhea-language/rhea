@@ -36,5 +36,5 @@ DynamicObject ModStatement::visit(
         );
     }
 
-    return DynamicObject();
+    return {};
 }

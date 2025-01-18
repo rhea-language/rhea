@@ -22,5 +22,5 @@ DynamicObject EmptyStatement::visit(
     SymbolTable& symbols
     __attribute__((unused))
 ) {
-    return DynamicObject();
+    return {};
 }

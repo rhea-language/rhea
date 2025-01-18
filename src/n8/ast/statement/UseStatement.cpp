@@ -66,5 +66,5 @@ DynamicObject UseStatement::visit(
     );
     #endif
 
-    return DynamicObject();
+    return {};
 }

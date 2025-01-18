@@ -22,17 +22,25 @@
 #include <n8/ast/TerminativeSignal.hpp>
 
 N8_FUNC(lang_buildPlatform) {
-    return DynamicObject(N8_BUILD_PLATFORM);
+    return DynamicObject(
+        std::string(N8_BUILD_PLATFORM)
+    );
 }
 
 N8_FUNC(lang_buildType) {
-    return DynamicObject(N8_BUILD_TYPE);
+    return DynamicObject(
+        std::string(N8_BUILD_TYPE)
+    );
 }
 
 N8_FUNC(lang_buildTime) {
-    return DynamicObject(N8_BUILD_TIME);
+    return DynamicObject(
+        std::string(N8_BUILD_TIME)
+    );
 }
 
 N8_FUNC(lang_version) {
-    return DynamicObject(N8_VERSION);
+    return DynamicObject(
+        std::string(N8_VERSION)
+    );
 }

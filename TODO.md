@@ -19,7 +19,7 @@ Todo:
     * gl
     * gpio
     ✓ io
-    * lang
+    ✓ lang
     * map
     ✓ math
     * ml

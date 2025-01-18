@@ -19,7 +19,7 @@
 #include "n8std/Unsafe.hpp"
 
 #include <n8/ast/TerminativeSignal.hpp>
-#include <unsafe_ops.h>
+#include <unsafe_ops.hpp>
 
 N8_FUNC(unsafe_volatileRead8) {
     N8_FUNC_REQUIRE_UNSAFE

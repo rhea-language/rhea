@@ -103,7 +103,11 @@ def include_local_lib(lib_name):
     lib_headers += ['-Ilib/' + lib_name + '/include']
     for root, dirs, files in os.walk('lib/' + lib_name + '/src'):
         for file in files:
-            if file.endswith('.cpp') or file.endswith('.c'):
+            if file.endswith('.cpp'):
+                lib_source_files.append(os.path.join(root, file))
+            elif file.endswith('.c'):
+                lib_source_files.append('-x')
+                lib_source_files.append('c')
                 lib_source_files.append(os.path.join(root, file))
 
 for root, dirs, files in os.walk('src'):

@@ -651,7 +651,7 @@ std::shared_ptr<ASTNode> Parser::exprPrimary() {
 
             this->consume(")");
             expression = std::make_shared<FunctionCallExpression>(
-                std::make_shared<Token>(address),
+                std::move(expression->getAddress()),
                 std::move(expression),
                 std::move(arguments)
             );

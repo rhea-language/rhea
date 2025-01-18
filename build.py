@@ -103,11 +103,7 @@ def include_local_lib(lib_name):
     lib_headers += ['-Ilib/' + lib_name + '/include']
     for root, dirs, files in os.walk('lib/' + lib_name + '/src'):
         for file in files:
-            if file.endswith('.cpp'):
-                lib_source_files.append(os.path.join(root, file))
-            elif file.endswith('.c'):
-                lib_source_files.append('-x')
-                lib_source_files.append('c')
+            if file.endswith('.cpp') or file.endswith('.c'):
                 lib_source_files.append(os.path.join(root, file))
 
 for root, dirs, files in os.walk('src'):
@@ -288,7 +284,7 @@ try:
         ]
 
         exe_build_args = [
-            '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude', '-Wall',
+            '/opt/homebrew/opt/llvm/bin/clang++', '-x' , 'c++', '-Iinclude',
             '-pedantic', '-Wdisabled-optimization', '-pedantic-errors',
             '-Wextra', '-Wcast-align', '-Wcast-qual', '-Wchar-subscripts',
             '-Wcomment', '-Wconversion', '-Werror', '-Wfloat-equal',
@@ -296,7 +292,7 @@ try:
             '-Wformat-y2k', '-Wimport', '-Winit-self', '-Winvalid-pch',
             '-Wlong-long', '-Wmissing-braces', '-Wmissing-field-initializers',
             '-Wmissing-format-attribute', '-Wmissing-include-dirs', '-Wpacked',
-            '-Wparentheses', '-Wpointer-arith', '-Wredundant-decls',
+            '-Wparentheses', '-Wpointer-arith', '-Wredundant-decls', '-Wall',
             '-Wsequence-point', '-Wshadow', '-Wsign-compare', '-Wstack-protector',
             '-Wstrict-aliasing', '-Wstrict-aliasing=2', '-Wswitch',
             '-Wswitch-default', '-Wswitch-enum', '-Wtrigraphs', '-Wuninitialized',
@@ -322,7 +318,7 @@ try:
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib',
             '-Wno-deprecated-declarations', '-DGL_SILENCE_DEPRECATION',
             '-L/opt/homebrew/lib', '-L/opt/homebrew/opt/openssl@3/lib',
-            '-std=c++23', '-Wno-deprecated-declarations'
+            '-std=c++23', '-Wno-deprecated-declarations', '-x', 'c++'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
             '-lcrypto', '-lglfw', '-framework', 'OpenGL'
         ]

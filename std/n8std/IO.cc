@@ -465,7 +465,7 @@ N8_FUNC(io_listAllFiles) {
     std::vector<DynamicObject> returnValues;
 
     if(!std::filesystem::exists(dirPath) || !std::filesystem::is_directory(dirPath))
-        return DynamicObject();
+        return {};
 
     #pragma omp parallel for
     for(const auto& entry : std::filesystem::directory_iterator(dirPath))

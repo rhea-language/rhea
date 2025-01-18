@@ -1003,7 +1003,7 @@ N8_FUNC(math_activation_softmax) {
     std::vector<DynamicObject> values = *value.getArray();
     size_t len = values.size();
     if(len == 0)
-        return DynamicObject();
+        return {};
 
     double max = values.at(0).getNumber(), sum = 0.0;
     parsync(size_t i = 1; i < len; i++) {

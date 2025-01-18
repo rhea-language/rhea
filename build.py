@@ -136,7 +136,7 @@ try:
         now = time.time()
 
         win_libs = [
-            '-static', '-static-libgcc', '-static-libstdc++',
+            '-static', '-static-libstdc++',
             '-lglfw3', '-lglew32', '-lopengl32', '-lgdi32', '-lwinmm',
             '-limm32', '-lole32', '-loleaut32', '-lversion',
             '-luuid', '-ldinput8', '-ldxguid', '-lsetupapi',

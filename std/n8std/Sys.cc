@@ -869,5 +869,5 @@ N8_FUNC(sys_sleep) {
     );
     #endif
 
-    return DynamicObject();
+    return {};
 }

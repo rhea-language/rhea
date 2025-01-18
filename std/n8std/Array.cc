@@ -56,7 +56,7 @@ N8_FUNC(array_clear) {
         );
     }
 
-    return DynamicObject();
+    return {};
 }
 
 N8_FUNC(array_length) {
@@ -120,7 +120,7 @@ N8_FUNC(array_first) {
 
     auto array = value.getArray();
     if(array->empty())
-        return DynamicObject();
+        return {};
     return value.getArray()->at(0);
 }
 
@@ -142,7 +142,7 @@ N8_FUNC(array_last) {
 
     auto array = value.getArray();
     if(array->empty())
-        return DynamicObject();
+        return {};
     return value.getArray()->back();
 }
 
@@ -353,7 +353,7 @@ N8_FUNC(array_removeAt) {
 
     array->at(static_cast<size_t>(
         index.getNumber()
-    )) = DynamicObject();
+    )) = {};
     return DynamicObject(array);
 }
 

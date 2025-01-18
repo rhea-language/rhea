@@ -85,7 +85,7 @@ N8_FUNC(reflect_remove) {
     DynamicObject name = args.at(0);
     symtab.removeSymbol(name.toString());
 
-    return DynamicObject();
+    return {};
 }
 
 N8_FUNC(reflect_invoke) {
@@ -228,7 +228,7 @@ N8_FUNC(reflect_exec) {
         N8Util::printError("\u001b[0m\r\n");
     }
 
-    return DynamicObject();
+    return {};
 }
 
 N8_FUNC(reflect_isTest) {

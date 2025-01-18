@@ -64,7 +64,7 @@ N8_FUNC(gl_initHint) {
         static_cast<int>(hint.getNumber()),
         static_cast<int>(value.getNumber())
     );
-    return DynamicObject();
+    return {};
 }
 
 N8_FUNC(gl_versionString) {
@@ -123,12 +123,12 @@ N8_FUNC(gl_setErrorCallback) {
         errorCallback->call(symbols, params);
     });
 
-    return DynamicObject();
+    return {};
 }
 
 N8_FUNC(gl_terminate) {
     glfwTerminate();
-    return DynamicObject();
+    return {};
 }
 
 N8_FUNC(gl_createWindow) {
@@ -165,7 +165,7 @@ N8_FUNC(gl_createWindow) {
     std::string key = N8Util::uniqueKey();
 
     if(!window)
-        return DynamicObject();
+        return {};
 
     windowMap[key] = window;
     return DynamicObject(key);
@@ -232,7 +232,7 @@ N8_FUNC(gl_clear) {
         );
 
     glClear(static_cast<int>(mask.getNumber()));
-    return DynamicObject();
+    return {};
 }
 
 N8_FUNC(gl_clearColor) {
@@ -282,7 +282,7 @@ N8_FUNC(gl_clearColor) {
         blue.getNumber(),
         alpha.getNumber()
     );
-    return DynamicObject();
+    return {};
 }
 
 N8_FUNC(gl_swapBuffers) {
@@ -314,7 +314,7 @@ N8_FUNC(gl_pollEvents) {
         );
 
     glfwPollEvents();
-    return DynamicObject();
+    return {};
 }
 
 N8_FUNC(gl_destroyWindow) {

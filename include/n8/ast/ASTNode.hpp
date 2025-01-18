@@ -32,6 +32,11 @@ public:
 
     virtual ~ASTNode() = default;
     virtual DynamicObject visit(SymbolTable& symbols) = 0;
+
+    [[nodiscard]]
+    const std::shared_ptr<Token>& getAddress() const {
+        return this->address;
+    }
 };
 
 #endif

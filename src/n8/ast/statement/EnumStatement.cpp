@@ -36,5 +36,5 @@ DynamicObject EnumStatement::visit(
         );
     }
 
-    return DynamicObject();
+    return {};
 }

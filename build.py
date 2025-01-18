@@ -284,7 +284,7 @@ try:
         ]
 
         exe_build_args = [
-            '/opt/homebrew/opt/llvm/bin/clang++', '-x' , 'c++', '-Iinclude',
+            '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
             '-pedantic', '-Wdisabled-optimization', '-pedantic-errors',
             '-Wextra', '-Wcast-align', '-Wcast-qual', '-Wchar-subscripts',
             '-Wcomment', '-Wconversion', '-Werror', '-Wfloat-equal',
@@ -318,7 +318,7 @@ try:
             '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib',
             '-Wno-deprecated-declarations', '-DGL_SILENCE_DEPRECATION',
             '-L/opt/homebrew/lib', '-L/opt/homebrew/opt/openssl@3/lib',
-            '-std=c++23', '-Wno-deprecated-declarations', '-x', 'c++'
+            '-std=c++23', '-Wno-deprecated-declarations'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
             '-lcrypto', '-lglfw', '-framework', 'OpenGL'
         ]

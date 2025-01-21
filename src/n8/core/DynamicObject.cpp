@@ -66,6 +66,9 @@ DynamicObject& DynamicObject::operator=(DynamicObject&& other) {
 bool DynamicObject::operator==(const DynamicObject& other) {
     if(this->isNil() && other.isNil())
         return true;
+    else if((this->isNil() && !other.isNil()) ||
+        (!this->isNil() && other.isNil()))
+        return false;
     else if(this->isBool() && other.isBool())
         return this->getBool() == other.getBool();
     else if(this->isNumber() && other.isNumber())

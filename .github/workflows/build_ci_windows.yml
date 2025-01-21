@@ -85,8 +85,8 @@ jobs:
         shell: cmd
         run: |
           cd n8
-          ./dist/n8lang/bin/n8 examples/99-beers.n8
-          ./dist/n8lang/bin/n8 examples/hello.n8
+          .\dist\n8lang\bin\n8 examples\99-beers.n8
+          .\dist\n8lang\bin\n8 examples\hello.n8
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

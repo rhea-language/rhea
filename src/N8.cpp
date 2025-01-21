@@ -36,6 +36,7 @@ extern "C" {
 
 void executeSource(const char* sourceCode) {
     Runtime::catchSegfault();
+    Runtime::setTestMode(true);
     Runtime::execute(sourceCode);
 
     std::cout << std::flush;

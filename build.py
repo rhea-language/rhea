@@ -159,8 +159,8 @@ try:
             '-Wtrigraphs', '-Wuninitialized', '-Wunknown-pragmas', '-Wunreachable-code',
             '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
             '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-Wno-deprecated-declarations',
-            '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-s',
-            '-std=c++23', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
+            '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-s', '-fopenmp'
+        ] + ext_instructions + ['-mfpmath=sse',
             '-march=native', '-ffast-math'
         ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + win_libs
 
@@ -173,8 +173,9 @@ try:
 
         now = time.time()
         lib_build_args = [
-            'g++', '-Iinclude', '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dll',
-            '-std=c++23', '-Wno-deprecated-declarations'
+            'g++', '-Iinclude', '-Istd', '-shared',
+            '-o', OUTPUT_LIBRARY + '.dll',
+            '-Wno-deprecated-declarations'
         ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + win_libs
 
         print("Executing:")

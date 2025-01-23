@@ -20,60 +20,66 @@
 #define N8_UTIL_INPUT_HIGHLIGHTER_HPP
 
 #include <algorithm>
+#include <cstdio>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
 #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 #   include <conio.h>
 #   include <windows.h>
-#else
+#elif defined(__linux__) || defined(__APPLE__)
 #   include <termios.h>
 #   include <unistd.h>
 #endif
 
 namespace N8Util {
 
+#define TERMINAL_DEFAULT    std::string("\u001b[0m")
+#define TERMINAL_STRING     std::string("\u001b[3;36m")
+#define TERMINAL_KEYWORD    std::string("\u001b[0;32m")
+#define TERMINAL_IDENTIFIER std::string("\u001b[1;37m")
+
 class InputHighlighter final {
 private:
-    std::string inputBuffer;
+    std::string prompt;
+    std::unordered_set<std::string> keywords;
+    std::vector<std::string> history;
+    size_t history_index;
 
     #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
-    HANDLE hConsole;
-    const WORD RED_HIGHLIGHT = FOREGROUND_RED | FOREGROUND_INTENSITY;
-    const WORD CYAN_HIGHLIGHT = FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
-    const WORD DEFAULT_COLOR = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+    HANDLE handle_console;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    DWORD original_mode;
 
-    #else
+    #elif defined(__linux__) || defined(__APPLE__)
 
-    const std::string RED_HIGHLIGHT = "\u001b[31m";
-    const std::string CYAN_HIGHLIGHT = "\u001b[36m";
-    const std::string DEFAULT_COLOR = "\u001b[0m";
+    struct termios original_termios;
 
     #endif
 
-    bool isKeyword(const std::string &word);
-    void highlightWord(const std::string &word);
-    char getCharacter();
+    std::string colorizeInput(const std::string& input);
+    bool isKeyword(const std::string& word);
+    void clearLine();
 
 public:
-    InputHighlighter() :
-        inputBuffer("")
+    InputHighlighter(std::string _prompt, const std::unordered_set<std::string>& _keywords) :
+        prompt(_prompt),
+        keywords(_keywords),
+        history({}),
+        history_index(0)
         #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-        , hConsole(GetStdHandle(STD_OUTPUT_HANDLE))
+        , handle_console(GetStdHandle(STD_INPUT_HANDLE))
+        , csbi({})
+        , original_mode(0)
+        #elif defined(__linux__) || defined(__APPLE__)
+        , original_termios({})
         #endif
     { }
 
-    InputHighlighter(const InputHighlighter& other) :
-        inputBuffer(other.inputBuffer)
-        #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-        , hConsole(other.hConsole)
-        #endif
-    { }
-
-    InputHighlighter& operator=(const InputHighlighter& other);
-    std::string getInput();
+    std::string readInput();
 };
 
 }

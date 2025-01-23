@@ -21,137 +21,255 @@
 
 namespace N8Util {
 
-InputHighlighter& InputHighlighter::operator=(const InputHighlighter& other) {
-    if(this != &other) {
-        this->inputBuffer = other.inputBuffer;
+std::string InputHighlighter::colorizeInput(const std::string& input) {
+    std::string currentWord, result;
+    bool inQuote = false;
+    char quoteChar = 0;
 
-        #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-        this->hConsole = other.hConsole;
-        #endif
+    for(size_t i = 0; i < input.length(); ++i) {
+        char c = input[i];
+
+        if(c == '"' || c == '\'') {
+            if(!inQuote) {
+                inQuote = true;
+                quoteChar = c;
+                result += TERMINAL_STRING;
+            }
+            else if(c == quoteChar) {
+                inQuote = false;
+                result += TERMINAL_STRING;
+            }
+        }
+
+        if(inQuote)
+            result += std::string(1, c);
+        else {
+            if(std::isspace(c) || std::ispunct(c)) {
+                if(this->isKeyword(currentWord))
+                    result += TERMINAL_KEYWORD + currentWord + TERMINAL_DEFAULT;
+                else if(c != '"' && c != '\'')
+                    result += TERMINAL_IDENTIFIER + currentWord + TERMINAL_DEFAULT;
+
+                currentWord.clear();
+                result += c;
+            }
+            else currentWord += c;
+
+            if(c == '"' || c == '\'')
+                result += TERMINAL_DEFAULT;
+        }
     }
 
-    return *this;
+    if(!currentWord.empty()) {
+        if(this->isKeyword(currentWord))
+            result += TERMINAL_KEYWORD + currentWord + TERMINAL_DEFAULT;
+        else result += TERMINAL_IDENTIFIER + currentWord + TERMINAL_DEFAULT;
+    }
+
+    return result;
 }
 
-bool InputHighlighter::isKeyword(const std::string &word) {
+bool InputHighlighter::isKeyword(const std::string& word) {
     return std::find(
-        OperatorsAndKeys::keywords.begin(),
-        OperatorsAndKeys::keywords.end(),
+        keywords.begin(),
+        keywords.end(),
         word
-    ) != OperatorsAndKeys::keywords.end();
+    ) != keywords.end();
 }
 
-void InputHighlighter::highlightWord(const std::string &word) {
+void InputHighlighter::clearLine() {
     #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
     CONSOLE_SCREEN_BUFFER_INFO csbi;
-    GetConsoleScreenBufferInfo(hConsole, &csbi);
-    COORD curPos = csbi.dwCursorPosition;
+    GetConsoleScreenBufferInfo(
+        GetStdHandle(STD_OUTPUT_HANDLE),
+        &this->csbi
+    );
 
-    curPos.X -= static_cast<SHORT>(word.length());
-    SetConsoleCursorPosition(hConsole, curPos);
+    DWORD written;
+    COORD coordScreen = {0, this->csbi.dwCursorPosition.Y};
 
-    if(this->isKeyword(word))
-        SetConsoleTextAttribute(hConsole, RED_HIGHLIGHT);
-    else SetConsoleTextAttribute(hConsole, CYAN_HIGHLIGHT);
+    FillConsoleOutputCharacter(
+        GetStdHandle(STD_OUTPUT_HANDLE),
+        ' ', 
+        this->csbi.dwSize.X,
+        coordScreen,
+        &written
+    );
 
-    std::cout << word;
-    SetConsoleTextAttribute(hConsole, DEFAULT_COLOR);
+    SetConsoleCursorPosition(
+        GetStdHandle(STD_OUTPUT_HANDLE),
+        coordScreen
+    );
 
     #else
 
     std::cout << "\r\u001b[K";
-    std::cout << inputBuffer;
-
-    if(this->isKeyword(word))
-        std::cout << RED_HIGHLIGHT << word << DEFAULT_COLOR;
-    else std::cout << CYAN_HIGHLIGHT << word << DEFAULT_COLOR;
-
-    std::cout.flush();
 
     #endif
 }
 
-char InputHighlighter::getCharacter() {
+std::string InputHighlighter::readInput() {
     #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
-    return static_cast<char>(_getch());
+    GetConsoleMode(this->handle_console, &this->original_mode);
+    SetConsoleMode(
+        this->handle_console,
+        ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT
+    );
 
-    #else
+    #elif defined(__linux__) || defined(__APPLE__)
 
-    struct termios oldt, newt;
-    char ch;
+    tcgetattr(STDIN_FILENO, &this->original_termios);
 
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    ch = getchar();
-
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    return ch;
+    struct termios raw = this->original_termios;
+    raw.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &raw);
 
     #endif
-}
 
-std::string InputHighlighter::getInput() {
-    bool inStringQuote = false;
-    char quoteType = '\0', ch;
+    std::string input;
+    size_t cursor_pos = 0;
 
-    inputBuffer.clear();
-    while((ch = this->getCharacter()) != '\n') {
-        #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-        if(ch == '\r')
-            break;
-        #endif
+    std::cout << "\u001b[0m"
+        << this->prompt
+        << std::flush;
 
-        if(ch == 127 || ch == '\b') {
-            if(!inputBuffer.empty()) {
-                if(inputBuffer.back() == quoteType) {
-                    inStringQuote = false;
-                    quoteType = '\0';
+    this->history_index = this->history.size();
+    while(true) {
+        int c = getchar();
+        if(c == '\u001b') {
+            getchar();
+
+            switch(getchar()) {
+                case 'A':
+                    if(!this->history.empty() && this->history_index > 0) {
+                        this->history_index--;
+
+                        input = this->history[this->history_index];
+                        cursor_pos = input.length();
+                        this->clearLine();
+
+                        std::cout << "\r\u001b[0m"
+                            << this->prompt 
+                            << this->colorizeInput(input)
+                            << std::flush;
+                    }
+                    break;
+
+                case 'B':
+                    if(this->history_index < this->history.size() - 1) {
+                        this->history_index++;
+
+                        input = this->history[this->history_index];
+                        cursor_pos = input.length();
+                        this->clearLine();
+
+                        std::cout << "\r\u001b[0m"
+                            << this->prompt
+                            << this->colorizeInput(input)
+                            << std::flush;
+                    }
+                    else if(this->history_index == this->history.size() - 1) {
+                        input.clear();
+                        cursor_pos = 0;
+                        this->clearLine();
+
+                        std::cout << "\r\u001b[0m"
+                            << this->prompt
+                            << std::flush;
+                    }
+                    break;
+
+                case 'C':
+                    if(cursor_pos < input.length()) {
+                        cursor_pos++;
+                        this->clearLine();
+
+                        std::cout << "\r\u001b[0m"
+                            << this->prompt
+                            << this->colorizeInput(input);
+
+                        for(size_t i = input.length(); i > cursor_pos; --i)
+                            std::cout << std::string("\u001b[D");
+                        std::flush(std::cout);
+                    }
+                    break;
+
+                case 'D':
+                    if(cursor_pos > 0) {
+                        cursor_pos--;
+                        this->clearLine();
+
+                        std::cout << "\r\u001b[0m"
+                            << this->prompt
+                            << this->colorizeInput(input);
+
+                        for(size_t i = input.length(); i > cursor_pos; --i)
+                            std::cout << std::string("\u001b[D");
+                        std::flush(std::cout);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+
+            continue;
+        }
+
+        switch(c) {
+            case 127:
+            case '\b':
+                if(!input.empty() && cursor_pos > 0) {
+                    input.erase(input.begin() + cursor_pos - 1);
+                    cursor_pos--;
+                    this->clearLine();
+
+                    std::cout << "\r\u001b[0m"
+                        << this->prompt
+                        << this->colorizeInput(input);
+
+                    for(size_t i = input.length(); i > cursor_pos; --i)
+                        std::cout << std::string("\u001b[D");
+                    std::flush(std::cout);
                 }
+                break;
 
-                inputBuffer.pop_back();
-                std::cout << "\b \b";
-            }
-        }
-        else if(ch == '"' || ch == '\'') {
-            if(!inStringQuote) {
-                inStringQuote = true;
-                quoteType = ch;
-            }
-            else if(quoteType == ch) {
-                inStringQuote = false;
-                quoteType = '\0';
-            }
+            case '\n':
+            case '\r':
+                if(!input.empty())
+                    this->history.push_back(input);
 
-            inputBuffer += ch;
-            std::cout << ch;
+                #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+                SetConsoleMode(this->handle_console, this->original_mode);
+                #elif defined(__linux__) || defined(__APPLE__)
+                tcsetattr(STDIN_FILENO, TCSANOW, &this->original_termios);
+                #endif
 
-            this->highlightWord(std::string(1, ch));
-        }
-        else {
-            inputBuffer += ch;
-            std::cout << ch;
+                std::cout << TERMINAL_DEFAULT << std::endl;
+                return input;
 
-            if(inStringQuote)
-                this->highlightWord(std::string(1, ch));
-            else {
-                size_t lastSpacePos = inputBuffer.find_last_of(' ');
-                std::string currentWord = (lastSpacePos != std::string::npos)
-                    ? inputBuffer.substr(lastSpacePos + 1)
-                    : inputBuffer;
+            default:
+                if(std::isprint(c)) {
+                    input.insert(
+                        input.begin() + cursor_pos,
+                        static_cast<char>(c)
+                    );
 
-                if(this->isKeyword(currentWord))
-                    this->highlightWord(currentWord);
-            }
+                    cursor_pos++;
+                    this->clearLine();
+
+                    std::cout << "\r\u001b[0m"
+                        << this->prompt
+                        << this->colorizeInput(input);
+
+                    for(size_t i = input.length(); i > cursor_pos; --i)
+                        std::cout << std::string("\u001b[D");
+                    std::flush(std::cout);
+                }
         }
     }
-
-    std::cout << std::endl;
-    return inputBuffer;
 }
 
 }

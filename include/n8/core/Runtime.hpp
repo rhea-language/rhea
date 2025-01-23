@@ -63,6 +63,8 @@ public:
         SymbolTable& symbols,
         std::vector<std::string> files
     );
+
+    static void showPrompt();
     static void repl();
 
     #else

@@ -267,14 +267,16 @@ void Runtime::showPrompt() {
     #endif
 
     std::cout << std::endl;
-    std::cout << "\u001b[1;34m┌─\u001b[0m [ \u001b[3;33m" << workingDir << "\u001b[0m ]" << std::endl;
-    std::cout << "\u001b[1;34m├─\u001b[0m [ \u001b[33m" << std::put_time(&localTime, "%m/%d/%Y %H:%M:%S") << "\u001b[0m ]" << std::endl;
-    std::cout << "\u001b[1;34m└──>\u001b[0m ";
+    std::cout << "\u001b[1;34m\u250c─\u001b[0m [ \u001b[3;33m" << workingDir << "\u001b[0m ]" << std::endl;
+    std::cout << "\u001b[1;34m\u251c─\u001b[0m [ \u001b[33m" << std::put_time(&localTime, "%m/%d/%Y %H:%M:%S") << "\u001b[0m ]" << std::endl;
 }
 
 void Runtime::repl() {
     SymbolTable symtab;
-    N8Util::InputHighlighter inputHighlighter;
+    N8Util::InputHighlighter inputHighlighter(
+        std::string("\u001b[1;34m\u2514──\u2a65\u001b[0m "),
+        OperatorsAndKeys::keywords
+    );
 
     std::string input, line;
     int iterNum = 1;
@@ -283,7 +285,7 @@ void Runtime::repl() {
     Runtime::showPrompt();
 
     while(true) {
-        input = inputHighlighter.getInput();
+        input = inputHighlighter.readInput();
         input += line + '\n';
 
         if(isBalanced(input)) {
@@ -393,7 +395,7 @@ void Runtime::repl() {
 
             Runtime::showPrompt();
         }
-        else std::cout << "\u001b[93m...\u001b[0m ";
+        else std::cout << "\u001b[93m...\u001b[0m  ";
     }
 }
 

@@ -105,7 +105,9 @@ auto main(int argc, char** argv) -> int {
 
     consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     consoleMode |= DISABLE_NEWLINE_AUTO_RETURN;            
+
     SetConsoleMode(handleOut , consoleMode);
+    SetConsoleOutputCP(CP_UTF8);
     #endif
 
     N8Util::ArgumentParser argParse(argc, argv);

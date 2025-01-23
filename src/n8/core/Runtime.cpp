@@ -25,10 +25,12 @@
 #include <n8/parser/Parser.hpp>
 #include <n8/parser/ParserException.hpp>
 #include <n8/parser/Tokenizer.hpp>
+#include <n8/util/InputHighlighter.hpp>
 #include <n8/util/Print.hpp>
 
 #include <algorithm>
 #include <exception>
+#include <filesystem>
 #include <iostream>
 #include <quickdigest5.hpp>
 #include <stack>
@@ -253,16 +255,35 @@ int Runtime::interpreter(SymbolTable& symbols, std::vector<std::string> files) {
     return 1;
 }
 
+void Runtime::showPrompt() {
+    std::string workingDir = std::filesystem::current_path().string();
+    std::time_t currentTime = std::time(nullptr);
+    std::tm localTime;
+
+    #ifdef _WIN32
+    localtime_s(&localTime, &currentTime);
+    #else
+    localtime_r(&currentTime, &localTime);
+    #endif
+
+    std::cout << std::endl;
+    std::cout << "\u001b[1;34m┌─\u001b[0m [ \u001b[3;33m" << workingDir << "\u001b[0m ]" << std::endl;
+    std::cout << "\u001b[1;34m├─\u001b[0m [ \u001b[33m" << std::put_time(&localTime, "%m/%d/%Y %H:%M:%S") << "\u001b[0m ]" << std::endl;
+    std::cout << "\u001b[1;34m└──>\u001b[0m ";
+}
+
 void Runtime::repl() {
     SymbolTable symtab;
+    N8Util::InputHighlighter inputHighlighter;
+
     std::string input, line;
     int iterNum = 1;
 
-    std::cout << N8_MAIN_BANNER
-        << std::endl << std::endl;
-    std::cout << "\u001b[1;32m>>>\u001b[0m ";
+    std::cout << N8_MAIN_BANNER << std::endl;
+    Runtime::showPrompt();
 
-    while(std::getline(std::cin, line)) {
+    while(true) {
+        input = inputHighlighter.getInput();
         input += line + '\n';
 
         if(isBalanced(input)) {
@@ -370,7 +391,7 @@ void Runtime::repl() {
             input.clear();
             iterNum++;
 
-            std::cout << std::endl << "\u001b[1;32m>>>\u001b[0m ";
+            Runtime::showPrompt();
         }
         else std::cout << "\u001b[93m...\u001b[0m ";
     }

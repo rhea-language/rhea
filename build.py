@@ -137,11 +137,11 @@ try:
 
         win_libs = [
             '-static', '-static-libstdc++',
-            '-lglfw3', '-lglew32', '-lopengl32', '-lgdi32', '-lwinmm',
-            '-limm32', '-lole32', '-loleaut32', '-lversion',
-            '-luuid', '-ldinput8', '-ldxguid', '-lsetupapi',
-            '-lshell32', '-lssl', '-lcrypto', '-lcrypt32',
-            '-lws2_32', '-luser32', '-lkernel32'
+            '-lglfw3', '-lglew32', '-lopengl32', '-lgdi32',
+            '-lwinmm', '-limm32', '-lole32', '-loleaut32',
+            '-lversion', '-luuid', '-ldinput8', '-ldxguid',
+            '-lsetupapi', '-lshell32', '-lssl', '-lcrypto',
+            '-lcrypt32', '-lws2_32', '-luser32', '-lkernel32'
         ]
 
         exe_build_args = [

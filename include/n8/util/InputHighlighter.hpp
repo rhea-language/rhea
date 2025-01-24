@@ -24,6 +24,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
@@ -79,6 +80,23 @@ public:
         #endif
     { }
 
+    InputHighlighter(const InputHighlighter& other) :
+        prompt(other.prompt),
+        keywords(other.keywords),
+        history(other.history),
+        history_index(other.history_index)
+        #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+        , handle_console(other.handle_console)
+        , csbi(other.csbi)
+        , original_mode(other.original_mode)
+        #elif defined(__linux__) || defined(__APPLE__)
+        , original_termios(other.original_termios)
+        #endif
+    { }
+
+    ~InputHighlighter();
+
+    InputHighlighter& operator=(const N8Util::InputHighlighter& other);
     std::string readInput();
 };
 

@@ -16,10 +16,40 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <n8/parser/OperatorsAndKeys.hpp>
 #include <n8/util/InputHighlighter.hpp>
 
 namespace N8Util {
+
+InputHighlighter& InputHighlighter::operator=(const N8Util::InputHighlighter& other) {
+    if(this != &other) {
+        this->prompt = other.prompt;
+        this->keywords = other.keywords;
+        this->history = other.history;
+        this->history_index = other.history_index;
+
+        #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+
+        this->handle_console = other.handle_console;
+        this->csbi = other.csbi;
+        this->original_mode = other.original_mode;
+
+        #elif defined(__linux__) || defined(__APPLE__)
+
+        this->original_termios = other.original_termios;
+
+        #endif
+    }
+
+    return *this;
+}
+
+InputHighlighter::~InputHighlighter() {
+    #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+    SetConsoleMode(this->handle_console, this->original_mode);
+    #elif defined(__linux__) || defined(__APPLE__)
+    tcsetattr(STDIN_FILENO, TCSANOW, &this->original_termios);
+    #endif
+}
 
 std::string InputHighlighter::colorizeInput(const std::string& input) {
     std::string currentWord, result;
@@ -80,7 +110,6 @@ bool InputHighlighter::isKeyword(const std::string& word) {
 void InputHighlighter::clearLine() {
     #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(
         GetStdHandle(STD_OUTPUT_HANDLE),
         &this->csbi
@@ -104,7 +133,7 @@ void InputHighlighter::clearLine() {
 
     #else
 
-    std::cout << "\r\u001b[K";
+    std::cout << "\u001b[K";
 
     #endif
 }
@@ -115,7 +144,9 @@ std::string InputHighlighter::readInput() {
     GetConsoleMode(this->handle_console, &this->original_mode);
     SetConsoleMode(
         this->handle_console,
-        ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT
+        ENABLE_PROCESSED_INPUT  |
+        ENABLE_MOUSE_INPUT      |
+        ENABLE_EXTENDED_FLAGS
     );
 
     #elif defined(__linux__) || defined(__APPLE__)
@@ -123,7 +154,7 @@ std::string InputHighlighter::readInput() {
     tcgetattr(STDIN_FILENO, &this->original_termios);
 
     struct termios raw = this->original_termios;
-    raw.c_lflag &= ~(ICANON | ECHO);
+    raw.c_lflag &= static_cast<tcflag_t>(~(ICANON | ECHO));
     tcsetattr(STDIN_FILENO, TCSANOW, &raw);
 
     #endif
@@ -138,6 +169,75 @@ std::string InputHighlighter::readInput() {
     this->history_index = this->history.size();
     while(true) {
         int c = getchar();
+        if(c == 10) {
+            if(!input.empty())
+                this->history.push_back(input);
+
+            #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+            SetConsoleMode(this->handle_console, this->original_mode);
+            #elif defined(__linux__) || defined(__APPLE__)
+            tcsetattr(STDIN_FILENO, TCSANOW, &this->original_termios);
+            #endif
+
+            std::cout << TERMINAL_DEFAULT << std::endl;
+            return input;
+        }
+
+        switch(c) {
+            case 127:
+            case '\b':
+                if(!input.empty() && cursor_pos > 0) {
+                    input.erase(
+                        input.begin() +
+                            static_cast<long>(cursor_pos - 1)
+                    );
+                    cursor_pos--;
+                    this->clearLine();
+
+                    std::cout << "\r\u001b[0m"
+                        << this->prompt
+                        << this->colorizeInput(input);
+
+                    for(size_t i = input.length(); i > cursor_pos; --i)
+                        std::cout << std::string("\u001b[D");
+                    std::flush(std::cout);
+                }
+                break;
+
+            case '\n':
+            case '\r':
+                if(!input.empty())
+                    this->history.push_back(input);
+
+                #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+                SetConsoleMode(this->handle_console, this->original_mode);
+                #elif defined(__linux__) || defined(__APPLE__)
+                tcsetattr(STDIN_FILENO, TCSANOW, &this->original_termios);
+                #endif
+
+                std::cout << TERMINAL_DEFAULT << std::endl;
+                return input;
+
+            default:
+                if(std::isprint(c)) {
+                    input.insert(
+                        input.begin() + static_cast<long>(cursor_pos),
+                        static_cast<char>(c)
+                    );
+
+                    cursor_pos++;
+                    this->clearLine();
+
+                    std::cout << "\r\u001b[0m"
+                        << this->prompt
+                        << this->colorizeInput(input);
+
+                    for(size_t i = input.length(); i > cursor_pos; --i)
+                        std::cout << std::string("\u001b[D");
+                    std::flush(std::cout);
+                }
+        }
+
         if(c == '\u001b') {
             getchar();
 
@@ -216,58 +316,6 @@ std::string InputHighlighter::readInput() {
             }
 
             continue;
-        }
-
-        switch(c) {
-            case 127:
-            case '\b':
-                if(!input.empty() && cursor_pos > 0) {
-                    input.erase(input.begin() + cursor_pos - 1);
-                    cursor_pos--;
-                    this->clearLine();
-
-                    std::cout << "\r\u001b[0m"
-                        << this->prompt
-                        << this->colorizeInput(input);
-
-                    for(size_t i = input.length(); i > cursor_pos; --i)
-                        std::cout << std::string("\u001b[D");
-                    std::flush(std::cout);
-                }
-                break;
-
-            case '\n':
-            case '\r':
-                if(!input.empty())
-                    this->history.push_back(input);
-
-                #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-                SetConsoleMode(this->handle_console, this->original_mode);
-                #elif defined(__linux__) || defined(__APPLE__)
-                tcsetattr(STDIN_FILENO, TCSANOW, &this->original_termios);
-                #endif
-
-                std::cout << TERMINAL_DEFAULT << std::endl;
-                return input;
-
-            default:
-                if(std::isprint(c)) {
-                    input.insert(
-                        input.begin() + cursor_pos,
-                        static_cast<char>(c)
-                    );
-
-                    cursor_pos++;
-                    this->clearLine();
-
-                    std::cout << "\r\u001b[0m"
-                        << this->prompt
-                        << this->colorizeInput(input);
-
-                    for(size_t i = input.length(); i > cursor_pos; --i)
-                        std::cout << std::string("\u001b[D");
-                    std::flush(std::cout);
-                }
         }
     }
 }

@@ -64,6 +64,8 @@ N8_FUNC(unsafe_portWrite8);
 N8_FUNC(unsafe_portWrite16);
 N8_FUNC(unsafe_portWrite32);
 
+N8_FUNC(unsafe_inject);
+
 N8_LIB_END
 
 #ifdef __clang__

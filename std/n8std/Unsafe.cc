@@ -729,3 +729,63 @@ N8_FUNC(unsafe_portWrite32) {
     );
     return {};
 }
+
+N8_FUNC(unsafe_inject) {
+    //N8_FUNC_REQUIRE_UNSAFE
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject bytes = args.at(0),
+        value = args.at(1);
+
+    TerminativeThrowSignal notBytes(
+        std::move(address),
+        "Bytes parameter should be of number array type, got " +
+            bytes.objectType()
+    );
+
+    if(!bytes.isArray())
+        throw notBytes;
+
+    std::vector<uint8_t> instBytes;
+    for(const DynamicObject& obj : *bytes.getArray()) {
+        if(!obj.isNumber())
+            throw notBytes;
+
+        instBytes.emplace_back(
+            static_cast<uint8_t>(obj.getNumber())
+        );
+    }
+
+    const std::string outType = value.toString();
+    const size_t instSize = instBytes.size();
+    uint8_t instructions[instSize];
+
+    std::copy(
+        instBytes.begin(),
+        instBytes.end(),
+        instructions
+    );
+
+    if(outType == "string")
+        return DynamicObject(std::string(
+            static_cast<const char*>(
+                static_cast<const void*>(
+                    execute_buffer<uint8_t*>(instructions, instSize)
+                )
+            ),
+            instSize
+        ));
+    else if(outType == "number")
+        return DynamicObject(static_cast<double>(
+            execute_buffer<double>(instructions, instSize)
+        ));
+    else if(outType == "unit")
+        execute_buffer<double>(instructions, instSize);
+
+    return {};
+}

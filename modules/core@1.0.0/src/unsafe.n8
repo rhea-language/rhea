@@ -50,5 +50,7 @@ import unsafe {
 
     portWrite8,
     portWrite16,
-    portWrite32
+    portWrite32,
+
+    inject
 } from "core"

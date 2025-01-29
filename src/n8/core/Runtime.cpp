@@ -122,29 +122,6 @@ void Runtime::cleanUp() {
 
 }
 
-static inline bool isBalanced(const std::string& input) {
-    std::stack<char> stack;
-
-    for(char ch : input) {
-        if(ch == '(' || ch == '{' || ch == '[')
-            stack.push(ch);
-        else if(ch == ')' || ch == '}' || ch == ']') {
-            if(stack.empty())
-                return false;
-
-            char top = stack.top();
-            if((ch == ')' && top != '(') ||
-                (ch == '}' && top != '{') ||
-                (ch == ']' && top != '['))
-                return false;
-
-            stack.pop();
-        }
-    }
-
-    return stack.empty();
-}
-
 #ifndef __EMSCRIPTEN__
 int Runtime::interpreter(SymbolTable& symbols, std::vector<std::string> files) {
     try {
@@ -288,114 +265,111 @@ void Runtime::repl() {
         input = inputHighlighter.readInput();
         input += line + '\n';
 
-        if(isBalanced(input)) {
-            try{
-                Tokenizer tokenizer(
-                    input,
-                    "<repl, iteration: " +
-                        std::to_string(iterNum) + ">"
-                );
-                tokenizer.scan();
+        try{
+            Tokenizer tokenizer(
+                input,
+                "<repl, iteration: " +
+                    std::to_string(iterNum) + ">"
+            );
+            tokenizer.scan();
 
-                Parser parser(tokenizer.getTokens());
-                parser.parse();
+            Parser parser(tokenizer.getTokens());
+            parser.parse();
 
-                for(const auto& statement : parser.getGlobalStatements())
-                    statement->visit(symtab);
-            }
-            catch(const std::system_error& exc) {
-                symtab.waitForTasks();
-                Runtime::cleanUp();
-
-                N8Util::printError("[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m");
-                N8Util::printError(exc.what());
-                N8Util::printError("\u001b[0m\r\n");
-            }
-            catch(const ASTNodeException& nodeExc) {
-                symtab.waitForTasks();
-                Runtime::cleanUp();
-
-                N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
-                N8Util::printError(nodeExc.what());
-                N8Util::printError("\u001b[0m\r\n                 ");
-                N8Util::printError(nodeExc.getAddress()->toString());
-                N8Util::printError("\r\n");
-            }
-            catch(const LexicalAnalysisException& lexAnlExc) {
-                symtab.waitForTasks();
-                Runtime::cleanUp();
-
-                N8Util::printError("[\u001b[1;31mLexical Error\u001b[0m]:\r\n\t");
-                N8Util::printError(lexAnlExc.what());
-                N8Util::printError("\r\n");
-            }
-            catch(const ParserException& parserExc) {
-                symtab.waitForTasks();
-                Runtime::cleanUp();
-
-                N8Util::printError("[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m");
-                N8Util::printError(parserExc.what());
-                N8Util::printError("\u001b[0m\r\n                 ");
-                N8Util::printError(parserExc.getAddress()->toString());
-                N8Util::printError("\r\n");
-            }
-            catch(const TerminativeBreakSignal& breakExc) {
-                symtab.waitForTasks();
-                Runtime::cleanUp();
-
-                N8Util::printError(
-                    "[\u001b[1;31mRuntime Error\u001b[0m]: "
-                    "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
-                    "\r\n                 "
-                );
-                N8Util::printError(breakExc.getAddress().toString());
-                N8Util::printError("\r\n");
-            }
-            catch(const TerminativeContinueSignal& continueExc) {
-                symtab.waitForTasks();
-                Runtime::cleanUp();
-
-                N8Util::printError(
-                    "[\u001b[1;31mRuntime Error\u001b[0m]: "
-                    "\u001b[3;37mInvalid continue statement signal caught.\u001b[0m"
-                    "\r\n                 "
-                );
-                N8Util::printError(continueExc.getAddress().toString());
-                N8Util::printError("\r\n");
-            }
-            catch(const TerminativeReturnSignal& retExc) {
-                symtab.waitForTasks();
-                Runtime::cleanUp();
-
-                N8Util::printError("\u001b[0;93m");
-                N8Util::printError(retExc.getObject().toString());
-                N8Util::printError("\u001b[0m\r\n");
-            }
-            catch(const TerminativeThrowSignal& throwExc) {
-                symtab.waitForTasks();
-                Runtime::cleanUp();
-
-                N8Util::printError("[\u001b[1;31mUncaught Error\u001b[0m]: \u001b[3;37m");
-                N8Util::printError(throwExc.getObject().toString());
-                N8Util::printError("\u001b[0m\r\n                  ");
-                N8Util::printError(throwExc.getAddress()->toString());
-                N8Util::printError("\r\n");
-            }
-            catch(const std::exception& exc) {
-                symtab.waitForTasks();
-                Runtime::cleanUp();
-
-                N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
-                N8Util::printError(exc.what());
-                N8Util::printError("\u001b[0m\r\n");
-            }
-
-            input.clear();
-            iterNum++;
-
-            Runtime::showPrompt();
+            for(const auto& statement : parser.getGlobalStatements())
+                statement->visit(symtab);
         }
-        else std::cout << "\u001b[93m...\u001b[0m  ";
+        catch(const std::system_error& exc) {
+            symtab.waitForTasks();
+            Runtime::cleanUp();
+
+            N8Util::printError("[\u001b[1;31mSystem Error\u001b[0m]: \u001b[3;37m");
+            N8Util::printError(exc.what());
+            N8Util::printError("\u001b[0m\r\n");
+        }
+        catch(const ASTNodeException& nodeExc) {
+            symtab.waitForTasks();
+            Runtime::cleanUp();
+
+            N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
+            N8Util::printError(nodeExc.what());
+            N8Util::printError("\u001b[0m\r\n                 ");
+            N8Util::printError(nodeExc.getAddress()->toString());
+            N8Util::printError("\r\n");
+        }
+        catch(const LexicalAnalysisException& lexAnlExc) {
+            symtab.waitForTasks();
+            Runtime::cleanUp();
+
+            N8Util::printError("[\u001b[1;31mLexical Error\u001b[0m]:\r\n\t");
+            N8Util::printError(lexAnlExc.what());
+            N8Util::printError("\r\n");
+        }
+        catch(const ParserException& parserExc) {
+            symtab.waitForTasks();
+            Runtime::cleanUp();
+
+            N8Util::printError("[\u001b[1;31mParser Error\u001b[0m]:  \u001b[3;37m");
+            N8Util::printError(parserExc.what());
+            N8Util::printError("\u001b[0m\r\n                 ");
+            N8Util::printError(parserExc.getAddress()->toString());
+            N8Util::printError("\r\n");
+        }
+        catch(const TerminativeBreakSignal& breakExc) {
+            symtab.waitForTasks();
+            Runtime::cleanUp();
+
+            N8Util::printError(
+                "[\u001b[1;31mRuntime Error\u001b[0m]: "
+                "\u001b[3;37mInvalid break statement signal caught.\u001b[0m"
+                "\r\n                 "
+            );
+            N8Util::printError(breakExc.getAddress().toString());
+            N8Util::printError("\r\n");
+        }
+        catch(const TerminativeContinueSignal& continueExc) {
+            symtab.waitForTasks();
+            Runtime::cleanUp();
+
+            N8Util::printError(
+                "[\u001b[1;31mRuntime Error\u001b[0m]: "
+                "\u001b[3;37mInvalid continue statement signal caught.\u001b[0m"
+                "\r\n                 "
+            );
+            N8Util::printError(continueExc.getAddress().toString());
+            N8Util::printError("\r\n");
+        }
+        catch(const TerminativeReturnSignal& retExc) {
+            symtab.waitForTasks();
+            Runtime::cleanUp();
+
+            N8Util::printError("\u001b[0;93m");
+            N8Util::printError(retExc.getObject().toString());
+            N8Util::printError("\u001b[0m\r\n");
+        }
+        catch(const TerminativeThrowSignal& throwExc) {
+            symtab.waitForTasks();
+            Runtime::cleanUp();
+
+            N8Util::printError("[\u001b[1;31mUncaught Error\u001b[0m]: \u001b[3;37m");
+            N8Util::printError(throwExc.getObject().toString());
+            N8Util::printError("\u001b[0m\r\n                  ");
+            N8Util::printError(throwExc.getAddress()->toString());
+            N8Util::printError("\r\n");
+        }
+        catch(const std::exception& exc) {
+            symtab.waitForTasks();
+            Runtime::cleanUp();
+
+            N8Util::printError("[\u001b[1;31mRuntime Error\u001b[0m]: \u001b[3;37m");
+            N8Util::printError(exc.what());
+            N8Util::printError("\u001b[0m\r\n");
+        }
+
+        input.clear();
+        iterNum++;
+
+        Runtime::showPrompt();
     }
 }
 

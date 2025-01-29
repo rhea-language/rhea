@@ -69,6 +69,7 @@ jobs:
         run: |
           /usr/bin/time -v ./dist/n8lang/bin/n8 ./examples/99-beers.n8
           /usr/bin/time -v ./dist/n8lang/bin/n8 ./examples/hello.n8
+          /usr/bin/time -v ./dist/n8lang/bin/n8 ./examples/inject.n8
 
       - name: Create N8 *.deb file
         run: python tools/build_deb.py

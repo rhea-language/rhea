@@ -7,3 +7,6 @@
 [submodule "lib/unsafe_ops"]
 	path = lib/unsafe_ops
 	url = https://github.com/nthnn/unsafe_ops
+[submodule "lib/chisei"]
+	path = lib/chisei
+	url = https://github.com/nthnn/chisei

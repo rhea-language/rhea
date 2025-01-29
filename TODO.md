@@ -1,6 +1,7 @@
 Todo:
 ---
 
+- Fix `unsafe` mechanism on standard library.
 - To be developed libraries:
     ✓ array
     * audio

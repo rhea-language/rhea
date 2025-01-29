@@ -17,8 +17,32 @@
  */
 
 #include <n8/util/InputHighlighter.hpp>
+#include <stack>
 
 namespace N8Util {
+
+static inline bool isBalanced(const std::string& input) {
+    std::stack<char> stack;
+
+    for(char ch : input) {
+        if(ch == '(' || ch == '{' || ch == '[')
+            stack.push(ch);
+        else if(ch == ')' || ch == '}' || ch == ']') {
+            if(stack.empty())
+                return false;
+
+            char top = stack.top();
+            if((ch == ')' && top != '(') ||
+                (ch == '}' && top != '{') ||
+                (ch == ']' && top != '['))
+                return false;
+
+            stack.pop();
+        }
+    }
+
+    return stack.empty();
+}
 
 InputHighlighter& InputHighlighter::operator=(const N8Util::InputHighlighter& other) {
     if(this != &other) {
@@ -169,20 +193,6 @@ std::string InputHighlighter::readInput() {
     this->history_index = this->history.size();
     while(true) {
         int c = getchar();
-        if(c == 10) {
-            if(!input.empty())
-                this->history.push_back(input);
-
-            #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
-            SetConsoleMode(this->handle_console, this->original_mode);
-            #elif defined(__linux__) || defined(__APPLE__)
-            tcsetattr(STDIN_FILENO, TCSANOW, &this->original_termios);
-            #endif
-
-            std::cout << TERMINAL_DEFAULT << std::endl;
-            return input;
-        }
-
         switch(c) {
             case 127:
             case '\b':

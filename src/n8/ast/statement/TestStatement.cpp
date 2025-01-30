@@ -20,7 +20,7 @@
 #include <n8/core/DynamicObject.hpp>
 #include <n8/core/Runtime.hpp>
 #include <n8/core/SymbolTable.hpp>
-#include <n8/util/Print.hpp>
+#include <n8/util/Render.hpp>
 
 #include <iostream>
 
@@ -34,15 +34,15 @@ DynamicObject TestStatement::visit(SymbolTable& symbols) {
     double elapsedTimeMs = std::chrono::duration<double, std::milli>(elapsedTime).count();
 
     if(value.booleanEquivalent())
-        N8Util::print("[\u001b[1;32m SUCCESS \u001b[0m]");
-    else N8Util::print("[\u001b[1;31m FAILED  \u001b[0m]");
+        N8Util::render("[\u001b[1;32m SUCCESS \u001b[0m]");
+    else N8Util::render("[\u001b[1;31m FAILED  \u001b[0m]");
 
     DynamicObject name = this->testName->visit(symbols);
-    N8Util::print(" ");
-    N8Util::print(std::to_string(elapsedTimeMs));
-    N8Util::print(" ms\t\u001b[3;97m");
-    N8Util::print(name.toString());
-    N8Util::print("\u001b[4;0m\r\n");
+    N8Util::render(" ");
+    N8Util::render(std::to_string(elapsedTimeMs));
+    N8Util::render(" ms\t\u001b[3;97m");
+    N8Util::render(name.toString());
+    N8Util::render("\u001b[4;0m\r\n");
 
     return {};
 }

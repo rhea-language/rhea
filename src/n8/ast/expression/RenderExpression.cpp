@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 - Nathanne Isip
+ * Copyright (c) 2025 - Nathanne Isip
  * This file is part of N8.
  * 
  * N8 is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 
 #include <n8/ast/expression/FunctionDeclarationExpression.hpp>
 #include <n8/ast/expression/RenderExpression.hpp>
-#include <n8/util/Print.hpp>
+#include <n8/util/Render.hpp>
 #include <iostream>
 
 DynamicObject RenderExpression::visit(SymbolTable& symbols) {
@@ -26,15 +26,14 @@ DynamicObject RenderExpression::visit(SymbolTable& symbols) {
     std::string str = value.toString();
 
     if(this->errorStream)
-        N8Util::printError(str);
-    else N8Util::print(str);
+        N8Util::renderError(str);
+    else N8Util::render(str);
 
     if(this->newLine) {
         if(this->errorStream)
-            N8Util::printError("\r\n");
-        else N8Util::print("\r\n");
+            N8Util::renderError("\r\n");
+        else N8Util::render("\r\n");
     }
 
-    std::fflush(stdout);
     return value;
 }

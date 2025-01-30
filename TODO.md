@@ -1,7 +1,6 @@
 Todo:
 ---
 
-- Fix `unsafe` mechanism on standard library.
 - To be developed libraries:
     ✓ array
     * audio
@@ -25,6 +24,7 @@ Todo:
     ✓ math
     * ml
         - ann
+        - astar
     * mysql
     * net
     ✓ reflect

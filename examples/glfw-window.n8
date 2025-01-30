@@ -2,28 +2,34 @@
 
 use "core"
 
-if(!gl.init()) {
-    render! "Failed to init gl."
-    io.exit()
+parallel {
+    if(!gl.init()) {
+        render! "Failed to init gl."
+        io.exit()
+    }
+
+    gl.setErrorCallback(func(error, message) {
+        console.log.error(message + " (" + error + ")")
+    })
+
+    window = gl.createWindow(300, 300, "Hello, world!")
+    if(window == nil) {
+        render! "Failed to create window."
+        io.exit()
+    }
+
+    gl.makeContextCurrent(window)
+    while(!gl.shouldCloseWindow(window)) {
+        gl.clear(0x00004000)
+        gl.clearColor(0.2, 0.3, 0.3, 1.0)
+        gl.swapBuffers(window)
+        gl.pollEvents()
+    }
+
+    gl.destroyWindow(window)
+    gl.terminate()
+
+    render! "Window terminated!"
 }
 
-gl.setErrorCallback(func(error, message) {
-    console.log.error(message + " (" + error + ")")
-})
-
-window = gl.createWindow(300, 300, "Hello, world!")
-if(window == nil) {
-    render! "Failed to create window."
-    io.exit()
-}
-
-gl.makeContextCurrent(window)
-while(!gl.shouldCloseWindow(window)) {
-    gl.clear(0x00004000)
-    gl.clearColor(0.2, 0.3, 0.3, 1.0)
-    gl.swapBuffers(window)
-    gl.pollEvents()
-}
-
-gl.destroyWindow(window)
-gl.terminate()
+render! "Window created!"

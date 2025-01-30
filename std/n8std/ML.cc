@@ -162,7 +162,8 @@ N8_FUNC(ml_trendline_calculateRmse) {
         double yPred = ml_trendline_predict(
             std::move(address),
             symtab,
-            params
+            params,
+            unsafe
         ).getNumber();
         double error = yObjArray[i].getNumber() - yPred;
 

@@ -18,6 +18,7 @@
 
 #include <n8/ast/ASTNodeException.hpp>
 #include <n8/ast/expression/FunctionCallExpression.hpp>
+#include <n8/core/Runtime.hpp>
 #include <n8/parser/Parser.hpp>
 
 DynamicObject FunctionCallExpression::visit(SymbolTable& symbols) {
@@ -46,7 +47,8 @@ DynamicObject FunctionCallExpression::visit(SymbolTable& symbols) {
         return (*nativeFunc)(
             std::move(this->address),
             symbols,
-            args
+            args,
+            Runtime::isUnsafeMode()
         );
     }
 

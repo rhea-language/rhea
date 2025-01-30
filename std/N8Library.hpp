@@ -33,11 +33,12 @@
     DynamicObject funcName(                             \
         std::shared_ptr<Token> address,                 \
         SymbolTable& symtab,                            \
-        std::vector<DynamicObject>& args                \
+        std::vector<DynamicObject>& args,               \
+        bool unsafe                                     \
     )
 
 #define N8_FUNC_REQUIRE_UNSAFE                          \
-    if(!Runtime::isUnsafeMode())                        \
+    if(!unsafe)                                          \
         throw TerminativeThrowSignal(                   \
             std::move(address),                         \
             "Function requires unsafe mode turned on"   \

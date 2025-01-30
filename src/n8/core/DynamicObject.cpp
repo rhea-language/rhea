@@ -202,7 +202,8 @@ DynamicObject DynamicObject::callFromNative(
         this->getNativeFunction()(
             std::move(address),
             symtab,
-            args
+            args,
+            Runtime::isUnsafeMode()
         );
 }
 

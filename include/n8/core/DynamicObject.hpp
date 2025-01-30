@@ -41,7 +41,8 @@ using NativeFunction = DynamicObject(
 *)(
     std::shared_ptr<Token>,
     SymbolTable&,
-    std::vector<DynamicObject>&
+    std::vector<DynamicObject>&,
+    bool
 );
 
 class DynamicObject final {

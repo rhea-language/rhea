@@ -17,7 +17,7 @@
  */
 
 #include <N8.hpp>
-#include <n8/util/Print.hpp>
+#include <n8/util/Render.hpp>
 
 #include <iostream>
 #include <stdexcept>

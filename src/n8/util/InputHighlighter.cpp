@@ -21,29 +21,6 @@
 
 namespace N8Util {
 
-static inline bool isBalanced(const std::string& input) {
-    std::stack<char> stack;
-
-    for(char ch : input) {
-        if(ch == '(' || ch == '{' || ch == '[')
-            stack.push(ch);
-        else if(ch == ')' || ch == '}' || ch == ']') {
-            if(stack.empty())
-                return false;
-
-            char top = stack.top();
-            if((ch == ')' && top != '(') ||
-                (ch == '}' && top != '{') ||
-                (ch == ']' && top != '['))
-                return false;
-
-            stack.pop();
-        }
-    }
-
-    return stack.empty();
-}
-
 InputHighlighter& InputHighlighter::operator=(const N8Util::InputHighlighter& other) {
     if(this != &other) {
         this->prompt = other.prompt;

@@ -35,5 +35,6 @@ DynamicObject RenderExpression::visit(SymbolTable& symbols) {
         else N8Util::print("\r\n");
     }
 
+    std::fflush(stdout);
     return value;
 }

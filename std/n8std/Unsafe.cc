@@ -731,7 +731,7 @@ N8_FUNC(unsafe_portWrite32) {
 }
 
 N8_FUNC(unsafe_inject) {
-    //N8_FUNC_REQUIRE_UNSAFE
+    N8_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -762,7 +762,7 @@ N8_FUNC(unsafe_inject) {
     }
 
     const std::string outType = value.toString();
-    const size_t instSize = instBytes.size();
+    size_t instSize = instBytes.size();
     uint8_t instructions[instSize];
 
     std::copy(

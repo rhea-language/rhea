@@ -73,7 +73,7 @@ jobs:
           /usr/bin/time -v ./dist/n8lang/bin/n8 -u ./examples/inject.n8
 
       - name: Create N8 *.deb file
-        run: python tools/build_deb.py
+        run: python tools/build_deb_installer.py
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

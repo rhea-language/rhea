@@ -27,6 +27,10 @@ Todo:
         - astar
     * mysql
     * net
+        - ftp
+        - http
+        - smtp
+        - tor
     ✓ reflect
     * regex
     * sqlite3

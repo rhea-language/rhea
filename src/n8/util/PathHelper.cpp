@@ -22,12 +22,43 @@
 #include <cstdlib>
 #include <filesystem>
 #include <iostream>
+#include <locale>
 #include <string>
+
+#if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+#   include <shlobj.h>
+#   include <windows.h>
+#   include <winreg.h>
+#endif
 
 namespace N8Util {
 
 std::string PathHelper::installationPath() {
+    #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+
+    HKEY hKey;
+    DWORD type, size;
+    wchar_t buffer[32767];
+
+    if(RegOpenKeyExW(HKEY_CURRENT_USER, L"Environment", 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
+        size = sizeof(buffer);
+        if(RegQueryValueExW(hKey, L"N8_PATH", NULL, &type, (LPBYTE)buffer, &size) == ERROR_SUCCESS) {
+            if(type == REG_SZ || type == REG_EXPAND_SZ) {
+                RegCloseKey(hKey);
+
+                std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> conv_x;
+                return conv_x.to_bytes(std::wstring(buffer));
+            }
+        }
+
+        RegCloseKey(hKey);
+    }
+
+    return "";
+
+    #else
     return std::getenv(N8_ENV_PATH_NAME);
+    #endif
 }
 
 bool PathHelper::isLibraryInstalled(

@@ -92,10 +92,10 @@ jobs:
         shell: cmd
         run: |
           cd n8
-          python tools/build_exe_uninstaller.py
-          python tools/windows_installer/embedded_files_gen.py
-          python tools/build_exe_installer.py
-          rmdir dist/n8lang /s /q
+          python tools\build_exe_uninstaller.py
+          python tools\windows_installer\embedded_files_gen.py
+          python tools\build_exe_installer.py
+          rmdir dist\n8lang /s /q
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

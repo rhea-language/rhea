@@ -186,6 +186,161 @@ std::wstring GetInstallBase(bool isBin) {
     return L"";
 }
 
+bool CreateFileAssociation() {
+    HKEY hKey;
+    std::wstring n8Path = GetInstallBase(true) + L"n8.exe";
+    
+    if(RegCreateKeyExW(
+        HKEY_CLASSES_ROOT,
+        L".n8", 0,
+        NULL, 0,
+        KEY_WRITE,
+        NULL,
+        &hKey,
+        NULL
+    ) == ERROR_SUCCESS) {
+        std::wstring value = L"n8lang_script";
+
+        RegSetValueExW(
+            hKey,
+            NULL, 0,
+            REG_SZ,
+            (const BYTE*) value.c_str(),
+            (value.size() + 1) * sizeof(wchar_t)
+        );
+        RegCloseKey(hKey);
+    }
+    else return false;
+
+    if(RegCreateKeyExW(HKEY_CLASSES_ROOT, L"n8lang_script", 0, NULL, 0, KEY_WRITE, NULL, &hKey, NULL) == ERROR_SUCCESS) {
+        std::wstring friendlyName = L"N8 Language Script";
+
+        RegSetValueExW(
+            hKey,
+            NULL, 0,
+            REG_SZ,
+            (const BYTE*) friendlyName.c_str(),
+            (friendlyName.size() + 1) * sizeof(wchar_t)
+        );
+        RegCloseKey(hKey);
+    }
+    else return false;
+
+    if(RegCreateKeyExW(
+        HKEY_CLASSES_ROOT,
+        L"n8lang_script\\shell\\open\\command",
+        0,
+        NULL, 0,
+        KEY_WRITE,
+        NULL,
+        &hKey,
+        NULL
+    ) == ERROR_SUCCESS) {
+        std::wstring command = L"\"" + n8Path + L"\" \"%1\"";
+
+        RegSetValueExW(
+            hKey,
+            NULL, 0,
+            REG_SZ,
+            (const BYTE*) command.c_str(),
+            (command.size() + 1) * sizeof(wchar_t)
+        );
+        RegCloseKey(hKey);
+    }
+    else return false;
+
+    return true;
+}
+
+bool CreateUninstallEntry() {
+    HKEY hKey;
+
+    std::wstring uninstallPath = L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\N8Lang";
+    std::wstring installPath = GetInstallBase(true).substr(0, GetInstallBase(true).find_last_of(L'\\'));
+    std::wstring uninstallerPath = installPath + L"\\uninstaller.exe";
+    std::wstring iconPath = installPath + L"\\bin\\n8.exe";
+
+    if(RegCreateKeyExW(
+        HKEY_LOCAL_MACHINE,
+        uninstallPath.c_str(), 0,
+        NULL, 0,
+        KEY_WRITE,
+        NULL,
+        &hKey,
+        NULL
+    ) != ERROR_SUCCESS)
+        return false;
+
+    RegSetValueExW(
+        hKey,
+        L"DisplayName",
+        0,
+        REG_SZ,
+        (const BYTE*) L"N8 Language",
+        sizeof(L"N8 Language")
+    );
+
+    RegSetValueExW(
+        hKey,
+        L"UninstallString", 0,
+        REG_SZ,
+        (const BYTE*) uninstallerPath.c_str(),
+        (uninstallerPath.size() + 1) * sizeof(wchar_t)
+    );
+
+    RegSetValueExW(
+        hKey,
+        L"InstallLocation", 0,
+        REG_SZ,
+        (const BYTE*) installPath.c_str(),
+        (installPath.size() + 1) * sizeof(wchar_t)
+    );
+
+    RegSetValueExW(
+        hKey,
+        L"DisplayIcon", 0,
+        REG_SZ,
+        (const BYTE*) iconPath.c_str(),
+        (iconPath.size() + 1) * sizeof(wchar_t)
+    );
+
+    RegSetValueExW(
+        hKey,
+        L"Publisher", 0,
+        REG_SZ,
+        (const BYTE*) L"Nathanne Isip",
+        sizeof(L"Nathanne Isip")
+    );
+
+    RegSetValueExW(
+        hKey,
+        L"DisplayVersion", 0,
+        REG_SZ,
+        (const BYTE*) L"1.0.0",
+        sizeof(L"1.0.0")
+    );
+
+    RegSetValueExW(
+        hKey,
+        L"URLInfoAbout", 0,
+        REG_SZ,
+        (const BYTE*) L"https://n8lang.netlify.app",
+        sizeof(L"https://n8lang.netlify.app")
+    );
+
+    DWORD version = 100;
+    RegSetValueExW(
+        hKey,
+        L"Version", 0,
+        REG_DWORD,
+        (const BYTE*) &version,
+        sizeof(version)
+    );
+
+    RegCloseKey(hKey);
+    return true;
+}
+
 struct FileMapping {
     const char* arrayName;
     const unsigned char* data;
@@ -253,6 +408,8 @@ int main() {
     }
 
     std::wstring n8Path = GetInstallBase(false).substr(0, GetInstallBase(false).find_last_of(L'\\'));
+    n8Path = n8Path.substr(0, n8Path.find_last_of(L'\\'));
+
     if(SetEnvironmentVariablePersistent(L"N8_PATH", n8Path, false)) {
         SetColor(Green);
         std::wcout << L"Set N8_PATH to: " << n8Path << std::endl;
@@ -275,6 +432,35 @@ int main() {
         std::wcerr << L"Failed to add to PATH" << std::endl;
         ResetColor();
     }
+
+    SetColor(Yellow);
+    std::wcout << L"\nCreating file associations..." << std::endl;
+    ResetColor();
+
+    if(CreateFileAssociation()) {
+        SetColor(Green);
+        std::wcout << L"Associated .n8 files with n8.exe" << std::endl;
+        ResetColor();
+    }
+    else {
+        SetColor(Red);
+        std::wcerr << L"Failed to create file associations!" << std::endl;
+        ResetColor();
+    }
+
+    SetColor(Yellow);
+    std::wcout << L"Registering uninstaller..." << std::endl;
+    ResetColor();
+
+    if(CreateUninstallEntry()) {
+        SetColor(Green);
+        std::wcout << L"Created Add/Remove Programs entry" << std::endl;
+    }
+    else {
+        SetColor(Red);
+        std::wcerr << L"Failed to create uninstall registry entry" << std::endl;
+    }
+    ResetColor();
 
     SetColor(Aqua);
     std::wcout << L"\nInstallation complete!" << std::endl;

@@ -19,8 +19,8 @@ import platform
 import subprocess
 
 subprocess.run([
-    'g++', '-static',
+    'g++', '-static', '-O2',
     '-o', 'dist\\n8lang\\bin\\uninstaller',
     'tools\\windows_uninstaller\\uninstaller.cpp',
-    '-lshlwapi', '-O2'
+    '-lshlwapi', '-lole32', '-ladvapi32', '-luser32'
 ])

@@ -16,11 +16,14 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <windows.h>
-#include <shlobj.h>
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
+
+#include <shlwapi.h>
+#include <shlobj.h>
+#include <windows.h>
 
 enum ConsoleColor {
     Blue = 1,
@@ -191,6 +194,30 @@ std::wstring GetInstallBase(bool isBin) {
     return L"";
 }
 
+bool RemoveFileAssociation() {
+    LSTATUS status;
+
+    status = RegDeleteTreeW(HKEY_CLASSES_ROOT, L".n8");
+    if(status != ERROR_SUCCESS && status != ERROR_FILE_NOT_FOUND)
+        return false;
+
+    status = RegDeleteTreeW(HKEY_CLASSES_ROOT, L"n8lang_script");
+    if(status != ERROR_SUCCESS && status != ERROR_FILE_NOT_FOUND)
+        return false;
+
+    return true;
+}
+
+bool RemoveUninstallEntry() {
+    std::wstring uninstallPath = L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\N8Lang";
+    LSTATUS status = RegDeleteTreeW(
+        HKEY_LOCAL_MACHINE,
+        uninstallPath.c_str()
+    );
+
+    return status == ERROR_SUCCESS || status == ERROR_FILE_NOT_FOUND;
+}
+
 int main() {
     if(!IsElevated()) {
         wchar_t path[MAX_PATH];
@@ -272,9 +299,110 @@ int main() {
     }
     ResetColor();
 
+    SetColor(Yellow);
+    std::wcout << L"Removing registry entries..." << std::endl;
+    ResetColor();
+
+    if(RemoveUninstallEntry()) {
+        SetColor(Green);
+        std::wcout << L"Removed Add/Remove Programs entry" << std::endl;
+    }
+    else {
+        SetColor(Red);
+        std::wcerr << L"Failed to remove uninstall registry entry" << std::endl;
+    }
+    ResetColor();
+
+    SetColor(Yellow);
+    std::wcout << L"Removing file associations..." << std::endl;
+    ResetColor();
+
+    if(RemoveFileAssociation()) {
+        SetColor(Green);
+        std::wcout << L"Removed .n8 file associations" << std::endl;
+    }
+    else {
+        SetColor(Red);
+        std::wcerr << L"Failed to remove file associations" << std::endl;
+    }
+    ResetColor();
+
     SetColor(Aqua);
     std::wcout << L"\nUninstallation complete!" << std::endl;
     ResetColor();
+
+    wchar_t exePath[MAX_PATH];
+    GetModuleFileNameW(NULL, exePath, MAX_PATH);
+
+    wchar_t tempDir[MAX_PATH];
+    GetTempPathW(MAX_PATH, tempDir);
+
+    wchar_t batPath[MAX_PATH];
+    srand(static_cast<unsigned int>(time(NULL)));
+    
+    do swprintf_s(
+        batPath,
+        MAX_PATH,
+        L"%s\\n8d_%04x.bat",
+        tempDir,
+        rand() % 0xFFFF
+    );
+    while(PathFileExistsW(batPath));
+
+    HANDLE hBatFile = CreateFileW(
+        batPath,
+        GENERIC_WRITE,
+        0,
+        NULL,
+        CREATE_ALWAYS,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+
+    if(hBatFile != INVALID_HANDLE_VALUE) {
+        std::wstring batContent = 
+            L"@echo off\r\n"
+            L"timeout /t 1 /nobreak >nul\r\n"
+            L"del \"" + std::wstring(exePath) + L"\"\r\n"
+            L"del \"%~f0\"\r\n";
+        
+        DWORD bytesWritten;
+        WriteFile(
+            hBatFile,
+            batContent.c_str(),
+            static_cast<DWORD>(batContent.size() * sizeof(wchar_t)),
+            &bytesWritten,
+            NULL
+        );
+        CloseHandle(hBatFile);
+
+        STARTUPINFOW si = { sizeof(si) };
+        PROCESS_INFORMATION pi;
+        si.dwFlags = STARTF_USESHOWWINDOW;
+        si.wShowWindow = SW_HIDE;
+
+        std::wstring cmdLine = L"cmd.exe /C \"" + std::wstring(batPath) + L"\"";
+        if(CreateProcessW(
+            NULL,
+            &cmdLine[0],
+            NULL,
+            NULL,
+            FALSE,
+            CREATE_NO_WINDOW,
+            NULL,
+            NULL,
+            &si,
+            &pi
+        )) {
+            CloseHandle(pi.hProcess);
+            CloseHandle(pi.hThread);
+        }
+        else {
+            SetColor(Red);
+            std::wcerr << L"Failed to self-destruct" << std::endl;
+            ResetColor();
+        }
+    }
 
     getchar();
     return 0;

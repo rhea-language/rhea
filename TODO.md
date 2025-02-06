@@ -1,6 +1,8 @@
 Todo:
 ---
 
+- Windows GUI uninstaller
+
 - To be developed libraries:
     ✓ array
     * audio
@@ -25,6 +27,7 @@ Todo:
     * ml
         - ann
         - astar
+        - llm
     * mysql
     * net
         - ftp

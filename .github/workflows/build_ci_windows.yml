@@ -91,12 +91,11 @@ jobs:
           .\dist\n8lang\bin\n8 examples\hello.n8
 
       - name: Create N8 installer executable file
-        shell: cmd
         run: |
           cd n8
           python tools\build_exe_uninstaller.py
           python tools\build_exe_installer.py
-          rmdir dist\n8lang /s /q
+          rm -rf dist\n8lang
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

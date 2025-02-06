@@ -18,7 +18,6 @@
 
 #include "installer_util.hpp"
 
-#include <fileapi.h>
 #include <shlobj.h>
 #include <windows.h>
 #include <winreg.h>

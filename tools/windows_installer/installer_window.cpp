@@ -21,8 +21,6 @@
 #include "installer_file_mapping.hpp"
 
 #include <iomanip>
-
-#include <stringapiset.h>
 #include <windows.h>
 
 const char* LICENSE_TEXT = R"(

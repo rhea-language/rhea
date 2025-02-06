@@ -16,26 +16,32 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "installer_window.hpp"
-#include "installer_util.hpp"
+#ifndef N8_INSTALLER_UTIL_HPP
+#define N8_INSTALLER_UTIL_HPP
 
-#include <windows.h>
+#include <cstdint>
+#include <string>
 
-int main(int argc, char* argv[]) {
-    if(!IsElevated()) {
-        wchar_t path[MAX_PATH];
+bool IsElevated();
 
-        GetModuleFileNameW(NULL, path, MAX_PATH);
-        ShellExecuteW(NULL, L"runas", path, NULL, NULL, SW_SHOWNORMAL);
+bool CreateDirectoryRecursive(const std::wstring& path);
+bool ExtractFile(
+    const std::wstring& path,
+    const unsigned char* data,
+    size_t size
+);
 
-        return 0;
-    }
+bool SetEnvironmentVariablePersistent(
+    const std::wstring& name,
+    const std::wstring& value,
+    bool systemWide
+);
+bool AddToSystemPath(const std::wstring& path);
 
-    auto app = Gtk::Application::create(argc, argv, "org.n8lang.installer");
-    InstallerWindow window;
+bool CreateFileAssociation();
+bool CreateUninstallEntry();
 
-    window.signal_hide().connect([&app] {
-        app->quit();
-    });
-    return app->run(window);
-}
+std::wstring GetInstallBase(bool isBin);
+std::string WideStr2Utf8(const std::wstring& wstr);
+
+#endif

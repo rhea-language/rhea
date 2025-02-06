@@ -1,4 +1,4 @@
 .vscode/
 dist/
-tools/windows_installer/embedded_files.h
-tools/windows_installer/embedded_file_map.hpp
+tools/windows_installer/include/installer_embedded_files.hpp
+tools/windows_installer/include/installer_embedded_file_map.hpp

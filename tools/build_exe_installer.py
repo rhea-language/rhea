@@ -52,8 +52,8 @@ files = {
     "dist\\n8lang\\modules\\core@1.0.0\\config.sconf":      "config_sconf"
 }
 
-embedded_files = "tools\\windows_installer\\embedded_files.h"
-embedded_file_map = "tools\\windows_installer\\embedded_file_map.hpp"
+embedded_files = "tools\\windows_installer\\include\\installer_embedded_files.hpp"
+embedded_file_map = "tools\\windows_installer\\include\\installer_embedded_file_map.hpp"
 
 if os.path.exists(embedded_files):
     os.remove(embedded_files)
@@ -98,10 +98,11 @@ subprocess.run([
     'g++', '-o', OUTPUT_EXE,
     '-DLIBDEFLATE_DLL', '-mwindows',
 
-    'tools\\windows_installer\\installer_window.cpp',
-    'tools\\windows_installer\\installer_util.cpp',
-    'tools\\windows_installer\\installer.cpp',
+    'tools\\windows_installer\\src\\installer_window.cpp',
+    'tools\\windows_installer\\src\\installer_util.cpp',
+    'tools\\windows_installer\\src\\installer.cpp',
 
+    '-I' + os.path.join('tools', 'windows_installer', 'include'),
     '-I' + os.path.join(msys2_path, 'include'),
     '-I' + os.path.join(msys2_path, 'include', 'gtkmm-3.0'),
     '-I' + os.path.join(msys2_path, 'lib', 'gtkmm-3.0', 'include'),

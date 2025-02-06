@@ -17,6 +17,11 @@
 import os
 import platform
 import subprocess
+import sys
+
+msys2_path = 'D:\\a\\_temp\\msys64\\mingw64\\'
+if len(sys.argv) == 2:
+    msys2_path = sys.argv[1]
 
 def file_to_c_array(file_path, array_name):
     with open(file_path, "rb") as f:
@@ -89,43 +94,48 @@ OUTPUT_EXE      = os.path.join(
     f'n8-lang_{VERSION}_{ARCHITECTURE}.exe'
 )
 
+
 subprocess.run([
     'g++', '-std=c++11', '-o', OUTPUT_EXE,
-    '-DLIBDEFLATE_DLL', '-mwindows',
 
     'tools\\windows_installer\\installer_window.cpp',
     'tools\\windows_installer\\installer_util.cpp',
     'tools\\windows_installer\\installer.cpp',
 
-    '-IC:\\msys64\\mingw64\\include\\gtkmm-3.0',
-    '-IC:\\msys64\\mingw64\\lib\\gtkmm-3.0\\include',
-    '-IC:\\msys64\\mingw64\\include\\atkmm-1.6',
-    '-IC:\\msys64\\mingw64\\lib\\atkmm-1.6\\include',
-    '-IC:\\msys64\\mingw64\\include\\gdkmm-3.0',
-    '-IC:\\msys64\\mingw64\\lib\\gdkmm-3.0\\include',
-    '-IC:\\msys64\\mingw64\\include\\giomm-2.4',
-    '-IC:\\msys64\\mingw64\\lib\\giomm-2.4\\include',
-    '-IC:\\msys64\\mingw64\\include\\gtk-3.0',
-    '-IC:\\msys64\\mingw64\\include\\cairo',
-    '-IC:\\msys64\\mingw64\\include\\atk-1.0',
-    '-IC:\\msys64\\mingw64\\include\\pangomm-1.4',
-    '-IC:\\msys64\\mingw64\\lib\\pangomm-1.4\\include',
-    '-IC:\\msys64\\mingw64\\include\\glibmm-2.4',
-    '-IC:\\msys64\\mingw64\\lib\\glibmm-2.4\\include',
-    '-IC:\\msys64\\mingw64\\include\\cairomm-1.0',
-    '-IC:\\msys64\\mingw64\\lib\\cairomm-1.0\\include',
-    '-IC:\\msys64\\mingw64\\include\\sigc++-2.0',
-    '-IC:\\msys64\\mingw64\\lib\\sigc++-2.0\\include',
-    '-IC:\\msys64\\mingw64\\include\\pango-1.0',
-    '-IC:\\msys64\\mingw64\\include\\pixman-1',
-    '-IC:\\msys64\\mingw64\\include\\fribidi',
-    '-IC:\\msys64\\mingw64\\include\\harfbuzz',
-    '-IC:\\msys64\\mingw64\\include\\freetype2',
-    '-IC:\\msys64\\mingw64\\include\\gdk-pixbuf-2.0',
-    '-IC:\\msys64\\mingw64\\include\\libpng16',
-    '-IC:\\msys64\\mingw64\\include\\webp',
-    '-IC:\\msys64\\mingw64\\include\\glib-2.0',
-    '-IC:\\msys64\\mingw64\\lib\\glib-2.0\\include',
+    '-I' + os.path.join(msys2_path, 'include', 'gtkmm-3.0'),
+    '-I' + os.path.join(msys2_path, 'lib', 'gtkmm-3.0', 'include'),
+    '-I' + os.path.join(msys2_path, 'include', 'atkmm-1.6'),
+    '-I' + os.path.join(msys2_path, 'lib', 'atkmm-1.6', 'include'),
+    '-I' + os.path.join(msys2_path, 'include', 'gdkmm-3.0'),
+    '-I' + os.path.join(msys2_path, 'lib', 'gdkmm-3.0', 'include'),
+    '-I' + os.path.join(msys2_path, 'include', 'giomm-2.4'),
+    '-I' + os.path.join(msys2_path, 'lib', 'giomm-2.4', 'include'),
+    '-I' + os.path.join(msys2_path, 'include', 'gtk-3.0'),
+    '-I' + os.path.join(msys2_path, 'include', 'cairo'),
+    '-I' + os.path.join(msys2_path, 'include', 'atk-1.0'),
+    '-I' + os.path.join(msys2_path, 'include', 'pangomm-1.4'),
+    '-I' + os.path.join(msys2_path, 'lib', 'pangomm-1.4', 'include'),
+    '-I' + os.path.join(msys2_path, 'include', 'glibmm-2.4'),
+    '-I' + os.path.join(msys2_path, 'lib', 'glibmm-2.4', 'include'),
+    '-I' + os.path.join(msys2_path, 'include', 'cairomm-1.0'),
+    '-I' + os.path.join(msys2_path, 'lib', 'cairomm-1.0', 'include'),
+    '-I' + os.path.join(msys2_path, 'include', 'sigc++-2.0'),
+    '-I' + os.path.join(msys2_path, 'lib', 'sigc++-2.0', 'include'),
+    '-I' + os.path.join(msys2_path, 'include', 'pango-1.0'),
+    '-I' + os.path.join(msys2_path, 'include', 'pixman-1'),
+    '-I' + os.path.join(msys2_path, 'include', 'fribidi'),
+    '-I' + os.path.join(msys2_path, 'include', 'harfbuzz'),
+    '-I' + os.path.join(msys2_path, 'include', 'freetype2'),
+    '-I' + os.path.join(msys2_path, 'include', 'gdk-pixbuf-2.0'),
+    '-I' + os.path.join(msys2_path, 'include', 'libpng16'),
+    '-I' + os.path.join(msys2_path, 'include', 'webp'),
+    '-I' + os.path.join(msys2_path, 'include', 'glib-2.0'),
+    '-I' + os.path.join(msys2_path, 'lib', 'glib-2.0', 'include'),
+
+    '-L' + os.path.join(msys2_path, 'lib'),
+    '-L' + os.path.join(msys2_path, 'bin'),
+
+    '-DLIBDEFLATE_DLL', '-mwindows',
 
     '-lgtkmm-3.0', '-latkmm-1.6', '-lgdkmm-3.0',
     '-lgdk-3', '-lz', '-lgdi32', '-limm32', '-lshell32',

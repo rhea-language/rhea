@@ -94,9 +94,9 @@ OUTPUT_EXE      = os.path.join(
     f'n8-lang_{VERSION}_{ARCHITECTURE}.exe'
 )
 
-
 subprocess.run([
-    'g++', '-std=c++11', '-o', OUTPUT_EXE,
+    'g++', '-o', OUTPUT_EXE,
+    '-DLIBDEFLATE_DLL', '-mwindows',
 
     'tools\\windows_installer\\installer_window.cpp',
     'tools\\windows_installer\\installer_util.cpp',
@@ -135,8 +135,6 @@ subprocess.run([
 
     '-L' + os.path.join(msys2_path, 'lib'),
     '-L' + os.path.join(msys2_path, 'bin'),
-
-    '-DLIBDEFLATE_DLL', '-mwindows',
 
     '-lgtkmm-3.0', '-latkmm-1.6', '-lgdkmm-3.0',
     '-lgdk-3', '-lz', '-lgdi32', '-limm32', '-lshell32',

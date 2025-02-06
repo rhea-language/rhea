@@ -31,6 +31,7 @@ jobs:
           update: true
           install: >-
             mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-pkg-config
             mingw-w64-x86_64-curl
             mingw-w64-x86_64-openssl
             mingw-w64-x86_64-glfw
@@ -47,6 +48,7 @@ jobs:
             mingw-w64-x86_64-cairo
             mingw-w64-x86_64-cairomm
             mingw-w64-x86_64-pango
+            mingw-w64-x86_64-harfbuzz
             git
 
       - name: Checkout code

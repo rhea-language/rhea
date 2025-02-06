@@ -40,6 +40,8 @@ jobs:
             mingw-w64-x86_64-sqlite3
             mingw-w64-x86_64-hidapi
             mingw-w64-x86_64-gtkmm3
+            mingw-w64-x86_64-gettext
+            mingw-w64-x86_64-cfrmgr32
             mingw-w64-x86_64-fontconfig
             git
 

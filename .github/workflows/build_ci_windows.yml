@@ -39,8 +39,10 @@ jobs:
             mingw-w64-x86_64-libzip
             mingw-w64-x86_64-sqlite3
             mingw-w64-x86_64-hidapi
+            mingw-w64-x86_64-gtk3
             mingw-w64-x86_64-gtkmm3
             mingw-w64-x86_64-gettext
+            mingw-w64-x86_64-freetype
             mingw-w64-x86_64-fontconfig
             mingw-w64-x86_64-cairo
             mingw-w64-x86_64-cairomm

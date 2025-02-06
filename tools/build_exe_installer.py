@@ -102,6 +102,7 @@ subprocess.run([
     'tools\\windows_installer\\installer_util.cpp',
     'tools\\windows_installer\\installer.cpp',
 
+    '-I' + os.path.join(msys2_path, 'include'),
     '-I' + os.path.join(msys2_path, 'include', 'gtkmm-3.0'),
     '-I' + os.path.join(msys2_path, 'lib', 'gtkmm-3.0', 'include'),
     '-I' + os.path.join(msys2_path, 'include', 'atkmm-1.6'),

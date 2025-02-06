@@ -16,26 +16,17 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "installer_window.hpp"
-#include "installer_util.hpp"
+#ifndef N8_INSTALLER_FILE_MAPPING_HPP
+#define N8_INSTALLER_FILE_MAPPING_HPP
 
-#include <windows.h>
+struct FileMapping {
+    const char* arrayName;
+    const unsigned char* data;
+    size_t size;
+    const wchar_t* originalPath;
+};
 
-int main(int argc, char* argv[]) {
-    if(!IsElevated()) {
-        wchar_t path[MAX_PATH];
+#include "embedded_files.h"
+#include "embedded_file_map.hpp"
 
-        GetModuleFileNameW(NULL, path, MAX_PATH);
-        ShellExecuteW(NULL, L"runas", path, NULL, NULL, SW_SHOWNORMAL);
-
-        return 0;
-    }
-
-    auto app = Gtk::Application::create(argc, argv, "org.n8lang.installer");
-    InstallerWindow window;
-
-    window.signal_hide().connect([&app] {
-        app->quit();
-    });
-    return app->run(window);
-}
+#endif

@@ -19,6 +19,9 @@
 #ifndef N8_INSTALLER_FILE_MAPPING_HPP
 #define N8_INSTALLER_FILE_MAPPING_HPP
 
+#include <cstdint>
+#include <windows.h>
+
 struct FileMapping {
     const char* arrayName;
     const unsigned char* data;

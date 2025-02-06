@@ -11,6 +11,7 @@ on:
       - src/**
       - std/**
       - test/**
+      - tools/**
       - build.py
     branches:
       - main

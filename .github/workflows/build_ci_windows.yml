@@ -37,6 +37,8 @@ jobs:
             mingw-w64-x86_64-python-py-cpuinfo
             mingw-w64-x86_64-libzip
             mingw-w64-x86_64-sqlite3
+            mingw-w64-x86_64-hidapi
+            mingw-w64-x86_64-gtkmm3
             git
 
       - name: Checkout code

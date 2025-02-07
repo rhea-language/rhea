@@ -93,7 +93,7 @@ def build_proc():
         
         log_info("Clean-up done!")
 
-    except(e):
+    except:
         log_error("Cannot delete meta-generated files.")
 
     log_task("Generating embedded files content mapping...")
@@ -133,6 +133,14 @@ def build_proc():
         f'n8-lang_{VERSION}_{ARCHITECTURE}.exe'
     )
 
+    config_res = 'dist\\n8-installer-config.res'
+    icon_config_res = 'dist\\n8-installer-icon-config.res'
+
+    log_task("Generating Windows resource file configurations...")
+    subprocess.run(['windres', 'configs\\n8-installer-config.rc', '-O', 'coff', '-o', config_res])
+    subprocess.run(['windres', 'configs\\n8-installer-icon-config.rc', '-O', 'coff', '-o', icon_config_res])
+    log_info("Windows resource file configurations successfully generated!")
+
     log_task("Executing build command subprocess...")
     subprocess.run([
         'g++', '-o', OUTPUT_EXE,
@@ -141,6 +149,9 @@ def build_proc():
         'tools\\windows_installer\\src\\installer_window.cpp',
         'tools\\windows_installer\\src\\installer_util.cpp',
         'tools\\windows_installer\\src\\installer.cpp',
+
+        config_res,
+        icon_config_res,
 
         '-I' + os.path.join('tools', 'windows_installer', 'include'),
         '-I' + os.path.join(msys2_path, 'include'),
@@ -190,6 +201,11 @@ def build_proc():
     ])
     log_info("Windows GUI installer build process done!")
 
+    log_warning("Cleaning up generated Windows resource file configurations...")
+    os.remove(config_res)
+    os.remove(icon_config_res)
+    log_info("Clean up done!")
+
     if os.path.exists(OUTPUT_EXE):
         log_info("Executable file generated at " + OUTPUT_EXE)
     else:
@@ -197,5 +213,7 @@ def build_proc():
 
 try:
     build_proc()
+except Exception as e:
+    log_error("Caught error: " + str(e))
 except KeyboardInterrupt:
     log_error("Process interrupted. Exiting...")

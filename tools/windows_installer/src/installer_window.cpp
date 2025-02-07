@@ -705,6 +705,9 @@ InstallerWindow::InstallerWindow() {
     this->set_position(Gtk::WIN_POS_CENTER);
     this->set_default_size(760, 380);
     this->set_resizable(false);
+    this->set_keep_above(true);
+    this->set_icon(Glib::RefPtr<Gdk::Pixbuf>());
+    this->set_default_icon(Glib::RefPtr<Gdk::Pixbuf>());
 
     auto css = Gtk::CssProvider::create();
     css->load_from_data(R"(
@@ -732,10 +735,6 @@ InstallerWindow::InstallerWindow() {
         .license-view, .log-view {
             border: 1px solid #909090;
         }
-
-        .log-success { color: #4CAF50; }
-        .log-error { color: #ff4444; }
-        .log-info { color: #9E9E9E; }
 
         .card {
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);

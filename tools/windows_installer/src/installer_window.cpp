@@ -842,14 +842,6 @@ void InstallerWindow::setup_install_page() {
     this->logView.set_editable(false);
     this->logView.override_font(font);
 
-    this->tagSuccess = Gtk::TextTag::create("log-success");
-    this->tagError = Gtk::TextTag::create("log-error");
-    this->tagInfo = Gtk::TextTag::create("log-info");
-    
-    this->logBuffer->get_tag_table()->add(tagSuccess);
-    this->logBuffer->get_tag_table()->add(tagError);
-    this->logBuffer->get_tag_table()->add(tagInfo);
-
     this->logScroll.add(this->logView);
     this->logScroll.get_style_context()->add_class("log-view");
     this->logScroll.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
@@ -880,10 +872,10 @@ void InstallerWindow::on_license_scroll() {
     );
 }
 
-void InstallerWindow::append_log(const std::string& message, const Glib::RefPtr<Gtk::TextTag>& tag) {
+void InstallerWindow::append_log(const std::string& message) {
     Glib::signal_idle().connect([=] {
         auto iter = logBuffer->end();
-        logBuffer->insert_with_tag(iter, message + "\n", tag);
+        logBuffer->insert_with_tag(iter, message + "\n", NULL);
 
         Glib::signal_timeout().connect_once([this]() {
             auto mark = logBuffer->create_mark("end", logBuffer->end(), false);
@@ -956,10 +948,7 @@ void InstallerWindow::run_installation() {
                 file.data,
                 file.size
             );
-            this->append_log(
-                "Installing: " + N8InstallerUtil::WideStr2Utf8(targetPath),
-                success ? this->tagSuccess : this->tagError
-            );
+            this->append_log("Installing: " + N8InstallerUtil::WideStr2Utf8(targetPath));
 
             filesOK &= success;
             progress += leap;
@@ -984,10 +973,7 @@ void InstallerWindow::run_installation() {
             L"N8_PATH", n8Path, false
         )) throw std::runtime_error("Failed to set N8_PATH");
 
-        this->append_log(
-            "Set N8_PATH to: " + N8InstallerUtil::WideStr2Utf8(n8Path),
-            this->tagSuccess
-        );
+        this->append_log("Set N8_PATH to: " + N8InstallerUtil::WideStr2Utf8(n8Path));
         this->update_progress(0.7);
 
         std::wstring binPath = N8InstallerUtil::GetInstallBase(true).substr(
@@ -998,27 +984,24 @@ void InstallerWindow::run_installation() {
         if(!N8InstallerUtil::AddToSystemPath(binPath))
             throw std::runtime_error("Failed to add to PATH");
 
-        this->append_log(
-            "Added to PATH: " + N8InstallerUtil::WideStr2Utf8(binPath),
-            this->tagSuccess
-        );
+        this->append_log("Added to PATH: " + N8InstallerUtil::WideStr2Utf8(binPath));
         this->update_progress(0.8);
 
         if(!N8InstallerUtil::CreateFileAssociation())
             throw std::runtime_error("Failed to create file associations");
 
-        this->append_log("Created .n8 file associations", this->tagSuccess);
+        this->append_log("Created .n8 file associations");
         this->update_progress(0.9);
 
         if(!N8InstallerUtil::CreateUninstallEntry())
             throw std::runtime_error("Failed to create uninstall entry");
 
-        this->append_log("Created uninstall registry entry", this->tagSuccess);
+        this->append_log("Created uninstall registry entry");
         this->update_progress(1.0);
     }
     catch(const std::exception& e) {
         this->installSuccess = false;
-        this->append_log("Error: " + std::string(e.what()), this->tagError);
+        this->append_log("Error: " + std::string(e.what()));
     }
 
     this->installation_done();

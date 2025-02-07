@@ -43,15 +43,15 @@ private:
 
     bool installSuccess = true;
     std::thread workerThread;
+
     Glib::RefPtr<Gtk::TextBuffer> logBuffer;
-    Glib::RefPtr<Gtk::TextTag> tagSuccess, tagError, tagInfo;
 
     void setup_license_page();
     void setup_install_page();
     void on_license_scroll();
     void start_installation();
 
-    void append_log(const std::string& message, const Glib::RefPtr<Gtk::TextTag>& tag);
+    void append_log(const std::string& message);
     void update_progress(double fraction);
     void update_status(const std::string& status);
     void installation_done();

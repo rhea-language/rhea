@@ -63,7 +63,6 @@ jobs:
           python build.py
           python tools/build_exe_uninstaller.py
           python tools/build_exe_installer.py
-          rm -rf dist/n8lang
 
       - name: Set Environment Path
         shell: bash
@@ -102,6 +101,9 @@ jobs:
           cd n8
           .\dist\n8lang\bin\n8 examples\99-beers.n8
           .\dist\n8lang\bin\n8 examples\hello.n8
+
+      - name: Build and Test Clean Up
+        run: rm -rf dist/n8lang
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

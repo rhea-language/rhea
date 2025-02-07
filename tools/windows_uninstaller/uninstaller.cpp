@@ -20,8 +20,13 @@ bool IsElevated() {
         TOKEN_ELEVATION Elevation;
         DWORD cbSize = sizeof(TOKEN_ELEVATION);
 
-        if(GetTokenInformation(hToken, TokenElevation, &Elevation, sizeof(Elevation), &cbSize))
-            fRet = Elevation.TokenIsElevated;
+        if(GetTokenInformation(
+            hToken,
+            TokenElevation,
+            &Elevation,
+            sizeof(Elevation),
+            &cbSize
+        )) fRet = Elevation.TokenIsElevated;
     }
 
     if(hToken)
@@ -30,7 +35,11 @@ bool IsElevated() {
     return fRet;
 }
 
-bool SetEnvironmentVariablePersistent(const std::wstring& name, const std::wstring& value, bool systemWide) {
+bool SetEnvironmentVariablePersistent(
+    const std::wstring& name,
+    const std::wstring& value,
+    bool systemWide
+) {
     HKEY hKey;
     HKEY root = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
     LPCWSTR keyPath = systemWide ? 
@@ -124,7 +133,6 @@ bool RemoveEnvironmentVariablePersistent(const std::wstring& name, bool systemWi
         5000,
         NULL
     );
-
     return true;
 }
 
@@ -163,8 +171,8 @@ std::wstring GetInstallBase(bool isBin) {
 
 bool RemoveFileAssociation() {
     LSTATUS status;
-
     status = RegDeleteTreeW(HKEY_CLASSES_ROOT, L".n8");
+
     if(status != ERROR_SUCCESS && status != ERROR_FILE_NOT_FOUND)
         return false;
 
@@ -177,10 +185,7 @@ bool RemoveFileAssociation() {
 
 bool RemoveUninstallEntry() {
     std::wstring uninstallPath = L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\N8Lang";
-    LSTATUS status = RegDeleteTreeW(
-        HKEY_LOCAL_MACHINE,
-        uninstallPath.c_str()
-    );
+    LSTATUS status = RegDeleteTreeW(HKEY_LOCAL_MACHINE, uninstallPath.c_str());
 
     return status == ERROR_SUCCESS || status == ERROR_FILE_NOT_FOUND;
 }
@@ -218,6 +223,9 @@ UninstallWindow::UninstallWindow() {
     this->set_position(Gtk::WIN_POS_CENTER);
     this->set_default_size(760, 380);
     this->set_resizable(false);
+    this->set_keep_above(true);
+    this->set_icon(Glib::RefPtr<Gdk::Pixbuf>());
+    this->set_default_icon(Glib::RefPtr<Gdk::Pixbuf>());
 
     auto css = Gtk::CssProvider::create();
     css->load_from_data(R"(
@@ -418,31 +426,64 @@ void UninstallWindow::perform_uninstall() {
 }
 
 void UninstallWindow::create_selfdestruct_bat() {
-    // Get the full path of the current executable.
     wchar_t exePath[MAX_PATH];
     GetModuleFileNameW(nullptr, exePath, MAX_PATH);
 
-    // Determine the bin directory (the directory containing uninstaller.exe).
     wchar_t binDir[MAX_PATH];
     wcscpy_s(binDir, exePath);
     PathRemoveFileSpecW(binDir);
 
-    // Determine the installation directory by removing the "bin" part.
     wchar_t installDir[MAX_PATH];
     wcscpy_s(installDir, binDir);
     PathRemoveFileSpecW(installDir);
 
-    // Get a temporary directory for creating the batch file.
     wchar_t tempDir[MAX_PATH];
     GetTempPathW(MAX_PATH, tempDir);
 
-    // Create a unique path for the batch file.
     wchar_t batPath[MAX_PATH];
-    do {
-        swprintf_s(batPath, L"%s\\n8d_%04x.bat", tempDir, rand() % 0xFFFF);
-    } while(PathFileExistsW(batPath));
+    do swprintf_s(
+        batPath,
+        L"%s\\n8d_%04x.bat",
+        tempDir,
+        rand() % 0xFFFF
+    );
+    while(PathFileExistsW(batPath));
 
-    // Create the batch file.
+    std::wstring batContentW =
+        L"@echo off\r\n"
+        L"timeout /t 5 /nobreak >nul\r\n"
+        L":retry_exe\r\n"
+        L"del \"" + std::wstring(exePath) + L"\" >nul 2>&1\r\n"
+        L"if exist \"" + std::wstring(exePath) + L"\" (\r\n"
+        L"    timeout /t 1 /nobreak >nul\r\n"
+        L"    goto retry_exe\r\n"
+        L")\r\n"
+        L":retry_install\r\n"
+        L"rmdir /S /Q \"" + std::wstring(installDir) + L"\"\r\n"
+        L"if exist \"" + std::wstring(installDir) + L"\" (\r\n"
+        L"    timeout /t 1 /nobreak >nul\r\n"
+        L"    goto retry_install\r\n"
+        L")\r\n"
+        L"del \"%~f0\" >nul 2>&1\r\n";
+
+    int ansiSize = WideCharToMultiByte(
+        CP_ACP, 0,
+        batContentW.c_str(), -1,
+        nullptr, 0,
+        nullptr,
+        nullptr
+    );
+    std::string batContentA(ansiSize, '\0');
+
+    WideCharToMultiByte(
+        CP_ACP, 0,
+        batContentW.c_str(), -1,
+        &batContentA[0],
+        ansiSize,
+        nullptr,
+        nullptr
+    );
+
     HANDLE hBatFile = CreateFileW(
         batPath,
         GENERIC_WRITE, 0,
@@ -452,33 +493,9 @@ void UninstallWindow::create_selfdestruct_bat() {
         nullptr
     );
 
-    if (hBatFile != INVALID_HANDLE_VALUE) {
-        // Build the batch file content (as a wide string) that:
-        // 1. Waits until the uninstaller.exe is deleted.
-        // 2. Recursively deletes the installation directory.
-        // 3. Deletes itself.
-        std::wstring batContentW =
-            L"@echo off\r\n"
-            L":retry_exe\r\n"
-            L"del \"" + std::wstring(exePath) + L"\" >nul 2>&1\r\n"
-            L"if exist \"" + std::wstring(exePath) + L"\" (\r\n"
-            L"    timeout /t 1 /nobreak >nul\r\n"
-            L"    goto retry_exe\r\n"
-            L")\r\n"
-            L":retry_install\r\n"
-            L"rmdir /S /Q \"" + std::wstring(installDir) + L"\"\r\n"
-            L"if exist \"" + std::wstring(installDir) + L"\" (\r\n"
-            L"    timeout /t 1 /nobreak >nul\r\n"
-            L"    goto retry_install\r\n"
-            L")\r\n"
-            L"del \"%~f0\" >nul 2>&1\r\n";
-
-        // Convert the wide string to an ANSI string so that cmd.exe can interpret it.
-        int ansiSize = WideCharToMultiByte(CP_ACP, 0, batContentW.c_str(), -1, nullptr, 0, nullptr, nullptr);
-        std::string batContentA(ansiSize, '\0');
-        WideCharToMultiByte(CP_ACP, 0, batContentW.c_str(), -1, &batContentA[0], ansiSize, nullptr, nullptr);
-
+    if(hBatFile != INVALID_HANDLE_VALUE) {
         DWORD written;
+
         WriteFile(
             hBatFile,
             batContentA.c_str(),
@@ -488,17 +505,14 @@ void UninstallWindow::create_selfdestruct_bat() {
         );
         CloseHandle(hBatFile);
 
-        // Set up startup info for launching the batch file.
         STARTUPINFOW si = { sizeof(si) };
         PROCESS_INFORMATION pi;
         si.dwFlags = STARTF_USESHOWWINDOW;
         si.wShowWindow = SW_HIDE;
 
-        // Prepare the command line for cmd.exe to execute the batch file.
-        std::wstring cmdLine = L"cmd.exe /C \"" + std::wstring(batPath) + L"\"";
+        std::wstring cmdLine = L"cmd.exe /C \"" +
+            std::wstring(batPath) + L"\"";
 
-        // Launch the batch file with its working directory set to the temporary folder
-        // (to avoid locking the installation directory).
         CreateProcessW(
             nullptr,
             &cmdLine[0],
@@ -507,9 +521,8 @@ void UninstallWindow::create_selfdestruct_bat() {
             FALSE,
             CREATE_NO_WINDOW,
             nullptr,
-            tempDir,  // current directory is tempDir
-            &si,
-            &pi
+            tempDir,
+            &si, &pi
         );
 
         CloseHandle(pi.hProcess);

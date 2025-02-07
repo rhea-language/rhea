@@ -1,8 +1,6 @@
 Todo:
 ---
 
-- Windows GUI uninstaller
-
 - To be developed libraries:
     ✓ array
     * audio

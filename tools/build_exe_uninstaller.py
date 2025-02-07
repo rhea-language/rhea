@@ -58,12 +58,23 @@ def build_proc():
         f'uninstaller.exe'
     )
 
+    config_res = 'dist\\n8-uninstaller-config.res'
+    icon_config_res = 'dist\\n8-uninstaller-icon-config.res'
+
+    log_task("Generating Windows resource file configurations...")
+    subprocess.run(['windres', 'configs\\n8-uninstaller-config.rc', '-O', 'coff', '-o', config_res])
+    subprocess.run(['windres', 'configs\\n8-uninstaller-icon-config.rc', '-O', 'coff', '-o', icon_config_res])
+    log_info("Windows resource file configurations successfully generated!")
+
     log_task("Executing build command subprocess...")
     subprocess.run([
         'g++', '-o', OUTPUT_EXE,
         '-DLIBDEFLATE_DLL', '-mwindows',
 
         'tools\\windows_uninstaller\\uninstaller.cpp',
+
+        config_res,
+        icon_config_res,
 
         '-I' + os.path.join(msys2_path, 'include'),
         '-I' + os.path.join(msys2_path, 'include', 'gtkmm-3.0'),
@@ -112,6 +123,11 @@ def build_proc():
         '-lshlwapi', '-ladvapi32', '-luser32'
     ])
     log_info("Windows GUI uninstaller build process done!")
+
+    log_warning("Cleaning up generated Windows resource file configurations...")
+    os.remove(config_res)
+    os.remove(icon_config_res)
+    log_info("Clean up done!")
 
     if os.path.exists(OUTPUT_EXE):
         log_info("Executable file generated at " + OUTPUT_EXE)

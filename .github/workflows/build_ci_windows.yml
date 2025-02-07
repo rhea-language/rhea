@@ -103,7 +103,7 @@ jobs:
           .\dist\n8lang\bin\n8 examples\hello.n8
 
       - name: Build and Test Clean Up
-        run: rm -rf dist/n8lang
+        run: rm -rf n8/dist/n8lang
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

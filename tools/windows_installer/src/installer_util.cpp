@@ -117,7 +117,7 @@ bool AddToSystemPath(const std::wstring& path) {
 bool CreateFileAssociation() {
     HKEY hKey;
     std::wstring n8Path = GetInstallBase(true) + L"n8.exe";
-    
+
     if(RegCreateKeyExW(
         HKEY_CLASSES_ROOT,
         L".n8", 0,

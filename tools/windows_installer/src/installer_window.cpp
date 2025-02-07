@@ -875,7 +875,7 @@ void InstallerWindow::on_license_scroll() {
 void InstallerWindow::append_log(const std::string& message) {
     Glib::signal_idle().connect([=] {
         auto iter = logBuffer->end();
-        logBuffer->insert_with_tag(iter, message + "\n", NULL);
+        logBuffer->insert(iter, message + "\n");
 
         Glib::signal_timeout().connect_once([this]() {
             auto mark = logBuffer->create_mark("end", logBuffer->end(), false);

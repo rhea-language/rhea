@@ -153,8 +153,8 @@ def build_proc():
 
     try:
         log_task("Pulling submodules...")
-        subprocess.run(['git', 'submodule', 'update', '--init', '--recursive'])
-        subprocess.run(['git', 'pull', '--recurse-submodules'])
+        subprocess.run(['git', 'submodule', '--quiet', 'update', '--init', '--recursive'])
+        subprocess.run(['git', 'pull', '--quiet', '--recurse-submodules'])
         log_info("Done pulling up submodules!")
 
     except Exception as e:
@@ -190,12 +190,17 @@ def build_proc():
             log_info("GLFW3 package dependency installation done!")
 
         elif PLATFORM == 'Darwin':
+            log_task("Installing GLFW3 and OpenSSL via brew...")
             subprocess.run(['brew', 'install', 'glfw', 'openssl'])
             subprocess.run(['brew', 'link', 'glfw'])
+            log_info("Done installing GLFW3 and OpenSSL!")
 
         log_task('Building binaries...')
         if PLATFORM == 'Windows':
             now = time.time()
+
+            config_res = 'dist\\n8-config.res'
+            icon_config_res = 'dist\\n8-icon-config.res'
 
             win_libs = [
                 '-static', '-static-libstdc++',
@@ -224,12 +229,25 @@ def build_proc():
                 '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-s', '-fopenmp'
             ] + ext_instructions + ['-mfpmath=sse',
                 '-march=native', '-ffast-math'
-            ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + win_libs
+            ] + lib_headers + lib_source_files + [
+                config_res,
+                icon_config_res
+            ] + cpp_files + ['-o', OUTPUT_EXECUTABLE] + win_libs
+
+            log_task("Generating Windows resource file configurations...")
+            subprocess.run(['windres', 'configs\\n8-config.rc', '-O', 'coff', '-o', config_res])
+            subprocess.run(['windres', 'configs\\n8-icon-config.rc', '-O', 'coff', '-o', icon_config_res])
+            log_info("Windows resource file configurations successfully generated!")
 
             log_task("Building N8 core for Windows...")
             subprocess.run(exe_build_args)
             end = time.time() - now
             log_info(f"Finished in {end:.6f} seconds")
+
+            log_warning("Cleaning up generated Windows resource file configurations...")
+            os.remove(config_res)
+            os.remove(icon_config_res)
+            log_info("Clean up done!")
 
             now = time.time()
             lib_build_args = [
@@ -383,5 +401,7 @@ def build_proc():
 
 try:
     build_proc()
+except Exception as e:
+    log_error("Caught error: " + str(e))
 except KeyboardInterrupt:
     log_error("Process interrupted. Exiting...")

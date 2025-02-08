@@ -1,0 +1,27 @@
+#!/opt/n8lang/bin/n8
+
+use "core"
+
+inputs = [
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+]
+outputs = [[1], [0], [0], [1]]
+
+ann = ml.ann.create(
+    [2, 4, 1],
+    func(arg) { ret 1 / (1 + math.exp(-arg)) },
+    func(arg) { ret arg * (1 - arg) }
+)
+
+ml.ann.train(ann, inputs, outputs, 6, 10000)
+
+loop(a = 0; a < size inputs; a = a + 1) {
+    prediction = ml.ann.predict(ann, inputs[a])
+    render! "[" +
+        inputs[a][0] + ", " +
+        inputs[a][1] + "]: " +
+        prediction[0]
+}

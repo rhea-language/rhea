@@ -20,3 +20,16 @@ import ml.trendline {
     calculateRmse,
     predict
 } from "core"
+
+import ml.ann {
+    create,
+    fromMnist,
+    fromModelFile,
+    train,
+    predict,
+    calculateMseLoss,
+    computeOutputGradient,
+    computeAccuracy,
+    isCorrectPrediction,
+    saveModel
+} from "core"

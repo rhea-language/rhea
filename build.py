@@ -212,7 +212,8 @@ def build_proc():
             ]
 
             exe_build_args = [
-                'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
+                'g++', '-Iinclude', '-static', '-static-libstdc++',
+                '-pedantic', '-Wall', '-Wdisabled-optimization',
                 '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
                 '-Wchar-subscripts', '-Wcomment', '-Wconversion', '-Werror',
                 '-Wfloat-equal', '-Wformat', '-Wformat=2', '-Wformat-nonliteral',

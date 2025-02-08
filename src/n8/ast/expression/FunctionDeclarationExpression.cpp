@@ -56,7 +56,9 @@ DynamicObject FunctionDeclarationExpression::call(
     if(args.size() != this->parameters.size())
         throw ASTNodeException(
             std::move(this->address),
-            "Argument count mismatch"
+            "Argument count mismatch, expecting " +
+                std::to_string(this->parameters.size()) + " but go only " +
+                std::to_string(args.size()) + "."
         );
 
     SymbolTable localSymbols(const_cast<SymbolTable&>(symbols));

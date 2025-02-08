@@ -174,6 +174,7 @@ def build_proc():
                 cc_files.append(os.path.join(root, file))
 
     log_task("Including local libraries/dependencies...")
+    include_local_lib('chisei')
     include_local_lib('QuickDigest5')
     include_local_lib('MyShell')
     include_local_lib('unsafe_ops')

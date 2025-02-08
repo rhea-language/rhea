@@ -16,6 +16,7 @@
 
 import os
 import platform
+import shutil
 import subprocess
 import sys
 
@@ -128,6 +129,30 @@ def build_proc():
     os.remove(config_res)
     os.remove(icon_config_res)
     log_info("Clean up done!")
+
+    log_task("Copying dependency DLL files to output folder...")
+    deps = [
+        'libwinpthread-1.dll',
+        'libgcc_s_seh-1.dll',
+        'libstdc++-6.dll',
+        'libintl-8.dll',
+        'libpcre2-8-0.dll',
+        'libiconv-2.dll',
+        'libffi-8.dll',
+        'zlib1.dll',
+        'libexpat-1.dll',
+        'liblzma-5.dll',
+        'libzstd.dll',
+        'libbz2-1.dll',
+        'libbrotlidec.dll',
+        'libbrotlicommon.dll'
+    ]
+    for x in range(len(deps)):
+        shutil.copyfile(
+            os.path.join(msys2_path, 'bin', deps[x]),
+            os.path.join('dist', 'n8lang', 'bin', deps[x])
+        )
+    log_info("Successfully copied dependency DLL files for uninstaller!")
 
     if os.path.exists(OUTPUT_EXE):
         log_info("Executable file generated at " + OUTPUT_EXE)

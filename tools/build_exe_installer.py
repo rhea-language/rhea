@@ -16,8 +16,10 @@
 
 import os
 import platform
+import shutil
 import subprocess
 import sys
+import zipfile
 
 from datetime import datetime
 
@@ -60,6 +62,21 @@ def build_proc():
     files = {
         "dist\\n8lang\\bin\\n8.exe":                            "n8_exe",
         "dist\\n8lang\\bin\\uninstaller.exe":                   "uninstaller",
+
+        "dist\\n8lang\\bin\\libwinpthread-1.dll":               "libwinpthread_1_dll",
+        "dist\\n8lang\\bin\\libgcc_s_seh-1.dll":                "gcc_s_seh_1",
+        "dist\\n8lang\\bin\\libstdc++-6.dll":                   "stdcpp_6",
+        "dist\\n8lang\\bin\\libintl-8.dll":                     "intl_8",
+        "dist\\n8lang\\bin\\libpcre2-8-0.dll":                  "pcre2_8_0",
+        "dist\\n8lang\\bin\\libiconv-2.dll":                    "iconv_2",
+        "dist\\n8lang\\bin\\libffi-8.dll":                      "ffi_8",
+        "dist\\n8lang\\bin\\zlib1.dll":                         "zlib1",
+        "dist\\n8lang\\bin\\libexpat-1.dll":                    "expat_1",
+        "dist\\n8lang\\bin\\liblzma-5.dll":                     "lzma_5",
+        "dist\\n8lang\\bin\\libzstd.dll":                       "zstd",
+        "dist\\n8lang\\bin\\libbz2-1.dll":                      "bz2_1",
+        "dist\\n8lang\\bin\\libbrotlidec.dll":                  "brotlidec",
+        "dist\\n8lang\\bin\\libbrotlicommon.dll":               "brotlicommon",
 
         "dist\\n8lang\\modules\\core@1.0.0\\lib\\core.dll":     "core_dll",
 
@@ -128,9 +145,14 @@ def build_proc():
 
     VERSION         = '1.0.0'
     ARCHITECTURE    = platform.machine().lower()
+
     OUTPUT_EXE      = os.path.join(
         'dist',
         f'n8-lang_{VERSION}_{ARCHITECTURE}.exe'
+    )
+    OUTPUT_ZIP      = os.path.join(
+        'dist',
+        f'n8-lang_{VERSION}_{ARCHITECTURE}.zip'
     )
 
     config_res = 'dist\\n8-installer-config.res'
@@ -210,6 +232,87 @@ def build_proc():
         log_info("Executable file generated at " + OUTPUT_EXE)
     else:
         log_error("No executable file was generated.")
+
+    log_task("Creating zip file output...")
+    zip = zipfile.ZipFile(
+        OUTPUT_ZIP,
+        'w',
+        zipfile.ZIP_DEFLATED
+    )
+
+    log_task("Copying dependency DLL files to zip output...")
+    deps = [
+        'libgcc_s_seh-1.dll',
+        'libgiomm-2.4-1.dll',
+        'libatkmm-1.6-1.dll',
+        'libgdkmm-3.0-1.dll',
+        'libglibmm-2.4-1.dll',
+        'libwinpthread-1.dll',
+        'libpangomm-1.4-1.dll',
+        'libgtkmm-3.0-1.dll',
+        'libstdc++-6.dll',
+        'libsigc-2.0-0.dll',
+        'libglib-2.0-0.dll',
+        'libintl-8.dll',
+        'libgobject-2.0-0.dll',
+        'libatk-1.0-0.dll',
+        'libgio-2.0-0.dll',
+        'libcairomm-1.0-1.dll',
+        'libgdk-3-0.dll',
+        'libgdk_pixbuf-2.0-0.dll',
+        'libgtk-3-0.dll',
+        'libgmodule-2.0-0.dll',
+        'libpango-1.0-0.dll',
+        'libpangocairo-1.0-0.dll',
+        'libiconv-2.dll',
+        'libffi-8.dll',
+        'libpcre2-8-0.dll',
+        'zlib1.dll',
+        'libcairo-2.dll',
+        'libjpeg-8.dll',
+        'libpng16-16.dll',
+        'libtiff-6.dll',
+        'libcairo-gobject-2.dll',
+        'libepoxy-0.dll',
+        'libfribidi-0.dll',
+        'libpangowin32-1.0-0.dll',
+        'libharfbuzz-0.dll',
+        'libthai-0.dll',
+        'libfontconfig-1.dll',
+        'libpangoft2-1.0-0.dll',
+        'libfreetype-6.dll',
+        'libpixman-1-0.dll',
+        'libdeflate.dll',
+        'liblzma-5.dll',
+        'libjbig-0.dll',
+        'libzstd.dll',
+        'libwebp-7.dll',
+        'libLerc.dll',
+        'libgraphite2.dll',
+        'libexpat-1.dll',
+        'libbrotlidec.dll',
+        'libdatrie-1.dll',
+        'libbz2-1.dll',
+        'libbrotlicommon.dll',
+        'libsharpyuv-0.dll'
+    ]
+    for dep in deps:
+        zip.write(
+            os.path.join(msys2_path, 'bin', dep),
+            arcname=dep
+        )
+    log_info("Done copying dependency files to zip output!")
+
+    log_task("Copying installer to output zip file...")
+    zip.write(OUTPUT_EXE, arcname=OUTPUT_EXE[5:])
+    log_info("Done copying installer to output zip file!")
+    zip.close()
+
+    log_task("Cleaning up build files...")
+    os.remove(OUTPUT_EXE)
+    log_info("Cleaning up done!")
+
+    log_info("Output build: " + OUTPUT_ZIP)
 
 try:
     build_proc()

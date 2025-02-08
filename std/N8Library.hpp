@@ -44,4 +44,6 @@
             "Function requires unsafe mode turned on"   \
         );
 
+#include <N8StdlibMaps.hpp>
+
 #endif

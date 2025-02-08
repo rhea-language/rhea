@@ -30,8 +30,6 @@
 #   include <windows.h>
 #endif
 
-std::unordered_map<std::string, std::shared_ptr<MyShell>> shellMap;
-
 N8_FUNC(sys_quickShell) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(

@@ -763,29 +763,29 @@ N8_FUNC(unsafe_inject) {
 
     const std::string outType = value.toString();
     size_t instSize = instBytes.size();
-    uint8_t instructions[instSize];
+    auto instructions = std::make_unique<uint8_t[]>(instSize);
 
     std::copy(
         instBytes.begin(),
         instBytes.end(),
-        instructions
+        instructions.get()
     );
 
     if(outType == "string")
         return DynamicObject(std::string(
             static_cast<const char*>(
                 static_cast<const void*>(
-                    execute_buffer<uint8_t*>(instructions, instSize)
+                    execute_buffer<uint8_t*>(instructions.get(), instSize)
                 )
             ),
             instSize
         ));
     else if(outType == "number")
         return DynamicObject(static_cast<double>(
-            execute_buffer<double>(instructions, instSize)
+            execute_buffer<double>(instructions.get(), instSize)
         ));
     else if(outType == "unit")
-        execute_buffer<double>(instructions, instSize);
+        execute_buffer<double>(instructions.get(), instSize);
 
     return {};
 }

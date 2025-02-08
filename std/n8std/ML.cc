@@ -20,6 +20,10 @@
 
 #include <N8.hpp>
 #include <n8/ast/TerminativeSignal.hpp>
+#include <n8/ast/expression/FunctionDeclarationExpression.hpp>
+#include <n8/util/VectorMath.hpp>
+
+#include <chisei/idx_loader.hpp>
 
 #include <cmath>
 #include <exception>
@@ -177,7 +181,7 @@ N8_FUNC(ml_trendline_predict) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 3 argument, got " +
+            "Expecting 2 argument, got " +
                 std::to_string(args.size())
         );
 
@@ -211,4 +215,438 @@ N8_FUNC(ml_trendline_predict) {
         value.getNumber() +
         intercept.getNumber()
     );
+}
+
+N8_FUNC(ml_ann_create) {
+    if(args.size() != 3)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 3 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject layers = args.at(0),
+        activation = args.at(1),
+        activationDerivative = args.at(2);
+
+    if(!layers.isArray() ||
+        !N8Util::isNumberArray(*layers.getArray().get())
+    ) throw TerminativeThrowSignal(
+            std::move(address),
+            "Layer parameter should be of number array type."
+        );
+
+    if(!activation.isFunction() ||
+        !activationDerivative.isFunction())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Activation function and derivative should be of function type."
+        );
+
+    std::string id = N8Util::uniqueKey();
+    std::vector<double> doubleLayers = N8Util::object2Vector(layers);
+    std::vector<size_t> layerSizes;
+
+    layerSizes.reserve(doubleLayers.size());
+    for(double d : doubleLayers)
+        layerSizes.push_back(static_cast<size_t>(d));
+
+    SymbolTable symbols = symtab;
+    neuralNetworkMap[id] = std::make_shared<chisei::NeuralNetwork>(
+        layerSizes,
+        [activation, symbols, unsafe](double arg) -> double {
+            std::vector<DynamicObject> callArgs;
+            callArgs.emplace_back(DynamicObject(arg));
+
+            DynamicObject result = activation.getCallable()->call(
+                symbols,
+                callArgs
+            );
+
+            return result.isNumber()
+                ? result.getNumber()
+                : 0.0;
+        },
+        [activationDerivative, symbols, unsafe](double arg) -> double {
+            std::vector<DynamicObject> callArgs;
+            callArgs.emplace_back(DynamicObject(arg));
+
+            DynamicObject result = activationDerivative.getCallable()->call(
+                symbols,
+                callArgs
+            );
+
+            return result.isNumber()
+                ? result.getNumber()
+                : 0.0;
+        }
+    );
+
+    return DynamicObject(id);
+}
+
+N8_FUNC(ml_ann_fromMnist) {
+    if(args.size() != 4)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 4 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject imageFile = args.at(0),
+        labelFile = args.at(1),
+        learningRate = args.at(2),
+        epoch = args.at(3);
+
+    if(!imageFile.isString() || !labelFile.isString())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Image and label file path should be of string type."
+        );
+
+    if(!learningRate.isString() || !epoch.isString())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Learning rate and epoch should be of number type."
+        );
+
+    std::string id = N8Util::uniqueKey();
+    neuralNetworkMap[id] = std::make_shared<chisei::NeuralNetwork>(
+        chisei::IDXLoader::fromMNIST(
+            imageFile.toString(),
+            labelFile.toString(),
+            learningRate.getNumber(),
+            epoch.getNumber()
+        )
+    );
+
+    return DynamicObject(id);
+}
+
+N8_FUNC(ml_ann_fromModelFile) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject path = args.at(0);
+    if(!path.isString())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Path parameter should be of string."
+        );
+
+    std::string id = N8Util::uniqueKey();
+    neuralNetworkMap[id] = std::make_unique<chisei::NeuralNetwork>(
+        chisei::NeuralNetwork::loadFromModel(path.toString())
+    );
+
+    return DynamicObject(id);
+}
+
+N8_FUNC(ml_ann_train) {
+    if(args.size() != 5)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 5 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject ann = args.at(0),
+        inputs = args.at(1),
+        targets = args.at(2),
+        learningRate = args.at(3),
+        epoch = args.at(4);
+
+    std::string id = ann.toString();
+    if(neuralNetworkMap.find(id) == neuralNetworkMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Neural network map ID not found."
+        );
+
+    if(!inputs.getArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Input parameter should be of array of number array type."
+        );
+
+    if(!targets.getArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Target parameter should be of array of number of array type."
+        );
+
+    if(!learningRate.getNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Learning rate parameter should be of number type."
+        );
+
+    if(!epoch.getNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Epoch parameter should be of number type."
+        );
+
+    std::vector<std::vector<double>> inputVec, targetVec;
+    for(const auto& inpv : *inputs.getArray().get()) {
+        if(!inpv.isArray() || !N8Util::isNumberArray(*inpv.getArray()))
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Input parameter elements should be of number array types."
+            );
+
+        inputVec.emplace_back(N8Util::object2Vector(inpv));
+    }
+
+    for(const auto& tgtv : *targets.getArray().get()) {
+        if(!tgtv.isArray() || !N8Util::isNumberArray(*tgtv.getArray()))
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Target parameter elements should be of number array types."
+            );
+
+        targetVec.emplace_back(N8Util::object2Vector(tgtv));
+    }
+
+    neuralNetworkMap[id]->train(
+        inputVec,
+        targetVec,
+        learningRate.getNumber(),
+        epoch.getNumber()
+    );
+    return {};
+}
+
+N8_FUNC(ml_ann_predict) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject ann = args.at(0),
+        inputs = args.at(1);
+
+    std::string id = ann.toString();
+    if(neuralNetworkMap.find(id) == neuralNetworkMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Neural network map ID not found."
+        );
+
+    if(!inputs.isArray() || !N8Util::isNumberArray(*inputs.getArray().get()))
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Inputs parameter should be of number array type."
+        );
+
+    return DynamicObject(N8Util::vector2Object(
+        neuralNetworkMap[id]->predict(
+            N8Util::object2Vector(inputs)
+        )
+    ));
+}
+
+N8_FUNC(ml_ann_calculateMseLoss) {
+    if(args.size() != 3)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 3 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject ann = args.at(0),
+        predictions = args.at(1),
+        targets = args.at(2);
+
+    std::string id = ann.toString();
+    if(neuralNetworkMap.find(id) == neuralNetworkMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Neural network map ID not found."
+        );
+
+    if(!predictions.isArray() || !N8Util::isNumberArray(*predictions.getArray().get()))
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Prediction parameter should be of number array type."
+        );
+
+    if(!targets.isArray() || !N8Util::isNumberArray(*targets.getArray().get()))
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Targets parameter should be of number array type."
+        );
+
+    return DynamicObject(
+        neuralNetworkMap[id]->compute_mse_loss(
+            N8Util::object2Vector(predictions),
+            N8Util::object2Vector(targets)
+        )
+    );
+}
+
+N8_FUNC(ml_ann_computeOutputGradient) {
+    if(args.size() != 3)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 3 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject ann = args.at(0),
+        predictions = args.at(1),
+        targets = args.at(2);
+
+    std::string id = ann.toString();
+    if(neuralNetworkMap.find(id) == neuralNetworkMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Neural network map ID not found."
+        );
+
+    if(!predictions.isArray() || !N8Util::isNumberArray(*predictions.getArray().get()))
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Prediction parameter should be of number array type."
+        );
+
+    if(!targets.isArray() || !N8Util::isNumberArray(*targets.getArray().get()))
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Targets parameter should be of number array type."
+        );
+
+    return DynamicObject(N8Util::vector2Object(
+        neuralNetworkMap[id]->compute_output_gradient(
+            N8Util::object2Vector(predictions),
+            N8Util::object2Vector(targets)
+        )
+    ));
+}
+
+N8_FUNC(ml_ann_computeAccuracy) {
+    if(args.size() != 5)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 5 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject ann = args.at(0),
+        inputs = args.at(1),
+        targets = args.at(2);
+
+    std::string id = ann.toString();
+    if(neuralNetworkMap.find(id) == neuralNetworkMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Neural network map ID not found."
+        );
+
+    if(!inputs.getArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Input parameter should be of array of number array type."
+        );
+
+    if(!targets.getArray())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Target parameter should be of array of number of array type."
+        );
+
+    std::vector<std::vector<double>> inputVec, targetVec;
+    for(const auto& inpv : *inputs.getArray().get()) {
+        if(!inpv.isArray() || !N8Util::isNumberArray(*inpv.getArray()))
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Input parameter elements should be of number array types."
+            );
+
+        inputVec.emplace_back(N8Util::object2Vector(inpv));
+    }
+
+    for(const auto& tgtv : *targets.getArray().get()) {
+        if(!tgtv.isArray() || !N8Util::isNumberArray(*tgtv.getArray()))
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Target parameter elements should be of number array types."
+            );
+
+        targetVec.emplace_back(N8Util::object2Vector(tgtv));
+    }
+
+    return DynamicObject(
+        neuralNetworkMap[id]->compute_accuracy(
+            inputVec,
+            targetVec
+        )
+    );
+}
+
+N8_FUNC(ml_ann_isCorrectPrediction) {
+    if(args.size() != 3)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 3 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject ann = args.at(0),
+        predictions = args.at(1),
+        targets = args.at(2);
+
+    std::string id = ann.toString();
+    if(neuralNetworkMap.find(id) == neuralNetworkMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Neural network map ID not found."
+        );
+
+    if(!predictions.isArray() || !N8Util::isNumberArray(*predictions.getArray().get()))
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Prediction parameter should be of number array type."
+        );
+
+    if(!targets.isArray() || !N8Util::isNumberArray(*targets.getArray().get()))
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Targets parameter should be of number array type."
+        );
+
+    return DynamicObject(
+        neuralNetworkMap[id]->is_correct_prediction(
+            N8Util::object2Vector(predictions),
+            N8Util::object2Vector(targets)
+        )
+    );
+}
+
+N8_FUNC(ml_ann_saveModel) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject ann = args.at(0),
+        path = args.at(1);
+
+    std::string id = ann.toString();
+    if(neuralNetworkMap.find(id) == neuralNetworkMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Neural network map ID not found."
+        );
+
+    neuralNetworkMap[id]->save_model(path.toString());
+    return {};
 }

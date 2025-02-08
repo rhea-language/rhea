@@ -32,6 +32,17 @@ N8_FUNC(ml_trendline_calculate);
 N8_FUNC(ml_trendline_calculateRmse);
 N8_FUNC(ml_trendline_predict);
 
+N8_FUNC(ml_ann_create);
+N8_FUNC(ml_ann_fromMnist);
+N8_FUNC(ml_ann_fromModelFile);
+N8_FUNC(ml_ann_train);
+N8_FUNC(ml_ann_predict);
+N8_FUNC(ml_ann_calculateMseLoss);
+N8_FUNC(ml_ann_computeOutputGradient);
+N8_FUNC(ml_ann_computeAccuracy);
+N8_FUNC(ml_ann_isCorrectPrediction);
+N8_FUNC(ml_ann_saveModel);
+
 N8_LIB_END
 
 #ifdef __clang__

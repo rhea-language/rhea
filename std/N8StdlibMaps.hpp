@@ -32,7 +32,10 @@ static std::unordered_map<std::string, GLFWmonitor*> monitorMap;
 static std::unordered_map<std::string, GLFWcursor*> cursorMap;
 
 // ML
-static std::unordered_map<std::string, chisei::NeuralNetwork> neuralNetworkMap;
+static std::unordered_map<
+    std::string,
+    std::shared_ptr<chisei::NeuralNetwork>
+> neuralNetworkMap;
 
 // Sys
 static std::unordered_map<std::string, std::shared_ptr<MyShell>> shellMap;

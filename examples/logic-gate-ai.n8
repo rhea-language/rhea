@@ -16,11 +16,14 @@ ann = ml.ann.create(
     func(arg) { ret arg * (1 - arg) }
 )
 
+render! "Starting training..."
 ml.ann.train(ann, inputs, outputs, 6, 10000)
+render! "Training finished!"
 
+render! "Inference:"
 loop(a = 0; a < size inputs; a = a + 1) {
     prediction = ml.ann.predict(ann, inputs[a])
-    render! "[" +
+    render! "\t[" +
         inputs[a][0] + ", " +
         inputs[a][1] + "]: " +
         prediction[0]

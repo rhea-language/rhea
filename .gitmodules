@@ -10,3 +10,6 @@
 [submodule "lib/chisei"]
 	path = lib/chisei
 	url = https://github.com/nthnn/chisei
+[submodule "lib/quoneq"]
+	path = lib/quoneq
+	url = https://github.com/nthnn/quoneq

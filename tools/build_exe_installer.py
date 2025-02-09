@@ -89,6 +89,7 @@ def build_proc():
         "dist\\n8lang\\modules\\core@1.0.0\\src\\lang.n8":      "lang_n8",
         "dist\\n8lang\\modules\\core@1.0.0\\src\\math.n8":      "math_n8",
         "dist\\n8lang\\modules\\core@1.0.0\\src\\ml.n8":        "ml_n8",
+        "dist\\n8lang\\modules\\core@1.0.0\\src\\net.n8":       "net_n8",
         "dist\\n8lang\\modules\\core@1.0.0\\src\\reflect.n8":   "reflect_n8",
         "dist\\n8lang\\modules\\core@1.0.0\\src\\str.n8":       "str_n8",
         "dist\\n8lang\\modules\\core@1.0.0\\src\\sys.n8":       "sys_n8",

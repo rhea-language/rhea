@@ -176,6 +176,7 @@ def build_proc():
     log_task("Including local libraries/dependencies...")
     include_local_lib('chisei')
     include_local_lib('QuickDigest5')
+    include_local_lib('quoneq')
     include_local_lib('MyShell')
     include_local_lib('unsafe_ops')
     log_info("Done including local libraries/dependencies!")

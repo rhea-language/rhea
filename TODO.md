@@ -31,6 +31,7 @@ Todo:
         - ftp
         - http
         - smtp
+        - telnet
         - tor
     ✓ reflect
     * regex

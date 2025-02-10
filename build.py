@@ -187,7 +187,10 @@ def build_proc():
             log_task("Installing GLFW3 package dependencies...")
             subprocess.run([
                 'sudo', 'apt', 'install', '-y',
-                'libglfw3-dev', 'libgl1-mesa-dev'
+                'libglfw3-dev',
+                'libgl1-mesa-dev',
+                'libcurl4-gnutls-dev',
+                'curl'
             ])
             log_info("GLFW3 package dependency installation done!")
 

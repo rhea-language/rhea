@@ -213,7 +213,8 @@ def build_proc():
                 '-lwinmm', '-limm32', '-lole32', '-loleaut32',
                 '-lversion', '-luuid', '-ldinput8', '-ldxguid',
                 '-lsetupapi', '-lshell32', '-lssl', '-lcrypto',
-                '-lcrypt32', '-lws2_32', '-luser32', '-lkernel32'
+                '-lcrypt32', '-lws2_32', '-luser32', '-lkernel32',
+                '-lcurl'
             ]
 
             exe_build_args = [
@@ -301,7 +302,9 @@ def build_proc():
                 'g++', '-Iinclude', '-Istd', '-fPIC', '-D__TERMUX__',
                 '-shared', '-o', OUTPUT_LIBRARY + '.so',
                 '-std=c++23', '-Wno-deprecated-declarations'
-            ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files
+            ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
+                '-lcurl'
+            ]
 
             log_task("Building N8 standard library for Termux...")
             subprocess.run(lib_build_args)
@@ -342,7 +345,7 @@ def build_proc():
                 '-shared', '-o', OUTPUT_LIBRARY + '.so',
                 '-std=c++23', '-Wno-deprecated-declarations'
             ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
-                '-lglfw', '-lGL'
+                '-lglfw', '-lGL', '-lcurl'
             ]
 
             log_task("Building N8 standard library for Linux...")
@@ -393,7 +396,7 @@ def build_proc():
                 '-L/opt/homebrew/lib', '-L/opt/homebrew/opt/openssl@3/lib',
                 '-std=c++23', '-Wno-deprecated-declarations'
             ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
-                '-lcrypto', '-lglfw', '-framework', 'OpenGL'
+                '-lcrypto', '-lglfw', '-lcurl', '-framework', 'OpenGL'
             ]
 
             log_task("Building N8 standard library for MacOS...")

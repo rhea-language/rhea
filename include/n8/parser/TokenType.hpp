@@ -16,37 +16,50 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef N8_PARSER_TOKEN_TYPE_HPP
-#define N8_PARSER_TOKEN_TYPE_HPP
+#ifndef N8_PARSER_TOKENTYPE_HPP
+#define N8_PARSER_TOKENTYPE_HPP
 
+#include <cstdint>
 #include <string>
 
-enum class TokenType {
-    DIGIT,
-    STRING,
-    REGEX,
-    KEYWORD,
-    IDENTIFIER,
-    OPERATOR
+class TokenType {
+private:
+    uint8_t type;
+
+public:
+    explicit TokenType(uint8_t _type = 0) : type(_type) { }
+
+    static const TokenType DIGIT;
+    static const TokenType STRING;
+    static const TokenType REGEX;
+    static const TokenType KEYWORD;
+    static const TokenType IDENTIFIER;
+    static const TokenType OPERATOR;
+
+    uint8_t getValue() const { return type; }
+
+    bool operator==(const TokenType& other) const { return type == other.type; }
+    bool operator!=(const TokenType& other) const { return type != other.type; }
+
+    bool operator<(const TokenType& other) const { return type < other.type; }
+    bool operator>(const TokenType& other) const { return type > other.type; }
 };
 
 inline std::string tokenTypeToString(TokenType type) {
-    switch (type) {
-        case TokenType::DIGIT:
-            return "digit";
-        case TokenType::STRING:
-            return "string";
-        case TokenType::KEYWORD:
-            return "keyword";
-        case TokenType::IDENTIFIER:
-            return "identifier";
-        case TokenType::OPERATOR:
-            return "operator";
-        case TokenType::REGEX:
-            return "regular expression";
-        default:
-            return "unknown";
-    }
+    if(type == TokenType::DIGIT)
+        return "digit";
+    if(type == TokenType::STRING)
+        return "string";
+    if(type ==  TokenType::KEYWORD)
+        return "keyword";
+    if(type == TokenType::IDENTIFIER)
+        return "identifier";
+    if(type == TokenType::OPERATOR)
+        return "operator";
+    if(type == TokenType::REGEX)
+        return "regular expression";
+
+    return "unknown";
 }
 
 #endif

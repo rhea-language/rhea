@@ -22,6 +22,7 @@
 #include <n8/ast/ASTNode.hpp>
 #include <n8/core/SymbolTable.hpp>
 #include <n8/parser/Token.hpp>
+#include <n8/parser/TokenType.hpp>
 
 #include <memory>
 #include <vector>

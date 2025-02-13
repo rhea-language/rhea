@@ -2,43 +2,43 @@ Todo:
 ---
 
 - To be developed libraries:
-    ✓ array
-    * audio
-    ✓ chrono
-    ✓ crypt
-    ✓ env
-    * fmt
-        - sconf
-        - csv
-        - json
-        - toml
-        - mdif
-        - png
-        - jpg
-        - xml
-    * gl
-    * gpio
-    ✓ io
-    ✓ lang
-    * map
-    ✓ math
-    * ml
-        ✓ ann
-        - astar
-        - llm
-    * mysql
-    * net
-        - ftp
-        - http
-        - smtp
-        - telnet
-        - tor
-    ✓ reflect
-    * regex
-    * sqlite3
-    ✓ str
-    ✓ sys
-    * termux
-    * thread
-    ✓ unsafe
-    * zip
+    - [x] array
+    - [ ] audio
+    - [x] chrono
+    - [x] crypt
+    - [x] env
+    - [ ] fmt
+        - [ ] sconf
+        - [ ] csv
+        - [ ] json
+        - [ ] toml
+        - [ ] mdif
+        - [ ] png
+        - [ ] jpg
+        - [ ] xml
+    - [ ] gl
+    - [ ] gpio
+    - [x] io
+    - [x] lang
+    - [ ] map
+    - [x] math
+    - [ ] ml
+        - [x] ann
+        - [ ] astar
+        - [ ] llm
+    - [ ] mysql
+    - [ ] net
+        - [ ] ftp
+        - [ ] http
+        - [ ] smtp
+        - [ ] telnet
+        - [ ] tor
+    - [x] reflect
+    - [ ] regex
+    - [ ] sqlite3
+    - [x] str
+    - [x] sys
+    - [ ] termux
+    - [ ] thread
+    - [x] unsafe
+    - [ ] zip

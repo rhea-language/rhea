@@ -217,11 +217,18 @@ def build_proc():
                 '-lwinmm', '-limm32', '-lole32', '-loleaut32',
                 '-lversion', '-luuid', '-ldinput8', '-ldxguid',
                 '-lsetupapi', '-lshell32', '-lssl', '-lcrypto',
-                '-lcrypt32', '-lws2_32', '-luser32', '-lkernel32'
+                '-lcrypt32', '-lpsl', '-lws2_32', '-luser32',
+                '-lkernel32', '-lidn2', '-lssh2', '-lnghttp2',
+                '-lz', '-lbcrypt', '-lbrotlidec', '-lbrotlicommon',
+                '-lzstd', '-lnghttp3', '-lwldap32', '-lunistring',
+                '-liconv'
             ]
 
+            linkable_libs.remove('-lglfw')
+            linkable_libs.remove('-lGL')
+
             exe_build_args = [
-                'g++', '-Iinclude', '-static', '-static-libstdc++',
+                'g++', '-Iinclude', '-DCURL_STATICLIB', '-static', '-static-libstdc++',
                 '-pedantic', '-Wall', '-Wdisabled-optimization',
                 '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
                 '-Wchar-subscripts', '-Wcomment', '-Wconversion', '-Werror',
@@ -244,7 +251,7 @@ def build_proc():
                 icon_config_res
             ] + cpp_files + [
                 '-o', OUTPUT_EXECUTABLE
-            ] + win_libs + linkable_libs
+            ] + linkable_libs + win_libs
 
             log_task("Generating Windows resource file configurations...")
             subprocess.run(['windres', 'configs\\n8-config.rc', '-O', 'coff', '-o', config_res])
@@ -264,9 +271,9 @@ def build_proc():
             now = time.time()
             lib_build_args = [
                 'g++', '-Iinclude', '-Istd', '-shared',
-                '-o', OUTPUT_LIBRARY + '.dll',
-                '-Wno-deprecated-declarations'
-            ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + win_libs + linkable_libs
+                '-fopenmp', '-o', OUTPUT_LIBRARY + '.dll',
+                '-Wno-deprecated-declarations', '-DCURL_STATICLIB'
+            ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + linkable_libs + win_libs
 
             log_task("Building N8 standard library for Windows...")
             subprocess.run(lib_build_args)
@@ -358,6 +365,7 @@ def build_proc():
 
         elif PLATFORM == 'Darwin':
             now = time.time()
+            linkable_libs.remove('-lGL')
 
             lib_headers += [
                 '-I/opt/homebrew/opt/openssl@3/include',

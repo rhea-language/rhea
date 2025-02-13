@@ -26,6 +26,7 @@
 #include <n8/parser/LexicalAnalysisException.hpp>
 #include <n8/parser/Parser.hpp>
 #include <n8/parser/ParserException.hpp>
+#include <n8/parser/TokenType.hpp>
 #include <n8/util/ArgumentParser.hpp>
 
 #ifdef __TERMUX__

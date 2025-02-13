@@ -37,7 +37,7 @@ enum class CryptAlgorithm {
 };
 
 const EVP_MD* getHashAlgorithm(CryptAlgorithm algo) {
-    switch (algo) {
+    switch(algo) {
         case CryptAlgorithm::MD4:
             return EVP_md4();
         case CryptAlgorithm::MD5:

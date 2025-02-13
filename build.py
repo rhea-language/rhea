@@ -181,6 +181,10 @@ def build_proc():
     include_local_lib('unsafe_ops')
     log_info("Done including local libraries/dependencies!")
 
+    linkable_libs = [
+        '-lglfw', '-lcurl', '-lGL'
+    ]
+
     try:
         ext_instructions = get_ext_instructions()
         if "TERMUX_VERSION" not in os.environ and PLATFORM == 'Linux':
@@ -213,8 +217,7 @@ def build_proc():
                 '-lwinmm', '-limm32', '-lole32', '-loleaut32',
                 '-lversion', '-luuid', '-ldinput8', '-ldxguid',
                 '-lsetupapi', '-lshell32', '-lssl', '-lcrypto',
-                '-lcrypt32', '-lws2_32', '-luser32', '-lkernel32',
-                '-lcurl'
+                '-lcrypt32', '-lws2_32', '-luser32', '-lkernel32'
             ]
 
             exe_build_args = [
@@ -239,7 +242,9 @@ def build_proc():
             ] + lib_headers + lib_source_files + [
                 config_res,
                 icon_config_res
-            ] + cpp_files + ['-o', OUTPUT_EXECUTABLE] + win_libs
+            ] + cpp_files + [
+                '-o', OUTPUT_EXECUTABLE
+            ] + win_libs + linkable_libs
 
             log_task("Generating Windows resource file configurations...")
             subprocess.run(['windres', 'configs\\n8-config.rc', '-O', 'coff', '-o', config_res])
@@ -261,7 +266,7 @@ def build_proc():
                 'g++', '-Iinclude', '-Istd', '-shared',
                 '-o', OUTPUT_LIBRARY + '.dll',
                 '-Wno-deprecated-declarations'
-            ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + win_libs
+            ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + win_libs + linkable_libs
 
             log_task("Building N8 standard library for Windows...")
             subprocess.run(lib_build_args)
@@ -290,7 +295,7 @@ def build_proc():
                 '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-ffast-math', '-s',
                 '-std=c++23', '-fopenmp'] + ext_instructions + ['-march=native',
                 '-ffast-math', '-D__TERMUX__'
-            ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
+            ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + linkable_libs
 
             log_task("Building N8 core for Termux...")
             subprocess.run(exe_build_args)
@@ -304,7 +309,7 @@ def build_proc():
                 '-std=c++23', '-Wno-deprecated-declarations'
             ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
                 '-lcurl'
-            ]
+            ] + linkable_libs
 
             log_task("Building N8 standard library for Termux...")
             subprocess.run(lib_build_args)
@@ -332,7 +337,7 @@ def build_proc():
                 '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-ffast-math', '-s',
                 '-std=c++23', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
                 '-march=native', '-ffast-math'
-            ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
+            ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + linkable_libs
 
             log_task("Building N8 core for Linux...")
             subprocess.run(exe_build_args)
@@ -344,9 +349,7 @@ def build_proc():
                 'g++', '-Iinclude', '-Istd', '-fPIC',
                 '-shared', '-o', OUTPUT_LIBRARY + '.so',
                 '-std=c++23', '-Wno-deprecated-declarations'
-            ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
-                '-lglfw', '-lGL', '-lcurl'
-            ]
+            ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + linkable_libs
 
             log_task("Building N8 standard library for Linux...")
             subprocess.run(lib_build_args)
@@ -396,8 +399,8 @@ def build_proc():
                 '-L/opt/homebrew/lib', '-L/opt/homebrew/opt/openssl@3/lib',
                 '-std=c++23', '-Wno-deprecated-declarations'
             ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
-                '-lcrypto', '-lglfw', '-lcurl', '-framework', 'OpenGL'
-            ]
+                '-framework', 'OpenGL'
+            ] + linkable_libs
 
             log_task("Building N8 standard library for MacOS...")
             subprocess.run(lib_build_args)

@@ -49,6 +49,9 @@ jobs:
             mingw-w64-x86_64-cairomm
             mingw-w64-x86_64-pango
             mingw-w64-x86_64-harfbuzz
+            mingw-w64-x86_64-gnutls
+            mingw-w64-x86_64-nettle
+            mingw-w64-x86_64-ngtcp2
             git
 
       - name: Checkout code

@@ -48,7 +48,7 @@ int Token::getColumn() const {
     return this->column;
 }
 
-TokenType Token::getType() const {
+TokenCategory Token::getType() const {
     return this->type;
 }
 

@@ -16,11 +16,11 @@
  * along with N8. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <n8/parser/TokenType.hpp>
+#include <n8/parser/TokenCategory.hpp>
 
-const TokenType TokenType::DIGIT(0);
-const TokenType TokenType::STRING(1);
-const TokenType TokenType::REGEX(2);
-const TokenType TokenType::KEYWORD(3);
-const TokenType TokenType::IDENTIFIER(4);
-const TokenType TokenType::OPERATOR(5);
+const TokenCategory TokenCategory::DIGIT(0);
+const TokenCategory TokenCategory::STRING(1);
+const TokenCategory TokenCategory::REGEX(2);
+const TokenCategory TokenCategory::KEYWORD(3);
+const TokenCategory TokenCategory::IDENTIFIER(4);
+const TokenCategory TokenCategory::OPERATOR(5);

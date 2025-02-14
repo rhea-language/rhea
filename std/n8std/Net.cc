@@ -19,8 +19,88 @@
 #include "n8std/Net.hpp"
 
 #include <n8/ast/TerminativeSignal.hpp>
+#include <n8/core/DynamicObject.hpp>
 
+#include <map>
+#include <vector>
+
+#include <curl/curl.h>
+#include <quoneq/http.hpp>
 #include <quoneq/net.hpp>
+
+DynamicObject httpResponseToObject(quoneq_http_response response) {
+    std::vector<DynamicObject> object;
+    object.emplace_back(DynamicObject(
+        static_cast<double>(response.status)
+    ));
+
+    object.emplace_back(DynamicObject(response.statusType));
+    object.emplace_back(DynamicObject(response.errorMessage));
+    object.emplace_back(DynamicObject(response.content));
+
+    std::vector<DynamicObject> headers;
+    for(const auto& header : response.header) {
+        std::vector<DynamicObject> headerEntry;
+        headerEntry.emplace_back(DynamicObject(header.first));
+        headerEntry.emplace_back(DynamicObject(header.second));
+
+        headers.emplace_back(DynamicObject(
+            std::make_shared<std::vector<DynamicObject>>(
+                headerEntry
+            )
+        ));
+    }
+
+    object.emplace_back(DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(
+            headers
+        )
+    ));
+
+    std::vector<DynamicObject> cookies;
+    for(const auto& cookie : response.cookies) {
+        std::vector<DynamicObject> cookieEntry;
+        cookieEntry.emplace_back(DynamicObject(cookie.first));
+        cookieEntry.emplace_back(DynamicObject(cookie.second));
+
+        cookies.emplace_back(DynamicObject(
+            std::make_shared<std::vector<DynamicObject>>(
+                cookieEntry
+            )
+        ));
+    }
+
+    object.emplace_back(DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(
+            cookies
+        )
+    ));
+
+    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(
+        object
+    ));
+}
+
+std::pair<bool, std::map<std::string, std::string>> objectArrayToMap(DynamicObject object) {
+    if(!object.isArray())
+        return std::make_pair(false, std::map<std::string, std::string>{});
+
+    std::map<std::string, std::string> pairs;
+    std::vector<DynamicObject> objects = *(object.getArray());
+
+    for(const auto& obj : objects) {
+        if(!obj.isArray())
+            return std::make_pair(false, std::map<std::string, std::string>{});
+
+        std::vector<DynamicObject> items = *(obj.getArray());
+        if(items.size() != 2)
+            return std::make_pair(false, std::map<std::string, std::string>{});
+
+        pairs[items.at(0).toString()] = items.at(1).toString();
+    }
+
+    return std::make_pair(true, pairs);
+}
 
 N8_FUNC(net_init) {
     quoneq_net::init();
@@ -29,5 +109,145 @@ N8_FUNC(net_init) {
 
 N8_FUNC(net_deinit) {
     quoneq_net::cleanup();
+    return {};
+}
+
+N8_FUNC(net_http_get) {
+    if(args.size() < 1 || args.size() > 6)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 to 6 argument(s), got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject urlStr = args.at(0);
+    std::map<std::string, std::string> headers = {},
+        cookies = {};
+    std::string proxy = "",
+        username = "",
+        password = "";
+
+    if(args.size() >= 2) {
+        auto result = objectArrayToMap(args.at(1));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Header map should be of array of string arrays (size=2) type."
+            );
+
+        headers = result.second;
+    }
+
+    if(args.size() >= 3) {
+        auto result = objectArrayToMap(args.at(2));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Cookie map should be of array of string arrays (size=2) type."
+            );
+
+        cookies = result.second;
+    }
+
+    if(args.size() >= 4)
+        proxy = args.at(3).toString();
+    if(args.size() >= 5)
+        username = args.at(4).toString();
+    if(args.size() >= 5)
+        password = args.at(5).toString();
+
+    return httpResponseToObject(*(quoneq_http_client::get(
+        urlStr.toString(),
+        headers,
+        cookies,
+        proxy,
+        username,
+        password
+    )));
+}
+
+N8_FUNC(net_http_post) {
+    if(args.size() < 1 || args.size() > 6)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 to 6 argument(s), got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject urlStr = args.at(0);
+    std::map<std::string, std::string> headers = {},
+        cookies = {};
+    std::string proxy = "",
+        username = "",
+        password = "";
+
+    if(args.size() >= 2) {
+        auto result = objectArrayToMap(args.at(1));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Header map should be of array of string arrays (size=2) type."
+            );
+
+        headers = result.second;
+    }
+
+    if(args.size() >= 3) {
+        auto result = objectArrayToMap(args.at(2));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Cookie map should be of array of string arrays (size=2) type."
+            );
+
+        cookies = result.second;
+    }
+
+    if(args.size() >= 4)
+        proxy = args.at(3).toString();
+    if(args.size() >= 5)
+        username = args.at(4).toString();
+    if(args.size() >= 5)
+        password = args.at(5).toString();
+
+    return httpResponseToObject(*(quoneq_http_client::post(
+        urlStr.toString(),
+        headers,
+        cookies,
+        proxy,
+        username,
+        password
+    )));
+}
+
+N8_FUNC(net_http_ping) {
+    if(args.size() < 1 || args.size() > 4)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 to 4 argument(s), got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject urlStr = args.at(0);
+    std::string proxy = "",
+        username = "",
+        password = "";
+
+    if(args.size() >= 2)
+        proxy = args.at(1).toString();
+    if(args.size() >= 3)
+        username = args.at(2).toString();
+    if(args.size() >= 4)
+        password = args.at(3).toString();
+
+    return httpResponseToObject(*(quoneq_http_client::ping(
+        urlStr.toString(),
+        proxy,
+        username,
+        password
+    )));
+}
+
+N8_FUNC(net_http_downloadFile) {
     return {};
 }

@@ -270,9 +270,10 @@ def build_proc():
 
             now = time.time()
             lib_build_args = [
-                'g++', '-Iinclude', '-Istd', '-shared',
-                '-fopenmp', '-o', OUTPUT_LIBRARY + '.dll',
-                '-Wno-deprecated-declarations', '-DCURL_STATICLIB'
+                'g++', '-static', '-static-libstdc++', '-DCURL_STATICLIB',
+                '-Iinclude', '-Istd', '-shared', '-fopenmp',
+                '-o', OUTPUT_LIBRARY + '.dll',
+                '-Wno-deprecated-declarations'
             ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + linkable_libs + win_libs
 
             log_task("Building N8 standard library for Windows...")

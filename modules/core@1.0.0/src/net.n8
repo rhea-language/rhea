@@ -19,3 +19,10 @@ import net {
     init,
     deinit
 } from "core"
+
+import net.http {
+    get,
+    post,
+    ping,
+    downloadFile
+} from "core"

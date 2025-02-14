@@ -99,7 +99,7 @@ void Tokenizer::scan() {
                     fileName,
                     line,
                     startColumn,
-                    TokenType::STRING
+                    TokenCategory::STRING
                 ));
             }
             else if(currentChar == '`') {
@@ -134,7 +134,7 @@ void Tokenizer::scan() {
                     fileName,
                     line,
                     startColumn,
-                    TokenType::REGEX
+                    TokenCategory::REGEX
                 ));
             }
             else {
@@ -155,7 +155,7 @@ void Tokenizer::scan() {
                     fileName,
                     line,
                     startColumn,
-                    TokenType::OPERATOR
+                    TokenCategory::OPERATOR
                 ));
             }
         }
@@ -303,7 +303,7 @@ void Tokenizer::scan() {
                 fileName,
                 line,
                 startColumn,
-                TokenType::DIGIT
+                TokenCategory::DIGIT
             ));
         }
         else if(this->isAlphabet(currentChar)) {
@@ -318,8 +318,8 @@ void Tokenizer::scan() {
                 column++;
             }
 
-            TokenType type = this->isKeyword(token) ?
-                TokenType::KEYWORD : TokenType::IDENTIFIER;
+            TokenCategory type = this->isKeyword(token) ?
+                TokenCategory::KEYWORD : TokenCategory::IDENTIFIER;
             this->tokens.push_back(Token(
                 token,
                 fileName,

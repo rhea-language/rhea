@@ -402,6 +402,8 @@ def build_proc():
             end = time.time() - now
             log_info(f"Finished in {end:.6f} seconds")
 
+            linkable_libs.append('-lcrypto')
+
             now = time.time()
             lib_build_args = [
                 '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',

@@ -221,7 +221,8 @@ def build_proc():
                 '-lkernel32', '-lidn2', '-lssh2', '-lnghttp2',
                 '-lz', '-lbcrypt', '-lbrotlidec', '-lbrotlicommon',
                 '-lzstd', '-lnghttp3', '-lwldap32', '-lunistring',
-                '-liconv', '-lgnutls', '-lnettle', '-lngtcp2'
+                '-liconv', '-lgnutls', '-lnettle', '-lngtcp2',
+                '-ltasn1', '-lgmp'
             ]
 
             linkable_libs.remove('-lglfw')

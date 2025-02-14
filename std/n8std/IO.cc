@@ -27,6 +27,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <iterator>
 #include <vector>
 
 #ifdef _WIN32
@@ -467,7 +468,6 @@ N8_FUNC(io_listAllFiles) {
     if(!std::filesystem::exists(dirPath) || !std::filesystem::is_directory(dirPath))
         return {};
 
-    #pragma omp parallel for
     for(const auto& entry : std::filesystem::directory_iterator(dirPath))
         returnValues.push_back(DynamicObject(
             entry.path().filename().string()

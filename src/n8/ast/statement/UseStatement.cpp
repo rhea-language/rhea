@@ -51,7 +51,7 @@ DynamicObject UseStatement::visit(
     catch(const std::exception& ex) {
         throw ASTNodeException(
             std::move(this->address),
-            "Some required N8 path environment variables are not found."
+            "Cannot find N8 module path: " + std::string(ex.what())
         );
     }
 

@@ -53,6 +53,8 @@ jobs:
             mingw-w64-x86_64-gnutls
             mingw-w64-x86_64-nettle
             mingw-w64-x86_64-ngtcp2
+            mingw-w64-x86_64-libtasn1
+            mingw-w64-x86_64-gmp
             git
 
       - name: Checkout code

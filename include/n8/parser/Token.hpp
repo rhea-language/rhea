@@ -19,7 +19,7 @@
 #ifndef N8_PARSER_TOKEN_HPP
 #define N8_PARSER_TOKEN_HPP
 
-#include <n8/parser/TokenType.hpp>
+#include <n8/parser/TokenCategory.hpp>
 #include <string>
 
 class Token final {
@@ -30,7 +30,7 @@ private:
     int line;
     int column;
 
-    TokenType type;
+    TokenCategory type;
 
 public:
     Token(
@@ -38,7 +38,7 @@ public:
         std::string _fileName,
         int _line,
         int _column,
-        TokenType _type
+        TokenCategory _type
     ) : image(std::move(_image)),
         fileName(std::move(_fileName)),
         line(_line),
@@ -54,7 +54,7 @@ public:
     int getLine() const;
     int getColumn() const;
 
-    TokenType getType() const;
+    TokenCategory getType() const;
     std::string toString() const;
 
     void appendToImage(std::string str);

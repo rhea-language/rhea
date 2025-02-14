@@ -63,21 +63,6 @@ def build_proc():
         "dist\\n8lang\\bin\\n8.exe":                            "n8_exe",
         "dist\\n8lang\\bin\\uninstaller.exe":                   "uninstaller",
 
-        "dist\\n8lang\\bin\\libwinpthread-1.dll":               "libwinpthread_1_dll",
-        "dist\\n8lang\\bin\\libgcc_s_seh-1.dll":                "gcc_s_seh_1",
-        "dist\\n8lang\\bin\\libstdc++-6.dll":                   "stdcpp_6",
-        "dist\\n8lang\\bin\\libintl-8.dll":                     "intl_8",
-        "dist\\n8lang\\bin\\libpcre2-8-0.dll":                  "pcre2_8_0",
-        "dist\\n8lang\\bin\\libiconv-2.dll":                    "iconv_2",
-        "dist\\n8lang\\bin\\libffi-8.dll":                      "ffi_8",
-        "dist\\n8lang\\bin\\zlib1.dll":                         "zlib1",
-        "dist\\n8lang\\bin\\libexpat-1.dll":                    "expat_1",
-        "dist\\n8lang\\bin\\liblzma-5.dll":                     "lzma_5",
-        "dist\\n8lang\\bin\\libzstd.dll":                       "zstd",
-        "dist\\n8lang\\bin\\libbz2-1.dll":                      "bz2_1",
-        "dist\\n8lang\\bin\\libbrotlidec.dll":                  "brotlidec",
-        "dist\\n8lang\\bin\\libbrotlicommon.dll":               "brotlicommon",
-
         "dist\\n8lang\\modules\\core@1.0.0\\lib\\core.dll":     "core_dll",
 
         "dist\\n8lang\\modules\\core@1.0.0\\src\\array.n8":     "array_n8",

@@ -22,7 +22,7 @@
 #include <n8/ast/ASTNode.hpp>
 #include <n8/core/SymbolTable.hpp>
 #include <n8/parser/Token.hpp>
-#include <n8/parser/TokenType.hpp>
+#include <n8/parser/TokenCategory.hpp>
 
 #include <memory>
 #include <vector>
@@ -85,12 +85,12 @@ private:
 
     Token current();
     Token consume(const std::string& image);
-    Token consume(TokenType type);
+    Token consume(TokenCategory type);
     Token getIdentifier();
 
     void advance();
     bool isAtEnd() const;
-    bool isNext(const std::string& image, TokenType type);
+    bool isNext(const std::string& image, TokenCategory type);
 
 public:
     Parser(const std::vector<Token>& _tokens) :

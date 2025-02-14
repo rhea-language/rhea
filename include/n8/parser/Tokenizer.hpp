@@ -22,7 +22,7 @@
 #include <n8/parser/LexicalAnalysisException.hpp>
 #include <n8/parser/OperatorsAndKeys.hpp>
 #include <n8/parser/Token.hpp>
-#include <n8/parser/TokenType.hpp>
+#include <n8/parser/TokenCategory.hpp>
 
 #include <algorithm>
 #include <fstream>

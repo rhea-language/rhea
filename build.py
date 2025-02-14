@@ -221,14 +221,15 @@ def build_proc():
                 '-lkernel32', '-lidn2', '-lssh2', '-lnghttp2',
                 '-lz', '-lbcrypt', '-lbrotlidec', '-lbrotlicommon',
                 '-lzstd', '-lnghttp3', '-lwldap32', '-lunistring',
-                '-liconv'
+                '-liconv', '-lgnutls', '-lnettle', '-lngtcp2'
             ]
 
             linkable_libs.remove('-lglfw')
             linkable_libs.remove('-lGL')
 
             exe_build_args = [
-                'g++', '-Iinclude', '-DCURL_STATICLIB', '-static', '-static-libstdc++',
+                'g++', '-Iinclude', '-DCURL_STATICLIB', '-DCURL_DISABLE_RTMP',
+                '-static', '-static-libstdc++',
                 '-pedantic', '-Wall', '-Wdisabled-optimization',
                 '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
                 '-Wchar-subscripts', '-Wcomment', '-Wconversion', '-Werror',

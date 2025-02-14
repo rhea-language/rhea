@@ -3,7 +3,7 @@ name: Build CI [WebAssembly]
 on:
   push:
     paths:
-      - .github/workflows/**
+      - .github/workflows/build_ci_wasm.yml
       - include/**
       - src/**
     branches:

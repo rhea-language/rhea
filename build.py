@@ -20,6 +20,7 @@ import platform
 import shutil
 import subprocess
 import time
+import urllib.request
 
 from datetime import datetime
 
@@ -422,6 +423,11 @@ def build_proc():
             subprocess.run(lib_build_args)
             end = time.time() - now
             log_info(f"Finished in {end:.6f} seconds")
+
+        urllib.request.urlretrieve(
+            'https://curl.se/ca/cacert.pem',
+            os.path.join('dist', 'n8lang', 'bin', 'cacert.pem')
+        )
 
     except Exception as e:
         log_error(f"Compilation failed with error: {e}")

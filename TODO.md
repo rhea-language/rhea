@@ -1,6 +1,7 @@
 Todo:
 ---
 
+- CA certificate definition on Quoneq
 - To be developed libraries:
     - [x] array
     - [ ] audio

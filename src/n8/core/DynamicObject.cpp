@@ -282,7 +282,40 @@ std::string DynamicObject::toString() {
         std::string result = "[";
 
         for(size_t i = 0; i < array->size(); i++) {
-            result += array->at(i).toString();
+            DynamicObject item = array->at(i);
+            if(item.isString()) {
+                std::string input = item.toString();
+                result += "\"";
+
+                for(char c : input)
+                    switch(c) {
+                        case '\\':
+                            result.append("\\\\");
+                            break;
+
+                        case '\"':
+                            result.append("\\\"");
+                            break;
+
+                        case '\n':
+                            result.append("\\n");
+                            break;
+
+                        case '\r':
+                            result.append("\\r");
+                            break;
+
+                        case '\t':
+                            result.append("\\t");
+                            break;
+
+                        default:
+                            result.push_back(c);
+                            break;
+                    }
+                result += "\"";
+            }
+            else result += item.toString();
 
             if(i < array->size() - 1)
                 result += ", ";

@@ -167,7 +167,7 @@ N8_FUNC(net_http_get) {
 }
 
 N8_FUNC(net_http_post) {
-    if(args.size() < 1 || args.size() > 6)
+    if(args.size() < 1 || args.size() > 7)
         throw TerminativeThrowSignal(
             std::move(address),
             "Expecting 1 to 6 argument(s), got " +
@@ -175,8 +175,10 @@ N8_FUNC(net_http_post) {
         );
 
     DynamicObject urlStr = args.at(0);
-    std::map<std::string, std::string> headers = {},
-        cookies = {};
+    std::map<std::string, std::string> forms = {},
+        headers = {},
+        cookies = {},
+        files = {};
     std::string proxy = "",
         username = "",
         password = "";
@@ -186,14 +188,25 @@ N8_FUNC(net_http_post) {
         if(!result.first)
             throw TerminativeThrowSignal(
                 std::move(address),
+                "Form data map should be of array of string arrays (size=2) type."
+            );
+
+        forms = result.second;
+    }
+    
+    if(args.size() >= 3) {
+        auto result = objectArrayToMap(args.at(2));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
                 "Header map should be of array of string arrays (size=2) type."
             );
 
         headers = result.second;
     }
 
-    if(args.size() >= 3) {
-        auto result = objectArrayToMap(args.at(2));
+    if(args.size() >= 4) {
+        auto result = objectArrayToMap(args.at(3));
         if(!result.first)
             throw TerminativeThrowSignal(
                 std::move(address),
@@ -203,17 +216,30 @@ N8_FUNC(net_http_post) {
         cookies = result.second;
     }
 
-    if(args.size() >= 4)
-        proxy = args.at(3).toString();
-    if(args.size() >= 5)
-        username = args.at(4).toString();
-    if(args.size() >= 5)
-        password = args.at(5).toString();
+    if(args.size() >= 5) {
+        auto result = objectArrayToMap(args.at(4));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "File map should be of array of string arrays (size=2) type."
+            );
+
+        files = result.second;
+    }
+
+    if(args.size() >= 6)
+        proxy = args.at(5).toString();
+    if(args.size() >= 7)
+        username = args.at(6).toString();
+    if(args.size() >= 8)
+        password = args.at(7).toString();
 
     return httpResponseToObject(*(quoneq_http_client::post(
         urlStr.toString(),
+        forms,
         headers,
         cookies,
+        files,
         proxy,
         username,
         password

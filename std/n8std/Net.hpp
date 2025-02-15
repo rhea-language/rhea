@@ -31,6 +31,9 @@ N8_LIB_START
 N8_FUNC(net_init);
 N8_FUNC(net_deinit);
 
+N8_FUNC(net_setCaCert);
+N8_FUNC(net_getCaCert);
+
 N8_FUNC(net_http_get);
 N8_FUNC(net_http_post);
 N8_FUNC(net_http_ping);

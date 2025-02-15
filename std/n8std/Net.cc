@@ -112,6 +112,22 @@ N8_FUNC(net_deinit) {
     return {};
 }
 
+N8_FUNC(net_setCaCert) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    quoneq_net::set_ca_cert(args.at(0).toString());
+    return {};
+}
+
+N8_FUNC(net_getCaCert) {
+    return DynamicObject(quoneq_net::get_ca_cert());
+}
+
 N8_FUNC(net_http_get) {
     if(args.size() < 1 || args.size() > 6)
         throw TerminativeThrowSignal(

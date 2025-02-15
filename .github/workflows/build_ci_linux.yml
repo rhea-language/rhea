@@ -71,7 +71,9 @@ jobs:
           export N8_PATH=$(pwd)/dist/n8lang
           /usr/bin/time -v ./dist/n8lang/bin/n8 ./examples/99-beers.n8
           /usr/bin/time -v ./dist/n8lang/bin/n8 ./examples/hello.n8
+          /usr/bin/time -v ./dist/n8lang/bin/n8 ./examples/http-get.n8
           /usr/bin/time -v ./dist/n8lang/bin/n8 -u ./examples/inject.n8
+          /usr/bin/time -v ./dist/n8lang/bin/n8 ./examples/logic-gate-ai.n8
 
       - name: Create N8 *.deb file
         run: python tools/build_deb_installer.py

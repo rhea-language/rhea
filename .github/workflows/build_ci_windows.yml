@@ -273,6 +273,7 @@ jobs:
         shell: cmd
         run: |
           cd n8
+          set N8_PATH=%cd%\dist\n8lang
           .\dist\n8lang\bin\n8 examples\99-beers.n8
           .\dist\n8lang\bin\n8 examples\hello.n8
           .\dist\n8lang\bin\n8 examples\http-get.n8

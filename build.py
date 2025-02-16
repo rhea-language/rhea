@@ -83,7 +83,7 @@ def get_ext_instructions():
         for feature in features_to_check:
             print(
                 "\033[1m[\033[0m \033[1;44m  TASK   \033[0m \033[1m]\033[0m \033[3m" +
-                str(datetime.today()) + "\033[0m :: Checking extended instruction support for " +
+                str(datetime.today()) + "\033[0m :: Checking hardware support for " +
                 feature + "... ",
                 end=''
             )
@@ -285,6 +285,9 @@ def build_proc():
 
         elif "TERMUX_VERSION" in os.environ:
             now = time.time()
+
+            linkable_libs.remove('-lglfw')
+            linkable_libs.remove('-lGL')
 
             ext_instructions.remove('-maes')
             exe_build_args= [

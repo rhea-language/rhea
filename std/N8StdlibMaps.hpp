@@ -23,13 +23,18 @@
 #include <unordered_map>
 
 #include <chisei/neural_network.hpp>
-#include <GLFW/glfw3.h>
 #include <myshell.hpp>
+
+#ifndef __TERMUX__
+
+#include <GLFW/glfw3.h>
 
 // GL
 static std::unordered_map<std::string, GLFWwindow*> windowMap;
 static std::unordered_map<std::string, GLFWmonitor*> monitorMap;
 static std::unordered_map<std::string, GLFWcursor*> cursorMap;
+
+#endif
 
 // ML
 static std::unordered_map<

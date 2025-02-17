@@ -1,7 +1,9 @@
 Todo:
 ---
 
-- CA certificate definition on Quoneq
+- Multiplaform `on` expression.
+- `assert` expression on `test` statement
+
 - To be developed libraries:
     - [x] array
     - [ ] audio

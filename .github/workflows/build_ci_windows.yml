@@ -229,6 +229,12 @@ jobs:
         run:
           git clone https://github.com/n8lang/n8
 
+      - name: Working Directory
+        run: |
+          cd
+          cd n8
+          cd
+
       - name: Build N8
         run: |
           cd n8

@@ -231,9 +231,10 @@ jobs:
 
       - name: Working Directory
         run: |
-          cd
+          pwd
+          ls
           cd n8
-          cd
+          pwd
 
       - name: Build N8
         run: |

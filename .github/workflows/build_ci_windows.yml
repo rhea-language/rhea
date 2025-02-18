@@ -229,13 +229,6 @@ jobs:
         run:
           git clone https://github.com/n8lang/n8
 
-      - name: Working Directory
-        run: |
-          pwd
-          ls
-          cd n8
-          pwd
-
       - name: Build N8
         run: |
           cd n8
@@ -262,6 +255,7 @@ jobs:
         shell: cmd
         run: |
           cd n8
+          setx N8_PATH %cd%\dist\n8lang /M
           .\dist\n8lang\bin\n8 .\test\arithmetic.n8
           .\dist\n8lang\bin\n8 .\test\array.n8
           .\dist\n8lang\bin\n8 .\test\digits.n8

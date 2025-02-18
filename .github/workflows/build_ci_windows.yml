@@ -256,6 +256,7 @@ jobs:
         run: |
           cd n8
           setx N8_PATH %cd%\dist\n8lang /M
+          echo %N8_PATH%
           .\dist\n8lang\bin\n8 .\test\arithmetic.n8
           .\dist\n8lang\bin\n8 .\test\array.n8
           .\dist\n8lang\bin\n8 .\test\digits.n8

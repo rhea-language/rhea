@@ -54,7 +54,7 @@ std::string PathHelper::installationPath() {
         RegCloseKey(hKey);
     }
 
-    return "";
+    return std::getenv(N8_ENV_PATH_NAME);
 
     #else
     return std::getenv(N8_ENV_PATH_NAME);

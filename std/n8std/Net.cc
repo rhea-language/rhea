@@ -291,5 +291,83 @@ N8_FUNC(net_http_ping) {
 }
 
 N8_FUNC(net_http_downloadFile) {
-    return {};
+    if(args.size() < 2 || args.size() > 8)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 to 7 argument(s), got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject urlStr = args.at(0),
+        outputFile = args.at(1);
+    std::map<std::string, std::string> forms = {},
+        headers = {},
+        cookies = {},
+        files = {};
+    std::string proxy = "",
+        username = "",
+        password = "";
+
+    if(args.size() >= 3) {
+        auto result = objectArrayToMap(args.at(2));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Form data map should be of array of string arrays (size=2) type."
+            );
+
+        forms = result.second;
+    }
+    
+    if(args.size() >= 4) {
+        auto result = objectArrayToMap(args.at(3));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Header map should be of array of string arrays (size=2) type."
+            );
+
+        headers = result.second;
+    }
+
+    if(args.size() >= 5) {
+        auto result = objectArrayToMap(args.at(4));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Cookie map should be of array of string arrays (size=2) type."
+            );
+
+        cookies = result.second;
+    }
+
+    if(args.size() >= 6) {
+        auto result = objectArrayToMap(args.at(5));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "File map should be of array of string arrays (size=2) type."
+            );
+
+        files = result.second;
+    }
+
+    if(args.size() >= 7)
+        proxy = args.at(6).toString();
+    if(args.size() >= 8)
+        username = args.at(7).toString();
+    if(args.size() >= 9)
+        password = args.at(8).toString();
+
+    return httpResponseToObject(*(quoneq_http_client::download_file(
+        urlStr.toString(),
+        outputFile.toString(),
+        forms,
+        headers,
+        cookies,
+        files,
+        proxy,
+        username,
+        password
+    )));
 }

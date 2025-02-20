@@ -20,7 +20,6 @@ import platform
 import shutil
 import subprocess
 import time
-import urllib.request
 
 from datetime import datetime
 
@@ -424,8 +423,8 @@ def build_proc():
             end = time.time() - now
             log_info(f"Finished in {end:.6f} seconds")
 
-        urllib.request.urlretrieve(
-            'https://curl.se/ca/cacert.pem',
+        shutil.copy(
+            os.path.join('misc', 'cacert.pem'),
             os.path.join('dist', 'n8lang', 'bin', 'cacert.pem')
         )
 

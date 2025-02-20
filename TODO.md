@@ -32,7 +32,7 @@ Todo:
     - [ ] mysql
     - [ ] net
         - [ ] ftp
-        - [ ] http
+        - [x] http
         - [ ] smtp
         - [ ] telnet
         - [ ] tor

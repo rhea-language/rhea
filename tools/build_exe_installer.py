@@ -61,6 +61,7 @@ def build_proc():
 
     files = {
         "dist\\n8lang\\bin\\n8.exe":                            "n8_exe",
+        "dist\\n8lang\\bin\\cacert.pem":                        "n8_cacert",
         "dist\\n8lang\\bin\\uninstaller.exe":                   "uninstaller",
 
         "dist\\n8lang\\modules\\core@1.0.0\\lib\\core.dll":     "core_dll",

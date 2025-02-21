@@ -29,11 +29,13 @@ DynamicObject TestStatement::visit(SymbolTable& symbols) {
         return {};
 
     auto startTime = std::chrono::high_resolution_clock::now();
-    DynamicObject value = this->testBody->visit(symbols);
+    DynamicObject assertion = this->testAssert->visit(symbols),
+        value = this->testBody->visit(symbols);
     auto elapsedTime = std::chrono::high_resolution_clock::now() - startTime;
     double elapsedTimeMs = std::chrono::duration<double, std::milli>(elapsedTime).count();
 
-    if(value.booleanEquivalent())
+    if((assertion.isNil() && value.booleanEquivalent()) ||
+        (!assertion.isNil() && assertion == value))
         N8Util::render("[\u001b[1;32m SUCCESS \u001b[0m]");
     else N8Util::render("[\u001b[1;31m FAILED  \u001b[0m]");
 

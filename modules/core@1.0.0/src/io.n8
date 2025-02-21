@@ -72,22 +72,18 @@ enum console.styles {
 }
 
 mod console {
-    stylize: func(style, message) {
-        ret "\e[" + style + "m" + message + "\e[0m"
-    }
+    stylize: func(style, message)
+        @ret "\e[" + style + "m" + message + "\e[0m"
 
     colorize: func(bgColor, fgColor, message) {
-        if(bgColor == console.colors.bgNone) {
-            ret("\e[" + fgColor + "m" + message + "\e[0m")
-        }
-        else {
-            ret("\e[" + fgColor + ";" + bgColor + "m" + message + "\e[0m")
-        }
+        if(bgColor == console.colors.bgNone)
+            @ret("\e[" + fgColor + "m" + message + "\e[0m")
+        else
+            @ret("\e[" + fgColor + ";" + bgColor + "m" + message + "\e[0m")
     }
 
-    log: func(message) {
-        io.print(message)
-    }
+    log: func(message)
+        @io.print(message)
 }
 
 mod console.log {
@@ -96,6 +92,7 @@ mod console.log {
             console.styles.italic,
             chrono.format(chrono.now(), "%d/%m/%Y %H:%M:%S ")
         )
+
         render console.colorize(
             console.colors.bgCyan,
             console.colors.fgWhite,
@@ -104,6 +101,7 @@ mod console.log {
                 "[" + logType.info + "]"
             )
         )
+
         render! " :: " + message
     }
 
@@ -112,6 +110,7 @@ mod console.log {
             console.styles.italic,
             chrono.format(chrono.now(), "%d/%m/%Y %H:%M:%S ")
         )
+
         render console.colorize(
             console.colors.bgRed,
             console.colors.fgWhite,
@@ -120,6 +119,7 @@ mod console.log {
                 "[" + logType.error + " ]"
             )
         )
+
         render! " :: " + message
     }
 
@@ -128,6 +128,7 @@ mod console.log {
             console.styles.italic,
             chrono.format(chrono.now(), "%d/%m/%Y %H:%M:%S ")
         )
+
         render console.colorize(
             console.colors.bgYellow,
             console.colors.fgWhite,
@@ -136,6 +137,7 @@ mod console.log {
                 "[" + logType.warning + "]"
             )
         )
+
         render! " :: " + message
     }
 }

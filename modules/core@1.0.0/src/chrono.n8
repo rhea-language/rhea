@@ -25,11 +25,9 @@ import chrono {
 } from "core"
 
 mod chrono {
-    toGmt: func(unix, gmt) {
-        ret unix + (gmt * 3600)
-    }
+    toGmt: func(unix, gmt)
+        @ret unix + (gmt * 3600)
 
-    nowForGmt: func(gmt) {
-        ret chrono.toGmt(chrono.now(), gmt)
-    }
+    nowForGmt: func(gmt)
+        @ret chrono.toGmt(chrono.now(), gmt)
 }

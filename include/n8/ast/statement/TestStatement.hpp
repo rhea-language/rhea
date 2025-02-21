@@ -28,14 +28,17 @@ class TestStatement final : public ASTNode {
 private:
     std::shared_ptr<ASTNode> testName;
     std::shared_ptr<ASTNode> testBody;
+    std::shared_ptr<ASTNode> testAssert;
 
 public:
     explicit TestStatement(
         std::shared_ptr<Token> _address,
         std::shared_ptr<ASTNode> _testName,
-        std::shared_ptr<ASTNode> _testBody
+        std::shared_ptr<ASTNode> _testBody,
+        std::shared_ptr<ASTNode> _testAssert
     ) : testName(std::move(_testName)),
-        testBody(std::move(_testBody)) {
+        testBody(std::move(_testBody)),
+        testAssert(std::move(_testAssert)) {
         this->address = std::move(_address);
     }
 

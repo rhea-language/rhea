@@ -72,7 +72,8 @@ throwStmt               :=
 
 testStmt                :=
     "test" "(" expression ")"
-        expression
+    ["if" "(" expression ")"]
+    expression
 
 useStmt                 :=
     "use" expression ["@" expression]
@@ -123,6 +124,7 @@ primaryExpr             :=
     (
         ("+" | "-" | "~" | "!") expression  |
         "(" expression ")"                  |
+        "@" statement                       |
         blockExpr                           |
         renderExpr                          |
         catchHandleExpr                     |

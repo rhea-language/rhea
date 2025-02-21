@@ -12,8 +12,8 @@ outputs = [[1], [0], [0], [1]]
 
 ann = ml.ann.create(
     [2, 4, 1],
-    func(arg) { ret 1 / (1 + math.exp(-arg)) },
-    func(arg) { ret arg * (1 - arg) }
+    func(arg) @ret 1 / (1 + math.exp(-arg)),
+    func(arg) @ret arg * (1 - arg)
 )
 
 render! "Starting training..."

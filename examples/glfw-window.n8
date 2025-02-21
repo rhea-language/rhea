@@ -8,9 +8,9 @@ parallel {
         io.exit()
     }
 
-    gl.setErrorCallback(func(error, message) {
+    gl.setErrorCallback(func(error, message)
         console.log.error(message + " (" + error + ")")
-    })
+    )
 
     window = gl.createWindow(300, 300, "Hello, world!")
     if(window == nil) {

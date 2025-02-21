@@ -1,26 +1,25 @@
 #!/opt/n8lang/bin/n8
 
-val i = 0;
+i = 0
 while(i < 10) {
-    render! "i++ = " + i;
-    i = i + 1;
+    render! "i++ = " + i
+    i = i + 1
 
     if(i % 2 == 0) {
         i = i + 1;
         continue;
-    };
-};
+    }
+}
 
 while(i > 0) {
-    render! "i-- = " + i;
-    i = i - 1;
+    render! "i-- = " + i
+    i = i - 1
 
     if(i % 2 == 1) {
-        i = i - 1;
-        continue;
-    };
-};
+        i = i - 1
+        continue
+    }
+}
 
-loop(i = 0; i < 10; i = i + 1) {
-    render! "-> " + i;
-};
+loop(i = 0; i < 10; i = i + 1)
+    render! "-> " + i

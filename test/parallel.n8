@@ -1,9 +1,9 @@
 #!/opt/n8lang/bin/n8
 
-parallel render! "Test 1";
-parallel render! "Test 2";
-parallel render! "Test 3";
-parallel render! "Test 4";
-parallel render! "Test 5";
+parallel render! "Test 1"
+parallel render! "Test 2"
+parallel render! "Test 3"
+parallel render! "Test 4"
+parallel render! "Test 5"
 
-wait;
+wait

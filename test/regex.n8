@@ -1,11 +1,11 @@
 #!/opt/n8lang/bin/n8
 
-val emailRegex = `(\w+)(\.?\w+)*@(\w+)(\.\w+)+`;
-val validEmail = "test@test.com";
-val invalidEmail = "test@test";
+val emailRegex = `(\w+)(\.?\w+)*@(\w+)(\.\w+)+`
+val validEmail = "test@test.com"
+val invalidEmail = "test@test"
 
-render! validEmail :: emailRegex;
-render! invalidEmail :: emailRegex;
+render! validEmail :: emailRegex
+render! invalidEmail :: emailRegex
 
-render! validEmail !: emailRegex;
-render! invalidEmail !: emailRegex;
+render! validEmail !: emailRegex
+render! invalidEmail !: emailRegex

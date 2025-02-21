@@ -1,9 +1,13 @@
 #!/opt/n8lang/bin/n8
 
 test("Example Test 1") {
-    ret 1 + 1 == 2;
-};
+    ret 1 + 1 == 2
+}
 
 test("Example Test 2") {
-    ret false;
-};
+    ret false
+}
+
+test("Example Test 3") if([1, 2, 3]) {
+    ret [1, 2, 3.14]
+}

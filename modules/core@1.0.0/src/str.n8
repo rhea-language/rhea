@@ -37,7 +37,6 @@ enum str {
 }
 
 mod str {
-    concat: func(x, y) {
-        ret x + y
-    }
+    concat: func(x, y)
+        @ret x + y
 }

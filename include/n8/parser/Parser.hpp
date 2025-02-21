@@ -36,6 +36,7 @@ private:
 
     std::shared_ptr<ASTNode> exprArray();
     std::shared_ptr<ASTNode> exprBlock();
+    std::shared_ptr<ASTNode> exprSingleStatement();
     std::shared_ptr<ASTNode> exprCatchHandle();
     std::shared_ptr<ASTNode> exprFunctionDecl();
     std::shared_ptr<ASTNode> exprLoop();

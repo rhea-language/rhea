@@ -1,7 +1,7 @@
 use "core"
 
 net.init()
-net.setCaCert("dist/n8lang/bin/cacert.pem")
+net.setCaCert("dist/rhea-lang/bin/cacert.pem")
 
 response = net.http.get("https://catfact.ninja/fact")
 render! response[3]

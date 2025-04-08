@@ -1,4 +1,4 @@
-#!/opt/n8lang/bin/n8
+#!/opt/rhea/bin/rhea
 
 catch {
     render! "This is inside the handle-clause";

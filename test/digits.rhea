@@ -1,4 +1,4 @@
-#!/opt/n8lang/bin/n8
+#!/usr/local/bin/rhea
 
 val bin = 0b001000,
     tri = 0t22,

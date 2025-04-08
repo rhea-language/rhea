@@ -1,4 +1,4 @@
-#!/opt/n8lang/bin/n8
+#!/usr/local/bin/rhea
 
 render! 1.1 + 2.2;
 render! 1.1 - 2.2;

@@ -6,11 +6,11 @@ BEGIN
   BEGIN
     BLOCK "040904E4"
     BEGIN
-      VALUE "CompanyName", "n8lang"
-      VALUE "FileDescription", "N8 Programming Language Installer"
+      VALUE "CompanyName", "rhea-lang"
+      VALUE "FileDescription", "Rhea Programming Language Installer"
       VALUE "FileVersion", "1.0"
       VALUE "LegalCopyright", "Nathanne Isip"
-      VALUE "ProductName", "N8 Programming Language Installer"
+      VALUE "ProductName", "Rhea Programming Language Installer"
       VALUE "ProductVersion", "1.0"
     END
   END

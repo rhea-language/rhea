@@ -1,18 +1,18 @@
 # Copyright (c) 2025 - Nathanne Isip
-# This file is part of N8.
+# This file is part of Rhea.
 # 
-# N8 is free software: you can redistribute it and/or modify
+# Rhea is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published
 # by the Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 # 
-# N8 is distributed in the hope that it will be useful, but
+# Rhea is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 # 
 # You should have received a copy of the GNU General Public License
-# along with N8. If not, see <https://www.gnu.org/licenses/>.
+# along with Rhea. If not, see <https://www.gnu.org/licenses/>.
 
 import os
 import platform
@@ -55,16 +55,16 @@ def build_proc():
     VERSION         = '1.0.0'
     ARCHITECTURE    = platform.machine().lower()
     OUTPUT_EXE      = os.path.join(
-        'dist', 'n8lang', 'bin',
+        'dist', 'rhea-lang', 'bin',
         f'uninstaller.exe'
     )
 
-    config_res = 'dist\\n8-uninstaller-config.res'
-    icon_config_res = 'dist\\n8-uninstaller-icon-config.res'
+    config_res = 'dist\\rhea-uninstaller-config.res'
+    icon_config_res = 'dist\\rhea-uninstaller-icon-config.res'
 
     log_task("Generating Windows resource file configurations...")
-    subprocess.run(['windres', 'configs\\n8-uninstaller-config.rc', '-O', 'coff', '-o', config_res])
-    subprocess.run(['windres', 'configs\\n8-uninstaller-icon-config.rc', '-O', 'coff', '-o', icon_config_res])
+    subprocess.run(['windres', 'configs\\rhea-uninstaller-config.rc', '-O', 'coff', '-o', config_res])
+    subprocess.run(['windres', 'configs\\rhea-uninstaller-icon-config.rc', '-O', 'coff', '-o', icon_config_res])
     log_info("Windows resource file configurations successfully generated!")
 
     log_task("Executing build command subprocess...")
@@ -150,7 +150,7 @@ def build_proc():
     for x in range(len(deps)):
         shutil.copyfile(
             os.path.join(msys2_path, 'bin', deps[x]),
-            os.path.join('dist', 'n8lang', 'bin', deps[x])
+            os.path.join('dist', 'rhea-lang', 'bin', deps[x])
         )
     log_info("Successfully copied dependency DLL files for uninstaller!")
 

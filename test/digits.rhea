@@ -1,4 +1,4 @@
-#!/usr/local/bin/rhea
+#!/usr/bin/rhea
 
 val bin = 0b001000,
     tri = 0t22,

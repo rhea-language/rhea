@@ -1,4 +1,4 @@
-#!/opt/rhea/bin/rhea
+#!/usr/bin/rhea
 
 i = 0
 while(i < 10) {

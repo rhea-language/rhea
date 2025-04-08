@@ -1,4 +1,4 @@
-#!/opt/rhea/bin/rhea
+#!/usr/bin/rhea
 
 parallel render! "Test 1"
 parallel render! "Test 2"

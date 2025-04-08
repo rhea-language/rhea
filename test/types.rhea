@@ -1,4 +1,4 @@
-#!/opt/rhea/bin/rhea
+#!/usr/bin/rhea
 
 render! type "hello"
 render! type 3.14

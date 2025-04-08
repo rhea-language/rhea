@@ -1,4 +1,4 @@
-#!/usr/local/bin/rhea
+#!/usr/bin/rhea
 
 render! 1.1 + 2.2;
 render! 1.1 - 2.2;

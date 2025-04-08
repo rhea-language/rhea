@@ -1,4 +1,4 @@
-#!/opt/rhea/bin/rhea
+#!/usr/bin/rhea
 
 test("Example Test 1") {
     ret 1 + 1 == 2

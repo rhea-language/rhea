@@ -6,11 +6,11 @@ BEGIN
   BEGIN
     BLOCK "040904E4"
     BEGIN
-      VALUE "CompanyName", "n8lang"
-      VALUE "FileDescription", "N8 Programming Language Uninstaller"
+      VALUE "CompanyName", "rhea-lang"
+      VALUE "FileDescription", "Rhea Programming Language Uninstaller"
       VALUE "FileVersion", "1.0"
       VALUE "LegalCopyright", "Nathanne Isip"
-      VALUE "ProductName", "N8 Programming Language Uninstaller"
+      VALUE "ProductName", "Rhea Programming Language Uninstaller"
       VALUE "ProductVersion", "1.0"
     END
   END

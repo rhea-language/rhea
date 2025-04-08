@@ -1,52 +1,49 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef N8_STDLIB_CRYPT_CC
-#define N8_STDLIB_CRYPT_CC
+#ifndef RHEA_STDLIB_STR_CC
+#define RHEA_STDLIB_STR_CC
 
 #ifdef __clang__
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 #endif
 
-#include "N8Library.hpp"
+#include "RheaLibrary.hpp"
 
-N8_LIB_START
+RHEA_LIB_START
 
-N8_FUNC(crypt_md4);
-N8_FUNC(crypt_validateMd4);
+RHEA_FUNC(str_append);
+RHEA_FUNC(str_at);
+RHEA_FUNC(str_contains);
+RHEA_FUNC(str_find);
+RHEA_FUNC(str_fromBuffer);
+RHEA_FUNC(str_occurence);
+RHEA_FUNC(str_pop);
+RHEA_FUNC(str_replace);
+RHEA_FUNC(str_replaceAll);
+RHEA_FUNC(str_split);
+RHEA_FUNC(str_substring);
+RHEA_FUNC(str_toArray);
+RHEA_FUNC(str_toBytes);
+RHEA_FUNC(str_trim);
 
-N8_FUNC(crypt_md5);
-N8_FUNC(crypt_validateMd5);
-
-N8_FUNC(crypt_sha224);
-N8_FUNC(crypt_validateSha224);
-
-N8_FUNC(crypt_sha256);
-N8_FUNC(crypt_validateSha256);
-
-N8_FUNC(crypt_sha384);
-N8_FUNC(crypt_validateSha384);
-
-N8_FUNC(crypt_sha512);
-N8_FUNC(crypt_validateSha512);
-
-N8_LIB_END
+RHEA_LIB_END
 
 #ifdef __clang__
 #   pragma clang diagnostic pop

@@ -1,28 +1,28 @@
 /*
  * Copyright (c) 2025 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "n8std/Unsafe.hpp"
+#include "rhea-std/Unsafe.hpp"
 
-#include <n8/ast/TerminativeSignal.hpp>
+#include <rhea/ast/TerminativeSignal.hpp>
 #include <unsafe_ops.hpp>
 
-N8_FUNC(unsafe_volatileRead8) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_volatileRead8) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -48,8 +48,8 @@ N8_FUNC(unsafe_volatileRead8) {
     );
 }
 
-N8_FUNC(unsafe_volatileRead16) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_volatileRead16) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -75,8 +75,8 @@ N8_FUNC(unsafe_volatileRead16) {
     );
 }
 
-N8_FUNC(unsafe_volatileRead32) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_volatileRead32) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -102,8 +102,8 @@ N8_FUNC(unsafe_volatileRead32) {
     );
 }
 
-N8_FUNC(unsafe_volatileWrite8) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_volatileWrite8) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -141,8 +141,8 @@ N8_FUNC(unsafe_volatileWrite8) {
     return {};
 }
 
-N8_FUNC(unsafe_volatileWrite16) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_volatileWrite16) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -180,8 +180,8 @@ N8_FUNC(unsafe_volatileWrite16) {
     return {};
 }
 
-N8_FUNC(unsafe_volatileWrite32) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_volatileWrite32) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -219,8 +219,8 @@ N8_FUNC(unsafe_volatileWrite32) {
     return {};
 }
 
-N8_FUNC(unsafe_registerSetBits) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_registerSetBits) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -258,8 +258,8 @@ N8_FUNC(unsafe_registerSetBits) {
     return {};
 }
 
-N8_FUNC(unsafe_registerClearBits) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_registerClearBits) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -297,8 +297,8 @@ N8_FUNC(unsafe_registerClearBits) {
     return {};
 }
 
-N8_FUNC(unsafe_registerToggleBits) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_registerToggleBits) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -336,8 +336,8 @@ N8_FUNC(unsafe_registerToggleBits) {
     return {};
 }
 
-N8_FUNC(unsafe_registerTestBits) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_registerTestBits) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -375,8 +375,8 @@ N8_FUNC(unsafe_registerTestBits) {
     return {};
 }
 
-N8_FUNC(unsafe_registerReadField) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_registerReadField) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -423,8 +423,8 @@ N8_FUNC(unsafe_registerReadField) {
     return {};
 }
 
-N8_FUNC(unsafe_registerWriteField) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_registerWriteField) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 4)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -480,64 +480,64 @@ N8_FUNC(unsafe_registerWriteField) {
     return {};
 }
 
-N8_FUNC(unsafe_memoryBarrier) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_memoryBarrier) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     memory_barrier();
 
     return {};
 }
 
-N8_FUNC(unsafe_readBarrier) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_readBarrier) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     read_barrier();
 
     return {};
 }
 
-N8_FUNC(unsafe_writeBarrier) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_writeBarrier) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     write_barrier();
 
     return {};
 }
 
-N8_FUNC(unsafe_memoryFenceAcquire) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_memoryFenceAcquire) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     memory_fence_acquire();
 
     return {};
 }
 
-N8_FUNC(unsafe_memoryFenceRelease) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_memoryFenceRelease) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     memory_fence_release();
 
     return {};
 }
 
-N8_FUNC(unsafe_memoryFenceSequential) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_memoryFenceSequential) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     memory_fence_sequential();
 
     return {};
 }
 
-N8_FUNC(unsafe_enableInterrupts) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_enableInterrupts) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     enable_interrupts();
 
     return {};
 }
 
-N8_FUNC(unsafe_disableInterrupts) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_disableInterrupts) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     disable_interrupts();
 
     return {};
 }
 
-N8_FUNC(unsafe_setCpuAffinity) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_setCpuAffinity) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -559,8 +559,8 @@ N8_FUNC(unsafe_setCpuAffinity) {
     return {};
 }
 
-N8_FUNC(unsafe_portRead8) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_portRead8) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -583,8 +583,8 @@ N8_FUNC(unsafe_portRead8) {
     );
 }
 
-N8_FUNC(unsafe_portRead16) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_portRead16) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -607,8 +607,8 @@ N8_FUNC(unsafe_portRead16) {
     );
 }
 
-N8_FUNC(unsafe_portRead32) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_portRead32) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -631,8 +631,8 @@ N8_FUNC(unsafe_portRead32) {
     );
 }
 
-N8_FUNC(unsafe_portWrite8) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_portWrite8) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -664,8 +664,8 @@ N8_FUNC(unsafe_portWrite8) {
     return {};
 }
 
-N8_FUNC(unsafe_portWrite16) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_portWrite16) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -697,8 +697,8 @@ N8_FUNC(unsafe_portWrite16) {
     return {};
 }
 
-N8_FUNC(unsafe_portWrite32) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_portWrite32) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -730,8 +730,8 @@ N8_FUNC(unsafe_portWrite32) {
     return {};
 }
 
-N8_FUNC(unsafe_inject) {
-    N8_FUNC_REQUIRE_UNSAFE
+RHEA_FUNC(unsafe_inject) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),

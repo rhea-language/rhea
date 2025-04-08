@@ -1,25 +1,25 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "n8std/IO.hpp"
+#include "rhea-std/IO.hpp"
 
-#include <N8.hpp>
-#include <n8/ast/TerminativeSignal.hpp>
+#include <Rhea.hpp>
+#include <rhea/ast/TerminativeSignal.hpp>
 
 #include <chrono>
 #include <exception>
@@ -37,7 +37,7 @@
 #   include <fcntl.h>
 #endif
 
-N8_FUNC(io_print) {
+RHEA_FUNC(io_print) {
     if(args.size() == 0)
         return {};
 
@@ -49,7 +49,7 @@ N8_FUNC(io_print) {
     return {};
 }
 
-N8_FUNC(io_printLine) {
+RHEA_FUNC(io_printLine) {
     if(args.size() == 0)
         return {};
 
@@ -61,21 +61,21 @@ N8_FUNC(io_printLine) {
     return {};
 }
 
-N8_FUNC(io_readString) {
+RHEA_FUNC(io_readString) {
     std::string str;
     std::getline(std::cin, str);
 
     return DynamicObject(str);
 }
 
-N8_FUNC(io_readNumber) {
+RHEA_FUNC(io_readNumber) {
     std::string str;
     std::getline(std::cin, str);
 
     return DynamicObject(::atof(str.c_str()));
 }
 
-N8_FUNC(io_readBoolean) {
+RHEA_FUNC(io_readBoolean) {
     std::string str;
     std::getline(std::cin, str);
 
@@ -86,7 +86,7 @@ N8_FUNC(io_readBoolean) {
     return DynamicObject(boolVal);
 }
 
-N8_FUNC(io_fileRead) {
+RHEA_FUNC(io_fileRead) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -114,7 +114,7 @@ N8_FUNC(io_fileRead) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-N8_FUNC(io_fileWrite) {
+RHEA_FUNC(io_fileWrite) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -133,7 +133,7 @@ N8_FUNC(io_fileWrite) {
     return DynamicObject(true);
 }
 
-N8_FUNC(io_fileSize) {
+RHEA_FUNC(io_fileSize) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -159,7 +159,7 @@ N8_FUNC(io_fileSize) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-N8_FUNC(io_filePerms) {
+RHEA_FUNC(io_filePerms) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -214,7 +214,7 @@ N8_FUNC(io_filePerms) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-N8_FUNC(io_fileCreationDate) {
+RHEA_FUNC(io_fileCreationDate) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -249,7 +249,7 @@ N8_FUNC(io_fileCreationDate) {
     ));
 }
 
-N8_FUNC(io_fileDelete) {
+RHEA_FUNC(io_fileDelete) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -294,7 +294,7 @@ N8_FUNC(io_fileDelete) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-N8_FUNC(io_folderCreate) {
+RHEA_FUNC(io_folderCreate) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -326,7 +326,7 @@ N8_FUNC(io_folderCreate) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-N8_FUNC(io_folderSize) {
+RHEA_FUNC(io_folderSize) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -358,7 +358,7 @@ N8_FUNC(io_folderSize) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-N8_FUNC(io_folderCreationDate) {
+RHEA_FUNC(io_folderCreationDate) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -391,7 +391,7 @@ N8_FUNC(io_folderCreationDate) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-N8_FUNC(io_folderDelete) {
+RHEA_FUNC(io_folderDelete) {
     if(args.empty() || args.size() >= 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -419,7 +419,7 @@ N8_FUNC(io_folderDelete) {
     return DynamicObject(true);
 }
 
-N8_FUNC(io_isFile) {
+RHEA_FUNC(io_isFile) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -436,7 +436,7 @@ N8_FUNC(io_isFile) {
     );
 }
 
-N8_FUNC(io_isFolder) {
+RHEA_FUNC(io_isFolder) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -453,7 +453,7 @@ N8_FUNC(io_isFolder) {
     );
 }
 
-N8_FUNC(io_listAllFiles) {
+RHEA_FUNC(io_listAllFiles) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -476,7 +476,7 @@ N8_FUNC(io_listAllFiles) {
     return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
-N8_FUNC(io_exit) {
+RHEA_FUNC(io_exit) {
     if(args.size() == 0)
         exit(0);
 

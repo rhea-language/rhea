@@ -1,37 +1,37 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "n8std/GL.hpp"
+#include "rhea-std/GL.hpp"
 
 #ifndef __TERMUX__
 
-#include <n8/ast/TerminativeSignal.hpp>
-#include <n8/ast/expression/FunctionDeclarationExpression.hpp>
-#include <n8/util/RandomUtil.hpp>
+#include <rhea/ast/TerminativeSignal.hpp>
+#include <rhea/ast/expression/FunctionDeclarationExpression.hpp>
+#include <rhea/util/RandomUtil.hpp>
 
 #include <GLFW/glfw3.h>
 #include <unordered_map>
 
-N8_FUNC(gl_init) {
+RHEA_FUNC(gl_init) {
     return DynamicObject(glfwInit() == 1);
 }
 
-N8_FUNC(gl_initHint) {
+RHEA_FUNC(gl_initHint) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -63,11 +63,11 @@ N8_FUNC(gl_initHint) {
     return {};
 }
 
-N8_FUNC(gl_versionString) {
+RHEA_FUNC(gl_versionString) {
     return DynamicObject(glfwGetVersionString());
 }
 
-N8_FUNC(gl_getError) {
+RHEA_FUNC(gl_getError) {
     std::vector<DynamicObject> values;
     const char* errorMessage;
 
@@ -88,7 +88,7 @@ N8_FUNC(gl_getError) {
     );
 }
 
-N8_FUNC(gl_setErrorCallback) {
+RHEA_FUNC(gl_setErrorCallback) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -122,12 +122,12 @@ N8_FUNC(gl_setErrorCallback) {
     return {};
 }
 
-N8_FUNC(gl_terminate) {
+RHEA_FUNC(gl_terminate) {
     glfwTerminate();
     return {};
 }
 
-N8_FUNC(gl_createWindow) {
+RHEA_FUNC(gl_createWindow) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -158,7 +158,7 @@ N8_FUNC(gl_createWindow) {
         title.toString().c_str(),
         NULL, NULL
     );
-    std::string key = N8Util::uniqueKey();
+    std::string key = RheaUtil::uniqueKey();
 
     if(!window)
         return {};
@@ -167,7 +167,7 @@ N8_FUNC(gl_createWindow) {
     return DynamicObject(key);
 }
 
-N8_FUNC(gl_makeContextCurrent) {
+RHEA_FUNC(gl_makeContextCurrent) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -187,7 +187,7 @@ N8_FUNC(gl_makeContextCurrent) {
     return DynamicObject(keyStr);
 }
 
-N8_FUNC(gl_shouldCloseWindow) {
+RHEA_FUNC(gl_shouldCloseWindow) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -211,7 +211,7 @@ N8_FUNC(gl_shouldCloseWindow) {
     );
 }
 
-N8_FUNC(gl_clear) {
+RHEA_FUNC(gl_clear) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -231,7 +231,7 @@ N8_FUNC(gl_clear) {
     return {};
 }
 
-N8_FUNC(gl_clearColor) {
+RHEA_FUNC(gl_clearColor) {
     if(args.size() != 4)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -281,7 +281,7 @@ N8_FUNC(gl_clearColor) {
     return {};
 }
 
-N8_FUNC(gl_swapBuffers) {
+RHEA_FUNC(gl_swapBuffers) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -301,7 +301,7 @@ N8_FUNC(gl_swapBuffers) {
     return DynamicObject(keyStr);
 }
 
-N8_FUNC(gl_pollEvents) {
+RHEA_FUNC(gl_pollEvents) {
     if(args.size() != 0)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -313,7 +313,7 @@ N8_FUNC(gl_pollEvents) {
     return {};
 }
 
-N8_FUNC(gl_destroyWindow) {
+RHEA_FUNC(gl_destroyWindow) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -333,13 +333,13 @@ N8_FUNC(gl_destroyWindow) {
     return DynamicObject(keyStr);
 }
 
-N8_FUNC(gl_getMonitors) {
+RHEA_FUNC(gl_getMonitors) {
     int count = 0;
     GLFWmonitor** monitors = glfwGetMonitors(&count);
 
     std::vector<DynamicObject> results;
     for(size_t i = 0; i < (size_t) count; i++) {
-        std::string key = N8Util::uniqueKey();
+        std::string key = RheaUtil::uniqueKey();
 
         monitorMap[key] = monitors[i];
         results.emplace_back(DynamicObject(key));
@@ -352,15 +352,15 @@ N8_FUNC(gl_getMonitors) {
     );
 }
 
-N8_FUNC(gl_primaryMonitor) {
+RHEA_FUNC(gl_primaryMonitor) {
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-    std::string key = N8Util::uniqueKey();
+    std::string key = RheaUtil::uniqueKey();
 
     monitorMap[key] = monitor;
     return DynamicObject(key);
 }
 
-N8_FUNC(gl_monitorPosition) {
+RHEA_FUNC(gl_monitorPosition) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -396,7 +396,7 @@ N8_FUNC(gl_monitorPosition) {
     );
 }
 
-N8_FUNC(gl_monitorWorkarea) {
+RHEA_FUNC(gl_monitorWorkarea) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -438,7 +438,7 @@ N8_FUNC(gl_monitorWorkarea) {
     );
 }
 
-N8_FUNC(gl_monitorPhysicalSize) {
+RHEA_FUNC(gl_monitorPhysicalSize) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -474,7 +474,7 @@ N8_FUNC(gl_monitorPhysicalSize) {
     );
 }
 
-N8_FUNC(gl_monitorContentScale) {
+RHEA_FUNC(gl_monitorContentScale) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -506,7 +506,7 @@ N8_FUNC(gl_monitorContentScale) {
     );
 }
 
-N8_FUNC(gl_monitorName) {
+RHEA_FUNC(gl_monitorName) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -529,7 +529,7 @@ N8_FUNC(gl_monitorName) {
     ));
 }
 
-N8_FUNC(gl_setMonitorCallback) {
+RHEA_FUNC(gl_setMonitorCallback) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -549,7 +549,7 @@ N8_FUNC(gl_setMonitorCallback) {
     static SymbolTable& symbols = symtab;
 
     glfwSetMonitorCallback([](GLFWmonitor* monitor, int event) {
-        std::string monitorKey = N8Util::uniqueKey();
+        std::string monitorKey = RheaUtil::uniqueKey();
         monitorMap[monitorKey] = monitor;
 
         std::vector<DynamicObject> params;
@@ -564,7 +564,7 @@ N8_FUNC(gl_setMonitorCallback) {
     return callback;
 }
 
-N8_FUNC(gl_getVideoModes) {
+RHEA_FUNC(gl_getVideoModes) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -621,7 +621,7 @@ N8_FUNC(gl_getVideoModes) {
     );
 }
 
-N8_FUNC(gl_getVideoMode) {
+RHEA_FUNC(gl_getVideoMode) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),

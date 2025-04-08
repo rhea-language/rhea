@@ -1,27 +1,27 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "n8std/ML.hpp"
+#include "rhea-std/ML.hpp"
 
-#include <N8.hpp>
-#include <n8/ast/TerminativeSignal.hpp>
-#include <n8/ast/expression/FunctionDeclarationExpression.hpp>
-#include <n8/util/VectorMath.hpp>
+#include <Rhea.hpp>
+#include <rhea/ast/TerminativeSignal.hpp>
+#include <rhea/ast/expression/FunctionDeclarationExpression.hpp>
+#include <rhea/util/VectorMath.hpp>
 
 #include <chisei/idx_loader.hpp>
 
@@ -65,7 +65,7 @@ static inline double calculateMean(
     return sum / arraySize;
 }
 
-N8_FUNC(ml_trendline_calculate) {
+RHEA_FUNC(ml_trendline_calculate) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -115,7 +115,7 @@ N8_FUNC(ml_trendline_calculate) {
     ));
 }
 
-N8_FUNC(ml_trendline_calculateRmse) {
+RHEA_FUNC(ml_trendline_calculateRmse) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -177,7 +177,7 @@ N8_FUNC(ml_trendline_calculateRmse) {
     return DynamicObject(std::sqrt(sumSquaredErrs / paramSize));
 }
 
-N8_FUNC(ml_trendline_predict) {
+RHEA_FUNC(ml_trendline_predict) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -217,7 +217,7 @@ N8_FUNC(ml_trendline_predict) {
     );
 }
 
-N8_FUNC(ml_ann_create) {
+RHEA_FUNC(ml_ann_create) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -230,7 +230,7 @@ N8_FUNC(ml_ann_create) {
         activationDerivative = args.at(2);
 
     if(!layers.isArray() ||
-        !N8Util::isNumberArray(*layers.getArray().get())
+        !RheaUtil::isNumberArray(*layers.getArray().get())
     ) throw TerminativeThrowSignal(
             std::move(address),
             "Layer parameter should be of number array type."
@@ -243,8 +243,8 @@ N8_FUNC(ml_ann_create) {
             "Activation function and derivative should be of function type."
         );
 
-    std::string id = N8Util::uniqueKey();
-    std::vector<double> doubleLayers = N8Util::object2Vector(layers);
+    std::string id = RheaUtil::uniqueKey();
+    std::vector<double> doubleLayers = RheaUtil::object2Vector(layers);
     std::vector<size_t> layerSizes;
 
     layerSizes.reserve(doubleLayers.size());
@@ -285,7 +285,7 @@ N8_FUNC(ml_ann_create) {
     return DynamicObject(id);
 }
 
-N8_FUNC(ml_ann_fromMnist) {
+RHEA_FUNC(ml_ann_fromMnist) {
     if(args.size() != 4)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -310,7 +310,7 @@ N8_FUNC(ml_ann_fromMnist) {
             "Learning rate and epoch should be of number type."
         );
 
-    std::string id = N8Util::uniqueKey();
+    std::string id = RheaUtil::uniqueKey();
     neuralNetworkMap[id] = std::make_shared<chisei::NeuralNetwork>(
         chisei::IDXLoader::fromMNIST(
             imageFile.toString(),
@@ -323,7 +323,7 @@ N8_FUNC(ml_ann_fromMnist) {
     return DynamicObject(id);
 }
 
-N8_FUNC(ml_ann_fromModelFile) {
+RHEA_FUNC(ml_ann_fromModelFile) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -338,7 +338,7 @@ N8_FUNC(ml_ann_fromModelFile) {
             "Path parameter should be of string."
         );
 
-    std::string id = N8Util::uniqueKey();
+    std::string id = RheaUtil::uniqueKey();
     neuralNetworkMap[id] = std::make_unique<chisei::NeuralNetwork>(
         chisei::NeuralNetwork::loadFromModel(path.toString())
     );
@@ -346,7 +346,7 @@ N8_FUNC(ml_ann_fromModelFile) {
     return DynamicObject(id);
 }
 
-N8_FUNC(ml_ann_train) {
+RHEA_FUNC(ml_ann_train) {
     if(args.size() != 5)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -393,23 +393,23 @@ N8_FUNC(ml_ann_train) {
 
     std::vector<std::vector<double>> inputVec, targetVec;
     for(const auto& inpv : *inputs.getArray().get()) {
-        if(!inpv.isArray() || !N8Util::isNumberArray(*inpv.getArray()))
+        if(!inpv.isArray() || !RheaUtil::isNumberArray(*inpv.getArray()))
             throw TerminativeThrowSignal(
                 std::move(address),
                 "Input parameter elements should be of number array types."
             );
 
-        inputVec.emplace_back(N8Util::object2Vector(inpv));
+        inputVec.emplace_back(RheaUtil::object2Vector(inpv));
     }
 
     for(const auto& tgtv : *targets.getArray().get()) {
-        if(!tgtv.isArray() || !N8Util::isNumberArray(*tgtv.getArray()))
+        if(!tgtv.isArray() || !RheaUtil::isNumberArray(*tgtv.getArray()))
             throw TerminativeThrowSignal(
                 std::move(address),
                 "Target parameter elements should be of number array types."
             );
 
-        targetVec.emplace_back(N8Util::object2Vector(tgtv));
+        targetVec.emplace_back(RheaUtil::object2Vector(tgtv));
     }
 
     neuralNetworkMap[id]->train(
@@ -421,7 +421,7 @@ N8_FUNC(ml_ann_train) {
     return {};
 }
 
-N8_FUNC(ml_ann_predict) {
+RHEA_FUNC(ml_ann_predict) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -439,20 +439,20 @@ N8_FUNC(ml_ann_predict) {
             "Neural network map ID not found."
         );
 
-    if(!inputs.isArray() || !N8Util::isNumberArray(*inputs.getArray().get()))
+    if(!inputs.isArray() || !RheaUtil::isNumberArray(*inputs.getArray().get()))
         throw TerminativeThrowSignal(
             std::move(address),
             "Inputs parameter should be of number array type."
         );
 
-    return DynamicObject(N8Util::vector2Object(
+    return DynamicObject(RheaUtil::vector2Object(
         neuralNetworkMap[id]->predict(
-            N8Util::object2Vector(inputs)
+            RheaUtil::object2Vector(inputs)
         )
     ));
 }
 
-N8_FUNC(ml_ann_calculateMseLoss) {
+RHEA_FUNC(ml_ann_calculateMseLoss) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -471,13 +471,13 @@ N8_FUNC(ml_ann_calculateMseLoss) {
             "Neural network map ID not found."
         );
 
-    if(!predictions.isArray() || !N8Util::isNumberArray(*predictions.getArray().get()))
+    if(!predictions.isArray() || !RheaUtil::isNumberArray(*predictions.getArray().get()))
         throw TerminativeThrowSignal(
             std::move(address),
             "Prediction parameter should be of number array type."
         );
 
-    if(!targets.isArray() || !N8Util::isNumberArray(*targets.getArray().get()))
+    if(!targets.isArray() || !RheaUtil::isNumberArray(*targets.getArray().get()))
         throw TerminativeThrowSignal(
             std::move(address),
             "Targets parameter should be of number array type."
@@ -485,13 +485,13 @@ N8_FUNC(ml_ann_calculateMseLoss) {
 
     return DynamicObject(
         neuralNetworkMap[id]->compute_mse_loss(
-            N8Util::object2Vector(predictions),
-            N8Util::object2Vector(targets)
+            RheaUtil::object2Vector(predictions),
+            RheaUtil::object2Vector(targets)
         )
     );
 }
 
-N8_FUNC(ml_ann_computeOutputGradient) {
+RHEA_FUNC(ml_ann_computeOutputGradient) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -510,27 +510,27 @@ N8_FUNC(ml_ann_computeOutputGradient) {
             "Neural network map ID not found."
         );
 
-    if(!predictions.isArray() || !N8Util::isNumberArray(*predictions.getArray().get()))
+    if(!predictions.isArray() || !RheaUtil::isNumberArray(*predictions.getArray().get()))
         throw TerminativeThrowSignal(
             std::move(address),
             "Prediction parameter should be of number array type."
         );
 
-    if(!targets.isArray() || !N8Util::isNumberArray(*targets.getArray().get()))
+    if(!targets.isArray() || !RheaUtil::isNumberArray(*targets.getArray().get()))
         throw TerminativeThrowSignal(
             std::move(address),
             "Targets parameter should be of number array type."
         );
 
-    return DynamicObject(N8Util::vector2Object(
+    return DynamicObject(RheaUtil::vector2Object(
         neuralNetworkMap[id]->compute_output_gradient(
-            N8Util::object2Vector(predictions),
-            N8Util::object2Vector(targets)
+            RheaUtil::object2Vector(predictions),
+            RheaUtil::object2Vector(targets)
         )
     ));
 }
 
-N8_FUNC(ml_ann_computeAccuracy) {
+RHEA_FUNC(ml_ann_computeAccuracy) {
     if(args.size() != 5)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -563,23 +563,23 @@ N8_FUNC(ml_ann_computeAccuracy) {
 
     std::vector<std::vector<double>> inputVec, targetVec;
     for(const auto& inpv : *inputs.getArray().get()) {
-        if(!inpv.isArray() || !N8Util::isNumberArray(*inpv.getArray()))
+        if(!inpv.isArray() || !RheaUtil::isNumberArray(*inpv.getArray()))
             throw TerminativeThrowSignal(
                 std::move(address),
                 "Input parameter elements should be of number array types."
             );
 
-        inputVec.emplace_back(N8Util::object2Vector(inpv));
+        inputVec.emplace_back(RheaUtil::object2Vector(inpv));
     }
 
     for(const auto& tgtv : *targets.getArray().get()) {
-        if(!tgtv.isArray() || !N8Util::isNumberArray(*tgtv.getArray()))
+        if(!tgtv.isArray() || !RheaUtil::isNumberArray(*tgtv.getArray()))
             throw TerminativeThrowSignal(
                 std::move(address),
                 "Target parameter elements should be of number array types."
             );
 
-        targetVec.emplace_back(N8Util::object2Vector(tgtv));
+        targetVec.emplace_back(RheaUtil::object2Vector(tgtv));
     }
 
     return DynamicObject(
@@ -590,7 +590,7 @@ N8_FUNC(ml_ann_computeAccuracy) {
     );
 }
 
-N8_FUNC(ml_ann_isCorrectPrediction) {
+RHEA_FUNC(ml_ann_isCorrectPrediction) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -609,13 +609,13 @@ N8_FUNC(ml_ann_isCorrectPrediction) {
             "Neural network map ID not found."
         );
 
-    if(!predictions.isArray() || !N8Util::isNumberArray(*predictions.getArray().get()))
+    if(!predictions.isArray() || !RheaUtil::isNumberArray(*predictions.getArray().get()))
         throw TerminativeThrowSignal(
             std::move(address),
             "Prediction parameter should be of number array type."
         );
 
-    if(!targets.isArray() || !N8Util::isNumberArray(*targets.getArray().get()))
+    if(!targets.isArray() || !RheaUtil::isNumberArray(*targets.getArray().get()))
         throw TerminativeThrowSignal(
             std::move(address),
             "Targets parameter should be of number array type."
@@ -623,13 +623,13 @@ N8_FUNC(ml_ann_isCorrectPrediction) {
 
     return DynamicObject(
         neuralNetworkMap[id]->is_correct_prediction(
-            N8Util::object2Vector(predictions),
-            N8Util::object2Vector(targets)
+            RheaUtil::object2Vector(predictions),
+            RheaUtil::object2Vector(targets)
         )
     );
 }
 
-N8_FUNC(ml_ann_saveModel) {
+RHEA_FUNC(ml_ann_saveModel) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),

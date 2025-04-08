@@ -1,25 +1,25 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "n8std/Crypt.hpp"
+#include "rhea-std/Crypt.hpp"
 
-#include <N8.hpp>
-#include <n8/ast/TerminativeSignal.hpp>
+#include <Rhea.hpp>
+#include <rhea/ast/TerminativeSignal.hpp>
 
 #include <iomanip>
 #include <openssl/evp.h>
@@ -92,7 +92,7 @@ std::string calculateHash(const std::string& input, CryptAlgorithm algo) {
     return ss.str();
 }
 
-N8_FUNC(crypt_md4) {
+RHEA_FUNC(crypt_md4) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -107,7 +107,7 @@ N8_FUNC(crypt_md4) {
     ));
 }
 
-N8_FUNC(crypt_validateMd4) {
+RHEA_FUNC(crypt_validateMd4) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -126,7 +126,7 @@ N8_FUNC(crypt_validateMd4) {
     );
 }
 
-N8_FUNC(crypt_md5) {
+RHEA_FUNC(crypt_md5) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -141,7 +141,7 @@ N8_FUNC(crypt_md5) {
     ));
 }
 
-N8_FUNC(crypt_validateMd5) {
+RHEA_FUNC(crypt_validateMd5) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -160,7 +160,7 @@ N8_FUNC(crypt_validateMd5) {
     );
 }
 
-N8_FUNC(crypt_sha224) {
+RHEA_FUNC(crypt_sha224) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -175,7 +175,7 @@ N8_FUNC(crypt_sha224) {
     ));
 }
 
-N8_FUNC(crypt_validateSha224) {
+RHEA_FUNC(crypt_validateSha224) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -194,7 +194,7 @@ N8_FUNC(crypt_validateSha224) {
     );
 }
 
-N8_FUNC(crypt_sha256) {
+RHEA_FUNC(crypt_sha256) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -209,7 +209,7 @@ N8_FUNC(crypt_sha256) {
     ));
 }
 
-N8_FUNC(crypt_validateSha256) {
+RHEA_FUNC(crypt_validateSha256) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -228,7 +228,7 @@ N8_FUNC(crypt_validateSha256) {
     );
 }
 
-N8_FUNC(crypt_sha384) {
+RHEA_FUNC(crypt_sha384) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -243,7 +243,7 @@ N8_FUNC(crypt_sha384) {
     ));
 }
 
-N8_FUNC(crypt_validateSha384) {
+RHEA_FUNC(crypt_validateSha384) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -262,7 +262,7 @@ N8_FUNC(crypt_validateSha384) {
     );
 }
 
-N8_FUNC(crypt_sha512) {
+RHEA_FUNC(crypt_sha512) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -277,7 +277,7 @@ N8_FUNC(crypt_sha512) {
     ));
 }
 
-N8_FUNC(crypt_validateSha512) {
+RHEA_FUNC(crypt_validateSha512) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),

@@ -30,7 +30,7 @@ jobs:
           brew install python@3.12 libomp
           export PATH=/usr/local/opt/python@3.12/bin:$PATH
 
-      - name: Build N8
+      - name: Build Rhea
         run: |
           export CPATH=/opt/homebrew/include
           export LIBRARY_PATH=/opt/homebrew/lib
@@ -39,40 +39,40 @@ jobs:
 
       - name: Set Environment Path
         run: |
-          export N8_PATH=$(pwd)/dist/n8lang
+          export RHEA_PATH=$(pwd)/dist/rhea-lang
 
       - name: Build verification
         run: |
-          ./dist/n8lang/bin/n8
+          ./dist/rhea-lang/bin/rhea
           ls -ral dist
           find dist | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
 
       - name: Run test scripts
         run: |
-          ./dist/n8lang/bin/n8 ./test/arithmetic.n8
-          ./dist/n8lang/bin/n8 ./test/array.n8
-          ./dist/n8lang/bin/n8 ./test/digits.n8
-          ./dist/n8lang/bin/n8 ./test/error_handling.n8
-          ./dist/n8lang/bin/n8 ./test/flow.n8
-          ./dist/n8lang/bin/n8 ./test/func.n8
-          ./dist/n8lang/bin/n8 ./test/lock.n8
-          ./dist/n8lang/bin/n8 ./test/loop.n8
-          ./dist/n8lang/bin/n8 ./test/native.n8
-          ./dist/n8lang/bin/n8 ./test/parallel.n8
-          ./dist/n8lang/bin/n8 ./test/regex.n8
-          ./dist/n8lang/bin/n8 ./test/test.n8 -t
-          ./dist/n8lang/bin/n8 ./test/types.n8
+          ./dist/rhea-lang/bin/rhea ./test/arithmetic.rhea
+          ./dist/rhea-lang/bin/rhea ./test/array.rhea
+          ./dist/rhea-lang/bin/rhea ./test/digits.rhea
+          ./dist/rhea-lang/bin/rhea ./test/error_handling.rhea
+          ./dist/rhea-lang/bin/rhea ./test/flow.rhea
+          ./dist/rhea-lang/bin/rhea ./test/func.rhea
+          ./dist/rhea-lang/bin/rhea ./test/lock.rhea
+          ./dist/rhea-lang/bin/rhea ./test/loop.rhea
+          ./dist/rhea-lang/bin/rhea ./test/native.rhea
+          ./dist/rhea-lang/bin/rhea ./test/parallel.rhea
+          ./dist/rhea-lang/bin/rhea ./test/regex.rhea
+          ./dist/rhea-lang/bin/rhea ./test/test.rhea -t
+          ./dist/rhea-lang/bin/rhea ./test/types.rhea
 
       - name: Run examples
         run: |
-          ./dist/n8lang/bin/n8 ./examples/99-beers.n8
-          ./dist/n8lang/bin/n8 ./examples/hello.n8
-          ./dist/n8lang/bin/n8 ./examples/http-get.n8
-          ./dist/n8lang/bin/n8 ./examples/logic-gate-ai.n8
+          ./dist/rhea-lang/bin/rhea ./examples/99-beers.rhea
+          ./dist/rhea-lang/bin/rhea ./examples/hello.rhea
+          ./dist/rhea-lang/bin/rhea ./examples/http-get.rhea
+          ./dist/rhea-lang/bin/rhea ./examples/logic-gate-ai.rhea
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4
         with:
-          name: n8-darwin-dist
+          name: rhea-darwin-dist
           path: dist/
           retention-days: 1

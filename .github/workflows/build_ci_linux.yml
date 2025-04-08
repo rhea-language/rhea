@@ -32,55 +32,55 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Build N8
+      - name: Build Rhea
         run: |
           python -m pip install py-cpuinfo
           python build.py
 
       - name: Set Environment Path
         run: |
-          export N8_PATH=$(pwd)/dist/n8lang
+          export RHEA_PATH=$(pwd)/dist/rhea-lang
 
       - name: Build verification
         run: |
-          ./dist/n8lang/bin/n8
+          ./dist/rhea-lang/bin/rhea
           ls dist -ral
           find dist | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
 
       - name: Run test scripts
         run: |
           start=$(date +%s%3N)
-          ./dist/n8lang/bin/n8 ./test/arithmetic.n8
-          ./dist/n8lang/bin/n8 ./test/array.n8
-          ./dist/n8lang/bin/n8 ./test/digits.n8
-          ./dist/n8lang/bin/n8 ./test/error_handling.n8
-          ./dist/n8lang/bin/n8 ./test/flow.n8
-          ./dist/n8lang/bin/n8 ./test/func.n8
-          ./dist/n8lang/bin/n8 ./test/lock.n8
-          ./dist/n8lang/bin/n8 ./test/loop.n8
-          ./dist/n8lang/bin/n8 ./test/native.n8
-          ./dist/n8lang/bin/n8 ./test/parallel.n8
-          ./dist/n8lang/bin/n8 ./test/regex.n8
-          ./dist/n8lang/bin/n8 ./test/test.n8 -t
-          ./dist/n8lang/bin/n8 ./test/types.n8
+          ./dist/rhea-lang/bin/rhea ./test/arithmetic.rhea
+          ./dist/rhea-lang/bin/rhea ./test/array.rhea
+          ./dist/rhea-lang/bin/rhea ./test/digits.rhea
+          ./dist/rhea-lang/bin/rhea ./test/error_handling.rhea
+          ./dist/rhea-lang/bin/rhea ./test/flow.rhea
+          ./dist/rhea-lang/bin/rhea ./test/func.rhea
+          ./dist/rhea-lang/bin/rhea ./test/lock.rhea
+          ./dist/rhea-lang/bin/rhea ./test/loop.rhea
+          ./dist/rhea-lang/bin/rhea ./test/native.rhea
+          ./dist/rhea-lang/bin/rhea ./test/parallel.rhea
+          ./dist/rhea-lang/bin/rhea ./test/regex.rhea
+          ./dist/rhea-lang/bin/rhea ./test/test.rhea -t
+          ./dist/rhea-lang/bin/rhea ./test/types.rhea
           end=$(date +%s%3N)
           echo "Elapsed time: $((end - start)) ms"
 
       - name: Run examples
         run: |
-          export N8_PATH=$(pwd)/dist/n8lang
-          /usr/bin/time -v ./dist/n8lang/bin/n8 ./examples/99-beers.n8
-          /usr/bin/time -v ./dist/n8lang/bin/n8 ./examples/hello.n8
-          /usr/bin/time -v ./dist/n8lang/bin/n8 ./examples/http-get.n8
-          /usr/bin/time -v ./dist/n8lang/bin/n8 -u ./examples/inject.n8
-          /usr/bin/time -v ./dist/n8lang/bin/n8 ./examples/logic-gate-ai.n8
+          export RHEA_PATH=$(pwd)/dist/rhea-lang
+          /usr/bin/time -v ./dist/rhea-lang/bin/rhea ./examples/99-beers.rhea
+          /usr/bin/time -v ./dist/rhea-lang/bin/rhea ./examples/hello.rhea
+          /usr/bin/time -v ./dist/rhea-lang/bin/rhea ./examples/http-get.rhea
+          /usr/bin/time -v ./dist/rhea-lang/bin/rhea -u ./examples/inject.rhea
+          /usr/bin/time -v ./dist/rhea-lang/bin/rhea ./examples/logic-gate-ai.rhea
 
-      - name: Create N8 *.deb file
+      - name: Create Rhea *.deb file
         run: python tools/build_deb_installer.py
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4
         with:
-          name: n8-linux-dist
-          path: dist/n8-lang_1.0.0_amd64.deb
+          name: rhea-linux-dist
+          path: dist/rhea-lang_1.0.0_amd64.deb
           retention-days: 1

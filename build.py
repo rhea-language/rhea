@@ -1,18 +1,18 @@
 # Copyright (c) 2025 - Nathanne Isip
-# This file is part of N8.
+# This file is part of Rhea.
 # 
-# N8 is free software: you can redistribute it and/or modify
+# Rhea is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published
 # by the Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 # 
-# N8 is distributed in the hope that it will be useful, but
+# Rhea is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 # 
 # You should have received a copy of the GNU General Public License
-# along with N8. If not, see <https://www.gnu.org/licenses/>.
+# along with Rhea. If not, see <https://www.gnu.org/licenses/>.
 
 import cpuinfo
 import os
@@ -48,11 +48,11 @@ def log_error(message):
     )
 
 CORE_VERSION = '1.0.0'
-OUT_DIR = os.path.join('dist', 'n8lang')
+OUT_DIR = os.path.join('dist', 'rhea-lang')
 
 PLATFORM = platform.system()
 ARCH = platform.architecture()[0]
-OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'bin', 'n8')
+OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'bin', 'rhea')
 OUTPUT_LIBRARY = os.path.join(
     OUT_DIR,
     'modules', 'core@1.0.0',
@@ -133,22 +133,22 @@ def build_proc():
     try:
         src = 'modules'
 
-        log_task("Copying N8 standard library module files...")
+        log_task("Copying Rhea standard library module files...")
         shutil.copytree(
             src,
             os.path.join(OUT_DIR, os.path.basename(src)),
             dirs_exist_ok=True
         )
 
-        os.makedirs(os.path.join('dist', 'n8lang', 'bin'))
+        os.makedirs(os.path.join('dist', 'rhea-lang', 'bin'))
         os.makedirs(os.path.join(
-            'dist', 'n8lang', 'modules',
+            'dist', 'rhea-lang', 'modules',
             'core@1.0.0', 'lib'
         ))
         log_info(f"Successfully copied '{src}' to '{OUT_DIR}'")
 
     except Exception as e:
-        log_error("Failed to copy N8 standard library modules.")
+        log_error("Failed to copy Rhea standard library modules.")
         exit(0)
 
     try:
@@ -167,7 +167,7 @@ def build_proc():
             if file.endswith('.cpp'):
                 cpp_files.append(os.path.join(root, file))
 
-    log_task("Listing included N8 standard library source files...")
+    log_task("Listing included Rhea standard library source files...")
     for root, dirs, files in os.walk('std'):
         for file in files:
             if file.endswith('.cc'):
@@ -208,8 +208,8 @@ def build_proc():
         if PLATFORM == 'Windows':
             now = time.time()
 
-            config_res = 'dist\\n8-config.res'
-            icon_config_res = 'dist\\n8-icon-config.res'
+            config_res = 'dist\\rhea-config.res'
+            icon_config_res = 'dist\\rhea-icon-config.res'
 
             win_libs = [
                 '-static', '-static-libstdc++',
@@ -256,11 +256,11 @@ def build_proc():
             ] + linkable_libs + win_libs
 
             log_task("Generating Windows resource file configurations...")
-            subprocess.run(['windres', 'configs\\n8-config.rc', '-O', 'coff', '-o', config_res])
-            subprocess.run(['windres', 'configs\\n8-icon-config.rc', '-O', 'coff', '-o', icon_config_res])
+            subprocess.run(['windres', 'configs\\rhea-config.rc', '-O', 'coff', '-o', config_res])
+            subprocess.run(['windres', 'configs\\rhea-icon-config.rc', '-O', 'coff', '-o', icon_config_res])
             log_info("Windows resource file configurations successfully generated!")
 
-            log_task("Building N8 core for Windows...")
+            log_task("Building Rhea core for Windows...")
             subprocess.run(exe_build_args)
             end = time.time() - now
             log_info(f"Finished in {end:.6f} seconds")
@@ -278,7 +278,7 @@ def build_proc():
                 '-Wno-deprecated-declarations'
             ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + linkable_libs + win_libs
 
-            log_task("Building N8 standard library for Windows...")
+            log_task("Building Rhea standard library for Windows...")
             subprocess.run(lib_build_args)
             end = time.time() - now
             log_info(f"Finished in {end:.6f} seconds")
@@ -310,7 +310,7 @@ def build_proc():
                 '-ffast-math', '-D__TERMUX__'
             ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + linkable_libs
 
-            log_task("Building N8 core for Termux...")
+            log_task("Building Rhea core for Termux...")
             subprocess.run(exe_build_args)
             end = time.time() - now
             log_info(f"Finished in {end:.6f} seconds")
@@ -324,7 +324,7 @@ def build_proc():
                 '-lcurl'
             ] + linkable_libs
 
-            log_task("Building N8 standard library for Termux...")
+            log_task("Building Rhea standard library for Termux...")
             subprocess.run(lib_build_args)
             end = time.time() - now
             log_info(f"Finished in {end:.6f} seconds")
@@ -352,7 +352,7 @@ def build_proc():
                 '-march=native', '-ffast-math'
             ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + linkable_libs
 
-            log_task("Building N8 core for Linux...")
+            log_task("Building Rhea core for Linux...")
             subprocess.run(exe_build_args)
             end = time.time() - now
             log_info(f"Finished in {end:.6f} seconds")
@@ -364,7 +364,7 @@ def build_proc():
                 '-std=c++23', '-Wno-deprecated-declarations'
             ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + linkable_libs
 
-            log_task("Building N8 standard library for Linux...")
+            log_task("Building Rhea standard library for Linux...")
             subprocess.run(lib_build_args)
             end = time.time() - now
             log_info(f"Finished in {end:.6f} seconds")
@@ -400,7 +400,7 @@ def build_proc():
                 '-Wno-pessimizing-move'
             ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
-            log_task("Building N8 core for MacOS...")
+            log_task("Building Rhea core for MacOS...")
             subprocess.run(exe_build_args)
             end = time.time() - now
             log_info(f"Finished in {end:.6f} seconds")
@@ -418,14 +418,14 @@ def build_proc():
                 '-framework', 'OpenGL'
             ] + linkable_libs
 
-            log_task("Building N8 standard library for MacOS...")
+            log_task("Building Rhea standard library for MacOS...")
             subprocess.run(lib_build_args)
             end = time.time() - now
             log_info(f"Finished in {end:.6f} seconds")
 
         shutil.copy(
             os.path.join('misc', 'cacert.pem'),
-            os.path.join('dist', 'n8lang', 'bin', 'cacert.pem')
+            os.path.join('dist', 'rhea-lang', 'bin', 'cacert.pem')
         )
 
     except Exception as e:

@@ -227,11 +227,11 @@ jobs:
 
       - name: Checkout code
         run:
-          git clone https://github.com/n8lang/n8
+          git clone https://github.com/rhea-language/rhea
 
-      - name: Build N8
+      - name: Build Rhea
         run: |
-          cd n8
+          cd rhea
           pwd
           where g++
           python build.py
@@ -241,52 +241,52 @@ jobs:
       - name: Set Environment Path
         shell: bash
         run: |
-          cd n8
-          echo "N8_PATH=$PWD/dist/n8lang" >> $GITHUB_ENV
+          cd rhea
+          echo "RHEA_PATH=$PWD/dist/rhea-lang" >> $GITHUB_ENV
 
       - name: Build verification
         shell: bash
         run: |
-          cd n8
-          ./dist/n8lang/bin/n8
+          cd rhea
+          ./dist/rhea-lang/bin/rhea
           ls -R dist
 
       - name: Run test scripts
         shell: cmd
         run: |
-          cd n8
-          setx N8_PATH %cd%\dist\n8lang /M
-          echo %N8_PATH%
-          .\dist\n8lang\bin\n8 .\test\arithmetic.n8
-          .\dist\n8lang\bin\n8 .\test\array.n8
-          .\dist\n8lang\bin\n8 .\test\digits.n8
-          .\dist\n8lang\bin\n8 .\test\error_handling.n8
-          .\dist\n8lang\bin\n8 .\test\flow.n8
-          .\dist\n8lang\bin\n8 .\test\func.n8
-          .\dist\n8lang\bin\n8 .\test\lock.n8
-          .\dist\n8lang\bin\n8 .\test\loop.n8
-          .\dist\n8lang\bin\n8 .\test\native.n8
-          .\dist\n8lang\bin\n8 .\test\parallel.n8
-          .\dist\n8lang\bin\n8 .\test\regex.n8
-          .\dist\n8lang\bin\n8 .\test\test.n8 -t
-          .\dist\n8lang\bin\n8 .\test\types.n8
+          cd rhea
+          setx RHEA_PATH %cd%\dist\rhea-lang /M
+          echo %RHEA_PATH%
+          .\dist\rhea-lang\bin\rhea .\test\arithmetic.rhea
+          .\dist\rhea-lang\bin\rhea .\test\array.rhea
+          .\dist\rhea-lang\bin\rhea .\test\digits.rhea
+          .\dist\rhea-lang\bin\rhea .\test\error_handling.rhea
+          .\dist\rhea-lang\bin\rhea .\test\flow.rhea
+          .\dist\rhea-lang\bin\rhea .\test\func.rhea
+          .\dist\rhea-lang\bin\rhea .\test\lock.rhea
+          .\dist\rhea-lang\bin\rhea .\test\loop.rhea
+          .\dist\rhea-lang\bin\rhea .\test\native.rhea
+          .\dist\rhea-lang\bin\rhea .\test\parallel.rhea
+          .\dist\rhea-lang\bin\rhea .\test\regex.rhea
+          .\dist\rhea-lang\bin\rhea .\test\test.rhea -t
+          .\dist\rhea-lang\bin\rhea .\test\types.rhea
 
       - name: Run examples
         shell: cmd
         run: |
-          cd n8
-          set N8_PATH=%cd%\dist\n8lang
-          .\dist\n8lang\bin\n8 examples\99-beers.n8
-          .\dist\n8lang\bin\n8 examples\hello.n8
-          .\dist\n8lang\bin\n8 examples\http-get.n8
-          .\dist\n8lang\bin\n8 examples\logic-gate-ai.n8
+          cd rhea
+          set RHEA_PATH=%cd%\dist\rhea-lang
+          .\dist\rhea-lang\bin\rhea examples\99-beers.rhea
+          .\dist\rhea-lang\bin\rhea examples\hello.rhea
+          .\dist\rhea-lang\bin\rhea examples\http-get.rhea
+          .\dist\rhea-lang\bin\rhea examples\logic-gate-ai.rhea
 
       - name: Build and Test Clean Up
-        run: rm -rf n8/dist/n8lang
+        run: rm -rf rhea/dist/rhea-lang
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4
         with:
-          name: n8-windows-dist
-          path: n8/dist
+          name: rhea-windows-dist
+          path: rhea/dist
           retention-days: 1

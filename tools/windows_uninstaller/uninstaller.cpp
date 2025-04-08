@@ -10,7 +10,7 @@
 #include <shlwapi.h>
 #include <shlobj.h>
 
-namespace N8Uninstaller {
+namespace RheaUninstaller {
 
 bool IsElevated() {
     BOOL fRet = FALSE;
@@ -159,11 +159,11 @@ std::wstring GetInstallBase(bool isBin) {
 
     if(isBin) {
         if(SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_PROGRAM_FILES, NULL, 0, path)))
-            return std::wstring(path) + L"\\n8lang";
+            return std::wstring(path) + L"\\rhea-lang";
     }
     else {
         if(SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_MYDOCUMENTS, NULL, 0, path)))
-            return std::wstring(path) + L"\\n8lang";
+            return std::wstring(path) + L"\\rhea-lang";
     }
 
     return L"";
@@ -171,12 +171,12 @@ std::wstring GetInstallBase(bool isBin) {
 
 bool RemoveFileAssociation() {
     LSTATUS status;
-    status = RegDeleteTreeW(HKEY_CLASSES_ROOT, L".n8");
+    status = RegDeleteTreeW(HKEY_CLASSES_ROOT, L".rhea");
 
     if(status != ERROR_SUCCESS && status != ERROR_FILE_NOT_FOUND)
         return false;
 
-    status = RegDeleteTreeW(HKEY_CLASSES_ROOT, L"n8lang_script");
+    status = RegDeleteTreeW(HKEY_CLASSES_ROOT, L"rhea_script");
     if(status != ERROR_SUCCESS && status != ERROR_FILE_NOT_FOUND)
         return false;
 
@@ -184,7 +184,7 @@ bool RemoveFileAssociation() {
 }
 
 bool RemoveUninstallEntry() {
-    std::wstring uninstallPath = L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\N8Lang";
+    std::wstring uninstallPath = L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\RheaLang";
     LSTATUS status = RegDeleteTreeW(HKEY_LOCAL_MACHINE, uninstallPath.c_str());
 
     return status == ERROR_SUCCESS || status == ERROR_FILE_NOT_FOUND;
@@ -219,7 +219,7 @@ protected:
 };
 
 UninstallWindow::UninstallWindow() {
-    this->set_title("N8 Language Uninstaller");
+    this->set_title("Rhea Language Uninstaller");
     this->set_position(Gtk::WIN_POS_CENTER);
     this->set_default_size(760, 380);
     this->set_resizable(false);
@@ -271,7 +271,7 @@ UninstallWindow::UninstallWindow() {
     this->add(this->mainBox);
 
     auto header = Gtk::make_managed<Gtk::Label>();
-    header->set_markup("<span size='20pt' weight='bold'>N8 Language Uninstaller</span>");
+    header->set_markup("<span size='20pt' weight='bold'>Rhea Language Uninstaller</span>");
     header->set_halign(Gtk::ALIGN_START);
     this->mainBox.pack_start(*header, Gtk::PACK_SHRINK);
 
@@ -348,28 +348,28 @@ void UninstallWindow::on_close_clicked() {
 }
 
 void UninstallWindow::perform_uninstall() {
-    this->append_log("Starting N8 Language uninstallation...");
+    this->append_log("Starting Rhea Language uninstallation...");
     this->update_status("Initializing...");
     this->update_progress(0.0);
 
-    std::wstring binPath = N8Uninstaller::GetInstallBase(true);
+    std::wstring binPath = RheaUninstaller::GetInstallBase(true);
     if(!binPath.empty()) {
         this->update_status("Removing program files...");
         this->append_log("Removing program files...");
 
-        if(N8Uninstaller::DeleteDirectory(binPath)) {
+        if(RheaUninstaller::DeleteDirectory(binPath)) {
             this->append_log("Successfully removed program files!");
             this->update_progress(0.2);
         }
         else this->append_log("Failed to remove program files!");
     }
 
-    std::wstring docPath = N8Uninstaller::GetInstallBase(false);
+    std::wstring docPath = RheaUninstaller::GetInstallBase(false);
     if(!docPath.empty()) {
         this->update_status("Removing user files...");
         this->append_log("Removing user files...");
 
-        if(N8Uninstaller::DeleteDirectory(docPath)) {
+        if(RheaUninstaller::DeleteDirectory(docPath)) {
             this->append_log("Successfully removed user files!");
             this->update_progress(0.4);
         }
@@ -377,21 +377,21 @@ void UninstallWindow::perform_uninstall() {
     }
 
     this->update_status("Cleaning environment...");
-    this->append_log("Removing N8_PATH...");
+    this->append_log("Removing RHEA_PATH...");
 
-    if(N8Uninstaller::RemoveEnvironmentVariablePersistent(
-        L"N8_PATH", false
+    if(RheaUninstaller::RemoveEnvironmentVariablePersistent(
+        L"RHEA_PATH", false
     )) {
-        this->append_log("Removed N8_PATH environment variable!");
+        this->append_log("Removed RHEA_PATH environment variable!");
         this->update_progress(0.6);
     }
-    else this->append_log("Failed to remove N8_PATH!");
+    else this->append_log("Failed to remove RHEA_PATH!");
 
-    std::wstring binDirPath = N8Uninstaller::GetInstallBase(true) +
+    std::wstring binDirPath = RheaUninstaller::GetInstallBase(true) +
         L"\\bin";
     this->append_log("Removing from system PATH...");
 
-    if(N8Uninstaller::RemoveFromSystemPath(binDirPath)) {
+    if(RheaUninstaller::RemoveFromSystemPath(binDirPath)) {
         this->append_log("Removed from system PATH!");
         this->update_progress(0.7);
     }
@@ -400,16 +400,16 @@ void UninstallWindow::perform_uninstall() {
     this->update_status("Cleaning registry...");
     this->append_log("Removing uninstall entry...");
 
-    if(N8Uninstaller::RemoveUninstallEntry()) {
+    if(RheaUninstaller::RemoveUninstallEntry()) {
         this->append_log("Removed registry entries!");
         this->update_progress(0.8);
     }
     else this->append_log("Failed to remove registry entries!");
 
     this->update_status("Removing file associations...");
-    this->append_log("Removing .n8 associations...");
+    this->append_log("Removing .rhea associations...");
 
-    if(N8Uninstaller::RemoveFileAssociation()) {
+    if(RheaUninstaller::RemoveFileAssociation()) {
         this->append_log("Removed file associations!");
         this->update_progress(0.9);
     }
@@ -443,7 +443,7 @@ void UninstallWindow::create_selfdestruct_bat() {
     wchar_t batPath[MAX_PATH];
     do swprintf_s(
         batPath,
-        L"%s\\n8d_%04x.bat",
+        L"%s\\rhead_%04x.bat",
         tempDir,
         rand() % 0xFFFF
     );
@@ -531,7 +531,7 @@ void UninstallWindow::create_selfdestruct_bat() {
 }
 
 int main(int argc, char* argv[]) {
-    if(!N8Uninstaller::IsElevated()) {
+    if(!RheaUninstaller::IsElevated()) {
         wchar_t path[MAX_PATH];
 
         GetModuleFileNameW(nullptr, path, MAX_PATH);
@@ -543,7 +543,7 @@ int main(int argc, char* argv[]) {
     auto app = Gtk::Application::create(
         argc,
         argv,
-        "org.n8lang.uninstaller"
+        "org.rhealang.uninstaller"
     );
     UninstallWindow window;
 

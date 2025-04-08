@@ -1,30 +1,30 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "n8std/Array.hpp"
+#include "rhea-std/Array.hpp"
 
-#include <N8.hpp>
-#include <n8/ast/TerminativeSignal.hpp>
+#include <Rhea.hpp>
+#include <rhea/ast/TerminativeSignal.hpp>
 
 #include <algorithm>
 #include <vector>
 
-N8_FUNC(array_create) {
+RHEA_FUNC(array_create) {
     std::vector<DynamicObject> values;
 
     for(size_t i = 0; i < args.size(); i++) {
@@ -37,7 +37,7 @@ N8_FUNC(array_create) {
     );
 }
 
-N8_FUNC(array_clear) {
+RHEA_FUNC(array_clear) {
     if(args.empty())
         throw TerminativeThrowSignal(
             std::move(address),
@@ -59,7 +59,7 @@ N8_FUNC(array_clear) {
     return {};
 }
 
-N8_FUNC(array_length) {
+RHEA_FUNC(array_length) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -80,7 +80,7 @@ N8_FUNC(array_length) {
     ));
 }
 
-N8_FUNC(array_reverse) {
+RHEA_FUNC(array_reverse) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -102,7 +102,7 @@ N8_FUNC(array_reverse) {
     return DynamicObject(array);
 }
 
-N8_FUNC(array_first) {
+RHEA_FUNC(array_first) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -124,7 +124,7 @@ N8_FUNC(array_first) {
     return value.getArray()->at(0);
 }
 
-N8_FUNC(array_last) {
+RHEA_FUNC(array_last) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -146,7 +146,7 @@ N8_FUNC(array_last) {
     return value.getArray()->back();
 }
 
-N8_FUNC(array_add) {
+RHEA_FUNC(array_add) {
     if(args.size() <= 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -171,7 +171,7 @@ N8_FUNC(array_add) {
     return DynamicObject(array);
 }
 
-N8_FUNC(array_pushBack) {
+RHEA_FUNC(array_pushBack) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -194,7 +194,7 @@ N8_FUNC(array_pushBack) {
     return DynamicObject(array);
 }
 
-N8_FUNC(array_pushFront) {
+RHEA_FUNC(array_pushFront) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -223,7 +223,7 @@ N8_FUNC(array_pushFront) {
     return DynamicObject(array);
 }
 
-N8_FUNC(array_assign) {
+RHEA_FUNC(array_assign) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -254,7 +254,7 @@ N8_FUNC(array_assign) {
     return DynamicObject(array);
 }
 
-N8_FUNC(array_slice) {
+RHEA_FUNC(array_slice) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -302,7 +302,7 @@ N8_FUNC(array_slice) {
     ));
 }
 
-N8_FUNC(array_remove) {
+RHEA_FUNC(array_remove) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -325,7 +325,7 @@ N8_FUNC(array_remove) {
     return DynamicObject(array);
 }
 
-N8_FUNC(array_removeAt) {
+RHEA_FUNC(array_removeAt) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -357,7 +357,7 @@ N8_FUNC(array_removeAt) {
     return DynamicObject(array);
 }
 
-N8_FUNC(array_removeAll) {
+RHEA_FUNC(array_removeAll) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -383,7 +383,7 @@ N8_FUNC(array_removeAll) {
     return DynamicObject(array);
 }
 
-N8_FUNC(array_removeSlice) {
+RHEA_FUNC(array_removeSlice) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -426,7 +426,7 @@ N8_FUNC(array_removeSlice) {
     return DynamicObject(array);
 }
 
-N8_FUNC(array_contains) {
+RHEA_FUNC(array_contains) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -452,7 +452,7 @@ N8_FUNC(array_contains) {
     );
 }
 
-N8_FUNC(array_find) {
+RHEA_FUNC(array_find) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -478,7 +478,7 @@ N8_FUNC(array_find) {
     );
 }
 
-N8_FUNC(array_at) {
+RHEA_FUNC(array_at) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -509,7 +509,7 @@ N8_FUNC(array_at) {
     return item;
 }
 
-N8_FUNC(array_join) {
+RHEA_FUNC(array_join) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -540,7 +540,7 @@ N8_FUNC(array_join) {
     return DynamicObject(output);
 }
 
-N8_FUNC(array_areAllString) {
+RHEA_FUNC(array_areAllString) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -563,7 +563,7 @@ N8_FUNC(array_areAllString) {
     return DynamicObject(true);
 }
 
-N8_FUNC(array_areAllNumber) {
+RHEA_FUNC(array_areAllNumber) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -586,7 +586,7 @@ N8_FUNC(array_areAllNumber) {
     return DynamicObject(true);
 }
 
-N8_FUNC(array_areAllFunction) {
+RHEA_FUNC(array_areAllFunction) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -609,7 +609,7 @@ N8_FUNC(array_areAllFunction) {
     return DynamicObject(true);
 }
 
-N8_FUNC(array_areAllBool) {
+RHEA_FUNC(array_areAllBool) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -632,7 +632,7 @@ N8_FUNC(array_areAllBool) {
     return DynamicObject(true);
 }
 
-N8_FUNC(array_areAllRegex) {
+RHEA_FUNC(array_areAllRegex) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -655,7 +655,7 @@ N8_FUNC(array_areAllRegex) {
     return DynamicObject(true);
 }
 
-N8_FUNC(array_areAllArray) {
+RHEA_FUNC(array_areAllArray) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -678,7 +678,7 @@ N8_FUNC(array_areAllArray) {
     return DynamicObject(true);
 }
 
-N8_FUNC(array_areAllNil) {
+RHEA_FUNC(array_areAllNil) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),

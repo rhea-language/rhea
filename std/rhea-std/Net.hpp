@@ -1,37 +1,45 @@
 /*
- * Copyright (c) 2024 - Nathanne Isip
- * This file is part of N8.
+ * Copyright (c) 2025 - Nathanne Isip
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef N8_STDLIB_ENV_CC
-#define N8_STDLIB_ENV_CC
-
+#ifndef RHEA_STDLIB_NET_CC
+#define RHEA_STDLIB_NET_CC
+ 
 #ifdef __clang__
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 #endif
 
-#include "N8Library.hpp"
+#include "RheaLibrary.hpp"
 
-N8_LIB_START
+RHEA_LIB_START
 
-N8_FUNC(env_set);
-N8_FUNC(env_get);
+RHEA_FUNC(net_init);
+RHEA_FUNC(net_deinit);
 
-N8_LIB_END
+RHEA_FUNC(net_setCaCert);
+RHEA_FUNC(net_getCaCert);
+
+RHEA_FUNC(net_http_get);
+RHEA_FUNC(net_http_post);
+RHEA_FUNC(net_http_ping);
+RHEA_FUNC(net_http_downloadFile);
+
+RHEA_LIB_END
 
 #ifdef __clang__
 #   pragma clang diagnostic pop

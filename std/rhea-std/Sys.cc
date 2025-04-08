@@ -1,25 +1,25 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "n8std/Sys.hpp"
+#include "rhea-std/Sys.hpp"
 
-#include <n8/ast/TerminativeSignal.hpp>
-#include <n8/util/RandomUtil.hpp>
+#include <rhea/ast/TerminativeSignal.hpp>
+#include <rhea/util/RandomUtil.hpp>
 
 #include <cstdlib>
 #include <fstream>
@@ -30,7 +30,7 @@
 #   include <windows.h>
 #endif
 
-N8_FUNC(sys_quickShell) {
+RHEA_FUNC(sys_quickShell) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -46,7 +46,7 @@ N8_FUNC(sys_quickShell) {
     );
 }
 
-N8_FUNC(sys_shellConnect) {
+RHEA_FUNC(sys_shellConnect) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -55,7 +55,7 @@ N8_FUNC(sys_shellConnect) {
         );
 
     DynamicObject value = args.at(0);
-    std::string uuid = N8Util::uniqueKey();
+    std::string uuid = RheaUtil::uniqueKey();
 
     shellMap[uuid] = std::make_shared<MyShell>(
         value.toString()
@@ -63,7 +63,7 @@ N8_FUNC(sys_shellConnect) {
     return DynamicObject(uuid);
 }
 
-N8_FUNC(sys_shellWrite) {
+RHEA_FUNC(sys_shellWrite) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -85,7 +85,7 @@ N8_FUNC(sys_shellWrite) {
     return DynamicObject(uuid);
 }
 
-N8_FUNC(sys_shellReadOutput) {
+RHEA_FUNC(sys_shellReadOutput) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -107,7 +107,7 @@ N8_FUNC(sys_shellReadOutput) {
     );
 }
 
-N8_FUNC(sys_shellReadError) {
+RHEA_FUNC(sys_shellReadError) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -129,7 +129,7 @@ N8_FUNC(sys_shellReadError) {
     );
 }
 
-N8_FUNC(sys_shellForceExit) {
+RHEA_FUNC(sys_shellForceExit) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -150,7 +150,7 @@ N8_FUNC(sys_shellForceExit) {
     return DynamicObject(uuid);
 }
 
-N8_FUNC(sys_shellHasExited) {
+RHEA_FUNC(sys_shellHasExited) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -170,7 +170,7 @@ N8_FUNC(sys_shellHasExited) {
     return DynamicObject(shellMap[uuid]->hasExited());
 }
 
-N8_FUNC(sys_shellExitCode) {
+RHEA_FUNC(sys_shellExitCode) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -194,7 +194,7 @@ N8_FUNC(sys_shellExitCode) {
     );
 }
 
-N8_FUNC(sys_shellProcessId) {
+RHEA_FUNC(sys_shellProcessId) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -218,7 +218,7 @@ N8_FUNC(sys_shellProcessId) {
     );
 }
 
-N8_FUNC(sys_shellClose) {
+RHEA_FUNC(sys_shellClose) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -239,7 +239,7 @@ N8_FUNC(sys_shellClose) {
     return DynamicObject(uuid);
 }
 
-N8_FUNC(sys_arch) {
+RHEA_FUNC(sys_arch) {
     std::string architecture;
 
     #if defined(__x86_64__) || defined(_M_X64)
@@ -351,7 +351,7 @@ N8_FUNC(sys_arch) {
     return DynamicObject(architecture);
 }
 
-N8_FUNC(sys_platform) {
+RHEA_FUNC(sys_platform) {
     std::string name = "unknown",
         variant = "unknown",
         version = "unknown",
@@ -676,13 +676,13 @@ N8_FUNC(sys_platform) {
     );
 }
 
-N8_FUNC(sys_wordSize) {
+RHEA_FUNC(sys_wordSize) {
     return DynamicObject(
         static_cast<double>(sizeof(void*) * 8)
     );
 }
 
-N8_FUNC(sys_endianess) {
+RHEA_FUNC(sys_endianess) {
     unsigned int x = 1;
     char *c = (char*) &x;
 
@@ -691,7 +691,7 @@ N8_FUNC(sys_endianess) {
     );
 }
 
-N8_FUNC(sys_cpuFeatures) {
+RHEA_FUNC(sys_cpuFeatures) {
     std::vector<DynamicObject> features;
 
     #ifdef __ABM__
@@ -846,7 +846,7 @@ N8_FUNC(sys_cpuFeatures) {
     );
 }
 
-N8_FUNC(sys_sleep) {
+RHEA_FUNC(sys_sleep) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),

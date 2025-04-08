@@ -1,28 +1,28 @@
 /*
  * Copyright (c) 2025 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "n8std/Str.hpp"
+#include "rhea-std/Str.hpp"
 
-#include <n8/ast/TerminativeSignal.hpp>
+#include <rhea/ast/TerminativeSignal.hpp>
 
 #include <cstdlib>
 
-N8_FUNC(str_append) {
+RHEA_FUNC(str_append) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -35,7 +35,7 @@ N8_FUNC(str_append) {
     return DynamicObject(x.toString() + y.toString());
 }
 
-N8_FUNC(str_at) {
+RHEA_FUNC(str_at) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -56,7 +56,7 @@ N8_FUNC(str_at) {
     )));
 }
 
-N8_FUNC(str_contains) {
+RHEA_FUNC(str_contains) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -72,7 +72,7 @@ N8_FUNC(str_contains) {
     );
 }
 
-N8_FUNC(str_find) {
+RHEA_FUNC(str_find) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -87,7 +87,7 @@ N8_FUNC(str_find) {
     ));
 }
 
-N8_FUNC(str_fromBuffer) {
+RHEA_FUNC(str_fromBuffer) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -116,7 +116,7 @@ N8_FUNC(str_fromBuffer) {
     return DynamicObject(stream);
 }
 
-N8_FUNC(str_occurence) {
+RHEA_FUNC(str_occurence) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -140,7 +140,7 @@ N8_FUNC(str_occurence) {
     return DynamicObject(static_cast<double>(count));
 }
 
-N8_FUNC(str_pop) {
+RHEA_FUNC(str_pop) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -155,7 +155,7 @@ N8_FUNC(str_pop) {
     return DynamicObject(str);
 }
 
-N8_FUNC(str_replace) {
+RHEA_FUNC(str_replace) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -176,7 +176,7 @@ N8_FUNC(str_replace) {
     return DynamicObject(sourceStr);
 }
 
-N8_FUNC(str_replaceAll) {
+RHEA_FUNC(str_replaceAll) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -200,7 +200,7 @@ N8_FUNC(str_replaceAll) {
     return DynamicObject(sourceStr);
 }
 
-N8_FUNC(str_split) {
+RHEA_FUNC(str_split) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -227,7 +227,7 @@ N8_FUNC(str_split) {
     ));
 }
 
-N8_FUNC(str_substring) {
+RHEA_FUNC(str_substring) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -259,7 +259,7 @@ N8_FUNC(str_substring) {
     );
 }
 
-N8_FUNC(str_toArray) {
+RHEA_FUNC(str_toArray) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -281,7 +281,7 @@ N8_FUNC(str_toArray) {
     ));
 }
 
-N8_FUNC(str_toBytes) {
+RHEA_FUNC(str_toBytes) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -303,7 +303,7 @@ N8_FUNC(str_toBytes) {
     ));
 }
 
-N8_FUNC(str_trim) {
+RHEA_FUNC(str_trim) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),

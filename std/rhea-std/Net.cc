@@ -1,25 +1,25 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "n8std/Net.hpp"
+#include "rhea-std/Net.hpp"
 
-#include <n8/ast/TerminativeSignal.hpp>
-#include <n8/core/DynamicObject.hpp>
+#include <rhea/ast/TerminativeSignal.hpp>
+#include <rhea/core/DynamicObject.hpp>
 
 #include <map>
 #include <vector>
@@ -102,17 +102,17 @@ std::pair<bool, std::map<std::string, std::string>> objectArrayToMap(DynamicObje
     return std::make_pair(true, pairs);
 }
 
-N8_FUNC(net_init) {
+RHEA_FUNC(net_init) {
     quoneq_net::init();
     return {};
 }
 
-N8_FUNC(net_deinit) {
+RHEA_FUNC(net_deinit) {
     quoneq_net::cleanup();
     return {};
 }
 
-N8_FUNC(net_setCaCert) {
+RHEA_FUNC(net_setCaCert) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -124,11 +124,11 @@ N8_FUNC(net_setCaCert) {
     return {};
 }
 
-N8_FUNC(net_getCaCert) {
+RHEA_FUNC(net_getCaCert) {
     return DynamicObject(quoneq_net::get_ca_cert());
 }
 
-N8_FUNC(net_http_get) {
+RHEA_FUNC(net_http_get) {
     if(args.size() < 1 || args.size() > 6)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -182,7 +182,7 @@ N8_FUNC(net_http_get) {
     )));
 }
 
-N8_FUNC(net_http_post) {
+RHEA_FUNC(net_http_post) {
     if(args.size() < 1 || args.size() > 7)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -262,7 +262,7 @@ N8_FUNC(net_http_post) {
     )));
 }
 
-N8_FUNC(net_http_ping) {
+RHEA_FUNC(net_http_ping) {
     if(args.size() < 1 || args.size() > 4)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -290,7 +290,7 @@ N8_FUNC(net_http_ping) {
     )));
 }
 
-N8_FUNC(net_http_downloadFile) {
+RHEA_FUNC(net_http_downloadFile) {
     if(args.size() < 2 || args.size() > 8)
         throw TerminativeThrowSignal(
             std::move(address),

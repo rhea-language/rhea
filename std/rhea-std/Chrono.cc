@@ -1,31 +1,31 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "n8std/Chrono.hpp"
+#include "rhea-std/Chrono.hpp"
 
-#include <n8/ast/TerminativeSignal.hpp>
+#include <rhea/ast/TerminativeSignal.hpp>
 
 #include <chrono>
 #include <ctime>
 #include <iomanip>
 #include <sstream>
 
-N8_FUNC(chrono_now) {
+RHEA_FUNC(chrono_now) {
     return DynamicObject(
         static_cast<double>(
             static_cast<long>(std::time(nullptr))
@@ -33,7 +33,7 @@ N8_FUNC(chrono_now) {
     );
 }
 
-N8_FUNC(chrono_since) {
+RHEA_FUNC(chrono_since) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -54,7 +54,7 @@ N8_FUNC(chrono_since) {
     );
 }
 
-N8_FUNC(chrono_ms) {
+RHEA_FUNC(chrono_ms) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -79,7 +79,7 @@ N8_FUNC(chrono_ms) {
     );
 }
 
-N8_FUNC(chrono_seconds) {
+RHEA_FUNC(chrono_seconds) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -100,7 +100,7 @@ N8_FUNC(chrono_seconds) {
     );
 }
 
-N8_FUNC(chrono_minutes) {
+RHEA_FUNC(chrono_minutes) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -121,7 +121,7 @@ N8_FUNC(chrono_minutes) {
     );
 }
 
-N8_FUNC(chrono_hour) {
+RHEA_FUNC(chrono_hour) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -142,7 +142,7 @@ N8_FUNC(chrono_hour) {
     );
 }
 
-N8_FUNC(chrono_day) {
+RHEA_FUNC(chrono_day) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -163,7 +163,7 @@ N8_FUNC(chrono_day) {
     );
 }
 
-N8_FUNC(chrono_month) {
+RHEA_FUNC(chrono_month) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -184,7 +184,7 @@ N8_FUNC(chrono_month) {
     );
 }
 
-N8_FUNC(chrono_year) {
+RHEA_FUNC(chrono_year) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -205,7 +205,7 @@ N8_FUNC(chrono_year) {
     );
 }
 
-N8_FUNC(chrono_dayNum) {
+RHEA_FUNC(chrono_dayNum) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -226,7 +226,7 @@ N8_FUNC(chrono_dayNum) {
     );
 }
 
-N8_FUNC(chrono_dayFromStart) {
+RHEA_FUNC(chrono_dayFromStart) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -247,13 +247,13 @@ N8_FUNC(chrono_dayFromStart) {
     );
 }
 
-N8_FUNC(chrono_clock) {
+RHEA_FUNC(chrono_clock) {
     return DynamicObject(
         static_cast<double>(clock())
     );
 }
 
-N8_FUNC(chrono_format) {
+RHEA_FUNC(chrono_format) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -274,7 +274,7 @@ N8_FUNC(chrono_format) {
     return DynamicObject(oss.str());
 }
 
-N8_FUNC(chrono_toGmt) {
+RHEA_FUNC(chrono_toGmt) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),

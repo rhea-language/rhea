@@ -1,31 +1,31 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "n8std/Math.hpp"
+#include "rhea-std/Math.hpp"
 
-#include <N8.hpp>
-#include <n8/ast/TerminativeSignal.hpp>
+#include <Rhea.hpp>
+#include <rhea/ast/TerminativeSignal.hpp>
 
 #include <cmath>
 #include <exception>
 #include <random>
 
-N8_FUNC(math_cos) {
+RHEA_FUNC(math_cos) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -43,7 +43,7 @@ N8_FUNC(math_cos) {
     return DynamicObject(cos(value.getNumber()));
 }
 
-N8_FUNC(math_cosh) {
+RHEA_FUNC(math_cosh) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -61,7 +61,7 @@ N8_FUNC(math_cosh) {
     return DynamicObject(cosh(value.getNumber()));
 }
 
-N8_FUNC(math_sin) {
+RHEA_FUNC(math_sin) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -79,7 +79,7 @@ N8_FUNC(math_sin) {
     return DynamicObject(sin(value.getNumber()));
 }
 
-N8_FUNC(math_sinh) {
+RHEA_FUNC(math_sinh) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -97,7 +97,7 @@ N8_FUNC(math_sinh) {
     return DynamicObject(sinh(value.getNumber()));
 }
 
-N8_FUNC(math_tan) {
+RHEA_FUNC(math_tan) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -115,7 +115,7 @@ N8_FUNC(math_tan) {
     return DynamicObject(tan(value.getNumber()));
 }
 
-N8_FUNC(math_tanh) {
+RHEA_FUNC(math_tanh) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -133,7 +133,7 @@ N8_FUNC(math_tanh) {
     return DynamicObject(tanh(value.getNumber()));
 }
 
-N8_FUNC(math_acos) {
+RHEA_FUNC(math_acos) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -151,7 +151,7 @@ N8_FUNC(math_acos) {
     return DynamicObject(acos(value.getNumber()));
 }
 
-N8_FUNC(math_acosh) {
+RHEA_FUNC(math_acosh) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -169,7 +169,7 @@ N8_FUNC(math_acosh) {
     return DynamicObject(acosh(value.getNumber()));
 }
 
-N8_FUNC(math_asin) {
+RHEA_FUNC(math_asin) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -187,7 +187,7 @@ N8_FUNC(math_asin) {
     return DynamicObject(asin(value.getNumber()));
 }
 
-N8_FUNC(math_asinh) {
+RHEA_FUNC(math_asinh) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -205,7 +205,7 @@ N8_FUNC(math_asinh) {
     return DynamicObject(asinh(value.getNumber()));
 }
 
-N8_FUNC(math_atan) {
+RHEA_FUNC(math_atan) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -223,7 +223,7 @@ N8_FUNC(math_atan) {
     return DynamicObject(atan(value.getNumber()));
 }
 
-N8_FUNC(math_atan2) {
+RHEA_FUNC(math_atan2) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -242,7 +242,7 @@ N8_FUNC(math_atan2) {
     return DynamicObject(atan2(y.getNumber(), x.getNumber()));
 }
 
-N8_FUNC(math_atanh) {
+RHEA_FUNC(math_atanh) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -260,7 +260,7 @@ N8_FUNC(math_atanh) {
     return DynamicObject(atanh(value.getNumber()));
 }
 
-N8_FUNC(math_rand) {
+RHEA_FUNC(math_rand) {
     std::uniform_real_distribution<> dis(0.0, 1.0);
     double value = 0.0f;
 
@@ -285,7 +285,7 @@ N8_FUNC(math_rand) {
     return DynamicObject(value);
 }
 
-N8_FUNC(math_pow) {
+RHEA_FUNC(math_pow) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -304,7 +304,7 @@ N8_FUNC(math_pow) {
     return DynamicObject(pow(x.getNumber(), y.getNumber()));
 }
 
-N8_FUNC(math_pow2) {
+RHEA_FUNC(math_pow2) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -322,7 +322,7 @@ N8_FUNC(math_pow2) {
     return DynamicObject(exp2(value.getNumber()));
 }
 
-N8_FUNC(math_log) {
+RHEA_FUNC(math_log) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -340,7 +340,7 @@ N8_FUNC(math_log) {
     return DynamicObject(log(value.getNumber()));
 }
 
-N8_FUNC(math_log10) {
+RHEA_FUNC(math_log10) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -358,7 +358,7 @@ N8_FUNC(math_log10) {
     return DynamicObject(log10(value.getNumber()));
 }
 
-N8_FUNC(math_log1p) {
+RHEA_FUNC(math_log1p) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -376,7 +376,7 @@ N8_FUNC(math_log1p) {
     return DynamicObject(log1p(value.getNumber()));
 }
 
-N8_FUNC(math_log2) {
+RHEA_FUNC(math_log2) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -394,7 +394,7 @@ N8_FUNC(math_log2) {
     return DynamicObject(log2(value.getNumber()));
 }
 
-N8_FUNC(math_exp) {
+RHEA_FUNC(math_exp) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -412,7 +412,7 @@ N8_FUNC(math_exp) {
     return DynamicObject(exp(value.getNumber()));
 }
 
-N8_FUNC(math_splitExponent) {
+RHEA_FUNC(math_splitExponent) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -440,7 +440,7 @@ N8_FUNC(math_splitExponent) {
     ));
 }
 
-N8_FUNC(math_combineExponent) {
+RHEA_FUNC(math_combineExponent) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -462,7 +462,7 @@ N8_FUNC(math_combineExponent) {
     ));
 }
 
-N8_FUNC(math_extractExponent) {
+RHEA_FUNC(math_extractExponent) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -480,7 +480,7 @@ N8_FUNC(math_extractExponent) {
     return DynamicObject(logb(value.getNumber()));
 }
 
-N8_FUNC(math_scaleByExponent) {
+RHEA_FUNC(math_scaleByExponent) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -502,7 +502,7 @@ N8_FUNC(math_scaleByExponent) {
     ));
 }
 
-N8_FUNC(math_squareRoot) {
+RHEA_FUNC(math_squareRoot) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -520,7 +520,7 @@ N8_FUNC(math_squareRoot) {
     return DynamicObject(sqrt(value.getNumber()));
 }
 
-N8_FUNC(math_cubicRoot) {
+RHEA_FUNC(math_cubicRoot) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -538,7 +538,7 @@ N8_FUNC(math_cubicRoot) {
     return DynamicObject(cbrt(value.getNumber()));
 }
 
-N8_FUNC(math_inverseSqrt) {
+RHEA_FUNC(math_inverseSqrt) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -570,7 +570,7 @@ N8_FUNC(math_inverseSqrt) {
     return DynamicObject(conv.f);
 }
 
-N8_FUNC(math_hypotenuse) {
+RHEA_FUNC(math_hypotenuse) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -592,7 +592,7 @@ N8_FUNC(math_hypotenuse) {
     ));
 }
 
-N8_FUNC(math_ceil) {
+RHEA_FUNC(math_ceil) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -610,7 +610,7 @@ N8_FUNC(math_ceil) {
     return DynamicObject(ceil(value.getNumber()));
 }
 
-N8_FUNC(math_floor) {
+RHEA_FUNC(math_floor) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -628,7 +628,7 @@ N8_FUNC(math_floor) {
     return DynamicObject(floor(value.getNumber()));
 }
 
-N8_FUNC(math_round) {
+RHEA_FUNC(math_round) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -646,7 +646,7 @@ N8_FUNC(math_round) {
     return DynamicObject(round(value.getNumber()));
 }
 
-N8_FUNC(math_dim) {
+RHEA_FUNC(math_dim) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -668,7 +668,7 @@ N8_FUNC(math_dim) {
     ));
 }
 
-N8_FUNC(math_min) {
+RHEA_FUNC(math_min) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -690,7 +690,7 @@ N8_FUNC(math_min) {
     ));
 }
 
-N8_FUNC(math_max) {
+RHEA_FUNC(math_max) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -712,7 +712,7 @@ N8_FUNC(math_max) {
     ));
 }
 
-N8_FUNC(math_errorFunc) {
+RHEA_FUNC(math_errorFunc) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -730,7 +730,7 @@ N8_FUNC(math_errorFunc) {
     return DynamicObject(erf(value.getNumber()));
 }
 
-N8_FUNC(math_errorFuncComp) {
+RHEA_FUNC(math_errorFuncComp) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -748,7 +748,7 @@ N8_FUNC(math_errorFuncComp) {
     return DynamicObject(erfc(value.getNumber()));
 }
 
-N8_FUNC(math_remainder) {
+RHEA_FUNC(math_remainder) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -770,7 +770,7 @@ N8_FUNC(math_remainder) {
     ));
 }
 
-N8_FUNC(math_remQuotient) {
+RHEA_FUNC(math_remQuotient) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -800,7 +800,7 @@ N8_FUNC(math_remQuotient) {
     ));
 }
 
-N8_FUNC(math_abs) {
+RHEA_FUNC(math_abs) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -818,7 +818,7 @@ N8_FUNC(math_abs) {
     return DynamicObject(fabs(value.getNumber()));
 }
 
-N8_FUNC(math_fusedMultiplyAdd) {
+RHEA_FUNC(math_fusedMultiplyAdd) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -842,7 +842,7 @@ N8_FUNC(math_fusedMultiplyAdd) {
     ));
 }
 
-N8_FUNC(math_activation_sigmoid) {
+RHEA_FUNC(math_activation_sigmoid) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -860,7 +860,7 @@ N8_FUNC(math_activation_sigmoid) {
     return DynamicObject(1 / (1 + exp(-value.getNumber())));
 }
 
-N8_FUNC(math_activation_sigmoidDerivative) {
+RHEA_FUNC(math_activation_sigmoidDerivative) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -879,7 +879,7 @@ N8_FUNC(math_activation_sigmoidDerivative) {
     return DynamicObject(num * (1 - num));
 }
 
-N8_FUNC(math_activation_step) {
+RHEA_FUNC(math_activation_step) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -898,7 +898,7 @@ N8_FUNC(math_activation_step) {
     return DynamicObject(num >= 0 ? 1.0 : 0.0);
 }
 
-N8_FUNC(math_activation_relu) {
+RHEA_FUNC(math_activation_relu) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -917,7 +917,7 @@ N8_FUNC(math_activation_relu) {
     return DynamicObject(num > 0 ? num : 0);
 }
 
-N8_FUNC(math_activation_leakyRelu) {
+RHEA_FUNC(math_activation_leakyRelu) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -937,7 +937,7 @@ N8_FUNC(math_activation_leakyRelu) {
     return DynamicObject(xn > 0 ? xn : y.getNumber() * xn);
 }
 
-N8_FUNC(math_activation_elu) {
+RHEA_FUNC(math_activation_elu) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -959,7 +959,7 @@ N8_FUNC(math_activation_elu) {
     );
 }
 
-N8_FUNC(math_activation_selu) {
+RHEA_FUNC(math_activation_selu) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -985,7 +985,7 @@ N8_FUNC(math_activation_selu) {
     );
 }
 
-N8_FUNC(math_activation_softmax) {
+RHEA_FUNC(math_activation_softmax) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1030,7 +1030,7 @@ N8_FUNC(math_activation_softmax) {
     ));
 }
 
-N8_FUNC(math_activation_swish) {
+RHEA_FUNC(math_activation_swish) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1049,7 +1049,7 @@ N8_FUNC(math_activation_swish) {
     return DynamicObject(num / (1.0 + exp(-num)));
 }
 
-N8_FUNC(math_activation_mish) {
+RHEA_FUNC(math_activation_mish) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1068,7 +1068,7 @@ N8_FUNC(math_activation_mish) {
     return DynamicObject(num * tanh(log1p(exp(num))));
 }
 
-N8_FUNC(math_activation_hardSigmoid) {
+RHEA_FUNC(math_activation_hardSigmoid) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1088,7 +1088,7 @@ N8_FUNC(math_activation_hardSigmoid) {
     );
 }
 
-N8_FUNC(math_activation_hardTan) {
+RHEA_FUNC(math_activation_hardTan) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1108,7 +1108,7 @@ N8_FUNC(math_activation_hardTan) {
     );
 }
 
-N8_FUNC(math_activation_softplus) {
+RHEA_FUNC(math_activation_softplus) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1128,7 +1128,7 @@ N8_FUNC(math_activation_softplus) {
     );
 }
 
-N8_FUNC(math_activation_softsign) {
+RHEA_FUNC(math_activation_softsign) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1147,7 +1147,7 @@ N8_FUNC(math_activation_softsign) {
     return DynamicObject(num / (1.0 + fabs(num)));
 }
 
-N8_FUNC(math_activation_gaussian) {
+RHEA_FUNC(math_activation_gaussian) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1166,7 +1166,7 @@ N8_FUNC(math_activation_gaussian) {
     return DynamicObject(exp(-num * num));
 }
 
-N8_FUNC(math_activation_bentIdentity) {
+RHEA_FUNC(math_activation_bentIdentity) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1185,7 +1185,7 @@ N8_FUNC(math_activation_bentIdentity) {
     return DynamicObject((sqrt(fma(num, num, 1.0) - 1.0) / 2.0) + num);
 }
 
-N8_FUNC(math_activation_logLogistic) {
+RHEA_FUNC(math_activation_logLogistic) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),

@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2025 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include <installer_window.hpp>
@@ -701,7 +701,7 @@ const char* LICENSE_TEXT = R"(
 )";
 
 InstallerWindow::InstallerWindow() {
-    this->set_title("N8 Language Installer");
+    this->set_title("Rhea Language Installer");
     this->set_position(Gtk::WIN_POS_CENTER);
     this->set_default_size(760, 380);
     this->set_resizable(false);
@@ -804,7 +804,7 @@ void InstallerWindow::setup_license_page() {
     auto licenseHeader = Gtk::make_managed<Gtk::Label>();
     licenseHeader->set_halign(Gtk::ALIGN_START);
     licenseHeader->set_margin_bottom(10);
-    licenseHeader->set_markup("<span font-size='18pt' weight='bold'>N8 Programming Language - License</span>");
+    licenseHeader->set_markup("<span font-size='18pt' weight='bold'>Rhea Programming Language - License</span>");
     licenseHeader->set_hexpand(true);
     licenseHeader->show();
 
@@ -829,7 +829,7 @@ void InstallerWindow::setup_install_page() {
 
     this->headerLabel.set_halign(Gtk::ALIGN_START);
     this->headerLabel.set_margin_bottom(10);
-    this->headerLabel.set_markup("<span font-size='20pt' weight='bold'>N8 Programming Language - Installation</span>");
+    this->headerLabel.set_markup("<span font-size='20pt' weight='bold'>Rhea Programming Language - Installation</span>");
     this->headerLabel.set_hexpand(true);
     this->headerLabel.show();
 
@@ -934,20 +934,20 @@ void InstallerWindow::run_installation() {
             std::wstring targetPath;
             std::wstring originalPath(file.originalPath);
 
-            if(originalPath.find(L"dist\\n8lang\\bin") == 0)
-                targetPath = N8InstallerUtil::GetInstallBase(true) +
+            if(originalPath.find(L"dist\\rhea-lang\\bin") == 0)
+                targetPath = RheaInstallerUtil::GetInstallBase(true) +
                     originalPath.substr(16);
-            else if(originalPath.find(L"dist\\n8lang\\modules") == 0)
-                targetPath = N8InstallerUtil::GetInstallBase(false) +
+            else if(originalPath.find(L"dist\\rhea-lang\\modules") == 0)
+                targetPath = RheaInstallerUtil::GetInstallBase(false) +
                     originalPath.substr(20);
             else continue;
 
-            bool success = N8InstallerUtil::ExtractFile(
+            bool success = RheaInstallerUtil::ExtractFile(
                 targetPath,
                 file.data,
                 file.size
             );
-            this->append_log("Installing: " + N8InstallerUtil::WideStr2Utf8(targetPath));
+            this->append_log("Installing: " + RheaInstallerUtil::WideStr2Utf8(targetPath));
 
             filesOK &= success;
             progress += leap;
@@ -962,37 +962,37 @@ void InstallerWindow::run_installation() {
         this->update_progress(0.6);
         this->update_status("Configuring environment...");
 
-        std::wstring n8Path = N8InstallerUtil::GetInstallBase(false);
-        n8Path = n8Path.substr(0, n8Path.find_last_of(
+        std::wstring rheaPath = RheaInstallerUtil::GetInstallBase(false);
+        rheaPath = rheaPath.substr(0, rheaPath.find_last_of(
             L'\\',
-            n8Path.find_last_of(L'\\') - 1
+            rheaPath.find_last_of(L'\\') - 1
         ));
 
-        if(!N8InstallerUtil::SetEnvironmentVariablePersistent(
-            L"N8_PATH", n8Path, false
-        )) throw std::runtime_error("Failed to set N8_PATH");
+        if(!RheaInstallerUtil::SetEnvironmentVariablePersistent(
+            L"RHEA_PATH", rheaPath, false
+        )) throw std::runtime_error("Failed to set RHEA_PATH");
 
-        this->append_log("Set N8_PATH to: " + N8InstallerUtil::WideStr2Utf8(n8Path));
+        this->append_log("Set RHEA_PATH to: " + RheaInstallerUtil::WideStr2Utf8(rheaPath));
         this->update_progress(0.7);
 
-        std::wstring binPath = N8InstallerUtil::GetInstallBase(true).substr(
+        std::wstring binPath = RheaInstallerUtil::GetInstallBase(true).substr(
             0,
-            N8InstallerUtil::GetInstallBase(true).find_last_of(L'\\')
+            RheaInstallerUtil::GetInstallBase(true).find_last_of(L'\\')
         );
 
-        if(!N8InstallerUtil::AddToSystemPath(binPath))
+        if(!RheaInstallerUtil::AddToSystemPath(binPath))
             throw std::runtime_error("Failed to add to PATH");
 
-        this->append_log("Added to PATH: " + N8InstallerUtil::WideStr2Utf8(binPath));
+        this->append_log("Added to PATH: " + RheaInstallerUtil::WideStr2Utf8(binPath));
         this->update_progress(0.8);
 
-        if(!N8InstallerUtil::CreateFileAssociation())
+        if(!RheaInstallerUtil::CreateFileAssociation())
             throw std::runtime_error("Failed to create file associations");
 
-        this->append_log("Created .n8 file associations");
+        this->append_log("Created .rhea file associations");
         this->update_progress(0.9);
 
-        if(!N8InstallerUtil::CreateUninstallEntry())
+        if(!RheaInstallerUtil::CreateUninstallEntry())
             throw std::runtime_error("Failed to create uninstall entry");
 
         this->append_log("Created uninstall registry entry");

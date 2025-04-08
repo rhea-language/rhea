@@ -1,18 +1,18 @@
 # Copyright (c) 2025 - Nathanne Isip
-# This file is part of N8.
+# This file is part of Rhea.
 # 
-# N8 is free software: you can redistribute it and/or modify
+# Rhea is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published
 # by the Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 # 
-# N8 is distributed in the hope that it will be useful, but
+# Rhea is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 # 
 # You should have received a copy of the GNU General Public License
-# along with N8. If not, see <https://www.gnu.org/licenses/>.
+# along with Rhea. If not, see <https://www.gnu.org/licenses/>.
 
 import os
 import platform
@@ -60,28 +60,28 @@ def build_proc():
     log_info("Using msys2 path at " + msys2_path)
 
     files = {
-        "dist\\n8lang\\bin\\n8.exe":                            "n8_exe",
-        "dist\\n8lang\\bin\\cacert.pem":                        "n8_cacert",
-        "dist\\n8lang\\bin\\uninstaller.exe":                   "uninstaller",
+        "dist\\rhea-lang\\bin\\rhea.exe":                            "rhea_exe",
+        "dist\\rhea-lang\\bin\\cacert.pem":                        "rhea_cacert",
+        "dist\\rhea-lang\\bin\\uninstaller.exe":                   "uninstaller",
 
-        "dist\\n8lang\\modules\\core@1.0.0\\lib\\core.dll":     "core_dll",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\lib\\core.dll":     "core_dll",
 
-        "dist\\n8lang\\modules\\core@1.0.0\\src\\array.n8":     "array_n8",
-        "dist\\n8lang\\modules\\core@1.0.0\\src\\chrono.n8":    "chrono_n8",
-        "dist\\n8lang\\modules\\core@1.0.0\\src\\crypt.n8":     "crypt_n8",
-        "dist\\n8lang\\modules\\core@1.0.0\\src\\env.n8":       "env_n8",
-        "dist\\n8lang\\modules\\core@1.0.0\\src\\gl.n8":        "gl_n8",
-        "dist\\n8lang\\modules\\core@1.0.0\\src\\io.n8":        "io_n8",
-        "dist\\n8lang\\modules\\core@1.0.0\\src\\lang.n8":      "lang_n8",
-        "dist\\n8lang\\modules\\core@1.0.0\\src\\math.n8":      "math_n8",
-        "dist\\n8lang\\modules\\core@1.0.0\\src\\ml.n8":        "ml_n8",
-        "dist\\n8lang\\modules\\core@1.0.0\\src\\net.n8":       "net_n8",
-        "dist\\n8lang\\modules\\core@1.0.0\\src\\reflect.n8":   "reflect_n8",
-        "dist\\n8lang\\modules\\core@1.0.0\\src\\str.n8":       "str_n8",
-        "dist\\n8lang\\modules\\core@1.0.0\\src\\sys.n8":       "sys_n8",
-        "dist\\n8lang\\modules\\core@1.0.0\\src\\unsafe.n8":    "unsafe_n8",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\src\\array.rhea":     "array_rhea",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\src\\chrono.rhea":    "chrono_rhea",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\src\\crypt.rhea":     "crypt_rhea",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\src\\env.rhea":       "env_rhea",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\src\\gl.rhea":        "gl_rhea",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\src\\io.rhea":        "io_rhea",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\src\\lang.rhea":      "lang_rhea",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\src\\math.rhea":      "math_rhea",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\src\\ml.rhea":        "ml_rhea",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\src\\net.rhea":       "net_rhea",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\src\\reflect.rhea":   "reflect_rhea",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\src\\str.rhea":       "str_rhea",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\src\\sys.rhea":       "sys_rhea",
+        "dist\\rhea-lang\\modules\\core@1.0.0\\src\\unsafe.rhea":    "unsafe_rhea",
 
-        "dist\\n8lang\\modules\\core@1.0.0\\config.sconf":      "config_sconf"
+        "dist\\rhea-lang\\modules\\core@1.0.0\\config.sconf":      "config_sconf"
     }
 
     embedded_files = "tools\\windows_installer\\include\\installer_embedded_files.hpp"
@@ -102,7 +102,7 @@ def build_proc():
 
     log_task("Generating embedded files content mapping...")
     with open(embedded_files, "w") as f:
-        f.write("#ifndef EMBEDDED_FILES_H\n#define N8_INSTALLER_EMBEDDED_FILES_H\n\n")
+        f.write("#ifndef EMBEDDED_FILES_H\n#define RHEA_INSTALLER_EMBEDDED_FILES_H\n\n")
         for file_name, array_name in files.items():
             f.write(file_to_c_array(file_name, array_name) + "\n\n")
         f.write("#endif // EMBEDDED_FILES_H\n")
@@ -135,19 +135,19 @@ def build_proc():
 
     OUTPUT_EXE      = os.path.join(
         'dist',
-        f'n8-lang_{VERSION}_{ARCHITECTURE}.exe'
+        f'rhea-lang_{VERSION}_{ARCHITECTURE}.exe'
     )
     OUTPUT_ZIP      = os.path.join(
         'dist',
-        f'n8-lang_{VERSION}_{ARCHITECTURE}.zip'
+        f'rhea-lang_{VERSION}_{ARCHITECTURE}.zip'
     )
 
-    config_res = 'dist\\n8-installer-config.res'
-    icon_config_res = 'dist\\n8-installer-icon-config.res'
+    config_res = 'dist\\rhea-installer-config.res'
+    icon_config_res = 'dist\\rhea-installer-icon-config.res'
 
     log_task("Generating Windows resource file configurations...")
-    subprocess.run(['windres', 'configs\\n8-installer-config.rc', '-O', 'coff', '-o', config_res])
-    subprocess.run(['windres', 'configs\\n8-installer-icon-config.rc', '-O', 'coff', '-o', icon_config_res])
+    subprocess.run(['windres', 'configs\\rhea-installer-config.rc', '-O', 'coff', '-o', config_res])
+    subprocess.run(['windres', 'configs\\rhea-installer-icon-config.rc', '-O', 'coff', '-o', icon_config_res])
     log_info("Windows resource file configurations successfully generated!")
 
     log_task("Executing build command subprocess...")

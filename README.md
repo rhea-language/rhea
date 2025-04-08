@@ -17,7 +17,7 @@ JIT-compiled dynamic general-purpose programming language utilizing OpenMP paral
 </p>
 
 ```rhea
-#!/usr/local/bin/rhea
+#!/usr/bin/rhea
 
 val count = 99
 

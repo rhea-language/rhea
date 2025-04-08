@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2025 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include <installer_util.hpp>
@@ -22,7 +22,7 @@
 #include <windows.h>
 #include <winreg.h>
 
-namespace N8InstallerUtil {
+namespace RheaInstallerUtil {
 
 bool IsElevated() {
     BOOL fRet = FALSE;
@@ -67,9 +67,9 @@ bool ExtractFile(const std::wstring& path, const unsigned char* data, size_t siz
 std::wstring GetInstallBase(bool isBin) {
     wchar_t path[MAX_PATH];
     if(isBin && SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_PROGRAM_FILES, NULL, 0, path)))
-        return std::wstring(path) + L"\\n8lang\\bin\\";
+        return std::wstring(path) + L"\\rhea-lang\\bin\\";
     if(!isBin && SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_MYDOCUMENTS, NULL, 0, path)))
-        return std::wstring(path) + L"\\n8lang\\modules\\";
+        return std::wstring(path) + L"\\rhea-lang\\modules\\";
     return L"";
 }
 
@@ -116,18 +116,18 @@ bool AddToSystemPath(const std::wstring& path) {
 
 bool CreateFileAssociation() {
     HKEY hKey;
-    std::wstring n8Path = GetInstallBase(true) + L"n8.exe";
+    std::wstring rheaPath = GetInstallBase(true) + L"rhea.exe";
 
     if(RegCreateKeyExW(
         HKEY_CLASSES_ROOT,
-        L".n8", 0,
+        L".rhea", 0,
         NULL, 0,
         KEY_WRITE,
         NULL,
         &hKey,
         NULL
     ) == ERROR_SUCCESS) {
-        std::wstring value = L"n8lang_script";
+        std::wstring value = L"rhea_script";
 
         RegSetValueExW(
             hKey,
@@ -140,8 +140,8 @@ bool CreateFileAssociation() {
     }
     else return false;
 
-    if(RegCreateKeyExW(HKEY_CLASSES_ROOT, L"n8lang_script", 0, NULL, 0, KEY_WRITE, NULL, &hKey, NULL) == ERROR_SUCCESS) {
-        std::wstring friendlyName = L"N8 Language Script";
+    if(RegCreateKeyExW(HKEY_CLASSES_ROOT, L"rhea_script", 0, NULL, 0, KEY_WRITE, NULL, &hKey, NULL) == ERROR_SUCCESS) {
+        std::wstring friendlyName = L"Rhea Language Script";
 
         RegSetValueExW(
             hKey,
@@ -156,7 +156,7 @@ bool CreateFileAssociation() {
 
     if(RegCreateKeyExW(
         HKEY_CLASSES_ROOT,
-        L"n8lang_script\\shell\\open\\command",
+        L"rhea_script\\shell\\open\\command",
         0,
         NULL, 0,
         KEY_WRITE,
@@ -164,7 +164,7 @@ bool CreateFileAssociation() {
         &hKey,
         NULL
     ) == ERROR_SUCCESS) {
-        std::wstring command = L"\"" + n8Path + L"\" \"%1\"";
+        std::wstring command = L"\"" + rheaPath + L"\" \"%1\"";
 
         RegSetValueExW(
             hKey,
@@ -183,10 +183,10 @@ bool CreateFileAssociation() {
 bool CreateUninstallEntry() {
     HKEY hKey;
 
-    std::wstring uninstallPath = L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\N8Lang";
+    std::wstring uninstallPath = L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\RheaLang";
     std::wstring installPath = GetInstallBase(true).substr(0, GetInstallBase(true).find_last_of(L'\\'));
     std::wstring uninstallerPath = installPath + L"\\uninstaller.exe";
-    std::wstring iconPath = installPath + L"\\bin\\n8.exe";
+    std::wstring iconPath = installPath + L"\\bin\\rhea.exe";
 
     if(RegCreateKeyExW(
         HKEY_LOCAL_MACHINE,
@@ -204,8 +204,8 @@ bool CreateUninstallEntry() {
         L"DisplayName",
         0,
         REG_SZ,
-        (const BYTE*) L"N8 Language",
-        sizeof(L"N8 Language")
+        (const BYTE*) L"Rhea Language",
+        sizeof(L"Rhea Language")
     );
 
     RegSetValueExW(
@@ -252,8 +252,8 @@ bool CreateUninstallEntry() {
         hKey,
         L"URLInfoAbout", 0,
         REG_SZ,
-        (const BYTE*) L"https://n8lang.netlify.app",
-        sizeof(L"https://n8lang.netlify.app")
+        (const BYTE*) L"https://rhea-lang.netlify.app",
+        sizeof(L"https://rhea-lang.netlify.app")
     );
 
     DWORD version = 100;

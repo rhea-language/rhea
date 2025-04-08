@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2025 - Nathanne Isip
- * This file is part of N8.
+ * This file is part of Rhea.
  * 
- * N8 is free software: you can redistribute it and/or modify
+ * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  * 
- * N8 is distributed in the hope that it will be useful, but
+ * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with N8. If not, see <https://www.gnu.org/licenses/>.
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include <installer_window.hpp>
@@ -22,7 +22,7 @@
 #include <windows.h>
 
 int main(int argc, char* argv[]) {
-    if(!N8InstallerUtil::IsElevated()) {
+    if(!RheaInstallerUtil::IsElevated()) {
         wchar_t path[MAX_PATH];
 
         GetModuleFileNameW(NULL, path, MAX_PATH);
@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    auto app = Gtk::Application::create(argc, argv, "org.n8lang.installer");
+    auto app = Gtk::Application::create(argc, argv, "org.rhealang.installer");
     InstallerWindow window;
 
     window.signal_hide().connect([&app] {

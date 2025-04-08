@@ -1,4 +1,4 @@
-#!/usr/local/bin/rhea
+#!/usr/bin/rhea
 
 val add = func(x, y) {
     ret x + y;

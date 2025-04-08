@@ -1,4 +1,4 @@
-#!/opt/rhea/bin/rhea
+#!/usr/bin/rhea
 
 val("dist/rhea-lang/modules/core@1.0.0/lib/core")
     io.printLine

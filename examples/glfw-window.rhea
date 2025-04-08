@@ -1,4 +1,4 @@
-#!/usr/local/bin/rhea
+#!/usr/bin/rhea
 
 use "core"
 

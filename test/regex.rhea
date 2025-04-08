@@ -1,4 +1,4 @@
-#!/opt/rhea/bin/rhea
+#!/usr/bin/rhea
 
 val emailRegex = `(\w+)(\.?\w+)*@(\w+)(\.\w+)+`
 val validEmail = "test@test.com"

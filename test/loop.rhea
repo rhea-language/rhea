@@ -1,4 +1,4 @@
-#!/opt/n8lang/bin/n8
+#!/opt/rhea/bin/rhea
 
 i = 0
 while(i < 10) {

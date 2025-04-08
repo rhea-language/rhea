@@ -1,4 +1,4 @@
-#!/opt/n8lang/bin/n8
+#!/usr/local/bin/rhea
 
 val greet = func(name)
     render! "Hello, " + name + "!"

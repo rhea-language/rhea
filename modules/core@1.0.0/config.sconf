@@ -19,4 +19,4 @@ name = "core"
 version = "1.0.0-beta+001"
 author = ["Nathanne Isip <nathanneisip@gmail.com>"]
 description = "The core standard library of Rhea programming language."
-repository = "https://github.com/rhea-lang/rhea"
+repository = "https://github.com/rhea-language/rhea"

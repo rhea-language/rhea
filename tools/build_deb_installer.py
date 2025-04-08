@@ -104,8 +104,8 @@ fi
 chmod 755 /etc/profile.d/rhea-lang.sh
 chmod 755 /etc/fish/conf.d/rhea-lang.fish
 
-ln -s /opt/rhea-lang/bin/rhea /usr/local/bin/rhea
-chmod 755 /usr/local/bin/rhea
+ln -s /opt/rhea-lang/bin/rhea /usr/bin/rhea
+chmod 755 /usr/bin/rhea
 
 echo "Rhea Language has been installed successfully!"
 exit 0
@@ -122,7 +122,7 @@ sed -i '/source \\/etc\\/profile.d\\/rhea-lang.sh/d' /etc/zsh/zshenv
 sed -i '/source \\/etc\\/profile.d\\/rhea-lang.sh/d' /etc/bash.bashrc
 sed -i '/source \\/etc\\/profile.d\\/rhea-lang.sh/d' /etc/profile
 
-rm -f /usr/local/bin/rhea
+rm -f /usr/bin/rhea
 rm -rf /opt/rhea-lang
 
 exit 0

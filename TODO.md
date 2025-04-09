@@ -2,6 +2,10 @@ Todo:
 ---
 
 - To be developed libraries:
+    - [ ] archive
+        - [ ] rar
+        - [ ] z7
+        - [ ] zip
     - [x] array
     - [ ] audio
     - [x] chrono
@@ -40,10 +44,10 @@ Todo:
         - [ ] sconf
         - [ ] toml
         - [ ] xml
+        - [ ] yaml
     - [ ] sqlite3
     - [x] str
     - [x] sys
     - [ ] termux
     - [ ] thread
     - [x] unsafe
-    - [ ] zip

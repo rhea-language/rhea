@@ -29,3 +29,16 @@ import net.http {
     ping,
     downloadFile
 } from "core"
+
+import net.tor {
+    get,
+    post,
+    ping,
+    downloadFile,
+    isRunning
+} from "core"
+
+import net.smtp {
+    sendMail,
+    sendMailHtml
+} from "core"

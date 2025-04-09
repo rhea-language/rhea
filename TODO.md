@@ -8,33 +8,38 @@ Todo:
     - [x] crypt
     - [x] env
     - [ ] fmt
-        - [ ] sconf
         - [ ] csv
-        - [ ] json
-        - [ ] toml
+        - [ ] gguf
+        - [ ] jpg
         - [ ] mdif
         - [ ] png
-        - [ ] jpg
-        - [ ] xml
     - [ ] gl
     - [ ] gpio
     - [x] io
     - [x] lang
+    - [ ] llm
     - [ ] map
     - [x] math
     - [ ] ml
         - [x] ann
         - [ ] astar
-        - [ ] llm
+        - [ ] regrsn
     - [ ] mysql
     - [ ] net
         - [ ] ftp
         - [x] http
-        - [ ] smtp
+        - [x] smtp
         - [ ] telnet
-        - [ ] tor
+        - [x] tor
     - [x] reflect
     - [ ] regex
+    - [ ] serial
+        - [ ] json
+        - [ ] msgpack
+        - [ ] protobuf
+        - [ ] sconf
+        - [ ] toml
+        - [ ] xml
     - [ ] sqlite3
     - [x] str
     - [x] sys

@@ -39,6 +39,15 @@ RHEA_FUNC(net_http_post);
 RHEA_FUNC(net_http_ping);
 RHEA_FUNC(net_http_downloadFile);
 
+RHEA_FUNC(net_tor_get);
+RHEA_FUNC(net_tor_post);
+RHEA_FUNC(net_tor_ping);
+RHEA_FUNC(net_tor_downloadFile);
+RHEA_FUNC(net_tor_isRunning);
+
+RHEA_FUNC(net_smtp_sendMail);
+RHEA_FUNC(net_smtp_sendMailHtml);
+
 RHEA_LIB_END
 
 #ifdef __clang__

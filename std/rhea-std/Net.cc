@@ -27,6 +27,8 @@
 #include <curl/curl.h>
 #include <quoneq/http.hpp>
 #include <quoneq/net.hpp>
+#include <quoneq/smtp.hpp>
+#include <quoneq/tor.hpp>
 
 DynamicObject httpResponseToObject(quoneq_http_response response) {
     std::vector<DynamicObject> object;
@@ -102,6 +104,23 @@ std::pair<bool, std::map<std::string, std::string>> objectArrayToMap(DynamicObje
     return std::make_pair(true, pairs);
 }
 
+std::pair<bool, std::vector<std::string>> objectArray1DToMap(DynamicObject object) {
+    if(!object.isArray())
+        return std::make_pair(false, std::vector<std::string>{});
+
+    std::vector<std::string> arrayValues;
+    std::vector<DynamicObject> objects = *(object.getArray());
+
+    for(auto& obj : objects) {
+        if(!obj.isString())
+            return std::make_pair(false, std::vector<std::string>{});
+
+        arrayValues.emplace_back(obj.toString());
+    }
+
+    return std::make_pair(true, arrayValues);
+}
+
 RHEA_FUNC(net_init) {
     quoneq_net::init();
     return {};
@@ -169,7 +188,7 @@ RHEA_FUNC(net_http_get) {
         proxy = args.at(3).toString();
     if(args.size() >= 5)
         username = args.at(4).toString();
-    if(args.size() >= 5)
+    if(args.size() >= 6)
         password = args.at(5).toString();
 
     return httpResponseToObject(*(quoneq_http_client::get(
@@ -370,4 +389,314 @@ RHEA_FUNC(net_http_downloadFile) {
         username,
         password
     )));
+}
+
+RHEA_FUNC(net_tor_get) {
+    if(args.size() < 1 || args.size() > 5)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 to 5 argument(s), got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject urlStr = args.at(0);
+    std::map<std::string, std::string> headers = {},
+        cookies = {};
+    std::string username = "",
+        password = "";
+
+    if(args.size() >= 2) {
+        auto result = objectArrayToMap(args.at(1));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Header map should be of array of string arrays (size=2) type."
+            );
+
+        headers = result.second;
+    }
+
+    if(args.size() >= 3) {
+        auto result = objectArrayToMap(args.at(2));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Cookie map should be of array of string arrays (size=2) type."
+            );
+
+        cookies = result.second;
+    }
+
+    if(args.size() >= 4)
+        username = args.at(3).toString();
+    if(args.size() >= 5)
+        password = args.at(4).toString();
+
+    return httpResponseToObject(*(quoneq_tor_client::get(
+        urlStr.toString(),
+        headers,
+        cookies,
+        username,
+        password
+    )));
+}
+
+RHEA_FUNC(net_tor_post) {
+    if(args.size() < 1 || args.size() > 6)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 to 6 argument(s), got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject urlStr = args.at(0);
+    std::map<std::string, std::string> forms = {},
+        headers = {},
+        cookies = {},
+        files = {};
+    std::string username = "",
+        password = "";
+
+    if(args.size() >= 2) {
+        auto result = objectArrayToMap(args.at(1));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Form data map should be of array of string arrays (size=2) type."
+            );
+
+        forms = result.second;
+    }
+    
+    if(args.size() >= 3) {
+        auto result = objectArrayToMap(args.at(2));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Header map should be of array of string arrays (size=2) type."
+            );
+
+        headers = result.second;
+    }
+
+    if(args.size() >= 4) {
+        auto result = objectArrayToMap(args.at(3));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Cookie map should be of array of string arrays (size=2) type."
+            );
+
+        cookies = result.second;
+    }
+
+    if(args.size() >= 5) {
+        auto result = objectArrayToMap(args.at(4));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "File map should be of array of string arrays (size=2) type."
+            );
+
+        files = result.second;
+    }
+
+    if(args.size() >= 6)
+        username = args.at(5).toString();
+    if(args.size() >= 7)
+        password = args.at(6).toString();
+
+    return httpResponseToObject(*(quoneq_tor_client::post(
+        urlStr.toString(),
+        forms,
+        headers,
+        cookies,
+        files,
+        username,
+        password
+    )));
+}
+
+RHEA_FUNC(net_tor_ping) {
+    if(args.size() < 1 || args.size() > 3)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 to 3 argument(s), got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject urlStr = args.at(0);
+    std::string username = "",
+        password = "";
+
+    if(args.size() >= 2)
+        username = args.at(1).toString();
+    if(args.size() >= 3)
+        password = args.at(2).toString();
+
+    return httpResponseToObject(*(quoneq_tor_client::ping(
+        urlStr.toString(),
+        username,
+        password
+    )));
+}
+
+RHEA_FUNC(net_tor_downloadFile) {
+    if(args.size() < 2 || args.size() > 7)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 to 7 argument(s), got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject urlStr = args.at(0),
+        outputFile = args.at(1);
+    std::map<std::string, std::string> forms = {},
+        headers = {},
+        cookies = {},
+        files = {};
+    std::string username = "",
+        password = "";
+
+    if(args.size() >= 3) {
+        auto result = objectArrayToMap(args.at(2));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Form data map should be of array of string arrays (size=2) type."
+            );
+
+        forms = result.second;
+    }
+    
+    if(args.size() >= 4) {
+        auto result = objectArrayToMap(args.at(3));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Header map should be of array of string arrays (size=2) type."
+            );
+
+        headers = result.second;
+    }
+
+    if(args.size() >= 5) {
+        auto result = objectArrayToMap(args.at(4));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "Cookie map should be of array of string arrays (size=2) type."
+            );
+
+        cookies = result.second;
+    }
+
+    if(args.size() >= 6) {
+        auto result = objectArrayToMap(args.at(5));
+        if(!result.first)
+            throw TerminativeThrowSignal(
+                std::move(address),
+                "File map should be of array of string arrays (size=2) type."
+            );
+
+        files = result.second;
+    }
+
+    if(args.size() >= 7)
+        username = args.at(6).toString();
+    if(args.size() >= 8)
+        password = args.at(7).toString();
+
+    return httpResponseToObject(*(quoneq_tor_client::download_file(
+        urlStr.toString(),
+        outputFile.toString(),
+        forms,
+        headers,
+        cookies,
+        files,
+        username,
+        password
+    )));
+}
+
+RHEA_FUNC(net_tor_isRunning) {
+    if(args.size() != 0)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 0 argument, got " +
+                std::to_string(args.size())
+        );
+
+    return DynamicObject(quoneq_tor_client::is_tor_running());
+}
+
+RHEA_FUNC(net_smtp_sendMail) {
+    if(args.size() != 7)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 7 argument, got " +
+                std::to_string(args.size())
+        );
+
+    std::string server = args.at(0).toString(),
+        email = args.at(1).toString(),
+        password = args.at(2).toString(),
+        recipient = args.at(3).toString(),
+        subject = args.at(4).toString(),
+        message = args.at(5).toString();
+
+    std::vector<std::string> files = {};
+    auto result = objectArray1DToMap(args.at(1));
+ 
+    if(!result.first)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "File list map should be of array of string arrays (size=2) type."
+        );
+
+    files = result.second;
+    return DynamicObject(quoneq_smtp_client::send_mail(
+        server,
+        email,
+        password,
+        recipient,
+        subject,
+        message,
+        files
+    ));
+}
+
+RHEA_FUNC(net_smtp_sendMailHtml) {
+    if(args.size() != 7)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 7 argument, got " +
+                std::to_string(args.size())
+        );
+
+    std::string server = args.at(0).toString(),
+        email = args.at(1).toString(),
+        password = args.at(2).toString(),
+        recipient = args.at(3).toString(),
+        subject = args.at(4).toString(),
+        message = args.at(5).toString();
+    std::vector<std::string> files = {};
+
+    auto result = objectArray1DToMap(args.at(6)); 
+    if(!result.first)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "File list map should be of array of string arrays (size=2) type."
+        );
+
+    files = result.second;
+    return DynamicObject(quoneq_smtp_client::send_mail_html(
+        server,
+        email,
+        password,
+        recipient,
+        subject,
+        message,
+        files
+    ));
 }

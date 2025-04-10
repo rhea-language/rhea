@@ -12,11 +12,13 @@ Todo:
     - [x] crypt
     - [x] env
     - [ ] fmt
+        - [ ] barcode
         - [ ] csv
         - [ ] gguf
         - [ ] jpg
         - [ ] mdif
         - [ ] png
+        - [ ] qr
     - [ ] gl
     - [ ] gpio
     - [x] io

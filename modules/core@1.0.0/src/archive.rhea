@@ -1,0 +1,105 @@
+#!/usr/bin/rhea
+# Copyright (c) 2024 - Nathanne Isip
+# This file is part of Rhea.
+# 
+# Rhea is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published
+# by the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+# 
+# Rhea is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with Rhea. If not, see <https://www.gnu.org/licenses/>.
+
+enum archive.zip {
+    # Flags
+    CREATE      = 1,
+    EXCL        = 2,
+    CHECKCONS   = 4,
+    TRUNCATE    = 8,
+    READ_ONLY   = 16,
+
+    # Errors
+    ERROR_RENAME        = 2,
+    ERROR_SEEK          = 4,
+    ERROR_READ          = 5,
+    ERROR_WRITE         = 6,
+    ERROR_EXISTS        = 10,
+    ERROR_TMPOPEN       = 12,
+    ERROR_ZLIB          = 13,
+    ERROR_MEMORY        = 14,
+    ERROR_EOF           = 17,
+    ERROR_INVAL         = 18,
+    ERROR_NOZIP         = 19,
+    ERROR_INTERNAL      = 20,
+    ERROR_INCONS        = 21,
+    ERROR_ENCRNOTSUPP   = 24,
+    ERROR_READ_ONLY     = 25,
+
+    # Compression Methods
+    COMP_DEFAULT          = -1,
+    COMP_STORE            = 0,
+    COMP_SHRINK           = 1,
+    COMP_REDUCE_1         = 2,
+    COMP_REDUCE_2         = 3,
+    COMP_REDUCE_3         = 4,
+    COMP_REDUCE_4         = 5,
+    COMP_IMPLODE          = 6,
+    COMP_DEFLATE          = 8,
+    COMP_DEFLATE64        = 9,
+    COMP_PKWARE_IMPLODE   = 10,
+    COMP_BZIP2            = 12,
+    COMP_LZMA             = 14,
+    COMP_TERSE            = 18,
+    COMP_LZ77             = 19,
+    COMP_LZMA2            = 33,
+    COMP_XZ               = 95,
+    COMP_JPEG             = 96,
+    COMP_WAVPACK          = 97,
+    COMP_PPMD             = 98,
+
+    # Encryption Methods
+    ENC_NONE         = 0,
+    ENC_TRAD_PKWARE  = 1,
+    ENC_AES_128      = 257,
+    ENC_AES_192      = 258,
+    ENC_AES_256      = 259,
+
+    # Source Flags
+    FLAG_ENC_GUESS    = 0,
+    FLAG_NOCASE       = 1,
+    FLAG_NODIR        = 2,
+    FLAG_COMPRESSED   = 4,
+    FLAG_UNCHANGED    = 8,
+    FLAG_RECOMPRESS   = 16,
+    FLAG_ENCRYPTED    = 32,
+    FLAG_ENC_RAW      = 64,
+    FLAG_ENC_STRICT   = 128,
+    FLAG_LOCAL        = 256,
+    FLAG_CENTRAL      = 512,
+    FLAG_ENC_UTF_8    = 2048,
+    FLAG_ENC_CP437    = 4096,
+    FLAG_OVERWRITE    = 8192
+}
+
+import archive.zip {
+    open,
+    close,
+
+    compressionMethod,
+
+    setPassword,
+    setEncryption,
+
+    addFromFile,
+    addFromData,
+    addFromDir,
+    addFromString,
+
+    deleteFile,
+    deleteDir
+} from "core"

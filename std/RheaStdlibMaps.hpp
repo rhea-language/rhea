@@ -24,6 +24,7 @@
 
 #include <chisei/neural_network.hpp>
 #include <myshell.hpp>
+#include <zip.h>
 
 #ifndef __TERMUX__
 
@@ -35,6 +36,9 @@ static std::unordered_map<std::string, GLFWmonitor*> monitorMap;
 static std::unordered_map<std::string, GLFWcursor*> cursorMap;
 
 #endif
+
+// Archive
+static std::unordered_map<std::string, zip_t*> zipMap;
 
 // ML
 static std::unordered_map<

@@ -1,0 +1,37 @@
+#!/usr/bin/rhea
+
+use "core"
+
+zip = archive.zip.open(
+    "hello.zip",
+    archive.zip.CREATE | archive.zip.TRUNCATE
+);
+
+if(zip[1] != 0) {
+    render! "Error creating zip file."
+    io.exit(1)
+}
+render! "Zip key: " + zip[0]
+
+zipKey = zip[0]
+result = archive.zip.addFromString(
+    zipKey,
+    archive.zip.FLAG_OVERWRITE | archive.zip.FLAG_ENC_UTF_8,
+    archive.zip.COMP_STORE,
+    "contents/hello.txt",
+    "Hello, world!"
+)
+
+if(result[1] == nil)
+    render! "Added hello.txt to zip file!"
+else render! "Error: " + result[1]
+
+if(archive.zip.setEncryption(
+    zipKey,
+    result[0],
+    archive.zip.ENC_AES_256,
+    "password"
+)) render! "Zip successfully encrypted."
+else render! "Failed to encrypt zip."
+
+archive.zip.close(zipKey)

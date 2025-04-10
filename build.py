@@ -19,6 +19,7 @@ import os
 import platform
 import shutil
 import subprocess
+import sys
 import time
 
 from datetime import datetime
@@ -114,6 +115,31 @@ def include_local_lib(lib_name):
 
     log_info("Done listing header file folders and source files!")
 
+def has_upgradable_packages():
+    try:
+        result = subprocess.run(
+            ['apt', 'list', '--upgradable'],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+
+        output = result.stdout.strip()
+        lines = output.splitlines()
+
+        if len(lines) <= 1:
+            log_info("No upgradable packages found.")
+            return False
+        else:
+            log_warning("Upgradable packages:\r\n\t" + "\r\n\t".join(lines[1:]))
+            return True
+
+    except subprocess.CalledProcessError as e:
+        log_error("Error: Could not retrieve upgradable packages.")
+
+    return False
+
 def build_proc():
     global OUTPUT_EXECUTABLE
     global OUTPUT_LIBRARY
@@ -125,27 +151,28 @@ def build_proc():
     global lib_source_files
 
     log_warning("Cleaning up already existing build folder...")
-    if os.path.exists(OUT_DIR):
+    if '--no-core' not in sys.argv and '--no-stdlib' not in sys.argv and os.path.exists(OUT_DIR):
         shutil.rmtree(OUT_DIR)
-    os.makedirs(OUT_DIR)
+        os.makedirs(OUT_DIR)
     log_info("Clean up done!")
 
     try:
-        src = 'modules'
+        if '--no-core' not in sys.argv and '--no-stdlib' not in sys.argv:
+            log_task("Copying Rhea standard library module files...")
 
-        log_task("Copying Rhea standard library module files...")
-        shutil.copytree(
-            src,
-            os.path.join(OUT_DIR, os.path.basename(src)),
-            dirs_exist_ok=True
-        )
+            src = 'modules'
+            shutil.copytree(
+                src,
+                os.path.join(OUT_DIR, os.path.basename(src)),
+                dirs_exist_ok=True
+            )
 
-        os.makedirs(os.path.join('dist', 'rhea-lang', 'bin'))
-        os.makedirs(os.path.join(
-            'dist', 'rhea-lang', 'modules',
-            'core@1.0.0', 'lib'
-        ))
-        log_info(f"Successfully copied '{src}' to '{OUT_DIR}'")
+            os.makedirs(os.path.join('dist', 'rhea-lang', 'bin'))
+            os.makedirs(os.path.join(
+                'dist', 'rhea-lang', 'modules',
+                'core@1.0.0', 'lib'
+            ))
+            log_info(f"Successfully copied '{src}' to '{OUT_DIR}'")
 
     except Exception as e:
         log_error("Failed to copy Rhea standard library modules.")
@@ -182,18 +209,19 @@ def build_proc():
     log_info("Done including local libraries/dependencies!")
 
     linkable_libs = [
-        '-lglfw', '-lcurl', '-lGL'
+        '-lglfw', '-lcurl', '-lGL', '-lzip'
     ]
 
     try:
         ext_instructions = get_ext_instructions()
-        if "TERMUX_VERSION" not in os.environ and PLATFORM == 'Linux':
+        if "TERMUX_VERSION" not in os.environ and PLATFORM == 'Linux' and not has_upgradable_packages():
             log_task("Installing GLFW3 package dependencies...")
             subprocess.run([
                 'sudo', 'apt', 'install', '-y',
                 'libglfw3-dev',
                 'libgl1-mesa-dev',
                 'libcurl4-gnutls-dev',
+                'libzip-dev',
                 'curl'
             ])
             log_info("GLFW3 package dependency installation done!")
@@ -206,8 +234,6 @@ def build_proc():
 
         log_task('Building binaries...')
         if PLATFORM == 'Windows':
-            now = time.time()
-
             config_res = 'dist\\rhea-config.res'
             icon_config_res = 'dist\\rhea-icon-config.res'
 
@@ -222,7 +248,7 @@ def build_proc():
                 '-lz', '-lbcrypt', '-lbrotlidec', '-lbrotlicommon',
                 '-lzstd', '-lnghttp3', '-lwldap32', '-lunistring',
                 '-liconv', '-lgnutls', '-lnettle', '-lngtcp2',
-                '-ltasn1', '-lgmp'
+                '-ltasn1', '-lgmp', '-lzip'
             ]
 
             linkable_libs.remove('-lglfw')
@@ -255,37 +281,39 @@ def build_proc():
                 '-o', OUTPUT_EXECUTABLE
             ] + linkable_libs + win_libs
 
-            log_task("Generating Windows resource file configurations...")
-            subprocess.run(['windres', 'configs\\rhea-config.rc', '-O', 'coff', '-o', config_res])
-            subprocess.run(['windres', 'configs\\rhea-icon-config.rc', '-O', 'coff', '-o', icon_config_res])
-            log_info("Windows resource file configurations successfully generated!")
+            if '--no-core' not in sys.argv:
+                now = time.time()
 
-            log_task("Building Rhea core for Windows...")
-            subprocess.run(exe_build_args)
-            end = time.time() - now
-            log_info(f"Finished in {end:.6f} seconds")
+                log_task("Generating Windows resource file configurations...")
+                subprocess.run(['windres', 'configs\\rhea-config.rc', '-O', 'coff', '-o', config_res])
+                subprocess.run(['windres', 'configs\\rhea-icon-config.rc', '-O', 'coff', '-o', icon_config_res])
+                log_info("Windows resource file configurations successfully generated!")
 
-            log_warning("Cleaning up generated Windows resource file configurations...")
-            os.remove(config_res)
-            os.remove(icon_config_res)
-            log_info("Clean up done!")
+                log_task("Building Rhea core for Windows...")
+                subprocess.run(exe_build_args)
+                end = time.time() - now
+                log_info(f"Finished in {end:.6f} seconds")
 
-            now = time.time()
-            lib_build_args = [
-                'g++', '-static', '-static-libstdc++', '-DCURL_STATICLIB',
-                '-Iinclude', '-Istd', '-shared', '-fopenmp',
-                '-o', OUTPUT_LIBRARY + '.dll',
-                '-Wno-deprecated-declarations'
-            ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + linkable_libs + win_libs
+                log_warning("Cleaning up generated Windows resource file configurations...")
+                os.remove(config_res)
+                os.remove(icon_config_res)
+                log_info("Clean up done!")
 
-            log_task("Building Rhea standard library for Windows...")
-            subprocess.run(lib_build_args)
-            end = time.time() - now
-            log_info(f"Finished in {end:.6f} seconds")
+            if '--no-stdlib' not in sys.argv:
+                now = time.time()
+                lib_build_args = [
+                    'g++', '-static', '-static-libstdc++', '-DCURL_STATICLIB',
+                    '-Iinclude', '-Istd', '-shared', '-fopenmp',
+                    '-o', OUTPUT_LIBRARY + '.dll',
+                    '-Wno-deprecated-declarations'
+                ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + linkable_libs + win_libs
+
+                log_task("Building Rhea standard library for Windows...")
+                subprocess.run(lib_build_args)
+                end = time.time() - now
+                log_info(f"Finished in {end:.6f} seconds")
 
         elif "TERMUX_VERSION" in os.environ:
-            now = time.time()
-
             linkable_libs.remove('-lglfw')
             linkable_libs.remove('-lGL')
 
@@ -310,28 +338,30 @@ def build_proc():
                 '-ffast-math', '-D__TERMUX__'
             ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + linkable_libs
 
-            log_task("Building Rhea core for Termux...")
-            subprocess.run(exe_build_args)
-            end = time.time() - now
-            log_info(f"Finished in {end:.6f} seconds")
+            if '--no-core' not in sys.argv:
+                now = time.time()
 
-            now = time.time()
-            lib_build_args = [
-                'g++', '-Iinclude', '-Istd', '-fPIC', '-D__TERMUX__',
-                '-shared', '-o', OUTPUT_LIBRARY + '.so',
-                '-std=c++23', '-Wno-deprecated-declarations'
-            ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
-                '-lcurl'
-            ] + linkable_libs
+                log_task("Building Rhea core for Termux...")
+                subprocess.run(exe_build_args)
+                end = time.time() - now
+                log_info(f"Finished in {end:.6f} seconds")
 
-            log_task("Building Rhea standard library for Termux...")
-            subprocess.run(lib_build_args)
-            end = time.time() - now
-            log_info(f"Finished in {end:.6f} seconds")
+            if '--no-stdlib' not in sys.argv:
+                now = time.time()
+                lib_build_args = [
+                    'g++', '-Iinclude', '-Istd', '-fPIC', '-D__TERMUX__',
+                    '-shared', '-o', OUTPUT_LIBRARY + '.so',
+                    '-std=c++23', '-Wno-deprecated-declarations'
+                ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
+                    '-lcurl'
+                ] + linkable_libs
+
+                log_task("Building Rhea standard library for Termux...")
+                subprocess.run(lib_build_args)
+                end = time.time() - now
+                log_info(f"Finished in {end:.6f} seconds")
 
         elif PLATFORM == 'Linux':
-            now = time.time()
-
             exe_build_args= [
                 'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
                 '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
@@ -352,27 +382,30 @@ def build_proc():
                 '-march=native', '-ffast-math'
             ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + linkable_libs
 
-            log_task("Building Rhea core for Linux...")
-            subprocess.run(exe_build_args)
-            end = time.time() - now
-            log_info(f"Finished in {end:.6f} seconds")
+            if '--no-core' not in sys.argv:
+                now = time.time()
 
-            now = time.time()
-            lib_build_args = [
-                'g++', '-Iinclude', '-Istd', '-fPIC',
-                '-shared', '-o', OUTPUT_LIBRARY + '.so',
-                '-std=c++23', '-Wno-deprecated-declarations'
-            ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + linkable_libs
+                log_task("Building Rhea core for Linux...")
+                subprocess.run(exe_build_args)
+                end = time.time() - now
+                log_info(f"Finished in {end:.6f} seconds")
 
-            log_task("Building Rhea standard library for Linux...")
-            subprocess.run(lib_build_args)
-            end = time.time() - now
-            log_info(f"Finished in {end:.6f} seconds")
+            if '--no-stdlib' not in sys.argv:
+                now = time.time()
+
+                lib_build_args = [
+                    'g++', '-Iinclude', '-Istd', '-fPIC',
+                    '-shared', '-o', OUTPUT_LIBRARY + '.so',
+                    '-std=c++23', '-Wno-deprecated-declarations'
+                ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + linkable_libs
+
+                log_task("Building Rhea standard library for Linux...")
+                subprocess.run(lib_build_args)
+                end = time.time() - now
+                log_info(f"Finished in {end:.6f} seconds")
 
         elif PLATFORM == 'Darwin':
-            now = time.time()
             linkable_libs.remove('-lGL')
-
             lib_headers += [
                 '-I/opt/homebrew/opt/openssl@3/include',
                 '-I/opt/homebrew/Cellar/glfw/3.4/include/GLFW'
@@ -400,33 +433,38 @@ def build_proc():
                 '-Wno-pessimizing-move'
             ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
-            log_task("Building Rhea core for MacOS...")
-            subprocess.run(exe_build_args)
-            end = time.time() - now
-            log_info(f"Finished in {end:.6f} seconds")
+            if '--no-core' not in sys.argv:
+                now = time.time()
 
-            linkable_libs.append('-lcrypto')
+                log_task("Building Rhea core for MacOS...")
+                subprocess.run(exe_build_args)
+                end = time.time() - now
+                log_info(f"Finished in {end:.6f} seconds")
 
-            now = time.time()
-            lib_build_args = [
-                '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
-                '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib',
-                '-Wno-deprecated-declarations', '-DGL_SILENCE_DEPRECATION',
-                '-L/opt/homebrew/lib', '-L/opt/homebrew/opt/openssl@3/lib',
-                '-std=c++23', '-Wno-deprecated-declarations'
-            ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
-                '-framework', 'OpenGL'
-            ] + linkable_libs
+            if '--no-stdlib' not in sys.argv:
+                now = time.time()
+                linkable_libs.append('-lcrypto')
 
-            log_task("Building Rhea standard library for MacOS...")
-            subprocess.run(lib_build_args)
-            end = time.time() - now
-            log_info(f"Finished in {end:.6f} seconds")
+                lib_build_args = [
+                    '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
+                    '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib',
+                    '-Wno-deprecated-declarations', '-DGL_SILENCE_DEPRECATION',
+                    '-L/opt/homebrew/lib', '-L/opt/homebrew/opt/openssl@3/lib',
+                    '-std=c++23', '-Wno-deprecated-declarations'
+                ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
+                    '-framework', 'OpenGL'
+                ] + linkable_libs
 
-        shutil.copy(
-            os.path.join('misc', 'cacert.pem'),
-            os.path.join('dist', 'rhea-lang', 'bin', 'cacert.pem')
-        )
+                log_task("Building Rhea standard library for MacOS...")
+                subprocess.run(lib_build_args)
+                end = time.time() - now
+                log_info(f"Finished in {end:.6f} seconds")
+
+        if '--no-core' not in sys.argv and '--no-stdlib' not in sys.argv:
+            shutil.copy(
+                os.path.join('misc', 'cacert.pem'),
+                os.path.join('dist', 'rhea-lang', 'bin', 'cacert.pem')
+            )
 
     except Exception as e:
         log_error(f"Compilation failed with error: {e}")

@@ -302,7 +302,8 @@ def build_proc():
             if '--no-stdlib' not in sys.argv:
                 now = time.time()
                 lib_build_args = [
-                    'g++', '-static', '-static-libstdc++', '-DCURL_STATICLIB',
+                    'g++', '-static', '-static-libstdc++',
+                    '-DCURL_STATICLIB', '-DZIP_STATIC',
                     '-Iinclude', '-Istd', '-shared', '-fopenmp',
                     '-o', OUTPUT_LIBRARY + '.dll',
                     '-Wno-deprecated-declarations'

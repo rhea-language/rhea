@@ -283,6 +283,7 @@ jobs:
           .\dist\rhea-lang\bin\rhea examples\hello.rhea
           .\dist\rhea-lang\bin\rhea examples\http-get.rhea
           .\dist\rhea-lang\bin\rhea examples\logic-gate-ai.rhea
+          .\dist\rhea-lang\bin\rhea examples\zip-create.rhea
 
       - name: Build and Test Clean Up
         run: rm -rf rhea/dist/rhea-lang

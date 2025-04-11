@@ -97,9 +97,24 @@ import archive.zip {
 
     addFromFile,
     addFromData,
-    addFromDir,
     addFromString,
 
     deleteFile,
-    deleteDir
+    deleteDir,
+
+    getIndex,
+    hasFile,
+    renameFile,
+
+    entryCount,
+    listEntries,
+
+    getComment,
+    setComment,
+
+    getFileComment,
+    setFileComment,
+
+    fileDosTime,
+    discard
 } from "core"

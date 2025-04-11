@@ -38,10 +38,26 @@ RHEA_FUNC(archive_zip_setEncryption);
 
 RHEA_FUNC(archive_zip_addFromFile);
 RHEA_FUNC(archive_zip_addFromData);
-RHEA_FUNC(archive_zip_addFromDir);
 RHEA_FUNC(archive_zip_addFromString);
+
 RHEA_FUNC(archive_zip_deleteFile);
 RHEA_FUNC(archive_zip_deleteDir);
+
+RHEA_FUNC(archive_zip_getIndex);
+RHEA_FUNC(archive_zip_hasFile);
+RHEA_FUNC(archive_zip_renameFile);
+
+RHEA_FUNC(archive_zip_entryCount);
+RHEA_FUNC(archive_zip_listEntries);
+
+RHEA_FUNC(archive_zip_getComment);
+RHEA_FUNC(archive_zip_setComment);
+
+RHEA_FUNC(archive_zip_getFileComment);
+RHEA_FUNC(archive_zip_setFileComment);
+
+RHEA_FUNC(archive_zip_fileDosTime);
+RHEA_FUNC(archive_zip_discard);
 
 RHEA_LIB_END
 

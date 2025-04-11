@@ -14,6 +14,22 @@ if(zip[1] != 0) {
 render! "Zip key: " + zip[0]
 
 zipKey = zip[0]
+
+archive.zip.registerProgressCallback(
+    zipKey,
+    0.1,
+    func(step) {
+        parallel
+            render! "Progress: " + (step * 100) + "%"
+    }
+)
+
+archive.zip.registerCancelCallback(
+    zipKey,
+    func()
+        @render! "Cancel callback triggered."
+)
+
 result = archive.zip.addFromString(
     zipKey,
     archive.zip.FLAG_OVERWRITE | archive.zip.FLAG_ENC_UTF_8,

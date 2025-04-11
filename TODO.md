@@ -5,7 +5,7 @@ Todo:
     - [ ] archive
         - [ ] rar
         - [ ] z7
-        - [ ] zip
+        - [x] zip
     - [x] array
     - [ ] audio
     - [x] chrono
@@ -23,12 +23,12 @@ Todo:
     - [ ] gpio
     - [x] io
     - [x] lang
-    - [ ] llm
     - [ ] map
     - [x] math
     - [ ] ml
         - [x] ann
         - [ ] astar
+        - [ ] llm
         - [ ] regrsn
     - [ ] mysql
     - [ ] net

@@ -116,5 +116,8 @@ import archive.zip {
     setFileComment,
 
     fileDosTime,
-    discard
+    discard,
+
+    registerProgressCallback,
+    registerCancelCallback
 } from "core"

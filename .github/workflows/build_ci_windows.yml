@@ -226,7 +226,7 @@ jobs:
             zstd
 
       - name: Check packages
-      - run: |
+        run: |
           pkg-config --cflags libzip
           pkg-config --libs libzip
 

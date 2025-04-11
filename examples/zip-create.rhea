@@ -2,52 +2,90 @@
 
 use "core"
 
-zip = archive.zip.open(
-    "hello.zip",
-    archive.zip.CREATE | archive.zip.TRUNCATE
-);
+createZipFile = func() {
+    zip = archive.zip.open(
+        "hello.zip",
+        archive.zip.CREATE | archive.zip.TRUNCATE
+    )
 
-if(zip[1] != 0) {
-    render! "Error creating zip file."
-    io.exit(1)
-}
-render! "Zip key: " + zip[0]
-
-zipKey = zip[0]
-
-archive.zip.registerProgressCallback(
-    zipKey,
-    0.1,
-    func(step) {
-        parallel
-            render! "Progress: " + (step * 100) + "%"
+    if(zip[1] != 0) {
+        render! "Error creating zip file."
+        io.exit(1)
     }
-)
+    render! "Zip key: " + zip[0]
 
-archive.zip.registerCancelCallback(
-    zipKey,
-    func()
-        @render! "Cancel callback triggered."
-)
+    zipKey = zip[0]
+    archive.zip.registerProgressCallback(
+        zipKey,
+        0.1,
+        func(step) {
+            parallel
+                render! "Progress: " + (step * 100) + "%"
+        }
+    )
+    archive.zip.registerCancelCallback(
+        zipKey,
+        func()
+            @render! "Cancel callback triggered."
+    )
 
-result = archive.zip.addFromString(
-    zipKey,
-    archive.zip.FLAG_OVERWRITE | archive.zip.FLAG_ENC_UTF_8,
-    archive.zip.COMP_STORE,
-    "contents/hello.txt",
-    "Hello, world!"
-)
+    result = archive.zip.addFromString(
+        zipKey,
+        archive.zip.FLAG_OVERWRITE | archive.zip.FLAG_ENC_UTF_8,
+        archive.zip.COMP_STORE,
+        "contents/hello.txt",
+        "Hello, world!"
+    )
 
-if(result[1] == nil)
-    render! "Added hello.txt to zip file!"
-else render! "Error: " + result[1]
+    if(result[1] == nil)
+        render! "Added hello.txt to zip file!"
+    else render! "Error: " + result[1]
 
-if(archive.zip.setEncryption(
-    zipKey,
-    result[0],
-    archive.zip.ENC_AES_256,
-    "password"
-)) render! "Zip successfully encrypted."
-else render! "Failed to encrypt zip."
+    if(archive.zip.setEncryption(
+        zipKey,
+        result[0],
+        archive.zip.ENC_AES_256,
+        "password"
+    )) render! "Zip successfully encrypted."
+    else render! "Failed to encrypt zip."
 
-archive.zip.close(zipKey)
+    archive.zip.close(zipKey)
+}
+
+readZipFile = func() {
+    zip = archive.zip.open(
+        "hello.zip",
+        archive.zip.READ_ONLY
+    )
+
+    if(zip[1] != 0) {
+        render! "Error creating zip file."
+        io.exit(1)
+    }
+    render! "Zip key: " + zip[0]
+
+    zipKey = zip[0]
+    archive.zip.setPassword(zipKey, "password")
+
+    render "File list:"
+    render! archive.zip.listEntries(
+        zipKey,
+        archive.zip.FLAG_NOCASE
+    )
+
+    render! "Reading contents/hello.txt: " +
+        archive.zip.readAsString(
+            zipKey,
+            "contents/hello.txt"
+        )
+}
+
+render! "Creating zip file..."
+createZipFile()
+render! "---------------------------"
+
+render! "Reading zip file..."
+readZipFile()
+render! "---------------------------"
+
+io.fileDelete("hello.zip")

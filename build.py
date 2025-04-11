@@ -248,7 +248,7 @@ def build_proc():
                 '-lz', '-lbcrypt', '-lbrotlidec', '-lbrotlicommon',
                 '-lzstd', '-lnghttp3', '-lwldap32', '-lunistring',
                 '-liconv', '-lgnutls', '-lnettle', '-lngtcp2',
-                '-ltasn1', '-lgmp', '-lzip'
+                '-ltasn1', '-lgmp', '-lbz2', '-llzma', '-lzip'
             ]
 
             linkable_libs.remove('-lglfw')
@@ -256,7 +256,7 @@ def build_proc():
 
             exe_build_args = [
                 'g++', '-Iinclude', '-DCURL_STATICLIB', '-DCURL_DISABLE_RTMP',
-                '-static', '-static-libstdc++',
+                '-DZIP_STATIC', '-static', '-static-libstdc++',
                 '-pedantic', '-Wall', '-Wdisabled-optimization',
                 '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
                 '-Wchar-subscripts', '-Wcomment', '-Wconversion', '-Werror',

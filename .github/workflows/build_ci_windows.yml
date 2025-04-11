@@ -225,6 +225,11 @@ jobs:
             zlib
             zstd
 
+      - name: Check packages
+      - run: |
+          pkg-config --cflags libzip
+          pkg-config --libs libzip
+
       - name: Checkout code
         run:
           git clone https://github.com/rhea-language/rhea

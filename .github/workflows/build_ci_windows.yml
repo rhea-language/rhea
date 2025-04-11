@@ -89,6 +89,8 @@ jobs:
             libutil-linux
             libxcrypt
             libzstd
+            lzip
+            mingw-w64-x86_64-7zip
             mingw-w64-x86_64-adwaita-icon-theme
             mingw-w64-x86_64-adwaita-icon-theme-legacy
             mingw-w64-x86_64-atk
@@ -222,6 +224,7 @@ jobs:
             openssh
             openssl
             xz
+            zip
             zlib
             zstd
 

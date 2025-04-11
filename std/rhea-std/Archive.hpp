@@ -59,6 +59,9 @@ RHEA_FUNC(archive_zip_setFileComment);
 RHEA_FUNC(archive_zip_fileDosTime);
 RHEA_FUNC(archive_zip_discard);
 
+RHEA_FUNC(archive_zip_registerProgressCallback);
+RHEA_FUNC(archive_zip_registerCancelCallback);
+
 RHEA_LIB_END
 
 #ifdef __clang__

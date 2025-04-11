@@ -18,6 +18,7 @@
 
 #include "rhea-std/Archive.hpp"
 
+#include <rhea/ast/expression/FunctionDeclarationExpression.hpp>
 #include <Rhea.hpp>
 
 RHEA_FUNC(archive_zip_open) {
@@ -1106,5 +1107,126 @@ RHEA_FUNC(archive_zip_discard) {
         );
 
     zip_discard(zip);
+    return DynamicObject();
+}
+
+RHEA_FUNC(archive_zip_registerProgressCallback) {
+    if(args.size() != 3)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 3 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0),
+        precision = args.at(1),
+        callback = args.at(2);
+    std::string keyStr = key.toString();
+
+    if(!precision.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Precision parameter should be of number type, got " +
+                precision.objectType()
+        );
+
+    if(!callback.isFunction())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Callback parameter should be of function type, got " +
+                callback.objectType()
+        );
+
+    auto it = zipMap.find(keyStr);
+    if(it == zipMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Zip key does not exist"
+        );
+
+    zip_t* zip = it->second;
+    if(zip == NULL)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Invalid zip handle"
+        );
+
+    static SymbolTable& symbols = symtab;
+    DynamicObject* cbPtr = new DynamicObject(callback);
+
+    zip_register_progress_callback_with_state(
+        zip,
+        static_cast<double>(precision.getNumber()),
+        [](zip_t* cbz, double step, void* data) {
+            DynamicObject* cbObj = static_cast<DynamicObject*>(data);
+
+            std::vector<DynamicObject> params;
+            params.emplace_back(DynamicObject(
+                static_cast<float>(step)
+            ));
+
+            cbObj->getCallable()->call(symbols, params);
+        },
+        [](void* data) {
+            DynamicObject* cbObj = static_cast<DynamicObject*>(data);
+            delete cbObj;
+        },
+        static_cast<void*>(cbPtr)
+    );
+
+    return DynamicObject();
+}
+
+RHEA_FUNC(archive_zip_registerCancelCallback) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0),
+        callback = args.at(1);
+    std::string keyStr = key.toString();
+
+    if(!callback.isFunction())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Callback parameter should be of function type, got " +
+                callback.objectType()
+        );
+
+    auto it = zipMap.find(keyStr);
+    if(it == zipMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Zip key does not exist"
+        );
+
+    zip_t* zip = it->second;
+    if(zip == NULL)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Invalid zip handle"
+        );
+
+    static SymbolTable& symbols = symtab;
+    DynamicObject* cbPtr = new DynamicObject(callback);
+
+    zip_register_cancel_callback_with_state(
+        zip,
+        [](zip_t* cbz, void* data) {
+            DynamicObject* cbObj = static_cast<DynamicObject*>(data);
+            cbObj->getCallable()->call(symbols, {});
+
+            return 0;
+        },
+        [](void* data) {
+            DynamicObject* cbObj = static_cast<DynamicObject*>(data);
+            delete cbObj;
+        },
+        static_cast<void*>(cbPtr)
+    );
+
     return DynamicObject();
 }

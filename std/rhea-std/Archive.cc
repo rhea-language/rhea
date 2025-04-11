@@ -248,7 +248,7 @@ RHEA_FUNC(archive_zip_addFromData) {
     for(size_t i = 0; i < dataSize; i++) {
         DynamicObject obj = buf->at(i);
         if(!obj.isNumber())
-            throw new TerminativeThrowSignal(
+            throw TerminativeThrowSignal(
                 std::move(address),
                 "Buffer parameter must be an array of numbers"
             );
@@ -824,7 +824,8 @@ RHEA_FUNC(archive_zip_listEntries) {
             "Invalid zip handle"
         );
 
-    std::shared_ptr<std::vector<DynamicObject>> entries;
+    std::shared_ptr<std::vector<DynamicObject>> entries =
+        std::make_shared<std::vector<DynamicObject>>();
     size_t entryCount = zip_get_num_entries(zip, 0);
 
     for(size_t i = 0; i < entryCount; i++) {
@@ -1229,4 +1230,190 @@ RHEA_FUNC(archive_zip_registerCancelCallback) {
     );
 
     return DynamicObject();
+}
+
+RHEA_FUNC(archive_zip_readAsData) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0),
+        fileName = args.at(1);
+    std::string keyStr = key.toString();
+
+    auto it = zipMap.find(keyStr);
+    if(it == zipMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Zip key does not exist"
+        );
+
+    zip_t* zip = it->second;
+    if(zip == NULL)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Invalid zip handle"
+        );
+
+    std::shared_ptr<std::vector<DynamicObject>> buf =
+        std::make_shared<std::vector<DynamicObject>>();
+
+    std::string actualFileNameStr = fileName.toString();
+    const char* actualFileName = actualFileNameStr.c_str();
+
+    struct zip_stat st;
+    if(zip_stat(
+        zip,
+        actualFileName,
+        0, &st
+    ) != 0) throw TerminativeThrowSignal(
+        std::move(address),
+        "Cannot find specified file name in zip: " +
+            fileName.toString()
+    );
+
+    zip_int64_t idx = zip_name_locate(
+        zip,
+        actualFileName,
+        0
+    );
+    if(idx < 0)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Cannot read specified file name in zip: " +
+                fileName.toString()
+        );
+
+    zip_file_t *zf = zip_fopen_index(zip, idx, 0);
+    if(!zf) throw TerminativeThrowSignal(
+        std::move(address),
+        "Cannot read specified file name in zip: " +
+            fileName.toString()
+    );
+
+    uint8_t *buffer = static_cast<uint8_t*>(malloc(st.size));
+    if(!buffer) {
+        zip_fclose(zf);
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Failed to allocate memory buffer"
+        );
+    }
+
+    int64_t bytes_read = zip_fread(zf, buffer, st.size);
+    if(bytes_read < 0 ||
+        static_cast<uint64_t>(bytes_read) != st.size
+    ) {
+        free(buffer);
+        zip_fclose(zf);
+
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Cannot read specified file name in zip: " +
+                fileName.toString()
+        );
+    }
+
+    for(size_t i = 0; i < st.size; i++)
+        buf->emplace_back(DynamicObject(
+            static_cast<float>(buffer[i])
+        ));
+
+    free(buffer);
+    zip_fclose(zf);
+
+    return DynamicObject(buf);
+}
+
+RHEA_FUNC(archive_zip_readAsString) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0),
+        fileName = args.at(1);
+    std::string keyStr = key.toString();
+
+    auto it = zipMap.find(keyStr);
+    if(it == zipMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Zip key does not exist"
+        );
+
+    zip_t* zip = it->second;
+    if(zip == NULL)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Invalid zip handle"
+        );
+
+    std::string actualFileNameStr = fileName.toString();
+    const char* actualFileName = actualFileNameStr.c_str();
+    
+    struct zip_stat st;
+    if(zip_stat(
+        zip,
+        actualFileName,
+        0, &st
+    ) != 0) throw TerminativeThrowSignal(
+        std::move(address),
+        "Cannot find specified file name in zip: " +
+            fileName.toString()
+    );
+
+    zip_int64_t idx = zip_name_locate(
+        zip,
+        actualFileName,
+        0
+    );
+    if(idx < 0)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Cannot read specified file name in zip: " +
+                fileName.toString()
+        );
+
+    zip_file_t *zf = zip_fopen_index(zip, idx, 0);
+    if(!zf) throw TerminativeThrowSignal(
+        std::move(address),
+        "Cannot read specified file name in zip: " +
+            fileName.toString()
+    );
+
+    uint8_t *buffer = static_cast<uint8_t*>(malloc(st.size));
+    if(!buffer) {
+        zip_fclose(zf);
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Failed to allocate memory buffer"
+        );
+    }
+
+    int64_t bytes_read = zip_fread(zf, buffer, st.size);
+    if(bytes_read < 0 ||
+        static_cast<uint64_t>(bytes_read) != st.size
+    ) {
+        free(buffer);
+        zip_fclose(zf);
+
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Cannot read specified file name in zip: " +
+                fileName.toString()
+        );
+    }
+
+    std::string buf;
+    for(size_t i = 0; i < st.size; i++)
+        buf += static_cast<char>(buffer[i]);
+
+    zip_fclose(zf);
+    return DynamicObject(buf);
 }

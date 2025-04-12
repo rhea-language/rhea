@@ -65,6 +65,11 @@ RHEA_FUNC(archive_zip_registerCancelCallback);
 RHEA_FUNC(archive_zip_readAsData);
 RHEA_FUNC(archive_zip_readAsString);
 
+RHEA_FUNC(archive_zip_fetchInfo);
+RHEA_FUNC(archive_zip_unchange);
+RHEA_FUNC(archive_zip_unchangeAll);
+RHEA_FUNC(archive_zip_unchangeArchive);
+
 RHEA_LIB_END
 
 #ifdef __clang__

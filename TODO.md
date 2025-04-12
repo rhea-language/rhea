@@ -11,7 +11,13 @@ Todo:
     - [x] chrono
     - [x] crypt
     - [x] env
-    - [ ] fmt
+    - [ ] gl
+    - [ ] gpio
+    - [x] io
+    - [x] lang
+    - [ ] map
+    - [x] math
+    - [ ] media
         - [ ] barcode
         - [ ] csv
         - [ ] gguf
@@ -19,12 +25,6 @@ Todo:
         - [ ] mdif
         - [ ] png
         - [ ] qr
-    - [ ] gl
-    - [ ] gpio
-    - [x] io
-    - [x] lang
-    - [ ] map
-    - [x] math
     - [ ] ml
         - [x] ann
         - [ ] astar

@@ -122,5 +122,10 @@ import archive.zip {
     registerCancelCallback,
 
     readAsData,
-    readAsString
+    readAsString,
+    fetchInfo,
+
+    unchange,
+    unchangeAll,
+    unchangeArchive
 } from "core"

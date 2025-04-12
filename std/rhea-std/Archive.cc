@@ -1417,3 +1417,164 @@ RHEA_FUNC(archive_zip_readAsString) {
     zip_fclose(zf);
     return DynamicObject(buf);
 }
+
+RHEA_FUNC(archive_zip_fetchInfo) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0),
+        fileName = args.at(1);
+    std::string keyStr = key.toString();
+
+    if(zipMap.find(keyStr) == zipMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Zip key does not exist"
+        );
+
+    auto it = zipMap.find(keyStr);
+    if(it == zipMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Zip key does not exist"
+        );
+
+    zip_t* zip = it->second;
+    if(zip == NULL)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Invalid zip handle"
+        );
+
+    std::string actualFileNameStr = fileName.toString();
+    const char* actualFileName = actualFileNameStr.c_str();
+
+    struct zip_stat st;
+    if(zip_stat(
+        zip,
+        actualFileName,
+        0, &st
+    ) != 0) throw TerminativeThrowSignal(
+        std::move(address),
+        "Cannot find specified file name in zip: " +
+            fileName.toString()
+    );
+
+    std::shared_ptr<std::vector<DynamicObject>> infos =
+        std::make_shared<std::vector<DynamicObject>>();
+
+    infos->emplace_back(DynamicObject(static_cast<float>(st.index)));
+    infos->emplace_back(DynamicObject(static_cast<float>(st.size)));
+    infos->emplace_back(DynamicObject(static_cast<float>(st.comp_size)));
+    infos->emplace_back(DynamicObject(static_cast<float>(st.mtime)));
+    infos->emplace_back(DynamicObject(static_cast<float>(st.crc)));
+    infos->emplace_back(DynamicObject(static_cast<float>(st.comp_method)));
+    infos->emplace_back(DynamicObject(static_cast<float>(st.encryption_method)));
+
+    return DynamicObject(infos);
+}
+
+RHEA_FUNC(archive_zip_unchange) {
+    if(args.size() != 2)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 2 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0),
+        index = args.at(1);
+    std::string keyStr = key.toString();
+
+    if(!index.isNumber())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Index argument must be of number type, got " +
+                index.objectType()
+        );
+
+    if(zipMap.find(keyStr) == zipMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Zip key does not exist"
+        );
+
+    auto it = zipMap.find(keyStr);
+    if(it == zipMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Zip key does not exist"
+        );
+
+    zip_t* zip = it->second;
+    if(zip == NULL)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Invalid zip handle"
+        );
+
+    return DynamicObject(zip_unchange(
+        zip,
+        static_cast<uint64_t>(index.getNumber())
+    ) == 0);
+}
+
+RHEA_FUNC(archive_zip_unchangeAll) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0);
+    std::string keyStr = key.toString();
+
+    auto it = zipMap.find(keyStr);
+    if(it == zipMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Zip key does not exist"
+        );
+
+    zip_t* zip = it->second;
+    if(zip == NULL)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Invalid zip handle"
+        );
+
+    return DynamicObject(zip_unchange_all(zip) == 0);
+}
+
+RHEA_FUNC(archive_zip_unchangeArchive) {
+    if(args.size() != 1)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Expecting 1 argument, got " +
+                std::to_string(args.size())
+        );
+
+    DynamicObject key = args.at(0);
+    std::string keyStr = key.toString();
+
+    auto it = zipMap.find(keyStr);
+    if(it == zipMap.end())
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Zip key does not exist"
+        );
+
+    zip_t* zip = it->second;
+    if(zip == NULL)
+        throw TerminativeThrowSignal(
+            std::move(address),
+            "Invalid zip handle"
+        );
+
+    return DynamicObject(zip_unchange_archive(zip) == 0);
+}

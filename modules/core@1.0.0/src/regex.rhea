@@ -32,4 +32,4 @@ import regex {
     split,
     getCapturedGroups,
     getAllCapturedGroups
-}
+} from "core"

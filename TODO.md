@@ -3,6 +3,7 @@ Todo:
 
 - To be developed libraries:
     - [ ] archive
+        - [ ] iso
         - [ ] rar
         - [ ] z7
         - [x] zip
@@ -10,6 +11,7 @@ Todo:
     - [ ] audio
     - [x] chrono
     - [x] crypt
+    - [ ] conv
     - [x] env
     - [ ] gl
     - [ ] gpio
@@ -38,7 +40,7 @@ Todo:
         - [ ] telnet
         - [x] tor
     - [x] reflect
-    - [ ] regex
+    - [x] regex
     - [ ] serial
         - [ ] json
         - [ ] msgpack

@@ -214,7 +214,7 @@ def build_proc():
 
         elif PLATFORM == 'Darwin':
             log_task("Installing GLFW3 and OpenSSL via brew...")
-            subprocess.run(['brew', 'install', 'glfw', 'openssl'])
+            subprocess.run(['brew', 'install', 'glfw', 'openssl', 'libzip'])
             subprocess.run(['brew', 'link', 'glfw'])
             log_info("Done installing GLFW3 and OpenSSL!")
 

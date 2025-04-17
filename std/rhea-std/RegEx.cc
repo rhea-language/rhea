@@ -16,10 +16,10 @@
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "rhea-std/Archive.hpp"
+#include "rhea-std/RegEx.hpp"
 
-#include <regex>
 #include <Rhea.hpp>
+#include <regex>
  
 RHEA_FUNC(regex_match) {
     if(args.size() != 2)

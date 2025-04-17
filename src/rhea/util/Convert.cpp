@@ -17,8 +17,25 @@
  */
 
 #include <rhea/util/Convert.hpp>
+#include <cstdint>
 
 namespace RheaUtil {
+
+static bool isValidForBase(const std::string& digits, int base) {
+    for(uint8_t ch : digits) {
+        int val = -1;
+
+        if(std::isdigit(ch))
+            val = ch - '0';
+        else if(std::isalpha(ch))
+            val = std::toupper(ch) - 'A' + 10;
+
+        if(val < 0 || val >= base)
+            return false;
+    }
+
+    return true;
+}
 
 void Convert::reverse(unsigned char* array, size_t length) {
     size_t left = 0, right = length - 1;
@@ -60,14 +77,42 @@ double Convert::translateDigit(const std::string& image) {
     if(image.empty())
         throw std::invalid_argument("Input string is null or empty");
 
-    if(image.find("0b") == 0)
-        return Convert::parseBinary(image.substr(2));
-    else if(image.find("0t") == 0)
-        return Convert::parseBase3(image.substr(2));
-    else if(image.find("0c") == 0)
-        return Convert::parseOctal(image.substr(2));
-    else if(image.find("0x") == 0)
+    if(image.find("0b") == 0) {
+        std::string digits = image.substr(2);
+        if(digits.empty() || !isValidForBase(digits, 2))
+            throw std::invalid_argument(
+                "Invalid binary literal: '" + image + "'"
+            );
+
+        return Convert::parseBinary(digits);
+    }
+    else if(image.find("0t") == 0) {
+        std::string digits = image.substr(2);
+        if(digits.empty() || !isValidForBase(digits, 3))
+            throw std::invalid_argument(
+                "Invalid trinary literal: '" + image + "'"
+            );
+
+        return Convert::parseBase3(digits);
+    }
+    else if(image.find("0c") == 0) {
+        std::string digits = image.substr(2);
+        if(digits.empty() || !isValidForBase(digits, 8))
+            throw std::invalid_argument(
+                "Invalid octadecimal literal: '" + image + "'"
+            );
+
+        return Convert::parseOctal(digits);
+    }
+    else if(image.find("0x") == 0) {
+        std::string digits = image.substr(2);
+        if(digits.empty() || !isValidForBase(digits, 16))
+            throw std::invalid_argument(
+                "Invalid hexadecimal literal: '" + image + "'"
+            );
+
         return Convert::parseHex(image.substr(2));
+    }
 
     return std::stod(image);
 }

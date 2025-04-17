@@ -22,7 +22,6 @@ import regex {
 
     search,
     countMatches,
-    transformMatches,
     findMatchPositions,
 
     findAllMatches,

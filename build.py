@@ -82,18 +82,8 @@ def get_ext_instructions():
 
     if 'flags' in cpu_info:
         for feature in features_to_check:
-            print(
-                "\033[1m[\033[0m \033[1;44m  TASK   \033[0m \033[1m]\033[0m \033[3m" +
-                str(datetime.today()) + "\033[0m :: Checking hardware support for " +
-                feature + "... ",
-                end=''
-            )
-
             if feature in cpu_info['flags']:
                 supported_features.append('-m' + feature.replace('_', '.'))
-                print('supported')
-            else:
-                print('not found')
 
     log_info("Done listing extended instruction support!")
     return supported_features
@@ -102,18 +92,14 @@ def include_local_lib(lib_name):
     global lib_headers
     global lib_source_files
 
-    log_task("Listing included library folders...")
     lib_headers += ['-Ilib/' + lib_name + '/include']
     if os.path.exists('lib/' + lib_name + '/src'):
         lib_headers += ['-Ilib/' + lib_name + '/src']
 
-    log_task("Listing included source files...")
     for root, dirs, files in os.walk('lib/' + lib_name + '/src'):
         for file in files:
             if file.endswith('.cpp') or file.endswith('.c'):
                 lib_source_files.append(os.path.join(root, file))
-
-    log_info("Done listing header file folders and source files!")
 
 def has_upgradable_packages():
     try:
@@ -189,13 +175,13 @@ def build_proc():
         exit(1)
 
     log_task("Listing included source file implementations...")
-    for root, dirs, files in os.walk('src'):
+    for root, _, files in os.walk('src'):
         for file in files:
             if file.endswith('.cpp'):
                 cpp_files.append(os.path.join(root, file))
 
     log_task("Listing included Rhea standard library source files...")
-    for root, dirs, files in os.walk('std'):
+    for root, _, files in os.walk('std'):
         for file in files:
             if file.endswith('.cc'):
                 cc_files.append(os.path.join(root, file))

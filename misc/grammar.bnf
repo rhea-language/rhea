@@ -149,7 +149,7 @@ blockExpr               :=
     "{" (statement)* "}"
 
 renderExpr              :=
-    "render" ["!"] expression
+    "render" ["!"] ["%"] expression
 
 catchHandleExpr         :=
     "catch" expression
@@ -212,6 +212,7 @@ literalExpr             :=
     string                                  |
     digits                                  |
     boolean                                 |
+    regex                                   |
     nil
 
 start                   :=

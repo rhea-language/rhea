@@ -700,7 +700,7 @@ std::shared_ptr<ASTNode> Parser::exprLogicAnd() {
         expression = std::make_shared<BinaryExpression>(
             std::make_shared<Token>(address),
             std::move(expression),
-            "&&",
+            this->consume(TokenCategory::OPERATOR),
             this->exprBitwiseOr()
         );
     }
@@ -717,7 +717,7 @@ std::shared_ptr<ASTNode> Parser::exprBitwiseOr() {
         expression = std::make_shared<BinaryExpression>(
             std::make_shared<Token>(address),
             std::move(expression),
-            "|",
+            this->consume(TokenCategory::OPERATOR),
             this->exprBitwiseXor()
         );
     }

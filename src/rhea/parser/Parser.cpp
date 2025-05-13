@@ -713,11 +713,11 @@ std::shared_ptr<ASTNode> Parser::exprBitwiseOr() {
 
     while(this->isNext("|", TokenCategory::OPERATOR) ||
         this->isNext(".|", TokenCategory::OPERATOR)) {
-        Token address = this->consume("|");
+        Token address = this->consume(TokenCategory::OPERATOR);
         expression = std::make_shared<BinaryExpression>(
             std::make_shared<Token>(address),
             std::move(expression),
-            this->consume(TokenCategory::OPERATOR).getImage(),
+            address.getImage(),
             this->exprBitwiseXor()
         );
     }
@@ -730,11 +730,11 @@ std::shared_ptr<ASTNode> Parser::exprBitwiseXor() {
 
     while(this->isNext("^", TokenCategory::OPERATOR) ||
         this->isNext(".^", TokenCategory::OPERATOR)) {
-        Token address = this->consume("^");
+        Token address = this->consume(TokenCategory::OPERATOR);
         expression = std::make_shared<BinaryExpression>(
             std::make_shared<Token>(address),
             std::move(expression),
-            "^",
+            address,
             this->exprBitwiseAnd()
         );
     }
@@ -747,11 +747,11 @@ std::shared_ptr<ASTNode> Parser::exprBitwiseAnd() {
 
     while(this->isNext("&", TokenCategory::OPERATOR) ||
         this->isNext(".&", TokenCategory::OPERATOR)) {
-        Token address = this->consume("&");
+        Token address = this->consume(TokenCategory::OPERATOR);
         expression = std::make_shared<BinaryExpression>(
             std::make_shared<Token>(address),
             std::move(expression),
-            "&",
+            address.getImage(),
             this->exprNilCoalescing()
         );
     }

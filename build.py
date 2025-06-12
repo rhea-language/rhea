@@ -68,14 +68,22 @@ lib_source_files = []
 
 def get_ext_instructions():
     log_task('Checking extended instruction availability...')
-    features_to_check = [
-        "abm", "adx", "aes", "avx", "avx2", "bmi",
-        "clflushopt", "cx16", "f16c", "fma", "fsgsbase",
-        "fxsr", "mmx", "movbe", "rdrnd", "rdseed",
-        "rtm", "sgx", "sse", "sse2", "sse3", "sse4",
-        "sse4_1", "sse4_2", "vpclmulqdq", "xsave",
-        "xsavec", "xsaveopt", "xsave"
-    ]
+    features_to_check = []
+
+    machine = os.uname().machine
+    if 'x86' in machine.lower() or 'amd64' in machine.lower():
+        features_to_check = [
+            "abm", "adx", "aes", "avx", "avx2", "bmi",
+            "clflushopt", "cx16", "f16c", "fma", "fsgsbase",
+            "fxsr", "mmx", "movbe", "rdrnd", "rdseed",
+            "rtm", "sgx", "sse", "sse2", "sse3", "sse4",
+            "sse4_1", "sse4_2", "vpclmulqdq", "xsave",
+            "xsavec", "xsaveopt", "xsave"
+        ]
+        log_task('Listed Intel x86-64 extensions...')
+    elif 'arm' in machine.lower() or 'aarch64' in machine.lower():
+        features_to_check = ["fma"]
+        log_task('Listed ARM64 extensions...')
 
     supported_features = []
     cpu_info = cpuinfo.get_cpu_info()

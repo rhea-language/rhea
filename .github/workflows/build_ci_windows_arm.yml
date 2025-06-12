@@ -27,7 +27,7 @@ jobs:
       - name: Setup MSYS2 for ARM64
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MING_ARM64
+          msystem: CLANGARM64
           update: true
           install: >-
             base

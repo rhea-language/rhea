@@ -113,7 +113,6 @@ jobs:
             mingw-w64-clang-aarch64-fribidi
             mingw-w64-clang-aarch64-gcc
             mingw-w64-clang-aarch64-gcc-libs
-            mingw-w64-clang-aarch64-gdb-multiarch
             mingw-w64-clang-aarch64-gdk-pixbuf2
             mingw-w64-clang-aarch64-gettext-libtextstyle
             mingw-w64-clang-aarch64-gettext-runtime

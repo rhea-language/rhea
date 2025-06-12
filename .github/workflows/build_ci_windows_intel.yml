@@ -178,6 +178,7 @@ jobs:
             mingw-w64-x86_64-nghttp3
             mingw-w64-x86_64-ngtcp2
             mingw-w64-x86_64-ntldd
+            mingw-w64-x86_64-openmp
             mingw-w64-x86_64-openssl
             mingw-w64-x86_64-p11-kit
             mingw-w64-x86_64-pango

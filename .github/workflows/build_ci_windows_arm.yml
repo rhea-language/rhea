@@ -176,6 +176,7 @@ jobs:
             mingw-w64-clang-aarch64-nghttp3
             mingw-w64-clang-aarch64-ngtcp2
             mingw-w64-clang-aarch64-ntldd
+            mingw-w64-clang-aarch64-openmp
             mingw-w64-clang-aarch64-openssl
             mingw-w64-clang-aarch64-p11-kit
             mingw-w64-clang-aarch64-pango

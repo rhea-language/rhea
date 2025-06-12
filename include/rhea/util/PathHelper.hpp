@@ -27,6 +27,11 @@
 namespace RheaUtil {
 
 class PathHelper {
+private:
+    #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+    static std::string wstring2Utf8(const std::wstring& wstr);
+    #endif
+
 public:
     static std::string installationPath();
     static std::string findSharedLibrary(std::string name);

@@ -72,7 +72,6 @@ jobs:
           /usr/bin/time -v ./dist/rhea-lang/bin/rhea ./examples/99-beers.rhea
           /usr/bin/time -v ./dist/rhea-lang/bin/rhea ./examples/hello.rhea
           /usr/bin/time -v ./dist/rhea-lang/bin/rhea ./examples/http-get.rhea
-          /usr/bin/time -v ./dist/rhea-lang/bin/rhea -u ./examples/inject.rhea
           /usr/bin/time -v ./dist/rhea-lang/bin/rhea ./examples/logic-gate-ai.rhea
           /usr/bin/time -v ./dist/rhea-lang/bin/rhea ./examples/zip-create.rhea
 

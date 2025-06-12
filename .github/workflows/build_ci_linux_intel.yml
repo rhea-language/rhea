@@ -1,0 +1,87 @@
+name: Build CI [Linux x86-64]
+
+on:
+  push:
+    paths:
+      - .github/workflows/build_ci_linux_intel.yml
+      - assets/**
+      - examples/**
+      - include/**
+      - lib/**
+      - src/**
+      - std/**
+      - test/**
+      - tools/**
+      - build.py
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Update Distro
+        run: sudo apt update && sudo apt upgrade
+
+      - name: Python 3.12 Installation
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build Rhea
+        run: |
+          python -m pip install py-cpuinfo
+          python build.py
+
+      - name: Set Environment Path
+        run: |
+          export RHEA_PATH=$(pwd)/dist/rhea-lang
+
+      - name: Build verification
+        run: |
+          ./dist/rhea-lang/bin/rhea
+          ls dist -ral
+          find dist | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
+
+      - name: Run test scripts
+        run: |
+          start=$(date +%s%3N)
+          ./dist/rhea-lang/bin/rhea ./test/arithmetic.rhea
+          ./dist/rhea-lang/bin/rhea ./test/array.rhea
+          ./dist/rhea-lang/bin/rhea ./test/digits.rhea
+          ./dist/rhea-lang/bin/rhea ./test/error_handling.rhea
+          ./dist/rhea-lang/bin/rhea ./test/flow.rhea
+          ./dist/rhea-lang/bin/rhea ./test/func.rhea
+          ./dist/rhea-lang/bin/rhea ./test/lock.rhea
+          ./dist/rhea-lang/bin/rhea ./test/loop.rhea
+          ./dist/rhea-lang/bin/rhea ./test/native.rhea
+          ./dist/rhea-lang/bin/rhea ./test/parallel.rhea
+          ./dist/rhea-lang/bin/rhea ./test/regex.rhea
+          ./dist/rhea-lang/bin/rhea ./test/test.rhea -t
+          ./dist/rhea-lang/bin/rhea ./test/types.rhea
+          end=$(date +%s%3N)
+          echo "Elapsed time: $((end - start)) ms"
+
+      - name: Run examples
+        run: |
+          export RHEA_PATH=$(pwd)/dist/rhea-lang
+          /usr/bin/time -v ./dist/rhea-lang/bin/rhea ./examples/99-beers.rhea
+          /usr/bin/time -v ./dist/rhea-lang/bin/rhea ./examples/hello.rhea
+          /usr/bin/time -v ./dist/rhea-lang/bin/rhea ./examples/http-get.rhea
+          /usr/bin/time -v ./dist/rhea-lang/bin/rhea -u ./examples/inject.rhea
+          /usr/bin/time -v ./dist/rhea-lang/bin/rhea ./examples/logic-gate-ai.rhea
+          /usr/bin/time -v ./dist/rhea-lang/bin/rhea ./examples/zip-create.rhea
+
+      - name: Create Rhea *.deb file
+        run: python tools/build_deb_installer.py
+
+      - name: Upload dist folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhea-linux-dist
+          path: dist/rhea-lang_1.0.0_amd64.deb
+          retention-days: 1

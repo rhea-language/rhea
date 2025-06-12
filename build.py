@@ -53,6 +53,7 @@ OUT_DIR = os.path.join('dist', 'rhea-lang')
 
 PLATFORM = platform.system()
 ARCH = platform.architecture()[0]
+MACHINE = platform.machine().lower()
 OUTPUT_EXECUTABLE = os.path.join(OUT_DIR, 'bin', 'rhea')
 OUTPUT_LIBRARY = os.path.join(
     OUT_DIR,
@@ -70,10 +71,8 @@ def get_ext_instructions():
     log_task('Checking extended instruction availability...')
     features_to_check = []
 
-    machine = platform.machine()
-    log_info(f"Detected machine architecture: {machine}")
-
-    if 'x86' in machine.lower() or 'amd64' in machine.lower():
+    log_info(f"Detected machine architecture: {MACHINE}")
+    if 'x86' in MACHINE or 'amd64' in MACHINE:
         features_to_check = [
             "abm", "adx", "aes", "avx", "avx2", "bmi",
             "clflushopt", "cx16", "f16c", "fma", "fsgsbase",
@@ -83,7 +82,7 @@ def get_ext_instructions():
             "xsavec", "xsaveopt", "xsave"
         ]
         log_task('Listed Intel x86-64 extensions...')
-    elif 'arm' in machine.lower() or 'aarch64' in machine.lower():
+    elif 'arm' in MACHINE or 'aarch64' in MACHINE:
         features_to_check = ["fma"]
         log_task('Listed ARM64 extensions...')
 
@@ -94,6 +93,9 @@ def get_ext_instructions():
         for feature in features_to_check:
             if feature in cpu_info['flags']:
                 supported_features.append('-m' + feature.replace('_', '.'))
+
+    if 'x86' in MACHINE or 'amd64' in MACHINE:
+        supported_features.append("-mfpmath=sse")
 
     log_info("Done listing extended instruction support!")
     return supported_features
@@ -268,7 +270,7 @@ def build_proc():
                 '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
                 '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-Wno-deprecated-declarations',
                 '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-s', '-fopenmp'
-            ] + ext_instructions + ['-mfpmath=sse',
+            ] + ext_instructions + [
                 '-march=native', '-ffast-math'
             ] + lib_headers + lib_source_files + [
                 config_res,
@@ -278,6 +280,10 @@ def build_proc():
             ] + linkable_libs + win_libs
 
             if '--no-core' not in sys.argv:
+                if 'arm' in MACHINE or 'aarch64' in MACHINE:
+                    exe_build_args.remove("-Wunsafe-loop-optimizations")
+                    exe_build_args.append("-Winvalid-specialization")
+
                 now = time.time()
 
                 log_task("Generating Windows resource file configurations...")
@@ -297,6 +303,7 @@ def build_proc():
 
             if '--no-stdlib' not in sys.argv:
                 now = time.time()
+
                 lib_build_args = [
                     'g++', '-static', '-static-libstdc++',
                     '-DCURL_STATICLIB', '-DZIP_STATIC',
@@ -304,6 +311,10 @@ def build_proc():
                     '-o', OUTPUT_LIBRARY + '.dll',
                     '-Wno-deprecated-declarations'
                 ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + linkable_libs + win_libs
+
+                if 'arm' in MACHINE or 'aarch64' in MACHINE:
+                    lib_build_args.remove("-Wunsafe-loop-optimizations")
+                    lib_build_args.append("-Winvalid-specialization")
 
                 log_task("Building Rhea standard library for Windows...")
                 subprocess.run(lib_build_args)
@@ -375,7 +386,7 @@ def build_proc():
                 '-Wunused', '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
                 '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros', '-O2',
                 '-Wvolatile-register-var', '-Wwrite-strings', '-pipe', '-ffast-math', '-s',
-                '-std=c++23', '-fopenmp'] + ext_instructions + ['-mfpmath=sse',
+                '-std=c++23', '-fopenmp'] + ext_instructions + [
                 '-march=native', '-ffast-math'
             ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE] + linkable_libs
 

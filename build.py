@@ -148,6 +148,8 @@ def build_proc():
     global lib_headers
     global lib_source_files
 
+    gen_time = time.time()
+
     log_warning("Cleaning up already existing build folder...")
     if '--no-core' not in sys.argv and '--no-stdlib' not in sys.argv and os.path.exists(OUT_DIR):
         shutil.rmtree(OUT_DIR)
@@ -477,6 +479,9 @@ def build_proc():
     except Exception as e:
         log_error(f"Compilation failed with error: {e}")
         exit(1)
+
+    gen_end = time.time() - gen_time
+    log_info(f"Finished in {gen_end:.6f} seconds")
 
 try:
     build_proc()

@@ -33,28 +33,90 @@
 
 namespace RheaUtil {
 
+#if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+std::string PathHelper::wstring2Utf8(const std::wstring& wstr) {
+    if(wstr.empty())
+        return "";
+
+    int sizeNeeded = WideCharToMultiByte(
+        CP_UTF8, 0,
+        wstr.data(),
+        (int) wstr.size(),
+        nullptr, 0,
+        nullptr,
+        nullptr
+    );
+
+    if(sizeNeeded == 0)
+        throw std::runtime_error(
+            "Path helper failed to calculate size for UTF-8 conversion."
+        );
+
+    std::string utf8Str(sizeNeeded, 0);
+    int charsConverted = WideCharToMultiByte(
+        CP_UTF8, 0,
+        wstr.data(),
+        (int) wstr.size(),
+        &utf8Str[0],
+        sizeNeeded,
+        nullptr,
+        nullptr
+    );
+
+    if(charsConverted == 0)
+        throw std::runtime_error("Path helper failed to convert wstring to UTF-8.");
+
+    utf8Str.resize(charsConverted);
+    return utf8Str;
+}
+#endif
+
 std::string PathHelper::installationPath() {
     #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
     HKEY hKey;
-    DWORD type, size;
+    DWORD type;
     wchar_t buffer[32767];
+    DWORD buffer_size_bytes = sizeof(buffer);
 
-    if(RegOpenKeyExW(HKEY_CURRENT_USER, L"Environment", 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
-        size = sizeof(buffer);
-        if(RegQueryValueExW(hKey, L"RHEA_PATH", NULL, &type, (LPBYTE)buffer, &size) == ERROR_SUCCESS) {
+    if(RegOpenKeyExW(
+        HKEY_CURRENT_USER,
+        L"Environment", 0,
+        KEY_READ,
+        &hKey
+    ) == ERROR_SUCCESS) {
+        if(RegQueryValueExW(
+            hKey,
+            L"RHEA_PATH",
+            NULL,
+            &type,
+            reinterpret_cast<LPBYTE>(buffer),
+            &buffer_size_bytes
+        ) == ERROR_SUCCESS) {
             if(type == REG_SZ || type == REG_EXPAND_SZ) {
                 RegCloseKey(hKey);
 
-                std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> conv_x;
-                return conv_x.to_bytes(std::wstring(buffer));
+                size_t num_wchars = buffer_size_bytes / sizeof(wchar_t);
+                if(num_wchars > 0 && buffer[num_wchars - 1] == L'\0');
+                else if(num_wchars < (sizeof(buffer) / sizeof(wchar_t)))
+                    buffer[num_wchars] = L'\0';
+                else {
+                    if(buffer[32767 - 1] != L'\0')
+                        buffer[32767 - 1] = L'\0';
+                }
+
+                return PathHelper::wstring2Utf8(std::wstring(buffer));
             }
         }
 
         RegCloseKey(hKey);
     }
 
-    return std::getenv(RHEA_ENV_PATH_NAME);
+    const char* env_path = std::getenv(RHEA_ENV_PATH_NAME);
+    if(env_path != nullptr)
+        return std::string(env_path);
+
+    return "";
 
     #else
     return std::getenv(RHEA_ENV_PATH_NAME);

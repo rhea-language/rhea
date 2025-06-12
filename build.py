@@ -240,13 +240,13 @@ def build_proc():
                 '-lglfw3', '-lglew32', '-lopengl32', '-lgdi32',
                 '-lwinmm', '-limm32', '-lole32', '-loleaut32',
                 '-lversion', '-luuid', '-ldinput8', '-ldxguid',
-                '-lsetupapi', '-lshell32', '-lssl', '-lcrypto',
-                '-lcrypt32', '-lpsl', '-lws2_32', '-luser32',
-                '-lkernel32', '-lidn2', '-lssh2', '-lnghttp2',
-                '-lz', '-lbcrypt', '-lbrotlidec', '-lbrotlicommon',
-                '-lzstd', '-lnghttp3', '-lwldap32', '-lunistring',
-                '-liconv', '-lbz2', '-llzma', '-lzip', '-lgnutls',
-                '-lnettle', '-lngtcp2', '-ltasn1', '-lgmp'
+                '-lsetupapi', '-lshell32', '-lngtcp2_crypto_ossl',
+                '-lssl', '-lcrypto', '-lcrypt32', '-lpsl', '-lws2_32',
+                '-luser32', '-lkernel32', '-lidn2', '-lssh2',
+                '-lnghttp2', '-lz', '-lbcrypt', '-lbrotlidec',
+                '-lbrotlicommon', '-lzstd', '-lnghttp3', '-lwldap32',
+                '-lunistring', '-liconv', '-lbz2', '-llzma', '-lzip',
+                '-lgnutls', '-lnettle', '-lngtcp2', '-ltasn1', '-lgmp'
             ]
 
             linkable_libs.remove('-lglfw')

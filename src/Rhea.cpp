@@ -27,7 +27,10 @@
 #endif
 
 #ifdef _OPENMP
-#include <omp.h>
+#   if (defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)) && _M_ARM
+#   else
+#       include <omp.h>
+#   endif
 #endif
 
 #ifdef __EMSCRIPTEN__

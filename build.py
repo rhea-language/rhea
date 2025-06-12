@@ -70,7 +70,9 @@ def get_ext_instructions():
     log_task('Checking extended instruction availability...')
     features_to_check = []
 
-    machine = os.uname().machine
+    machine = platform.machine()
+    log_info(f"Detected machine architecture: {machine}")
+
     if 'x86' in machine.lower() or 'amd64' in machine.lower():
         features_to_check = [
             "abm", "adx", "aes", "avx", "avx2", "bmi",

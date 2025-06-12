@@ -22,11 +22,7 @@
 namespace RheaUtil {
 
 static bool isValidForBase(const std::string& digits, int base) {
-    #ifdef __APPLE__
     for(const char ch : digits) {
-    #else
-    for(uint8_t ch : digits) {
-    #endif
         int val = -1;
 
         if(std::isdigit(ch))

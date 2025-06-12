@@ -52,7 +52,10 @@ std::string PathHelper::wstring2Utf8(const std::wstring& wstr) {
             "Path helper failed to calculate size for UTF-8 conversion."
         );
 
-    std::string utf8Str(sizeNeeded, 0);
+    std::string utf8Str(
+        static_cast<size_t>(sizeNeeded),
+        0
+    );
     int charsConverted = WideCharToMultiByte(
         CP_UTF8, 0,
         wstr.data(),
@@ -66,7 +69,10 @@ std::string PathHelper::wstring2Utf8(const std::wstring& wstr) {
     if(charsConverted == 0)
         throw std::runtime_error("Path helper failed to convert wstring to UTF-8.");
 
-    utf8Str.resize(charsConverted);
+    utf8Str.resize(
+        static_cast<size_t>(charsConverted)
+    );
+
     return utf8Str;
 }
 #endif

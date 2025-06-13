@@ -1,4 +1,5 @@
 .vscode/
 dist/
-tools/windows_installer/include/installer_embedded_files.hpp
-tools/windows_installer/include/installer_embedded_file_map.hpp
+installer/RheaWindowsInstaller/.vs
+installer/RheaWindowsInstaller/bin
+installer/RheaWindowsInstaller/obj

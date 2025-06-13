@@ -314,10 +314,6 @@ def build_proc():
                     '-Wno-deprecated-declarations'
                 ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + linkable_libs + win_libs
 
-                if 'arm' in MACHINE or 'aarch64' in MACHINE:
-                    lib_build_args.remove("-Wunsafe-loop-optimizations")
-                    lib_build_args.append("-Winvalid-specialization")
-
                 log_task("Building Rhea standard library for Windows...")
                 subprocess.run(lib_build_args)
                 end = time.time() - now

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+	 xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui"
+	 xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+	<Package Id="rhea_lang" Name="Rhea Programming Language" Language="1033" Version="1.0.0.0"
+             Manufacturer="Nathanne Isip" UpgradeCode="7379fc24-8db9-4580-93a3-75ca0c807b63">
+		<WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+		<Property Id="MSIFASTINSTALL" Value="0"/>
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of Rhea is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+		<util:QueryNativeMachine />
+
+		<ui:WixUI Id="WixUI_Mondo" />
+		<Feature Id="ProductFeature" Title="Rhea Programming Language Installer" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Package>
+</Wix>

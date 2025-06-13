@@ -4,9 +4,21 @@
 <h1 align="center">Rhea Programming Language</h1>
 
 <p align="center">
-    <img alt="Build CI for Linux" src="https://github.com/rhea-language/rhea/actions/workflows/build_ci_linux.yml/badge.svg" />
-    <img alt="Build CI for Darwin" src="https://github.com/rhea-language/rhea/actions/workflows/build_ci_darwin.yml/badge.svg" />
-    <img alt="Build CI for Windows" src="https://github.com/rhea-language/rhea/actions/workflows/build_ci_windows.yml/badge.svg" />
+    <img alt="Build CI for Linux x86-64" src="https://github.com/rhea-language/rhea/actions/workflows/build_ci_linux_intel.yml/badge.svg" />
+    <img alt="Build CI for Linux ARM64" src="https://github.com/rhea-language/rhea/actions/workflows/build_ci_linux_arm.yml/badge.svg" />
+</p>
+
+<p align="center">
+    <img alt="Build CI for MacOS Intel" src="https://github.com/rhea-language/rhea/actions/workflows/build_ci_macos_intel.yml/badge.svg" />
+    <img alt="Build CI for MacOS M1" src="https://github.com/rhea-language/rhea/actions/workflows/build_ci_macos_m1.yml/badge.svg" />
+</p>
+
+<p align="center">
+    <img alt="Build CI for Windows x86-64" src="https://github.com/rhea-language/rhea/actions/workflows/build_ci_windows_intel.yml/badge.svg" />
+    <img alt="Build CI for Windows ARM64" src="https://github.com/rhea-language/rhea/actions/workflows/build_ci_windows_arm.yml/badge.svg" />
+</p>
+
+<p align="center">
     <img alt="Build CI for WebAssembly" src="https://github.com/rhea-language/rhea/actions/workflows/build_ci_wasm.yml/badge.svg" />
 </p>
 

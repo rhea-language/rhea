@@ -1,9 +1,9 @@
-name: Build CI [Darwin]
+name: Build CI [MacOS M1]
 
 on:
   push:
     paths:
-      - .github/workflows/build_ci_darwin.yml
+      - .github/workflows/build_ci_macos_m1.yml
       - assets/**
       - examples/**
       - include/**
@@ -74,6 +74,6 @@ jobs:
       - name: Upload dist folder
         uses: actions/upload-artifact@v4
         with:
-          name: rhea-darwin-dist
+          name: rhea-macos-m1
           path: dist/
           retention-days: 1

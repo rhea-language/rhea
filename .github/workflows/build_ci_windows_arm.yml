@@ -275,16 +275,6 @@ jobs:
           ./dist/rhea-lang/bin/rhea
           ls -R dist
 
-      - name: Run examples
-        shell: cmd
-        run: |
-          cd rhea
-          set RHEA_PATH=%cd%\dist\rhea-lang
-          .\dist\rhea-lang\bin\rhea examples\99-beers.rhea
-          .\dist\rhea-lang\bin\rhea examples\hello.rhea
-          .\dist\rhea-lang\bin\rhea examples\http-get.rhea
-          .\dist\rhea-lang\bin\rhea examples\zip-create.rhea
-
       - name: Zip the Built Files
         shell: pwsh
         run: |

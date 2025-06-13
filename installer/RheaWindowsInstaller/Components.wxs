@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<Component Id="cmp_rhea_exe" Directory="DirBin">
+				<File Id="file_rhea_exe" Source="..\..\dist\rhea-lang\bin\rhea.exe" KeyPath="yes" />
+
+				<ProgId Id="RheaLangFile" Description="Rhea Programming Language Interpreter">
+					<Extension Id="rhea" ContentType="text/plain">
+						<Verb Id="open" Argument="&quot;%1&quot;" TargetFile="file_rhea_exe" />
+					</Extension>
+				</ProgId>
+
+				<Environment Id="ENVVAR_RHEA_PATH_SYSTEM" Name="RHEA_PATH" Value="[INSTALLFOLDER]" Permanent="no" System="yes" Action="set" />
+				<Environment Id="ENVVAR_RHEA_PATH_LOCAL" Name="RHEA_PATH" Value="[INSTALLFOLDER]" Permanent="no" System="no" Action="set" />
+			</Component>
+
+			<Component Id="cmp_cacert_pem" Directory="DirBin">
+				<File Id="file_cacert_pem" Source="..\..\dist\rhea-lang\bin\cacert.pem" />
+			</Component>
+
+			<Component Id="cmp_config_sconf" Directory="DirCoreModule_1_0_0">
+				<File Id="file_config_sconf" Source="..\..\dist\rhea-lang\modules\core@1.0.0\config.sconf" />
+			</Component>
+
+			<Component Id="cmp_core_dll" Directory="DirLib">
+				<File Id="file_core_dll" Source="..\..\dist\rhea-lang\modules\core@1.0.0\lib\core.dll" />
+			</Component>
+
+			<Component Id="cmp_archive_rhea" Directory="DirSrc">
+				<File Id="file_archive_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\archive.rhea" />
+			</Component>
+			<Component Id="cmp_array_rhea" Directory="DirSrc">
+				<File Id="file_array_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\array.rhea" />
+			</Component>
+			<Component Id="cmp_chrono_rhea" Directory="DirSrc">
+				<File Id="file_chrono_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\chrono.rhea" />
+			</Component>
+			<Component Id="cmp_conv_rhea" Directory="DirSrc">
+				<File Id="file_conv_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\conv.rhea" />
+			</Component>
+			<Component Id="cmp_crypt_rhea" Directory="DirSrc">
+				<File Id="file_crypt_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\crypt.rhea" />
+			</Component>
+			<Component Id="cmp_env_rhea" Directory="DirSrc">
+				<File Id="file_env_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\env.rhea" />
+			</Component>
+			<Component Id="cmp_gl_rhea" Directory="DirSrc">
+				<File Id="file_gl_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\gl.rhea" />
+			</Component>
+			<Component Id="cmp_io_rhea" Directory="DirSrc">
+				<File Id="file_io_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\io.rhea" />
+			</Component>
+			<Component Id="cmp_lang_rhea" Directory="DirSrc">
+				<File Id="file_lang_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\lang.rhea" />
+			</Component>
+			<Component Id="cmp_math_rhea" Directory="DirSrc">
+				<File Id="file_math_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\math.rhea" />
+			</Component>
+			<Component Id="cmp_ml_rhea" Directory="DirSrc">
+				<File Id="file_ml_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\ml.rhea" />
+			</Component>
+			<Component Id="cmp_net_rhea" Directory="DirSrc">
+				<File Id="file_net_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\net.rhea" />
+			</Component>
+			<Component Id="cmp_reflect_rhea" Directory="DirSrc">
+				<File Id="file_reflect_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\reflect.rhea" />
+			</Component>
+			<Component Id="cmp_regex_rhea" Directory="DirSrc">
+				<File Id="file_regex_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\regex.rhea" />
+			</Component>
+			<Component Id="cmp_str_rhea" Directory="DirSrc">
+				<File Id="file_str_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\str.rhea" />
+			</Component>
+			<Component Id="cmp_sys_rhea" Directory="DirSrc">
+				<File Id="file_sys_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\sys.rhea" />
+			</Component>
+			<Component Id="cmp_unsafe_rhea" Directory="DirSrc">
+				<File Id="file_unsafe_rhea" Source="..\..\dist\rhea-lang\modules\core@1.0.0\src\unsafe.rhea" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>

@@ -451,9 +451,9 @@ def build_proc():
                 '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
                 '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
                 '-Wwrite-strings', '-Wno-return-type-c-linkage', '-pipe',
-                '-std=c++23' if 'x86' in MACHINE else '', '-march=native', '-ffast-math',
-                '-flto=auto', '-Xpreprocessor', '-O2', '-Wno-header-guard',
-                '-Wno-pessimizing-move'
+                '-std=c++23' if 'x86' in MACHINE or 'amd64' in MACHINE else '',
+                '-march=native', '-ffast-math', '-flto=auto', '-Xpreprocessor',
+                '-O2', '-Wno-header-guard', '-Wno-pessimizing-move'
             ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
             if '--no-core' not in sys.argv:

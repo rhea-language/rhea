@@ -255,6 +255,12 @@ jobs:
           where g++
           python build.py
 
+      - name: Zip the Built Files
+        shell: pwsh
+        run: |
+          Compress-Archive -Path .\dist\rhea-lang -DestinationPath .\dist\rhea-lang.zip
+          Remove-Item -Path .\dist\rhea-lang -Recurse -Force
+
       - name: Build WiX project
         shell: pwsh
         run: |

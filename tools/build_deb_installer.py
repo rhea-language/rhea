@@ -151,6 +151,7 @@ os.chmod(os.path.join(DEB_DIR, 'DEBIAN'), 0o755)
 try:
     subprocess.run(['dpkg-deb', '-Z', 'xz', '--build', DEB_DIR, OUTPUT_DEB], check=True)
     print(f'Package created: {OUTPUT_DEB}')
+    shutil.rmtree('dist/deb')
 
 except Exception as e:
     print(f'Failed to build deb package: {str(e)}')

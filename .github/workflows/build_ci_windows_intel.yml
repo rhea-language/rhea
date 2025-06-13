@@ -241,6 +241,7 @@ jobs:
           dotnet-version: '9.0.300'
 
       - name: Install WiX Toolset v4
+        shell: pwsh
         run: dotnet tool install --global wix
 
       - name: Checkout code
@@ -255,6 +256,7 @@ jobs:
           python build.py
 
       - name: Build WiX project
+        shell: pwsh
         run: |
           cd rhea\installer\RheaWindowsInstaller
           msbuild RheaWindowsInstaller.sln /p:Configuration=Release /p:Platform="x64"

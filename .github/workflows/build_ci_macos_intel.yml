@@ -1,0 +1,79 @@
+name: Build CI [MacOS Intel]
+
+on:
+  push:
+    paths:
+      - .github/workflows/build_ci_macos_intel.yml
+      - assets/**
+      - examples/**
+      - include/**
+      - lib/**
+      - src/**
+      - std/**
+      - test/**
+      - tools/**
+      - build.py
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Python3 and LLVM (with OpenMP support)
+        run: |
+          brew reinstall --force llvm
+          brew install python@3.12 libomp
+          export PATH=/usr/local/opt/python@3.12/bin:$PATH
+
+      - name: Build Rhea
+        run: |
+          export CPATH=/opt/homebrew/include
+          export LIBRARY_PATH=/opt/homebrew/lib
+          python -m pip install py-cpuinfo
+          python build.py
+
+      - name: Set Environment Path
+        run: |
+          export RHEA_PATH=$(pwd)/dist/rhea-lang
+
+      - name: Build verification
+        run: |
+          ./dist/rhea-lang/bin/rhea
+          ls -ral dist
+          find dist | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"
+
+      - name: Run test scripts
+        run: |
+          ./dist/rhea-lang/bin/rhea ./test/arithmetic.rhea
+          ./dist/rhea-lang/bin/rhea ./test/array.rhea
+          ./dist/rhea-lang/bin/rhea ./test/digits.rhea
+          ./dist/rhea-lang/bin/rhea ./test/error_handling.rhea
+          ./dist/rhea-lang/bin/rhea ./test/flow.rhea
+          ./dist/rhea-lang/bin/rhea ./test/func.rhea
+          ./dist/rhea-lang/bin/rhea ./test/lock.rhea
+          ./dist/rhea-lang/bin/rhea ./test/loop.rhea
+          ./dist/rhea-lang/bin/rhea ./test/native.rhea
+          ./dist/rhea-lang/bin/rhea ./test/parallel.rhea
+          ./dist/rhea-lang/bin/rhea ./test/regex.rhea
+          ./dist/rhea-lang/bin/rhea ./test/test.rhea -t
+          ./dist/rhea-lang/bin/rhea ./test/types.rhea
+
+      - name: Run examples
+        run: |
+          ./dist/rhea-lang/bin/rhea ./examples/99-beers.rhea
+          ./dist/rhea-lang/bin/rhea ./examples/hello.rhea
+          ./dist/rhea-lang/bin/rhea ./examples/http-get.rhea
+          ./dist/rhea-lang/bin/rhea ./examples/logic-gate-ai.rhea
+          ./dist/rhea-lang/bin/rhea ./examples/zip-create.rhea
+
+      - name: Upload dist folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhea-macos-intel
+          path: dist/
+          retention-days: 1

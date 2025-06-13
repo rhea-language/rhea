@@ -229,6 +229,12 @@ jobs:
             zlib
             zstd
 
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Install WiX Toolset v4
+        run: dotnet tool install --global wix
+
       - name: Checkout code
         run:
           git clone https://github.com/rhea-language/rhea
@@ -239,8 +245,12 @@ jobs:
           pwd
           where g++
           python build.py
-          python tools/build_exe_uninstaller.py
-          python tools/build_exe_installer.py
+
+      - name: Build WiX project
+        run: |
+          cd rhea\installer\RheaWindowsInstaller
+          msbuild RheaWindowsInstaller.sln /p:Configuration=Release /p:Platform="Any CPU"
+          mv bin\x64\Release\en-US\RheaWindowsInstaller.msi ..\..\dist\rhea-win-arm64-1.0.0.msi
 
       - name: Set Environment Path
         shell: bash

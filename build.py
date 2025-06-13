@@ -417,8 +417,13 @@ def build_proc():
                 '-I/opt/homebrew/Cellar/glfw/3.4/include/GLFW'
             ]
 
+            if platform.processor() == 'arm':
+                compiler = '/opt/homebrew/opt/llvm/bin/clang++'
+            else:
+                compiler = '/opt/llvm/bin/clang++'
+
             exe_build_args = [
-                '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
+                compiler, '-Iinclude',
                 '-pedantic', '-Wdisabled-optimization', '-pedantic-errors',
                 '-Wextra', '-Wcast-align', '-Wcast-qual', '-Wchar-subscripts',
                 '-Wcomment', '-Wconversion', '-Werror', '-Wfloat-equal',
@@ -452,7 +457,7 @@ def build_proc():
                 linkable_libs.append('-lcrypto')
 
                 lib_build_args = [
-                    '/opt/homebrew/opt/llvm/bin/clang++', '-Iinclude',
+                    compiler, '-Iinclude',
                     '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib',
                     '-Wno-deprecated-declarations', '-DGL_SILENCE_DEPRECATION',
                     '-L/opt/homebrew/lib', '-L/opt/homebrew/opt/openssl@3/lib',

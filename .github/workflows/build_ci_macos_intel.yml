@@ -32,7 +32,7 @@ jobs:
 
       - name: Build Rhea
         run: |
-          where clang++
+          which clang++
           echo $CPATH
           echo $LIBRARY_PATH
           export CPATH=/opt/homebrew/include

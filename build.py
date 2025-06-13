@@ -73,14 +73,26 @@ def get_ext_instructions():
 
     log_info(f"Detected machine architecture: {MACHINE}")
     if 'x86' in MACHINE or 'amd64' in MACHINE:
-        features_to_check = [
-            "abm", "adx", "aes", "avx", "avx2", "bmi",
-            "clflushopt", "cx16", "f16c", "fma", "fsgsbase",
-            "fxsr", "mmx", "movbe", "rdrnd", "rdseed",
-            "rtm", "sgx", "sse", "sse2", "sse3", "sse4",
-            "sse4_1", "sse4_2", "vpclmulqdq", "xsave",
-            "xsavec", "xsaveopt", "xsave"
-        ]
+        if PLATFORM == 'Darwin':
+            features_to_check = [
+                "aes", "avx", "avx2", "bmi",
+                "clflushopt", "cx16", "f16c",
+                "fma", "fsgsbase", "fxsr", "mmx",
+                "movbe", "rdrnd", "rdseed", "sgx",
+                "sse", "sse2", "sse3", "sse4",
+                "sse4_1", "sse4_2", "vpclmulqdq",
+                "xsave", "xsavec", "xsaveopt",
+                "xsave"
+            ]
+        else:
+            features_to_check = [
+                "abm", "adx", "aes", "avx", "avx2", "bmi",
+                "clflushopt", "cx16", "f16c", "fma", "fsgsbase",
+                "fxsr", "mmx", "movbe", "rdrnd", "rdseed",
+                "rtm", "sgx", "sse", "sse2", "sse3", "sse4",
+                "sse4_1", "sse4_2", "vpclmulqdq", "xsave",
+                "xsavec", "xsaveopt", "xsave"
+            ]
         log_task('Listed Intel x86-64 extensions...')
     elif 'arm' in MACHINE or 'aarch64' in MACHINE:
         features_to_check = ["fma"]
@@ -439,7 +451,7 @@ def build_proc():
                 '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
                 '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
                 '-Wwrite-strings', '-Wno-return-type-c-linkage', '-pipe',
-                '-std=c++23', '-fopenmp', '-march=native', '-ffast-math',
+                '-std=c++23', '-march=native', '-ffast-math',
                 '-flto=auto', '-Xpreprocessor', '-O2', '-Wno-header-guard',
                 '-Wno-pessimizing-move'
             ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]

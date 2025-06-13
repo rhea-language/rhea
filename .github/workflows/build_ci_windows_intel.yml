@@ -207,6 +207,7 @@ jobs:
             mingw-w64-x86_64-tcl
             mingw-w64-x86_64-termcap
             mingw-w64-x86_64-tk
+            mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-tools-git
             mingw-w64-x86_64-tzdata
             mingw-w64-x86_64-vulkan-headers

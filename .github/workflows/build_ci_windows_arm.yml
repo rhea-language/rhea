@@ -128,6 +128,7 @@ jobs:
             mingw-w64-clang-aarch64-graphite2
             mingw-w64-clang-aarch64-gtk-update-icon-cache
             mingw-w64-clang-aarch64-gtk3
+            mingw-w64-clang-aarch64-gtkmm
             mingw-w64-clang-aarch64-gtkmm3
             mingw-w64-clang-aarch64-gumbo-parser
             mingw-w64-clang-aarch64-harfbuzz
@@ -205,6 +206,7 @@ jobs:
             mingw-w64-clang-aarch64-tcl
             mingw-w64-clang-aarch64-termcap
             mingw-w64-clang-aarch64-tk
+            mingw-w64-clang-aarch64-toolchain
             mingw-w64-clang-aarch64-tools-git
             mingw-w64-clang-aarch64-tzdata
             mingw-w64-clang-aarch64-vulkan-headers

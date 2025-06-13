@@ -1,4 +1,4 @@
-name: Build CI [Windows ARM64 (64-bit)]
+name: Build CI [Windows ARM64]
 
 on:
   push:

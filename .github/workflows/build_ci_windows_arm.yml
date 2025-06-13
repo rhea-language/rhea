@@ -262,13 +262,6 @@ jobs:
           msbuild RheaWindowsInstaller.sln /p:Configuration=Release
           mv bin\ARM64\Release\en-US\RheaWindowsInstaller.msi ..\..\dist\rhea-win-arm64-1.0.0.msi
 
-      - name: Zip the Built Files
-        shell: pwsh
-        run: |
-          cd rhea
-          Compress-Archive -Path .\dist\rhea-lang -DestinationPath .\dist\rhea-lang.zip
-          Remove-Item -Path .\dist\rhea-lang -Recurse -Force
-
       - name: Set Environment Path
         shell: bash
         run: |
@@ -313,8 +306,12 @@ jobs:
           .\dist\rhea-lang\bin\rhea examples\logic-gate-ai.rhea
           .\dist\rhea-lang\bin\rhea examples\zip-create.rhea
 
-      - name: Build and Test Clean Up
-        run: rm -rf rhea/dist/rhea-lang
+      - name: Zip the Built Files
+        shell: pwsh
+        run: |
+          cd rhea
+          Compress-Archive -Path .\dist\rhea-lang -DestinationPath .\dist\rhea-lang.zip
+          Remove-Item -Path .\dist\rhea-lang -Recurse -Force
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4

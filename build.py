@@ -497,6 +497,8 @@ def build_proc():
     gen_end = time.time() - gen_time
     log_info(f"Finished in {gen_end:.6f} seconds")
 
+print(MACHINE)
+exit(0)
 try:
     build_proc()
 except Exception as e:

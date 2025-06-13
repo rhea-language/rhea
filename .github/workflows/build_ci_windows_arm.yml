@@ -254,13 +254,19 @@ jobs:
           where g++
           python build.py
 
+      - name: Zip the Built Files
+        shell: pwsh
+        run: |
+          Compress-Archive -Path .\dist\rhea-lang -DestinationPath .\dist\rhea-lang.zip
+          Remove-Item -Path .\dist\rhea-lang -Recurse -Force
+
       - name: Build WiX project
         shell: pwsh
         run: |
           cd rhea\installer\RheaWindowsInstaller
           nuget restore RheaWindowsInstaller.sln
           msbuild RheaWindowsInstaller.sln /p:Configuration=Release
-          mv bin\x64\Release\en-US\RheaWindowsInstaller.msi ..\..\dist\rhea-win-arm64-1.0.0.msi
+          mv bin\ARM64\Release\en-US\RheaWindowsInstaller.msi ..\..\dist\rhea-win-arm64-1.0.0.msi
 
       - name: Set Environment Path
         shell: bash

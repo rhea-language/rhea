@@ -258,6 +258,7 @@ jobs:
       - name: Zip the Built Files
         shell: pwsh
         run: |
+          cd rhea
           Compress-Archive -Path .\dist\rhea-lang -DestinationPath .\dist\rhea-lang.zip
           Remove-Item -Path .\dist\rhea-lang -Recurse -Force
 

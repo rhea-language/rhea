@@ -1,4 +1,4 @@
-name: Build CI [Windows x86-64]
+name: Build CI [Windows x86-64 (64-bit)]
 
 on:
   push:
@@ -232,6 +232,13 @@ jobs:
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.300'
 
       - name: Install WiX Toolset v4
         run: dotnet tool install --global wix

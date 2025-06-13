@@ -1,4 +1,4 @@
-name: Build CI [Windows ARM64]
+name: Build CI [Windows ARM64 (64-bit)]
 
 on:
   push:
@@ -231,6 +231,13 @@ jobs:
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: arm64
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.300'
 
       - name: Install WiX Toolset v4
         run: dotnet tool install --global wix

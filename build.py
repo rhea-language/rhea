@@ -420,7 +420,7 @@ def build_proc():
             if platform.processor() == 'arm':
                 compiler = '/opt/homebrew/opt/llvm/bin/clang++'
             else:
-                compiler = '/opt/llvm/bin/clang++'
+                compiler = '/usr/bin/clang++'
 
             exe_build_args = [
                 compiler, '-Iinclude',

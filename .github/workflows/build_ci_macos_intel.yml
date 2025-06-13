@@ -32,11 +32,6 @@ jobs:
 
       - name: Build Rhea
         run: |
-          which clang++
-          echo $CPATH
-          echo $LIBRARY_PATH
-          export CPATH=/opt/homebrew/include
-          export LIBRARY_PATH=/opt/homebrew/lib
           python -m pip install py-cpuinfo
           python build.py
 

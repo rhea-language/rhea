@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+	<Fragment>
+		<StandardDirectory Id="ProgramFiles6432Folder">
+			<Directory Id="INSTALLFOLDER" Name="rhea-lang">
+				<Directory Id="DirBin" Name="bin" />
+				<Directory Id="DirModules" Name="modules">
+					<Directory Id="DirCoreModule_1_0_0" Name="core@1.0.0">
+						<Directory Id="DirLib" Name="lib" />
+						<Directory Id="DirSrc" Name="src" />
+					</Directory>
+				</Directory>
+			</Directory>
+		</StandardDirectory>
+	</Fragment>
+</Wix>

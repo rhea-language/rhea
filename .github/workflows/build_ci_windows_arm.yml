@@ -279,7 +279,7 @@ jobs:
         shell: pwsh
         run: |
           cd rhea
-          Compress-Archive -Path .\dist\rhea-lang -DestinationPath .\dist\rhea-lang.zip
+          Compress-Archive -Path .\dist\rhea-lang -DestinationPath .\dist\rhea-win-arm64-1.0.0.zip
           Remove-Item -Path .\dist\rhea-lang -Recurse -Force
 
       - name: Upload dist folder

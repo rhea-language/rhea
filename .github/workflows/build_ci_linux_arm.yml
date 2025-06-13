@@ -1,4 +1,4 @@
-name: Build CI [Linux ARM64]
+name: Build CI [Linux ARM64 (64-bit)]
 
 on:
   push:

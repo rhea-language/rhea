@@ -258,7 +258,8 @@ jobs:
         shell: pwsh
         run: |
           cd rhea\installer\RheaWindowsInstaller
-          msbuild RheaWindowsInstaller.sln /p:Configuration=Release /p:Platform="Any CPU"
+          nuget restore RheaWindowsInstaller.sln
+          msbuild RheaWindowsInstaller.sln /p:Configuration=Release
           mv bin\x64\Release\en-US\RheaWindowsInstaller.msi ..\..\dist\rhea-win-arm64-1.0.0.msi
 
       - name: Set Environment Path

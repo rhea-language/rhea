@@ -259,6 +259,7 @@ jobs:
         shell: pwsh
         run: |
           cd rhea\installer\RheaWindowsInstaller
+          nuget restore RheaWindowsInstaller.sln
           msbuild RheaWindowsInstaller.sln /p:Configuration=Release /p:Platform="x64"
           mv bin\x64\Release\en-US\RheaWindowsInstaller.msi ..\..\dist\rhea-win-x86_64-1.0.0.msi
 

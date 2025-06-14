@@ -424,6 +424,8 @@ def build_proc():
 
         elif PLATFORM == 'Darwin':
             linkable_libs.remove('-lGL')
+            linkable_libs.append('-lssl')
+            linkable_libs.append('-lcrypto')
 
             if 'x86_64' in MACHINE or 'i386' in MACHINE:
                 lib_headers += [
@@ -432,8 +434,7 @@ def build_proc():
                     '-I/usr/local/Cellar/libzip/1.11.4/include',
                     '-L/usr/local/opt/openssl@3/lib',
                     '-L/usr/local/opt/glfw/lib',
-                    '-L/usr/local/Cellar/libzip/1.11.4/lib',
-                    '-lssl', '-lcrypto', '-lglfw', '-lzip'
+                    '-L/usr/local/Cellar/libzip/1.11.4/lib'
                 ]
             else:
                 lib_headers += [
@@ -477,7 +478,6 @@ def build_proc():
 
             if '--no-stdlib' not in sys.argv:
                 now = time.time()
-                linkable_libs.append('-lcrypto')
 
                 lib_build_args = [
                     compiler, '-Iinclude',

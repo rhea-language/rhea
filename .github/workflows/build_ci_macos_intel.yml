@@ -27,7 +27,12 @@ jobs:
       - name: Install Python3 and LLVM (with OpenMP support)
         run: |
           brew install llvm python@3.12 libomp
-          ls -ral /opt/homebrew/opt/llvm/bin
+          export PATH="/usr/local/opt/llvm/bin:$PATH"
+          export LDFLAGS="-L/usr/local/opt/llvm/lib"
+          export CPPFLAGS="-I/usr/local/opt/llvm/include"
+          export LDFLAGS="-L/usr/local/opt/libomp/lib"
+          export CPPFLAGS="-I/usr/local/opt/libomp/include"
+          ls -ral /usr/local/opt/libomp/bin
           export PATH=/usr/local/opt/python@3.12/bin:$PATH
 
       - name: Build Rhea

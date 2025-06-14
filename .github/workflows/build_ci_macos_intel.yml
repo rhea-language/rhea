@@ -24,9 +24,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Python3 and LLVM (with OpenMP support)
+      - name: Install LLVM and OpenMP support
         run: |
           brew install llvm libomp
+          brew --prefix openssl@3
+          brew --prefix glfw
           export PATH="/usr/local/opt/llvm/bin:$PATH"
           export LDFLAGS="-L/usr/local/opt/llvm/lib"
           export CPPFLAGS="-I/usr/local/opt/llvm/include"

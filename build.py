@@ -433,7 +433,7 @@ def build_proc():
                     '-L/usr/local/opt/openssl@3/lib',
                     '-L/usr/local/opt/glfw/lib',
                     '-L/usr/local/opt/libzip/lib'
-                    '-lssl', '-lcrypto', '-lglfw', '-lzip'
+                    '-lssl', '-lcrypto', '-lglfw'
                 ]
             else:
                 lib_headers += [

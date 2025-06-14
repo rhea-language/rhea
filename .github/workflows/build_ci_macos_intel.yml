@@ -26,7 +26,7 @@ jobs:
 
       - name: Install Python3 and LLVM (with OpenMP support)
         run: |
-          brew reinstall --force llvm
+          brew upgrade llvm
           brew install python@3.12 libomp
           export PATH=/usr/local/opt/python@3.12/bin:$PATH
 

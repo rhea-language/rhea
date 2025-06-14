@@ -429,10 +429,10 @@ def build_proc():
                 lib_headers += [
                     '-I/usr/local/opt/openssl@3/include',
                     '-I/usr/local/opt/glfw/include',
-                    '-I/usr/local/opt/libzip/include',
+                    '-I/usr/local/Cellar/libzip/1.11.4/include',
                     '-L/usr/local/opt/openssl@3/lib',
                     '-L/usr/local/opt/glfw/lib',
-                    '-L/usr/local/opt/libzip/lib'
+                    '-L/usr/local/Cellar/libzip/1.11.4/lib'
                     '-lssl', '-lcrypto', '-lglfw'
                 ]
             else:

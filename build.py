@@ -424,10 +424,20 @@ def build_proc():
 
         elif PLATFORM == 'Darwin':
             linkable_libs.remove('-lGL')
-            lib_headers += [
-                '-I/opt/homebrew/opt/openssl@3/include',
-                '-I/opt/homebrew/Cellar/glfw/3.4/include/GLFW'
-            ]
+
+            if 'x86_64' in MACHINE or 'i386' in MACHINE:
+                lib_headers += [
+                    '-I/usr/local/opt/openssl@3/include',
+                    '-I/usr/local/opt/glfw/include',
+                    '-L/usr/local/opt/openssl@3/lib',
+                    '-L/usr/local/opt/glfw/lib',
+                    '-lssl', '-lcrypto', '-lglfw'
+                ]
+            else:
+                lib_headers += [
+                    '-I/opt/homebrew/opt/openssl@3/include',
+                    '-I/opt/homebrew/Cellar/glfw/3.4/include/GLFW'
+                ]
 
             if platform.processor() == 'arm':
                 compiler = '/opt/homebrew/opt/llvm/bin/clang++'

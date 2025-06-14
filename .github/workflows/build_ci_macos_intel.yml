@@ -26,9 +26,8 @@ jobs:
 
       - name: Install LLVM and OpenMP support
         run: |
-          brew install llvm libomp
-          brew --prefix openssl@3
-          brew --prefix glfw
+          brew install llvm libomp libzip
+          brew --prefix libzip
           export PATH="/usr/local/opt/llvm/bin:$PATH"
           export LDFLAGS="-L/usr/local/opt/llvm/lib"
           export CPPFLAGS="-I/usr/local/opt/llvm/include"

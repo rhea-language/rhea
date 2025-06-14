@@ -7,6 +7,7 @@ on:
       - assets/**
       - examples/**
       - include/**
+      - installer/**
       - lib/**
       - src/**
       - std/**

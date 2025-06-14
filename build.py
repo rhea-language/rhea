@@ -432,8 +432,8 @@ def build_proc():
                     '-I/usr/local/Cellar/libzip/1.11.4/include',
                     '-L/usr/local/opt/openssl@3/lib',
                     '-L/usr/local/opt/glfw/lib',
-                    '-L/usr/local/Cellar/libzip/1.11.4/lib'
-                    '-lssl', '-lcrypto', '-lglfw'
+                    '-L/usr/local/Cellar/libzip/1.11.4/lib',
+                    '-lssl', '-lcrypto', '-lglfw', '-lzip'
                 ]
             else:
                 lib_headers += [

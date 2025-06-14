@@ -32,7 +32,7 @@ jobs:
           export CPPFLAGS="-I/usr/local/opt/llvm/include"
           export LDFLAGS="-L/usr/local/opt/libomp/lib"
           export CPPFLAGS="-I/usr/local/opt/libomp/include"
-          ls -ral /usr/local/opt/libomp/bin
+          ls -ral /usr/local/opt/llvm/bin
           export PATH=/usr/local/opt/python@3.12/bin:$PATH
 
       - name: Build Rhea

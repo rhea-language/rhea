@@ -5,14 +5,16 @@
 			<Component Id="cmp_rhea_exe" Directory="DirBin">
 				<File Id="file_rhea_exe" Source="..\..\dist\rhea-lang\bin\rhea.exe" KeyPath="yes" />
 
-				<ProgId Id="RheaLangFile" Description="Rhea Programming Language Interpreter">
+				<ProgId Id="RheaLangFile" Description="Rhea Script File">
 					<Extension Id="rhea" ContentType="text/plain">
 						<Verb Id="open" Argument="&quot;%1&quot;" TargetFile="file_rhea_exe" />
 					</Extension>
 				</ProgId>
 
-				<Environment Id="ENVVAR_RHEA_PATH_SYSTEM" Name="RHEA_PATH" Value="[INSTALLFOLDER]" Permanent="no" System="yes" Action="set" />
-				<Environment Id="ENVVAR_RHEA_PATH_LOCAL" Name="RHEA_PATH" Value="[INSTALLFOLDER]" Permanent="no" System="no" Action="set" />
+				<Environment Id="ENVVAR_PATH_BIN" Name="PATH" Value="[DirBin]" Permanent="yes" System="yes" Action="set" Part="last" />
+
+				<Environment Id="ENVVAR_RHEA_PATH_SYSTEM" Name="RHEA_PATH" Value="[INSTALLFOLDER]" Permanent="no" System="no" Action="set" />
+				<Environment Id="ENVVAR_RHEA_PATH_LOCAL" Name="RHEA_PATH" Value="[INSTALLFOLDER]" Permanent="no" System="yes" Action="set" />
 			</Component>
 
 			<Component Id="cmp_cacert_pem" Directory="DirBin">

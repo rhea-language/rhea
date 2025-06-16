@@ -68,7 +68,7 @@ public:
         arrayValue(nullptr),
         regexValue(nullptr),
         nativeValue(nullptr),
-        stringValue(std::move("")),
+        stringValue(""),
         numberValue(0.0),
         boolValue(false) {}
 
@@ -80,7 +80,7 @@ public:
         arrayValue(nullptr),
         regexValue(std::move(value)),
         nativeValue(nullptr),
-        stringValue(std::move("")),
+        stringValue(""),
         numberValue(0.0),
         boolValue(false) {}
 
@@ -92,7 +92,7 @@ public:
         arrayValue(std::move(value)),
         regexValue(nullptr),
         nativeValue(nullptr),
-        stringValue(std::move("")),
+        stringValue(""),
         numberValue(0.0),
         boolValue(false) {}
 
@@ -116,7 +116,7 @@ public:
         arrayValue(nullptr),
         regexValue(nullptr),
         nativeValue(nullptr),
-        stringValue(std::move("")),
+        stringValue(""),
         numberValue(value),
         boolValue(false) {}
 
@@ -128,7 +128,7 @@ public:
         arrayValue(nullptr),
         regexValue(nullptr),
         nativeValue(nullptr),
-        stringValue(std::move("")),
+        stringValue(""),
         numberValue(0.0),
         boolValue(value) {}
 
@@ -140,7 +140,7 @@ public:
         arrayValue(nullptr),
         regexValue(nullptr),
         nativeValue(value),
-        stringValue(std::move("")),
+        stringValue(""),
         numberValue(0.0),
         boolValue(false) {}
 
@@ -152,7 +152,7 @@ public:
         arrayValue(nullptr),
         regexValue(nullptr),
         nativeValue(nullptr),
-        stringValue(std::move("")),
+        stringValue(""),
         numberValue(0.0),
         boolValue(false) {}
 

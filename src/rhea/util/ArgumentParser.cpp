@@ -87,7 +87,7 @@ std::vector<std::string> ArgumentParser::getInputFiles() const {
         }
         else if(arg[0] == '-') {
             std::string paramShort = arg.substr(1);
-            if(this->parameters.find(paramShort) != this->parameters.end())
+            if(this->parameters.count(paramShort) == 1)
                 continue;
         }
 

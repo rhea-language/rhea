@@ -361,7 +361,7 @@ RHEA_FUNC(ml_ann_train) {
         epoch = args.at(4);
 
     std::string id = ann.toString();
-    if(neuralNetworkMap.find(id) == neuralNetworkMap.end())
+    if(neuralNetworkMap.count(id) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Neural network map ID not found."
@@ -433,7 +433,7 @@ RHEA_FUNC(ml_ann_predict) {
         inputs = args.at(1);
 
     std::string id = ann.toString();
-    if(neuralNetworkMap.find(id) == neuralNetworkMap.end())
+    if(neuralNetworkMap.count(id) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Neural network map ID not found."
@@ -465,7 +465,7 @@ RHEA_FUNC(ml_ann_calculateMseLoss) {
         targets = args.at(2);
 
     std::string id = ann.toString();
-    if(neuralNetworkMap.find(id) == neuralNetworkMap.end())
+    if(neuralNetworkMap.count(id) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Neural network map ID not found."
@@ -504,7 +504,7 @@ RHEA_FUNC(ml_ann_computeOutputGradient) {
         targets = args.at(2);
 
     std::string id = ann.toString();
-    if(neuralNetworkMap.find(id) == neuralNetworkMap.end())
+    if(neuralNetworkMap.count(id) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Neural network map ID not found."
@@ -543,7 +543,7 @@ RHEA_FUNC(ml_ann_computeAccuracy) {
         targets = args.at(2);
 
     std::string id = ann.toString();
-    if(neuralNetworkMap.find(id) == neuralNetworkMap.end())
+    if(neuralNetworkMap.count(id) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Neural network map ID not found."
@@ -603,7 +603,7 @@ RHEA_FUNC(ml_ann_isCorrectPrediction) {
         targets = args.at(2);
 
     std::string id = ann.toString();
-    if(neuralNetworkMap.find(id) == neuralNetworkMap.end())
+    if(neuralNetworkMap.count(id) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Neural network map ID not found."
@@ -641,7 +641,7 @@ RHEA_FUNC(ml_ann_saveModel) {
         path = args.at(1);
 
     std::string id = ann.toString();
-    if(neuralNetworkMap.find(id) == neuralNetworkMap.end())
+    if(neuralNetworkMap.count(id) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Neural network map ID not found."

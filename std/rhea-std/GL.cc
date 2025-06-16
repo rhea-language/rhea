@@ -177,7 +177,7 @@ RHEA_FUNC(gl_makeContextCurrent) {
 
     DynamicObject key = args.at(0);
     std::string keyStr = key.toString();
-    if(windowMap.find(keyStr) == windowMap.end())
+    if(windowMap.count(keyStr) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Window key does not exist"
@@ -198,7 +198,7 @@ RHEA_FUNC(gl_shouldCloseWindow) {
     DynamicObject key = args.at(0);
     std::string keyStr = key.toString();
 
-    if(windowMap.find(keyStr) == windowMap.end())
+    if(windowMap.count(keyStr) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Window key does not exist"
@@ -291,7 +291,7 @@ RHEA_FUNC(gl_swapBuffers) {
 
     DynamicObject key = args.at(0);
     std::string keyStr = key.toString();
-    if(windowMap.find(keyStr) == windowMap.end())
+    if(windowMap.count(keyStr) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Window key does not exist"
@@ -323,7 +323,7 @@ RHEA_FUNC(gl_destroyWindow) {
 
     DynamicObject key = args.at(0);
     std::string keyStr = key.toString();
-    if(windowMap.find(keyStr) == windowMap.end())
+    if(windowMap.count(keyStr) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Window key does not exist"
@@ -371,7 +371,7 @@ RHEA_FUNC(gl_monitorPosition) {
     DynamicObject key = args.at(0);
     std::string keyStr = key.toString();
 
-    if(monitorMap.find(keyStr) == monitorMap.end())
+    if(monitorMap.count(keyStr) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Monitor key does not exist"
@@ -407,7 +407,7 @@ RHEA_FUNC(gl_monitorWorkarea) {
     DynamicObject key = args.at(0);
     std::string keyStr = key.toString();
 
-    if(monitorMap.find(keyStr) == monitorMap.end())
+    if(monitorMap.count(keyStr) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Monitor key does not exist"
@@ -449,7 +449,7 @@ RHEA_FUNC(gl_monitorPhysicalSize) {
     DynamicObject key = args.at(0);
     std::string keyStr = key.toString();
 
-    if(monitorMap.find(keyStr) == monitorMap.end())
+    if(monitorMap.count(keyStr) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Monitor key does not exist"
@@ -485,7 +485,7 @@ RHEA_FUNC(gl_monitorContentScale) {
     DynamicObject key = args.at(0);
     std::string keyStr = key.toString();
 
-    if(monitorMap.find(keyStr) == monitorMap.end())
+    if(monitorMap.count(keyStr) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Monitor key does not exist"
@@ -517,7 +517,7 @@ RHEA_FUNC(gl_monitorName) {
     DynamicObject key = args.at(0);
     std::string keyStr = key.toString();
 
-    if(monitorMap.find(keyStr) == monitorMap.end())
+    if(monitorMap.count(keyStr) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Monitor key does not exist"
@@ -575,7 +575,7 @@ RHEA_FUNC(gl_getVideoModes) {
     DynamicObject key = args.at(0);
     std::string keyStr = key.toString();
 
-    if(monitorMap.find(keyStr) == monitorMap.end())
+    if(monitorMap.count(keyStr) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Monitor key does not exist"
@@ -632,7 +632,7 @@ RHEA_FUNC(gl_getVideoMode) {
     DynamicObject key = args.at(0);
     std::string keyStr = key.toString();
 
-    if(monitorMap.find(keyStr) == monitorMap.end())
+    if(monitorMap.count(keyStr) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Monitor key does not exist"

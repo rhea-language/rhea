@@ -85,8 +85,7 @@ void* Runtime::getLoadedLibrary(std::string libName) {
 
 bool Runtime::hasLoadedLibrary(std::string libName) {
     #ifndef __EMSCRIPTEN__
-    return Runtime::nativeLibraries.find(libName) !=
-        Runtime::nativeLibraries.end();
+    return Runtime::nativeLibraries.count(libName) == 1;
     #else
     (void) libName;
     return false;

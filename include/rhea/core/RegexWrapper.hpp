@@ -29,7 +29,7 @@ private:
     std::shared_ptr<std::regex> regex;
 
 public:
-    RegexWrapper(const std::string& _pattern) :
+    RegexWrapper(const std::string _pattern) :
         pattern(std::move(_pattern)),
         regex(std::make_shared<std::regex>(this->pattern)) {}
 

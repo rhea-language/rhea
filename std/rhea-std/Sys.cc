@@ -75,7 +75,7 @@ RHEA_FUNC(sys_shellWrite) {
         content = args.at(1);
     std::string uuid = value.toString();
 
-    if(shellMap.find(uuid) == shellMap.end())
+    if(shellMap.count(uuid) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Shell handler not found"
@@ -96,7 +96,7 @@ RHEA_FUNC(sys_shellReadOutput) {
     DynamicObject value = args.at(0);
     std::string uuid = value.toString();
 
-    if(shellMap.find(uuid) == shellMap.end())
+    if(shellMap.count(uuid) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Shell handler not found"
@@ -118,7 +118,7 @@ RHEA_FUNC(sys_shellReadError) {
     DynamicObject value = args.at(0);
     std::string uuid = value.toString();
 
-    if(shellMap.find(uuid) == shellMap.end())
+    if(shellMap.count(uuid) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Shell handler not found"
@@ -140,7 +140,7 @@ RHEA_FUNC(sys_shellForceExit) {
     DynamicObject value = args.at(0);
     std::string uuid = value.toString();
 
-    if(shellMap.find(uuid) == shellMap.end())
+    if(shellMap.count(uuid) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Shell handler not found"
@@ -161,7 +161,7 @@ RHEA_FUNC(sys_shellHasExited) {
     DynamicObject value = args.at(0);
     std::string uuid = value.toString();
 
-    if(shellMap.find(uuid) == shellMap.end())
+    if(shellMap.count(uuid) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Shell handler not found"
@@ -181,7 +181,7 @@ RHEA_FUNC(sys_shellExitCode) {
     DynamicObject value = args.at(0);
     std::string uuid = value.toString();
 
-    if(shellMap.find(uuid) == shellMap.end())
+    if(shellMap.count(uuid) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Shell handler not found"
@@ -205,7 +205,7 @@ RHEA_FUNC(sys_shellProcessId) {
     DynamicObject value = args.at(0);
     std::string uuid = value.toString();
 
-    if(shellMap.find(uuid) == shellMap.end())
+    if(shellMap.count(uuid) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Shell handler not found"
@@ -229,7 +229,7 @@ RHEA_FUNC(sys_shellClose) {
     DynamicObject value = args.at(0);
     std::string uuid = value.toString();
 
-    if(shellMap.find(uuid) == shellMap.end())
+    if(shellMap.count(uuid) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Shell handler not found"

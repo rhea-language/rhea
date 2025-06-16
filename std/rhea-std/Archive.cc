@@ -144,7 +144,7 @@ RHEA_FUNC(archive_zip_setPassword) {
         password = args.at(1);
     std::string keyStr = key.toString();
 
-    if(zipMap.find(keyStr) == zipMap.end())
+    if(zipMap.count(keyStr) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Zip key does not exist"
@@ -1430,7 +1430,7 @@ RHEA_FUNC(archive_zip_fetchInfo) {
         fileName = args.at(1);
     std::string keyStr = key.toString();
 
-    if(zipMap.find(keyStr) == zipMap.end())
+    if(zipMap.count(keyStr) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Zip key does not exist"
@@ -1497,7 +1497,7 @@ RHEA_FUNC(archive_zip_unchange) {
                 index.objectType()
         );
 
-    if(zipMap.find(keyStr) == zipMap.end())
+    if(zipMap.count(keyStr) != 1)
         throw TerminativeThrowSignal(
             std::move(address),
             "Zip key does not exist"

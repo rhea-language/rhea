@@ -29,6 +29,9 @@
 
 DynamicObject& DynamicObject::operator=(const DynamicObject& other) {
     if(this != &other) {
+        if(this->isLocked)
+            return *this;
+
         this->type = other.type;
         this->isLocked = other.isLocked;
         this->owner = other.owner;
@@ -48,6 +51,9 @@ DynamicObject& DynamicObject::operator=(const DynamicObject& other) {
 
 DynamicObject& DynamicObject::operator=(DynamicObject&& other) {
     if(this != &other) {
+        if(this->isLocked)
+            return *this;
+
         this->type = std::move(other.type);
         this->isLocked = std::move(other.isLocked);
         this->owner = std::move(other.owner);
@@ -197,6 +203,12 @@ DynamicObject DynamicObject::callFromNative(
     SymbolTable& symtab,
     std::vector<DynamicObject> args
 ) {
+    if(!this->isNative() && !this->isFunction())
+        throw ASTNodeException(
+            std::move(address),
+            "Cannot call non-callable object"
+        );
+
     return !this->isNative() ?
         this->getCallable()->call(symtab, args) :
         this->getNativeFunction()(

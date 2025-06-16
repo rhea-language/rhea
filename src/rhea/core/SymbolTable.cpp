@@ -68,7 +68,7 @@ void SymbolTable::setSymbol(
     DynamicObject value
 ) {
     std::string name = reference->getImage();
-    if(this->table.find(name) != this->table.end()) {
+    if(this->table.count(name) == 1) {
         DynamicObject& current = this->table[name];
         if(current.hasLock())
             return;
@@ -110,7 +110,7 @@ void SymbolTable::removeSymbol(std::shared_ptr<Token> name) {
 
 bool SymbolTable::hasSymbol(const std::string& name) {
     return (this->parent && this->parent->hasSymbol(name)) ||
-        this->table.find(name) != this->table.end();
+        this->table.count(name) == 1;
 }
 
 void SymbolTable::addParallelism(std::future<void> par) {
@@ -134,7 +134,7 @@ void SymbolTable::lock(std::string name, SymbolTable& requestOrigin) {
     if(!this->hasSymbol(name))
         return;
 
-    if(this->table.find(name) != this->table.end()) {
+    if(this->table.count(name) == 1) {
         DynamicObject& current = this->table[name];
 	if(current.hasLock())
             return;
@@ -150,7 +150,7 @@ void SymbolTable::unlock(std::string name, SymbolTable& requestOrigin) {
     if(!this->hasSymbol(name))
         return;
 
-    if(this->table.find(name) != this->table.end() &&
+    if(this->table.count(name) == 1 &&
         this->table[name].ownerId() == requestOrigin.id)
         this->table[name].unlock();
     else if(this->parent)

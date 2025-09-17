@@ -335,7 +335,8 @@ def build_proc():
             linkable_libs.remove('-lglfw')
             linkable_libs.remove('-lGL')
 
-            ext_instructions.remove('-maes')
+            if '-maes' in ext_instructions:
+                ext_instructions.remove('-maes')
             exe_build_args= [
                 'g++', '-Iinclude', '-Wall', '-pedantic', '-Wdisabled-optimization',
                 '-pedantic-errors', '-Wextra', '-Wcast-align', '-Wcast-qual',
@@ -502,6 +503,7 @@ def build_proc():
 
     except Exception as e:
         log_error(f"Compilation failed with error: {e}")
+        traceback.print_exc()
         exit(1)
 
     gen_end = time.time() - gen_time

@@ -226,7 +226,7 @@ std::string InputHighlighter::readInput() {
         }
 
         if(c == '\u001b') {
-            getchar();
+            (void) getchar();
 
             switch(getchar()) {
                 case 'A':

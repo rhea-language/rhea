@@ -250,7 +250,7 @@ def build_proc():
             icon_config_res = 'dist\\rhea-icon-config.res'
 
             win_libs = [
-                '-static', '-static-libstdc++',
+                '-static', '-static-libstdc++', '-lsecur32',
                 '-lglfw3', '-lglew32', '-lopengl32', '-lgdi32',
                 '-lwinmm', '-limm32', '-lole32', '-loleaut32',
                 '-lversion', '-luuid', '-ldinput8', '-ldxguid',
@@ -260,7 +260,8 @@ def build_proc():
                 '-lnghttp2', '-lz', '-lbcrypt', '-lbrotlidec',
                 '-lbrotlicommon', '-lzstd', '-lnghttp3', '-lwldap32',
                 '-lunistring', '-liconv', '-lbz2', '-llzma', '-lzip',
-                '-lgnutls', '-lnettle', '-lngtcp2', '-ltasn1', '-lgmp'
+                '-lgnutls', '-lnettle', '-lngtcp2', '-ltasn1', '-lgmp',
+                '-liphlpapi'
             ]
 
             linkable_libs.remove('-lglfw')

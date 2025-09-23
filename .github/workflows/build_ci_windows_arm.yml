@@ -276,6 +276,37 @@ jobs:
           ./dist/rhea-lang/bin/rhea
           ls -R dist
 
+      - name: Run test scripts
+        shell: cmd
+        run: |
+          cd rhea
+          setx RHEA_PATH %cd%\dist\rhea-lang /M
+          echo %RHEA_PATH%
+          .\dist\rhea-lang\bin\rhea .\test\arithmetic.rhea
+          .\dist\rhea-lang\bin\rhea .\test\array.rhea
+          .\dist\rhea-lang\bin\rhea .\test\digits.rhea
+          .\dist\rhea-lang\bin\rhea .\test\error_handling.rhea
+          .\dist\rhea-lang\bin\rhea .\test\flow.rhea
+          .\dist\rhea-lang\bin\rhea .\test\func.rhea
+          .\dist\rhea-lang\bin\rhea .\test\lock.rhea
+          .\dist\rhea-lang\bin\rhea .\test\loop.rhea
+          .\dist\rhea-lang\bin\rhea .\test\native.rhea
+          .\dist\rhea-lang\bin\rhea .\test\parallel.rhea
+          .\dist\rhea-lang\bin\rhea .\test\regex.rhea
+          .\dist\rhea-lang\bin\rhea .\test\test.rhea -t
+          .\dist\rhea-lang\bin\rhea .\test\types.rhea
+
+      - name: Run examples
+        shell: cmd
+        run: |
+          cd rhea
+          set RHEA_PATH=%cd%\dist\rhea-lang
+          .\dist\rhea-lang\bin\rhea examples\99-beers.rhea
+          .\dist\rhea-lang\bin\rhea examples\hello.rhea
+          .\dist\rhea-lang\bin\rhea examples\http-get.rhea
+          .\dist\rhea-lang\bin\rhea examples\logic-gate-ai.rhea
+          .\dist\rhea-lang\bin\rhea examples\zip-create.rhea
+
       - name: Zip the Built Files
         shell: pwsh
         run: |

@@ -504,7 +504,6 @@ def build_proc():
 
     except Exception as e:
         log_error(f"Compilation failed with error: {e}")
-        traceback.print_exc()
         exit(1)
 
     gen_end = time.time() - gen_time

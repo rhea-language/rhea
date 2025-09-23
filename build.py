@@ -429,6 +429,11 @@ def build_proc():
             linkable_libs.append('-lssl')
             linkable_libs.append('-lcrypto')
 
+            compiler = '/usr/local/opt/llvm/bin/clang++'
+            if platform.processor() == 'arm':
+                compiler = '/opt/homebrew/opt/llvm/bin/clang++'
+
+            march = "-arch x64_64"
             if 'x86_64' in MACHINE or 'i386' in MACHINE:
                 lib_headers += [
                     '-I/usr/local/opt/openssl@3/include',
@@ -439,15 +444,11 @@ def build_proc():
                     '-L/usr/local/Cellar/libzip/1.11.4/lib'
                 ]
             else:
+                march = "-arch arm64"
                 lib_headers += [
                     '-I/opt/homebrew/opt/openssl@3/include',
                     '-I/opt/homebrew/Cellar/glfw/3.4/include/GLFW'
                 ]
-
-            if platform.processor() == 'arm':
-                compiler = '/opt/homebrew/opt/llvm/bin/clang++'
-            else:
-                compiler = '/usr/local/opt/llvm/bin/clang++'
 
             exe_build_args = [
                 compiler, '-Iinclude',
@@ -466,7 +467,7 @@ def build_proc():
                 '-Wunused-function', '-Wunused-label', '-Wunused-parameter',
                 '-Wunused-value', '-Wunused-variable', '-Wvariadic-macros',
                 '-Wwrite-strings', '-Wno-return-type-c-linkage', '-pipe',
-                '-std=c++23', '-march=native', '-ffast-math', '-flto=auto',
+                '-std=c++23', march, '-ffast-math', '-flto=auto',
                 '-Xpreprocessor', '-O2', '-Wno-header-guard', '-Wno-pessimizing-move'
             ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 

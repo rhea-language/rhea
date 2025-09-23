@@ -433,21 +433,24 @@ def build_proc():
             if platform.processor() == 'arm':
                 compiler = '/opt/homebrew/opt/llvm/bin/clang++'
 
-            march = "-arch x64_64"
-            if 'x86_64' in MACHINE or 'i386' in MACHINE:
+            brew_prefix = "/usr/local" if MACHINE.startswith("x86_64") or MACHINE.startswith("i386") else "/opt/homebrew"
+            lib_headers += [
+                f"-I{brew_prefix}/opt/openssl@3/include",
+                f"-L{brew_prefix}/opt/openssl@3/lib",
+            ]
+
+            if MACHINE.startswith("x86_64") or MACHINE.startswith("i386"):
+                march = "-arch x86_64"
                 lib_headers += [
-                    '-I/usr/local/opt/openssl@3/include',
-                    '-I/usr/local/opt/glfw/include',
-                    '-I/usr/local/Cellar/libzip/1.11.4/include',
-                    '-L/usr/local/opt/openssl@3/lib',
-                    '-L/usr/local/opt/glfw/lib',
-                    '-L/usr/local/Cellar/libzip/1.11.4/lib'
+                    '-I{brew_prefix}/opt/glfw/include',
+                    '-I{brew_prefix}/Cellar/libzip/1.11.4/include',
+                    '-L{brew_prefix}/opt/glfw/lib',
+                    '-L{brew_prefix}/Cellar/libzip/1.11.4/lib'
                 ]
             else:
                 march = "-arch arm64"
                 lib_headers += [
-                    '-I/opt/homebrew/opt/openssl@3/include',
-                    '-I/opt/homebrew/Cellar/glfw/3.4/include/GLFW'
+                    '-I{brew_prefix}/Cellar/glfw/3.4/include/GLFW'
                 ]
 
             exe_build_args = [

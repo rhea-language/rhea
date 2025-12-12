@@ -270,23 +270,25 @@ void Tokenizer::scan() {
                             }
                         }
 
-                        if(!this->isAtEnd() && this->source[this->index] == 'e') {
-                            digit += this->source[this->index++];
+                        if(!this->isAtEnd() && this->source[
+                            static_cast<size_t>(this->index)
+                        ] == 'e') {
+                            digit += this->source[static_cast<size_t>(this->index++)];
                             column++;
 
                             if(!this->isAtEnd() && (
-                                this->source[this->index] == '+' ||
-                                this->source[this->index] == '-'
+                                this->source[static_cast<size_t>(this->index)] == '+' ||
+                                this->source[static_cast<size_t>(this->index)] == '-'
                             )) {
-                                digit += this->source[this->index++];
+                                digit += this->source[static_cast<size_t>(this->index++)];
                                 column++;
                             }
 
                             bool foundDigit = false;
                             while(!this->isAtEnd() &&
-                                this->isDigit(this->source[this->index])
+                                this->isDigit(this->source[static_cast<size_t>(this->index)])
                             ) {
-                                digit += this->source[this->index++];
+                                digit += this->source[static_cast<size_t>(this->index++)];
                                 column++;
                                 foundDigit = true;
                             }
@@ -327,23 +329,23 @@ void Tokenizer::scan() {
                     }
                 }
 
-                if(!this->isAtEnd() && this->source[this->index] == 'e') {
-                    digit += this->source[this->index++];
+                if(!this->isAtEnd() && this->source[static_cast<size_t>(this->index)] == 'e') {
+                    digit += this->source[static_cast<size_t>(this->index++)];
                     column++;
 
                     if(!this->isAtEnd() && (
-                        this->source[this->index] == '+' ||
-                        this->source[this->index] == '-'
+                        this->source[static_cast<size_t>(this->index)] == '+' ||
+                        this->source[static_cast<size_t>(this->index)] == '-'
                     )) {
-                        digit += this->source[this->index++];
+                        digit += this->source[static_cast<size_t>(this->index++)];
                         column++;
                     }
 
                     bool foundDigit = false;
                     while(!this->isAtEnd() &&
-                        this->isDigit(this->source[this->index])
+                        this->isDigit(this->source[static_cast<size_t>(this->index)])
                     ) {
-                        digit += this->source[this->index++];
+                        digit += this->source[static_cast<size_t>(this->index++)];
                         column++;
                         foundDigit = true;
                     }

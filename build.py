@@ -445,7 +445,7 @@ def build_proc():
                 ]
 
             if platform.processor() == 'arm':
-                compiler = '/opt/homebrew/opt/llvm/bin/clang++'
+                compiler = 'clang++'
             else:
                 compiler = '/usr/local/opt/llvm/bin/clang++'
 
@@ -468,7 +468,7 @@ def build_proc():
                 '-Wwrite-strings', '-Wno-return-type-c-linkage', '-pipe',
                 '-std=c++23', '-ffast-math', '-flto=auto',
                 '-Xpreprocessor', '-O2', '-Wno-header-guard', '-Wno-pessimizing-move'
-            ] + lib_headers + lib_source_files + cpp_files + ['-o', OUTPUT_EXECUTABLE]
+            ] + lib_headers + lib_source_files + ['-lc++abi'] + cpp_files + ['-o', OUTPUT_EXECUTABLE]
 
             if '--no-core' not in sys.argv:
                 now = time.time()

@@ -270,7 +270,7 @@ std::string DynamicObject::toString() {
         if(dotPos != std::string::npos) {
             numstr.erase(numstr.find_last_not_of('0') + 1);
 
-            if(numstr.back() == '.')
+            if(!numstr.empty() && numstr.back() == '.')
                 numstr.pop_back();
         }
 
@@ -489,9 +489,8 @@ DynamicObject operator-(
         }
 
         size_t index = 0;
-        while((index = subject.find(subject, index)) != std::string::npos) {
-            subject.replace(index, rightVal.size(), "");
-            index++;
+        while((index = subject.find(object, index)) != std::string::npos) {
+            subject.replace(index, object.size(), "");
         }
 
         return DynamicObject(subject);

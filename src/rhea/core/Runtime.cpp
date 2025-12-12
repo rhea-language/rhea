@@ -76,7 +76,9 @@ void Runtime::addLoadedLibrary(std::string libName, void* handle) {
 
 void* Runtime::getLoadedLibrary(std::string libName) {
     #ifndef __EMSCRIPTEN__
-    return Runtime::nativeLibraries[libName];
+    auto it = Runtime::nativeLibraries.find(libName);
+    return it == Runtime::nativeLibraries.end() ?
+        nullptr : it->second;
     #else
     (void) libName;
     return nullptr;

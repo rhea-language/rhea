@@ -34,7 +34,7 @@ public:
         regex(std::make_shared<std::regex>(this->pattern)) {}
 
     const std::string& getPattern() const;
-    const std::regex getRegex() const;
+    const std::regex& getRegex() const;
 };
 
 #endif

@@ -114,7 +114,6 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         handle = dlopen(library.c_str(), RTLD_NOW | RTLD_LOCAL);
         #elif defined(__unix__) || defined(__linux__)
         handle = dlopen(library.c_str(), RTLD_NOW | RTLD_LOCAL);
-        #endif
 
         if(dlerror())
             throw ASTNodeException(
@@ -123,6 +122,8 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
                 "\r\n                 " +
                 dlerror()
             );
+        #endif
+
         Runtime::addLoadedLibrary(library, handle);
     }
 

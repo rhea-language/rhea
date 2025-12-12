@@ -31,6 +31,9 @@ std::shared_ptr<Tokenizer> Tokenizer::loadFile(const std::string& filePath) {
 }
 
 bool Tokenizer::isValidIdentifier(std::string str) {
+    if(str.empty())
+        return false;
+
     if(Tokenizer::isDigit(str[0]))
         return false;
 
@@ -267,27 +270,31 @@ void Tokenizer::scan() {
                             }
                         }
 
-                        if(!this->isAtEnd() && this->source[
-                            static_cast<size_t>(this->index)
-                        ] == 'e') {
-                            digit += this->source[static_cast<size_t>(this->index++)];
+                        if(!this->isAtEnd() && this->source[this->index] == 'e') {
+                            digit += this->source[this->index++];
                             column++;
 
-                            char sign = this->source[static_cast<size_t>(this->index++)];
-                            if(this->isAtEnd() || (sign != '+' && sign != '-'))
-                                throw LexicalAnalysisException(
-                                    "Expecting 'e' followed by decimal digits. (line " +
-                                        std::to_string(line) + ", column " +
-                                        std::to_string(column) + ")"
-                                );
-
-                            digit += sign;
-                            while(!this->isAtEnd() && this->isDigit(
-                                this->source[static_cast<size_t>(this->index)]
+                            if(!this->isAtEnd() && (
+                                this->source[this->index] == '+' ||
+                                this->source[this->index] == '-'
                             )) {
-                                digit += this->source[static_cast<size_t>(this->index++)];
+                                digit += this->source[this->index++];
                                 column++;
                             }
+
+                            bool foundDigit = false;
+                            while(!this->isAtEnd() &&
+                                this->isDigit(this->source[this->index])
+                            ) {
+                                digit += this->source[this->index++];
+                                column++;
+                                foundDigit = true;
+                            }
+
+                            if(!foundDigit)
+                                throw LexicalAnalysisException(
+                                    "Expecting decimal digits after exponent."
+                                );
                         }
                         break;
                 }
@@ -320,29 +327,31 @@ void Tokenizer::scan() {
                     }
                 }
 
-                if(!this->isAtEnd() && this->source[
-                    static_cast<size_t>(this->index)
-                ] == 'e') {
-                    digit += this->source[static_cast<size_t>(this->index++)];
+                if(!this->isAtEnd() && this->source[this->index] == 'e') {
+                    digit += this->source[this->index++];
                     column++;
 
-                    char sign = this->source[static_cast<size_t>(this->index++)];
-                    column++;
-
-                    if(this->isAtEnd() || (sign != '+' && sign != '-'))
-                        throw LexicalAnalysisException(
-                            "Expecting 'e' followed by decimal digits. (line " +
-                                std::to_string(line) + ", column " +
-                                std::to_string(column) + ")"
-                        );
-
-                    digit += sign;
-                    while(!this->isAtEnd() && this->isDigit(
-                        this->source[static_cast<size_t>(this->index)]
+                    if(!this->isAtEnd() && (
+                        this->source[this->index] == '+' ||
+                        this->source[this->index] == '-'
                     )) {
-                        digit += this->source[static_cast<size_t>(this->index++)];
+                        digit += this->source[this->index++];
                         column++;
                     }
+
+                    bool foundDigit = false;
+                    while(!this->isAtEnd() &&
+                        this->isDigit(this->source[this->index])
+                    ) {
+                        digit += this->source[this->index++];
+                        column++;
+                        foundDigit = true;
+                    }
+
+                    if(!foundDigit)
+                        throw LexicalAnalysisException(
+                            "Expecting decimal digits after exponent."
+                        );
                 }
             }
 

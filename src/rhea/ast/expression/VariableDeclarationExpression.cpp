@@ -111,11 +111,18 @@ NativeFunction VariableDeclarationExpression::loadNativeFunction(
         handle = LoadLibraryA(library.c_str());
 
         #elif defined(__APPLE__)
-        handle = dlopen(library.c_str(), RTLD_LAZY);
+        handle = dlopen(library.c_str(), RTLD_NOW | RTLD_LOCAL);
         #elif defined(__unix__) || defined(__linux__)
-        handle = dlopen(library.c_str(), RTLD_LAZY);
+        handle = dlopen(library.c_str(), RTLD_NOW | RTLD_LOCAL);
         #endif
 
+        if(dlerror())
+            throw ASTNodeException(
+                std::move(address),
+                "Failed to load library: " + library +
+                "\r\n                 " +
+                dlerror()
+            );
         Runtime::addLoadedLibrary(library, handle);
     }
 

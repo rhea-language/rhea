@@ -1,0 +1,15 @@
+---
+Language: Cpp
+BasedOnStyle: Google
+IndentWidth: 4
+ColumnLimit: 80
+SpaceBeforeParens: Never
+AllowShortFunctionsOnASingleLine: None
+FixNamespaceComments: true
+ReflowComments: true
+SortIncludes: true
+Standard: Latest
+PointerAlignment: Left
+ReferenceAlignment: Left
+BreakBeforeBraces: Attach
+...

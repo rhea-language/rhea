@@ -35,7 +35,7 @@ jobs:
       - name: Build Rhea
         run: |
           python -m pip install py-cpuinfo
-          python build.py
+          python tools/build.py
 
       - name: Set Environment Path
         run: |
@@ -82,5 +82,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rhea-linux-dist
-          path: dist/rhea-lang_1.0.0_amd64.deb
+          path: dist/rhea-lang_1.0.0_arm64.deb
           retention-days: 1

@@ -1,0 +1,12 @@
+{
+  "name": "rhea",
+  "version": "1.0.0",
+  "description": "Rhea Programming Language",
+  "scripts": {
+    "format": "python3 format.py",
+    "build": "python3 build.py"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0"
+  }
+}

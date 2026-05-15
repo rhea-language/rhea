@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
  * This file is part of Rhea.
- * 
+ *
  * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -25,25 +25,23 @@
 namespace RheaUtil {
 
 class SemVer {
-private:
+   private:
     int major;
     int minor;
     int patch;
     std::optional<std::string> preRelease;
     std::optional<std::string> buildMetadata;
 
-public:
-    SemVer(
-        int _major,
-        int _minor,
-        int _patch, 
-        std::optional<std::string> _preRelease = std::nullopt, 
-        std::optional<std::string> _buildMetadata = std::nullopt
-    ) : major(_major),
-        minor(_minor),
-        patch(_patch),
-        preRelease(_preRelease),
-        buildMetadata(_buildMetadata) {}
+   public:
+    SemVer(int _major, int _minor, int _patch,
+           std::optional<std::string> _preRelease = std::nullopt,
+           std::optional<std::string> _buildMetadata = std::nullopt)
+        : major(_major),
+          minor(_minor),
+          patch(_patch),
+          preRelease(_preRelease),
+          buildMetadata(_buildMetadata) {
+    }
 
     int getMajor() const;
     int getMinor() const;
@@ -63,6 +61,6 @@ public:
     static bool validateSemVer(const std::string& version);
 };
 
-};
+};  // namespace RheaUtil
 
 #endif

@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
  * This file is part of Rhea.
- * 
+ *
  * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -21,8 +21,7 @@
 
 std::shared_ptr<Tokenizer> Tokenizer::loadFile(const std::string& filePath) {
     std::ifstream file(filePath);
-    if(!file.is_open())
-        throw std::runtime_error("File not found: " + filePath);
+    if(!file.is_open()) throw std::runtime_error("File not found: " + filePath);
 
     std::ostringstream content;
     content << file.rdbuf();
@@ -31,29 +30,23 @@ std::shared_ptr<Tokenizer> Tokenizer::loadFile(const std::string& filePath) {
 }
 
 bool Tokenizer::isValidIdentifier(std::string str) {
-    if(str.empty())
-        return false;
+    if(str.empty()) return false;
 
-    if(Tokenizer::isDigit(str[0]))
-        return false;
+    if(Tokenizer::isDigit(str[0])) return false;
 
     for(const char& ch : str)
-        if(Tokenizer::isOperator(ch) ||
-            Tokenizer::isWhitespace(ch))
+        if(Tokenizer::isOperator(ch) || Tokenizer::isWhitespace(ch))
             return false;
 
     return !Tokenizer::isKeyword(str);
 }
 
 void Tokenizer::scan() {
-    if(this->source.empty())
-        return;
+    if(this->source.empty()) return;
 
     int line = 1, column = 0;
     while(!this->isAtEnd()) {
-        char currentChar = this->source[
-            static_cast<size_t>(this->index++)
-        ];
+        char currentChar = this->source[static_cast<size_t>(this->index++)];
         column++;
 
         if(this->isWhitespace(currentChar)) {
@@ -61,179 +54,163 @@ void Tokenizer::scan() {
                 line++;
                 column = 0;
             }
-        }
-        else if(this->isOperator(currentChar)) {
+        } else if(this->isOperator(currentChar)) {
             if(currentChar == '#') {
-                while(!this->isAtEnd() && this->source[static_cast<size_t>(this->index)] != '\n') {
+                while(!this->isAtEnd() &&
+                      this->source[static_cast<size_t>(this->index)] != '\n') {
                     this->index++;
                     column++;
                 }
 
                 column = 0;
-            }
-            else if(currentChar == '"') {
+            } else if(currentChar == '"') {
                 std::string str;
                 int startColumn = column;
 
-                while(!this->isAtEnd() && this->source[
-                    static_cast<size_t>(this->index)
-                ] != '"') {
+                while(!this->isAtEnd() &&
+                      this->source[static_cast<size_t>(this->index)] != '"') {
                     char ch = this->source[static_cast<size_t>(this->index++)];
                     column++;
 
                     if(ch == '\n')
                         throw LexicalAnalysisException(
                             "Found new line inside string literal. (line " +
-                                std::to_string(line) + ", column " +
-                                std::to_string(column) + ")"
-                        );
+                            std::to_string(line) + ", column " +
+                            std::to_string(column) + ")");
                     else if(ch == '\\') {
                         str += ch;
                         column++;
 
                         if(isAtEnd())
                             throw LexicalAnalysisException(
-                                "Expecting escape character, encountered end-of-file. (line " +
-                                    std::to_string(line) + ", column " +
-                                    std::to_string(column) + ")"
-                            );
+                                "Expecting escape character, encountered "
+                                "end-of-file. (line " +
+                                std::to_string(line) + ", column " +
+                                std::to_string(column) + ")");
 
-                        char escape = this->source[static_cast<size_t>(this->index++)];
+                        char escape =
+                            this->source[static_cast<size_t>(this->index++)];
                         str += escape;
                         column++;
-                    }
-                    else str += ch;
+                    } else
+                        str += ch;
                 }
 
                 this->index++;
                 column++;
 
                 str = RheaUtil::replaceEscapeSequences(std::move(str));
-                this->tokens.push_back(Token(
-                    str,
-                    fileName,
-                    line,
-                    startColumn,
-                    TokenCategory::STRING
-                ));
-            }
-            else if(currentChar == '`') {
+                this->tokens.push_back(Token(str, fileName, line, startColumn,
+                                             TokenCategory::STRING));
+            } else if(currentChar == '`') {
                 std::string str;
                 int startColumn = column;
 
-                while(!this->isAtEnd() && this->source[
-                    static_cast<size_t>(this->index)
-                ] != '`') {
+                while(!this->isAtEnd() &&
+                      this->source[static_cast<size_t>(this->index)] != '`') {
                     char ch = this->source[static_cast<size_t>(this->index++)];
 
                     if(ch == '\n')
                         throw LexicalAnalysisException(
-                            "Found new line inside regular expression literal. (line " +
-                                std::to_string(line) + ", column " +
-                                std::to_string(column) + ")"
-                        );
+                            "Found new line inside regular expression literal. "
+                            "(line " +
+                            std::to_string(line) + ", column " +
+                            std::to_string(column) + ")");
                     else if(ch == '\\') {
                         str += ch;
                         column++;
 
                         if(isAtEnd())
                             throw LexicalAnalysisException(
-                                "Expecting escape character, encountered end-of-file. (line " +
-                                    std::to_string(line) + ", column " +
-                                    std::to_string(column) + ")"
-                            );
+                                "Expecting escape character, encountered "
+                                "end-of-file. (line " +
+                                std::to_string(line) + ", column " +
+                                std::to_string(column) + ")");
 
-                        str += this->source[
-                            static_cast<size_t>(this->index++)
-                        ];
+                        str += this->source[static_cast<size_t>(this->index++)];
                         column++;
-                    }
-                    else str += ch;
+                    } else
+                        str += ch;
                 }
 
                 this->index++;
                 column++;
 
                 str = RheaUtil::replaceEscapeSequences(std::move(str));
-                this->tokens.push_back(Token(
-                    str,
-                    fileName,
-                    line,
-                    startColumn,
-                    TokenCategory::REGEX
-                ));
-            }
-            else {
+                this->tokens.push_back(Token(str, fileName, line, startColumn,
+                                             TokenCategory::REGEX));
+            } else {
                 std::string op(1, currentChar);
                 int startColumn = column;
 
-                while(!isAtEnd() && std::find(
-                    OperatorsAndKeys::operators.begin(),
-                    OperatorsAndKeys::operators.end(),
-                    op + this->source[static_cast<size_t>(this->index)]
-                ) != OperatorsAndKeys::operators.end()) {
+                while(
+                    !isAtEnd() &&
+                    std::find(
+                        OperatorsAndKeys::operators.begin(),
+                        OperatorsAndKeys::operators.end(),
+                        op + this->source[static_cast<size_t>(this->index)]) !=
+                        OperatorsAndKeys::operators.end()) {
                     op += this->source[static_cast<size_t>(this->index++)];
                     column++;
                 }
 
-                this->tokens.push_back(Token(
-                    op,
-                    fileName,
-                    line,
-                    startColumn,
-                    TokenCategory::OPERATOR
-                ));
+                this->tokens.push_back(Token(op, fileName, line, startColumn,
+                                             TokenCategory::OPERATOR));
             }
-        }
-        else if(this->isDigit(currentChar)) {
+        } else if(this->isDigit(currentChar)) {
             std::string digit(1, currentChar);
             int startColumn = column;
 
             if(currentChar == '0') {
-                char nextChar = this->source[
-                    static_cast<size_t>(this->index++)
-                ];
+                char nextChar =
+                    this->source[static_cast<size_t>(this->index++)];
                 column++;
 
                 switch(nextChar) {
                     case 'b':
                         digit += nextChar;
-                        while(!this->isAtEnd() && this->isBinaryDigit(
-                            this->source[static_cast<size_t>(this->index)]
-                        )) {
-                            digit += this->source[
-                                static_cast<size_t>(this->index++)
-                            ];
+                        while(!this->isAtEnd() &&
+                              this->isBinaryDigit(
+                                  this->source[static_cast<size_t>(
+                                      this->index)])) {
+                            digit += this->source[static_cast<size_t>(
+                                this->index++)];
                             column++;
                         }
                         break;
 
                     case 't':
                         digit += nextChar;
-                        while(!this->isAtEnd() && this->isTrinaryDigit(
-                            this->source[static_cast<size_t>(this->index)])
-                        ) {
-                            digit += this->source[static_cast<size_t>(this->index++)];
+                        while(!this->isAtEnd() &&
+                              this->isTrinaryDigit(
+                                  this->source[static_cast<size_t>(
+                                      this->index)])) {
+                            digit += this->source[static_cast<size_t>(
+                                this->index++)];
                             column++;
                         }
                         break;
 
                     case 'c':
                         digit += nextChar;
-                        while(!this->isAtEnd() && this->isOctalDecimalDigit(
-                            this->source[static_cast<size_t>(this->index)]
-                        )) {
-                            digit += this->source[static_cast<size_t>(this->index++)];
+                        while(!this->isAtEnd() &&
+                              this->isOctalDecimalDigit(
+                                  this->source[static_cast<size_t>(
+                                      this->index)])) {
+                            digit += this->source[static_cast<size_t>(
+                                this->index++)];
                             column++;
                         }
                         break;
 
                     case 'x':
                         digit += nextChar;
-                        while(!this->isAtEnd() && this->isHexadecimalDigit(
-                            this->source[static_cast<size_t>(this->index)]
-                        )) {
-                            digit += this->source[static_cast<size_t>(this->index++)];
+                        while(!this->isAtEnd() &&
+                              this->isHexadecimalDigit(
+                                  this->source[static_cast<size_t>(
+                                      this->index)])) {
+                            digit += this->source[static_cast<size_t>(
+                                this->index++)];
                             column++;
                         }
                         break;
@@ -242,150 +219,153 @@ void Tokenizer::scan() {
                         this->index--;
                         column--;
 
-                        while(!this->isAtEnd() && this->isDigit(
-                            this->source[static_cast<size_t>(this->index)]
-                        )) {
-                            digit += this->source[static_cast<size_t>(this->index++)];
+                        while(!this->isAtEnd() &&
+                              this->isDigit(this->source[static_cast<size_t>(
+                                  this->index)])) {
+                            digit += this->source[static_cast<size_t>(
+                                this->index++)];
                             column++;
                         }
 
-                        if(!this->isAtEnd() && this->source[
-                            static_cast<size_t>(this->index)
-                        ] == '.') {
-                            digit += this->source[
-                                static_cast<size_t>(this->index++)
-                            ];
+                        if(!this->isAtEnd() &&
+                           this->source[static_cast<size_t>(this->index)] ==
+                               '.') {
+                            digit += this->source[static_cast<size_t>(
+                                this->index++)];
                             column++;
 
-                            if(this->isAtEnd() || !this->isDigit(this->source[
-                                static_cast<size_t>(this->index)])
-                            ) throw LexicalAnalysisException("Expecting decimal digits. (line " +
-                                std::to_string(line) + ", column " + std::to_string(column) + ")");
+                            if(this->isAtEnd() ||
+                               !this->isDigit(this->source[static_cast<size_t>(
+                                   this->index)]))
+                                throw LexicalAnalysisException(
+                                    "Expecting decimal digits. (line " +
+                                    std::to_string(line) + ", column " +
+                                    std::to_string(column) + ")");
 
-                            while(!this->isAtEnd() && this->isDigit(
-                                this->source[static_cast<size_t>(this->index)]
-                            )) {
-                                digit += this->source[static_cast<size_t>(this->index++)];
+                            while(
+                                !this->isAtEnd() &&
+                                this->isDigit(this->source[static_cast<size_t>(
+                                    this->index)])) {
+                                digit += this->source[static_cast<size_t>(
+                                    this->index++)];
                                 column++;
                             }
                         }
 
-                        if(!this->isAtEnd() && this->source[
-                            static_cast<size_t>(this->index)
-                        ] == 'e') {
-                            digit += this->source[static_cast<size_t>(this->index++)];
+                        if(!this->isAtEnd() &&
+                           this->source[static_cast<size_t>(this->index)] ==
+                               'e') {
+                            digit += this->source[static_cast<size_t>(
+                                this->index++)];
                             column++;
 
-                            if(!this->isAtEnd() && (
-                                this->source[static_cast<size_t>(this->index)] == '+' ||
-                                this->source[static_cast<size_t>(this->index)] == '-'
-                            )) {
-                                digit += this->source[static_cast<size_t>(this->index++)];
+                            if(!this->isAtEnd() &&
+                               (this->source[static_cast<size_t>(
+                                    this->index)] == '+' ||
+                                this->source[static_cast<size_t>(
+                                    this->index)] == '-')) {
+                                digit += this->source[static_cast<size_t>(
+                                    this->index++)];
                                 column++;
                             }
 
                             bool foundDigit = false;
-                            while(!this->isAtEnd() &&
-                                this->isDigit(this->source[static_cast<size_t>(this->index)])
-                            ) {
-                                digit += this->source[static_cast<size_t>(this->index++)];
+                            while(
+                                !this->isAtEnd() &&
+                                this->isDigit(this->source[static_cast<size_t>(
+                                    this->index)])) {
+                                digit += this->source[static_cast<size_t>(
+                                    this->index++)];
                                 column++;
                                 foundDigit = true;
                             }
 
                             if(!foundDigit)
                                 throw LexicalAnalysisException(
-                                    "Expecting decimal digits after exponent."
-                                );
+                                    "Expecting decimal digits after exponent.");
                         }
                         break;
                 }
-            }
-            else {
-                while(!this->isAtEnd() && this->isDigit(
-                    this->source[static_cast<size_t>(this->index)]
-                )) {
+            } else {
+                while(!this->isAtEnd() &&
+                      this->isDigit(
+                          this->source[static_cast<size_t>(this->index)])) {
                     digit += this->source[static_cast<size_t>(this->index++)];
                     column++;
                 }
 
-                if(!this->isAtEnd() && this->source[static_cast<size_t>(this->index)] == '.') {
+                if(!this->isAtEnd() &&
+                   this->source[static_cast<size_t>(this->index)] == '.') {
                     digit += this->source[static_cast<size_t>(this->index++)];
                     column++;
 
-                    if(this->isAtEnd() || !this->isDigit(
-                        this->source[static_cast<size_t>(this->index)]
-                    )) throw LexicalAnalysisException(
-                        "Expecting decimal digits. (line " +
+                    if(this->isAtEnd() ||
+                       !this->isDigit(
+                           this->source[static_cast<size_t>(this->index)]))
+                        throw LexicalAnalysisException(
+                            "Expecting decimal digits. (line " +
                             std::to_string(line) + ", column " +
-                            std::to_string(column) + ")"
-                    );
+                            std::to_string(column) + ")");
 
-                    while(!this->isAtEnd() && this->isDigit(
-                        this->source[static_cast<size_t>(this->index)]
-                    )) {
-                        digit += this->source[static_cast<size_t>(this->index++)];
+                    while(!this->isAtEnd() &&
+                          this->isDigit(
+                              this->source[static_cast<size_t>(this->index)])) {
+                        digit +=
+                            this->source[static_cast<size_t>(this->index++)];
                         column++;
                     }
                 }
 
-                if(!this->isAtEnd() && this->source[static_cast<size_t>(this->index)] == 'e') {
+                if(!this->isAtEnd() &&
+                   this->source[static_cast<size_t>(this->index)] == 'e') {
                     digit += this->source[static_cast<size_t>(this->index++)];
                     column++;
 
-                    if(!this->isAtEnd() && (
-                        this->source[static_cast<size_t>(this->index)] == '+' ||
-                        this->source[static_cast<size_t>(this->index)] == '-'
-                    )) {
-                        digit += this->source[static_cast<size_t>(this->index++)];
+                    if(!this->isAtEnd() &&
+                       (this->source[static_cast<size_t>(this->index)] == '+' ||
+                        this->source[static_cast<size_t>(this->index)] ==
+                            '-')) {
+                        digit +=
+                            this->source[static_cast<size_t>(this->index++)];
                         column++;
                     }
 
                     bool foundDigit = false;
                     while(!this->isAtEnd() &&
-                        this->isDigit(this->source[static_cast<size_t>(this->index)])
-                    ) {
-                        digit += this->source[static_cast<size_t>(this->index++)];
+                          this->isDigit(
+                              this->source[static_cast<size_t>(this->index)])) {
+                        digit +=
+                            this->source[static_cast<size_t>(this->index++)];
                         column++;
                         foundDigit = true;
                     }
 
                     if(!foundDigit)
                         throw LexicalAnalysisException(
-                            "Expecting decimal digits after exponent."
-                        );
+                            "Expecting decimal digits after exponent.");
                 }
             }
 
-            this->tokens.push_back(Token(
-                digit,
-                fileName,
-                line,
-                startColumn,
-                TokenCategory::DIGIT
-            ));
-        }
-        else if(this->isAlphabet(currentChar)) {
+            this->tokens.push_back(Token(digit, fileName, line, startColumn,
+                                         TokenCategory::DIGIT));
+        } else if(this->isAlphabet(currentChar)) {
             std::string token(1, currentChar);
             int startColumn = column;
 
             while(!this->isAtEnd() &&
-                (this->isDigit(this->source[static_cast<size_t>(this->index)]) ||
-                    this->isAlphabet(this->source[static_cast<size_t>(this->index)]))
-            ) {
+                  (this->isDigit(
+                       this->source[static_cast<size_t>(this->index)]) ||
+                   this->isAlphabet(
+                       this->source[static_cast<size_t>(this->index)]))) {
                 token += this->source[static_cast<size_t>(this->index++)];
                 column++;
             }
 
-            TokenCategory type = this->isKeyword(token) ?
-                TokenCategory::KEYWORD : TokenCategory::IDENTIFIER;
-            this->tokens.push_back(Token(
-                token,
-                fileName,
-                line,
-                startColumn,
-                type
-            ));
+            TokenCategory type = this->isKeyword(token)
+                                     ? TokenCategory::KEYWORD
+                                     : TokenCategory::IDENTIFIER;
+            this->tokens.push_back(
+                Token(token, fileName, line, startColumn, type));
         }
     }
 }
@@ -399,11 +379,7 @@ bool Tokenizer::isAtEnd() const {
 }
 
 bool Tokenizer::isWhitespace(char ch) {
-    return ch == ' ' ||
-        ch == '\t' ||
-        ch == '\r' ||
-        ch == '\n' ||
-        ch == '\f';
+    return ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n' || ch == '\f';
 }
 
 bool Tokenizer::isDigit(char ch) {
@@ -423,24 +399,20 @@ bool Tokenizer::isOctalDecimalDigit(char ch) {
 }
 
 bool Tokenizer::isHexadecimalDigit(char ch) {
-    return (ch >= '0' && ch <= '9') ||
-        (ch >= 'a' && ch <= 'f') ||
-        (ch >= 'A' && ch <= 'F');
+    return (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') ||
+           (ch >= 'A' && ch <= 'F');
 }
 
 bool Tokenizer::isAlphabet(char ch) {
-    return !Tokenizer::isWhitespace(ch) &&
-        !Tokenizer::isDigit(ch) &&
-        !Tokenizer::isOperator(ch);
+    return !Tokenizer::isWhitespace(ch) && !Tokenizer::isDigit(ch) &&
+           !Tokenizer::isOperator(ch);
 }
 
 bool Tokenizer::isOperator(char ch) {
     const std::unordered_set<char> operators = {
-        '!', '~', '`', '#', '%', '^', '&', '*',
-        '(', ')', '-', '=', '+', '[', ']', '{',
-        '}', '|', '"', ':', ';', '<', ',', '>',
-        '.', '?', '/', '\\', '@'
-    };
+        '!', '~', '`', '#', '%', '^', '&', '*',  '(', ')',
+        '-', '=', '+', '[', ']', '{', '}', '|',  '"', ':',
+        ';', '<', ',', '>', '.', '?', '/', '\\', '@'};
 
     return operators.count(ch) == 1;
 }

@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2025 - Nathanne Isip
  * This file is part of Rhea.
- * 
+ *
  * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -26,26 +26,20 @@ RHEA_FUNC(unsafe_volatileRead8) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject adrs = args.at(0);
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Address parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
     double value = adrs.getNumber();
-    auto addr = reinterpret_cast<volatile void*>(
-        *reinterpret_cast<uintptr_t*>(&value)
-    );
+    auto addr =
+        reinterpret_cast<volatile void*>(*reinterpret_cast<uintptr_t*>(&value));
 
-    return DynamicObject(
-        static_cast<double>(volatile_read8(addr))
-    );
+    return DynamicObject(static_cast<double>(volatile_read8(addr)));
 }
 
 RHEA_FUNC(unsafe_volatileRead16) {
@@ -53,26 +47,20 @@ RHEA_FUNC(unsafe_volatileRead16) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject adrs = args.at(0);
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Address parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
     double value = adrs.getNumber();
-    auto addr = reinterpret_cast<volatile void*>(
-        *reinterpret_cast<uintptr_t*>(&value)
-    );
+    auto addr =
+        reinterpret_cast<volatile void*>(*reinterpret_cast<uintptr_t*>(&value));
 
-    return DynamicObject(
-        static_cast<double>(volatile_read16(addr))
-    );
+    return DynamicObject(static_cast<double>(volatile_read16(addr)));
 }
 
 RHEA_FUNC(unsafe_volatileRead32) {
@@ -80,26 +68,20 @@ RHEA_FUNC(unsafe_volatileRead32) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject adrs = args.at(0);
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Address parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
     double value = adrs.getNumber();
-    auto addr = reinterpret_cast<volatile void*>(
-        *reinterpret_cast<uintptr_t*>(&value)
-    );
+    auto addr =
+        reinterpret_cast<volatile void*>(*reinterpret_cast<uintptr_t*>(&value));
 
-    return DynamicObject(
-        static_cast<double>(volatile_read32(addr))
-    );
+    return DynamicObject(static_cast<double>(volatile_read32(addr)));
 }
 
 RHEA_FUNC(unsafe_volatileWrite8) {
@@ -107,36 +89,27 @@ RHEA_FUNC(unsafe_volatileWrite8) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject adrs = args.at(0),
-        value = args.at(1);
+    DynamicObject adrs = args.at(0), value = args.at(1);
 
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Address parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
     if(!value.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Value parameter should be of number type, got " +
-                value.objectType()
-        );
+                value.objectType());
 
     double adrval = adrs.getNumber();
     auto addr = reinterpret_cast<volatile void*>(
-        *reinterpret_cast<uintptr_t*>(&adrval)
-    );
+        *reinterpret_cast<uintptr_t*>(&adrval));
 
-    volatile_write8(
-        addr,
-        static_cast<uint8_t>(value.getNumber())
-    );
+    volatile_write8(addr, static_cast<uint8_t>(value.getNumber()));
 
     return {};
 }
@@ -146,36 +119,27 @@ RHEA_FUNC(unsafe_volatileWrite16) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject adrs = args.at(0),
-        value = args.at(1);
+    DynamicObject adrs = args.at(0), value = args.at(1);
 
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Address parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
     if(!value.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Value parameter should be of number type, got " +
-                value.objectType()
-        );
+                value.objectType());
 
     double adrval = adrs.getNumber();
     auto addr = reinterpret_cast<volatile void*>(
-        *reinterpret_cast<uintptr_t*>(&adrval)
-    );
+        *reinterpret_cast<uintptr_t*>(&adrval));
 
-    volatile_write16(
-        addr,
-        static_cast<uint16_t>(value.getNumber())
-    );
+    volatile_write16(addr, static_cast<uint16_t>(value.getNumber()));
 
     return {};
 }
@@ -185,36 +149,27 @@ RHEA_FUNC(unsafe_volatileWrite32) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject adrs = args.at(0),
-        value = args.at(1);
+    DynamicObject adrs = args.at(0), value = args.at(1);
 
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Address parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
     if(!value.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Value parameter should be of number type, got " +
-                value.objectType()
-        );
+                value.objectType());
 
     double adrval = adrs.getNumber();
     auto addr = reinterpret_cast<volatile void*>(
-        *reinterpret_cast<uintptr_t*>(&adrval)
-    );
+        *reinterpret_cast<uintptr_t*>(&adrval));
 
-    volatile_write32(
-        addr,
-        static_cast<uint32_t>(value.getNumber())
-    );
+    volatile_write32(addr, static_cast<uint32_t>(value.getNumber()));
 
     return {};
 }
@@ -224,36 +179,27 @@ RHEA_FUNC(unsafe_registerSetBits) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject adrs = args.at(0),
-        value = args.at(1);
+    DynamicObject adrs = args.at(0), value = args.at(1);
 
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Register parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
     if(!value.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Value parameter should be of number type, got " +
-                value.objectType()
-        );
+                value.objectType());
 
     double adrval = adrs.getNumber();
     auto addr = reinterpret_cast<volatile uint32_t*>(
-        *reinterpret_cast<uintptr_t*>(&adrval)
-    );
+        *reinterpret_cast<uintptr_t*>(&adrval));
 
-    reg_set_bits(
-        addr,
-        static_cast<uint32_t>(value.getNumber())
-    );
+    reg_set_bits(addr, static_cast<uint32_t>(value.getNumber()));
 
     return {};
 }
@@ -263,36 +209,27 @@ RHEA_FUNC(unsafe_registerClearBits) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject adrs = args.at(0),
-        value = args.at(1);
+    DynamicObject adrs = args.at(0), value = args.at(1);
 
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Register parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
     if(!value.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Value parameter should be of number type, got " +
-                value.objectType()
-        );
+                value.objectType());
 
     double adrval = adrs.getNumber();
     auto addr = reinterpret_cast<volatile uint32_t*>(
-        *reinterpret_cast<uintptr_t*>(&adrval)
-    );
+        *reinterpret_cast<uintptr_t*>(&adrval));
 
-    reg_clear_bits(
-        addr,
-        static_cast<uint32_t>(value.getNumber())
-    );
+    reg_clear_bits(addr, static_cast<uint32_t>(value.getNumber()));
 
     return {};
 }
@@ -302,36 +239,27 @@ RHEA_FUNC(unsafe_registerToggleBits) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject adrs = args.at(0),
-        value = args.at(1);
+    DynamicObject adrs = args.at(0), value = args.at(1);
 
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Register parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
     if(!value.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Value parameter should be of number type, got " +
-                value.objectType()
-        );
+                value.objectType());
 
     double adrval = adrs.getNumber();
     auto addr = reinterpret_cast<volatile uint32_t*>(
-        *reinterpret_cast<uintptr_t*>(&adrval)
-    );
+        *reinterpret_cast<uintptr_t*>(&adrval));
 
-    reg_toggle_bits(
-        addr,
-        static_cast<uint32_t>(value.getNumber())
-    );
+    reg_toggle_bits(addr, static_cast<uint32_t>(value.getNumber()));
 
     return {};
 }
@@ -341,36 +269,27 @@ RHEA_FUNC(unsafe_registerTestBits) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject adrs = args.at(0),
-        value = args.at(1);
+    DynamicObject adrs = args.at(0), value = args.at(1);
 
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Register parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
     if(!value.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Value parameter should be of number type, got " +
-                value.objectType()
-        );
+                value.objectType());
 
     double adrval = adrs.getNumber();
     auto addr = reinterpret_cast<volatile uint32_t*>(
-        *reinterpret_cast<uintptr_t*>(&adrval)
-    );
+        *reinterpret_cast<uintptr_t*>(&adrval));
 
-    reg_test_bits(
-        addr,
-        static_cast<uint32_t>(value.getNumber())
-    );
+    reg_test_bits(addr, static_cast<uint32_t>(value.getNumber()));
 
     return {};
 }
@@ -380,45 +299,34 @@ RHEA_FUNC(unsafe_registerReadField) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 3 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 3 argument, got " + std::to_string(args.size()));
 
-    DynamicObject adrs = args.at(0),
-        value = args.at(1),
-        mask = args.at(2);
+    DynamicObject adrs = args.at(0), value = args.at(1), mask = args.at(2);
 
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Register parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
     if(!value.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Value parameter should be of number type, got " +
-                value.objectType()
-        );
+                value.objectType());
 
     if(!mask.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Mask parameter should be of number type, got " +
-                mask.objectType()
-        );
+                mask.objectType());
 
     double adrval = adrs.getNumber();
     auto addr = reinterpret_cast<volatile uint32_t*>(
-        *reinterpret_cast<uintptr_t*>(&adrval)
-    );
+        *reinterpret_cast<uintptr_t*>(&adrval));
 
-    reg_read_field(
-        addr,
-        static_cast<uint32_t>(value.getNumber()),
-        static_cast<uint32_t>(mask.getNumber())
-    );
+    reg_read_field(addr, static_cast<uint32_t>(value.getNumber()),
+                   static_cast<uint32_t>(mask.getNumber()));
 
     return {};
 }
@@ -428,54 +336,42 @@ RHEA_FUNC(unsafe_registerWriteField) {
     if(args.size() != 4)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 4 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 4 argument, got " + std::to_string(args.size()));
 
-    DynamicObject adrs = args.at(0),
-        shift = args.at(1),
-        value = args.at(2),
-        mask = args.at(3);
+    DynamicObject adrs = args.at(0), shift = args.at(1), value = args.at(2),
+                  mask = args.at(3);
 
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Register parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
     if(!shift.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Shift parameter should be of number type, got " +
-                shift.objectType()
-        );
+                shift.objectType());
 
     if(!value.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Value parameter should be of number type, got " +
-                value.objectType()
-        );
+                value.objectType());
 
     if(!mask.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Mask parameter should be of number type, got " +
-                mask.objectType()
-        );
+                mask.objectType());
 
     double adrval = adrs.getNumber();
     auto addr = reinterpret_cast<volatile uint32_t*>(
-        *reinterpret_cast<uintptr_t*>(&adrval)
-    );
+        *reinterpret_cast<uintptr_t*>(&adrval));
 
-    reg_write_field(
-        addr,
-        static_cast<uint32_t>(mask.getNumber()),
-        static_cast<uint32_t>(shift.getNumber()),
-        static_cast<uint32_t>(value.getNumber())
-    );
+    reg_write_field(addr, static_cast<uint32_t>(mask.getNumber()),
+                    static_cast<uint32_t>(shift.getNumber()),
+                    static_cast<uint32_t>(value.getNumber()));
 
     return {};
 }
@@ -541,21 +437,16 @@ RHEA_FUNC(unsafe_setCpuAffinity) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject id = args.at(0);
     if(!id.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "CPU ID parameter should be of number type, got " +
-                id.objectType()
-        );
+                id.objectType());
 
-    set_cpu_affinity(
-        static_cast<int>(id.getNumber())
-    );
+    set_cpu_affinity(static_cast<int>(id.getNumber()));
     return {};
 }
 
@@ -564,23 +455,17 @@ RHEA_FUNC(unsafe_portRead8) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject adrs = args.at(0);
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Address parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
-    return DynamicObject(
-        static_cast<double>(port_read8(
-            static_cast<uint16_t>(adrs.getNumber())
-        ))
-    );
+    return DynamicObject(static_cast<double>(
+        port_read8(static_cast<uint16_t>(adrs.getNumber()))));
 }
 
 RHEA_FUNC(unsafe_portRead16) {
@@ -588,23 +473,17 @@ RHEA_FUNC(unsafe_portRead16) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject adrs = args.at(0);
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Address parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
-    return DynamicObject(
-        static_cast<double>(port_read16(
-            static_cast<uint16_t>(adrs.getNumber())
-        ))
-    );
+    return DynamicObject(static_cast<double>(
+        port_read16(static_cast<uint16_t>(adrs.getNumber()))));
 }
 
 RHEA_FUNC(unsafe_portRead32) {
@@ -612,23 +491,17 @@ RHEA_FUNC(unsafe_portRead32) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject adrs = args.at(0);
     if(!adrs.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Address parameter should be of number type, got " +
-                adrs.objectType()
-        );
+                adrs.objectType());
 
-    return DynamicObject(
-        static_cast<double>(port_read32(
-            static_cast<uint16_t>(adrs.getNumber())
-        ))
-    );
+    return DynamicObject(static_cast<double>(
+        port_read32(static_cast<uint16_t>(adrs.getNumber()))));
 }
 
 RHEA_FUNC(unsafe_portWrite8) {
@@ -636,31 +509,24 @@ RHEA_FUNC(unsafe_portWrite8) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject port = args.at(0),
-        value = args.at(1);
+    DynamicObject port = args.at(0), value = args.at(1);
 
     if(!port.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Port parameter should be of number type, got " +
-                port.objectType()
-        );
+                port.objectType());
 
     if(!value.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Value parameter should be of number type, got " +
-                value.objectType()
-        );
+                value.objectType());
 
-    port_write8(
-        static_cast<uint16_t>(port.getNumber()),
-        static_cast<uint8_t>(value.getNumber())
-    );
+    port_write8(static_cast<uint16_t>(port.getNumber()),
+                static_cast<uint8_t>(value.getNumber()));
     return {};
 }
 
@@ -669,31 +535,24 @@ RHEA_FUNC(unsafe_portWrite16) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject port = args.at(0),
-        value = args.at(1);
+    DynamicObject port = args.at(0), value = args.at(1);
 
     if(!port.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Port parameter should be of number type, got " +
-                port.objectType()
-        );
+                port.objectType());
 
     if(!value.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Value parameter should be of number type, got " +
-                value.objectType()
-        );
+                value.objectType());
 
-    port_write16(
-        static_cast<uint16_t>(port.getNumber()),
-        static_cast<uint16_t>(value.getNumber())
-    );
+    port_write16(static_cast<uint16_t>(port.getNumber()),
+                 static_cast<uint16_t>(value.getNumber()));
     return {};
 }
 
@@ -702,31 +561,24 @@ RHEA_FUNC(unsafe_portWrite32) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject port = args.at(0),
-        value = args.at(1);
+    DynamicObject port = args.at(0), value = args.at(1);
 
     if(!port.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Port parameter should be of number type, got " +
-                port.objectType()
-        );
+                port.objectType());
 
     if(!value.isNumber())
         throw TerminativeThrowSignal(
             std::move(address),
             "Value parameter should be of number type, got " +
-                value.objectType()
-        );
+                value.objectType());
 
-    port_write32(
-        static_cast<uint16_t>(port.getNumber()),
-        static_cast<uint32_t>(value.getNumber())
-    );
+    port_write32(static_cast<uint16_t>(port.getNumber()),
+                 static_cast<uint32_t>(value.getNumber()));
     return {};
 }
 
@@ -735,55 +587,38 @@ RHEA_FUNC(unsafe_inject) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject bytes = args.at(0),
-        value = args.at(1);
+    DynamicObject bytes = args.at(0), value = args.at(1);
 
     TerminativeThrowSignal notBytes(
         std::move(address),
         "Bytes parameter should be of number array type, got " +
-            bytes.objectType()
-    );
+            bytes.objectType());
 
-    if(!bytes.isArray())
-        throw notBytes;
+    if(!bytes.isArray()) throw notBytes;
 
     std::vector<uint8_t> instBytes;
     for(const DynamicObject& obj : *bytes.getArray()) {
-        if(!obj.isNumber())
-            throw notBytes;
+        if(!obj.isNumber()) throw notBytes;
 
-        instBytes.emplace_back(
-            static_cast<uint8_t>(obj.getNumber())
-        );
+        instBytes.emplace_back(static_cast<uint8_t>(obj.getNumber()));
     }
 
     const std::string outType = value.toString();
     size_t instSize = instBytes.size();
     auto instructions = std::make_unique<uint8_t[]>(instSize);
 
-    std::copy(
-        instBytes.begin(),
-        instBytes.end(),
-        instructions.get()
-    );
+    std::copy(instBytes.begin(), instBytes.end(), instructions.get());
 
     if(outType == "string")
         return DynamicObject(std::string(
-            static_cast<const char*>(
-                static_cast<const void*>(
-                    execute_buffer<uint8_t*>(instructions.get(), instSize)
-                )
-            ),
-            instSize
-        ));
+            static_cast<const char*>(static_cast<const void*>(
+                execute_buffer<uint8_t*>(instructions.get(), instSize))),
+            instSize));
     else if(outType == "number")
         return DynamicObject(static_cast<double>(
-            execute_buffer<double>(instructions.get(), instSize)
-        ));
+            execute_buffer<double>(instructions.get(), instSize)));
     else if(outType == "unit")
         execute_buffer<double>(instructions.get(), instSize);
 

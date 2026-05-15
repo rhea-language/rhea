@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
  * This file is part of Rhea.
- * 
+ *
  * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -20,33 +20,28 @@
 #define RHEA_UTIL_PATH_HELPER_HPP
 
 #include <rhea/util/SemVer.hpp>
-
 #include <string>
 #include <vector>
 
 namespace RheaUtil {
 
 class PathHelper {
-private:
-    #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+   private:
+#if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
     static std::string wstring2Utf8(const std::wstring& wstr);
-    #endif
+#endif
 
-public:
+   public:
     static std::string installationPath();
     static std::string findSharedLibrary(std::string name);
 
-    static bool isLibraryInstalled(
-        std::string libraryName,
-        std::string libraryVersion
-    );
+    static bool isLibraryInstalled(std::string libraryName,
+                                   std::string libraryVersion);
 
-    static std::vector<std::string> getLibraryFiles(
-        std::string libraryName,
-        std::string libraryVersion
-    );
+    static std::vector<std::string> getLibraryFiles(std::string libraryName,
+                                                    std::string libraryVersion);
 };
 
-}
+}  // namespace RheaUtil
 
 #endif

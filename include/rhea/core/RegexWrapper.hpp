@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
  * This file is part of Rhea.
- * 
+ *
  * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -21,17 +21,24 @@
 
 #include <memory>
 #include <regex>
+#include <stdexcept>
 #include <string>
 
 class RegexWrapper final {
-private:
+   private:
     std::string pattern;
     std::shared_ptr<std::regex> regex;
 
-public:
-    RegexWrapper(const std::string _pattern) :
-        pattern(std::move(_pattern)),
-        regex(std::make_shared<std::regex>(this->pattern)) {}
+   public:
+    RegexWrapper(const std::string _pattern)
+        : pattern(std::move(_pattern)), regex(nullptr) {
+        try {
+            regex = std::make_shared<std::regex>(this->pattern);
+        } catch(const std::regex_error& e) {
+            throw std::runtime_error("Invalid regular expression pattern '" +
+                                     this->pattern + "': " + e.what());
+        }
+    }
 
     const std::string& getPattern() const;
     const std::regex& getRegex() const;

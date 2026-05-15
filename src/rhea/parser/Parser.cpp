@@ -1,21 +1,22 @@
 /*
-* Copyright (c) 2024 - Nathanne Isip
-* This file is part of Rhea.
-* 
-* Rhea is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published
-* by the Free Software Foundation, either version 3 of the License,
-* or (at your option) any later version.
-* 
-* Rhea is distributed in the hope that it will be useful, but
-* WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-* 
-* You should have received a copy of the GNU General Public License
-* along with Rhea. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * Copyright (c) 2024 - Nathanne Isip
+ * This file is part of Rhea.
+ *
+ * Rhea is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Rhea is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
+ */
 
+#include <memory>
 #include <rhea/ast/ASTNode.hpp>
 #include <rhea/ast/expression/ArrayAccessExpression.hpp>
 #include <rhea/ast/expression/ArrayExpression.hpp>
@@ -46,7 +47,6 @@
 #include <rhea/ast/expression/VariableDeclarationExpression.hpp>
 #include <rhea/ast/expression/WhenExpression.hpp>
 #include <rhea/ast/expression/WhileExpression.hpp>
-
 #include <rhea/ast/statement/BreakStatement.hpp>
 #include <rhea/ast/statement/ContinueStatement.hpp>
 #include <rhea/ast/statement/DeleteStatement.hpp>
@@ -59,18 +59,13 @@
 #include <rhea/ast/statement/ThrowStatement.hpp>
 #include <rhea/ast/statement/UseStatement.hpp>
 #include <rhea/ast/statement/WaitStatement.hpp>
-
 #include <rhea/core/Runtime.hpp>
 #include <rhea/core/SymbolTable.hpp>
-
 #include <rhea/parser/Parser.hpp>
 #include <rhea/parser/ParserException.hpp>
 #include <rhea/parser/Token.hpp>
 #include <rhea/parser/Tokenizer.hpp>
-
 #include <rhea/util/Convert.hpp>
-
-#include <memory>
 #include <stdexcept>
 #include <vector>
 
@@ -90,53 +85,43 @@ void Parser::advance() {
 }
 
 Token Parser::previous() {
-    if(this->index > 1)
-        return this->tokens[(size_t) this->index - 1];
+    if(this->index > 1) return this->tokens[(size_t)this->index - 1];
 
     return this->tokens[0];
 }
 
 Token Parser::peek() {
     if(this->isAtEnd())
-        throw ParserException(
-            std::make_shared<Token>(this->previous()),
-            "Encountered end-of-file."
-        );
+        throw ParserException(std::make_shared<Token>(this->previous()),
+                              "Encountered end-of-file.");
 
-    return this->tokens[(size_t) this->index];
+    return this->tokens[(size_t)this->index];
 }
 
 bool Parser::isNext(const std::string& image, TokenCategory type) {
-    if(this->isAtEnd())
-        return false;
+    if(this->isAtEnd()) return false;
 
     Token next = this->peek();
-    return next.getImage() == image &&
-        next.getType() == type;
+    return next.getImage() == image && next.getType() == type;
 }
 
 Token Parser::current() {
-    if(this->index >= (int) this->tokens.size())
-        return this->previous();
+    if(this->index >= (int)this->tokens.size()) return this->previous();
 
-    return this->tokens[(size_t) this->index];
+    return this->tokens[(size_t)this->index];
 }
 
 Token Parser::consume(const std::string& image) {
     if(this->isAtEnd())
         throw ParserException(
             std::make_shared<Token>(this->previous()),
-            "Expecting \"" + image +
-                "\", encountered end-of-code."
-        );
+            "Expecting \"" + image + "\", encountered end-of-code.");
 
     Token token = this->peek();
     if(token.getImage() != image)
-        throw ParserException(
-            std::make_shared<Token>(this->previous()),
-            "Expecting \"" + image +
-                "\", encountered \"" + token.getImage() + "\""
-        );
+        throw ParserException(std::make_shared<Token>(this->previous()),
+                              "Expecting \"" + image + "\", encountered \"" +
+                                  token.getImage() + "\"");
 
     this->advance();
     return token;
@@ -144,18 +129,15 @@ Token Parser::consume(const std::string& image) {
 
 Token Parser::consume(TokenCategory type) {
     if(this->isAtEnd())
-        throw ParserException(
-            std::make_shared<Token>(this->previous()),
-            "Expecting token type, encountered end-of-code."
-        );
+        throw ParserException(std::make_shared<Token>(this->previous()),
+                              "Expecting token type, encountered end-of-code.");
 
     Token token = this->peek();
     if(token.getType() != type)
-        throw ParserException(
-            std::make_shared<Token>(this->current()),
-            "Expecting " + tokenTypeToString(type) +
-                ", encountered " + tokenTypeToString(token.getType())
-        );
+        throw ParserException(std::make_shared<Token>(this->current()),
+                              "Expecting " + tokenTypeToString(type) +
+                                  ", encountered " +
+                                  tokenTypeToString(token.getType()));
 
     this->advance();
     return token;
@@ -167,15 +149,14 @@ Token Parser::getIdentifier() {
         this->consume(".");
 
         token.appendToImage(
-            "." + this->consume(TokenCategory::IDENTIFIER)
-                .getImage()
-        );
+            "." + this->consume(TokenCategory::IDENTIFIER).getImage());
     }
 
     return token;
 }
 
-const std::vector<std::shared_ptr<ASTNode>>& Parser::getGlobalStatements() const {
+const std::vector<std::shared_ptr<ASTNode>>& Parser::getGlobalStatements()
+    const {
     return this->globalStatements;
 }
 
@@ -184,17 +165,14 @@ std::shared_ptr<ASTNode> Parser::exprArray() {
     std::vector<std::shared_ptr<ASTNode>> expressions;
 
     while(!this->isNext("]", TokenCategory::OPERATOR)) {
-        if(!expressions.empty())
-            this->consume(",");
+        if(!expressions.empty()) this->consume(",");
 
         expressions.push_back(this->expression());
     }
 
     this->consume("]");
-    return std::make_shared<ArrayExpression>(
-        std::make_shared<Token>(address),
-        std::move(expressions)
-    );
+    return std::make_shared<ArrayExpression>(std::make_shared<Token>(address),
+                                             std::move(expressions));
 }
 
 std::shared_ptr<ASTNode> Parser::exprBlock() {
@@ -207,10 +185,8 @@ std::shared_ptr<ASTNode> Parser::exprBlock() {
     }
     this->consume("}");
 
-    return std::make_shared<BlockExpression>(
-        std::make_shared<Token>(address),
-        std::move(statements)
-    );
+    return std::make_shared<BlockExpression>(std::make_shared<Token>(address),
+                                             std::move(statements));
 }
 
 std::shared_ptr<ASTNode> Parser::exprCatchHandle() {
@@ -228,12 +204,9 @@ std::shared_ptr<ASTNode> Parser::exprCatchHandle() {
     }
 
     return std::make_shared<CatchHandleExpression>(
-        std::make_shared<Token>(address),
-        std::move(catchExpr),
-        std::move(handleExpr),
-        std::make_shared<Token>(handler),
-        std::move(finalExpr)
-    );
+        std::make_shared<Token>(address), std::move(catchExpr),
+        std::move(handleExpr), std::make_shared<Token>(handler),
+        std::move(finalExpr));
 }
 
 std::shared_ptr<ASTNode> Parser::exprFunctionDecl() {
@@ -242,23 +215,16 @@ std::shared_ptr<ASTNode> Parser::exprFunctionDecl() {
 
     std::vector<std::shared_ptr<Token>> parameters;
     while(!this->isNext(")", TokenCategory::OPERATOR)) {
-        if(!parameters.empty())
-            this->consume(",");
+        if(!parameters.empty()) this->consume(",");
 
-        parameters.push_back(
-            std::make_shared<Token>(
-                this->getIdentifier()
-            )
-        );
+        parameters.push_back(std::make_shared<Token>(this->getIdentifier()));
     }
     this->consume(")");
 
     std::shared_ptr<ASTNode> body = this->expression();
     return std::make_shared<FunctionDeclarationExpression>(
-        std::make_shared<Token>(address),
-        std::move(parameters),
-        std::move(body)
-    );
+        std::make_shared<Token>(address), std::move(parameters),
+        std::move(body));
 }
 
 std::shared_ptr<ASTNode> Parser::exprLoop() {
@@ -277,22 +243,15 @@ std::shared_ptr<ASTNode> Parser::exprLoop() {
 
         std::shared_ptr<ASTNode> body = this->expression();
         return std::make_shared<LoopExpression>(
-            std::make_shared<Token>(address),
-            std::move(initial),
-            std::move(condition),
-            std::move(postexpr),
-            std::move(body)
-        );
+            std::make_shared<Token>(address), std::move(initial),
+            std::move(condition), std::move(postexpr), std::move(body));
     }
 
     return std::make_shared<WhileExpression>(
         std::make_shared<Token>(address),
         std::make_shared<BooleanLiteralExpression>(
-            std::make_shared<Token>(address),
-            true
-        ),
-        this->expression()
-    );
+            std::make_shared<Token>(address), true),
+        this->expression());
 }
 
 std::shared_ptr<ASTNode> Parser::exprIf() {
@@ -311,11 +270,8 @@ std::shared_ptr<ASTNode> Parser::exprIf() {
     }
 
     return std::make_shared<IfElseExpression>(
-        std::make_shared<Token>(address),
-        std::move(condition),
-        std::move(thenExpr),
-        std::move(elseExpr)
-    );
+        std::make_shared<Token>(address), std::move(condition),
+        std::move(thenExpr), std::move(elseExpr));
 }
 
 std::shared_ptr<ASTNode> Parser::exprLiteral() {
@@ -323,50 +279,39 @@ std::shared_ptr<ASTNode> Parser::exprLiteral() {
 
     if(this->isNext("true", TokenCategory::KEYWORD))
         expr = std::make_shared<BooleanLiteralExpression>(
-            std::make_shared<Token>(this->consume("true")),
-            true
-        );
+            std::make_shared<Token>(this->consume("true")), true);
     else if(this->isNext("false", TokenCategory::KEYWORD))
         expr = std::make_shared<BooleanLiteralExpression>(
-            std::make_shared<Token>(this->consume("false")),
-            false
-        );
+            std::make_shared<Token>(this->consume("false")), false);
     else if(this->isNext("maybe", TokenCategory::KEYWORD))
         expr = std::make_shared<MaybeExpression>(
-            std::make_shared<Token>(this->consume("maybe"))
-        );
+            std::make_shared<Token>(this->consume("maybe")));
     else if(this->isNext("nil", TokenCategory::KEYWORD))
         expr = std::make_shared<NilLiteralExpression>(
-            std::make_shared<Token>(this->consume("nil"))
-        );
-    else if(!this->isAtEnd() && this->peek().getType() == TokenCategory::STRING) {
+            std::make_shared<Token>(this->consume("nil")));
+    else if(!this->isAtEnd() &&
+            this->peek().getType() == TokenCategory::STRING) {
         Token stringToken = this->consume(TokenCategory::STRING);
         expr = std::make_shared<StringLiteralExpression>(
-            std::make_shared<Token>(stringToken),
-            stringToken.getImage()
-        );
-    }
-    else if(!this->isAtEnd() && this->peek().getType() == TokenCategory::DIGIT) {
+            std::make_shared<Token>(stringToken), stringToken.getImage());
+    } else if(!this->isAtEnd() &&
+              this->peek().getType() == TokenCategory::DIGIT) {
         Token digitToken = this->consume(TokenCategory::DIGIT);
         expr = std::make_shared<NumberLiteralExpression>(
             std::make_shared<Token>(digitToken),
-            RheaUtil::Convert::translateDigit(digitToken.getImage())
-        );
-    }
-    else if(!this->isAtEnd() && this->peek().getType() == TokenCategory::REGEX) {
+            RheaUtil::Convert::translateDigit(digitToken.getImage()));
+    } else if(!this->isAtEnd() &&
+              this->peek().getType() == TokenCategory::REGEX) {
         Token regexToken = this->consume(TokenCategory::REGEX);
         std::string regExpression(regexToken.getImage());
 
         expr = std::make_shared<RegexExpression>(
-            std::make_shared<Token>(regexToken),
-            regExpression
-        );
-    }
-    else if(!this->isAtEnd() && this->peek().getType() == TokenCategory::IDENTIFIER) {
+            std::make_shared<Token>(regexToken), regExpression);
+    } else if(!this->isAtEnd() &&
+              this->peek().getType() == TokenCategory::IDENTIFIER) {
         Token var = this->getIdentifier();
         expr = std::make_shared<VariableAccessExpression>(
-            std::make_shared<Token>(var)
-        );
+            std::make_shared<Token>(var));
 
         while(this->isNext("[", TokenCategory::OPERATOR)) {
             Token address = this->consume("[");
@@ -374,10 +319,8 @@ std::shared_ptr<ASTNode> Parser::exprLiteral() {
 
             this->consume("]");
             expr = std::make_shared<ArrayAccessExpression>(
-                std::make_shared<Token>(address),
-                std::move(expr),
-                std::move(indexExpr)
-            );
+                std::make_shared<Token>(address), std::move(expr),
+                std::move(indexExpr));
         }
     }
 
@@ -385,9 +328,7 @@ std::shared_ptr<ASTNode> Parser::exprLiteral() {
         auto address = this->current();
         throw ParserException(
             std::make_shared<Token>(address),
-            "Expecting expression, encountered " +
-                address.getImage()
-        );
+            "Expecting expression, encountered " + address.getImage());
     }
 
     return expr;
@@ -403,11 +344,9 @@ std::shared_ptr<ASTNode> Parser::exprRandom() {
         elseExpr = this->expression();
     }
 
-    return std::make_shared<RandomExpression>(
-        std::make_shared<Token>(address),
-        std::move(thenExpr),
-        std::move(elseExpr)
-    );
+    return std::make_shared<RandomExpression>(std::make_shared<Token>(address),
+                                              std::move(thenExpr),
+                                              std::move(elseExpr));
 }
 
 std::shared_ptr<ASTNode> Parser::exprParallel() {
@@ -415,9 +354,7 @@ std::shared_ptr<ASTNode> Parser::exprParallel() {
     std::shared_ptr<ASTNode> expression = this->expression();
 
     return std::make_shared<ParallelExpression>(
-        std::make_shared<Token>(address),
-        std::move(expression)
-    );
+        std::make_shared<Token>(address), std::move(expression));
 }
 
 std::shared_ptr<ASTNode> Parser::exprRender() {
@@ -435,12 +372,9 @@ std::shared_ptr<ASTNode> Parser::exprRender() {
     }
 
     std::shared_ptr<ASTNode> expression = this->expression();
-    return std::make_shared<RenderExpression>(
-        std::make_shared<Token>(address),
-        newLine,
-        errorStream,
-        std::move(expression)
-    );
+    return std::make_shared<RenderExpression>(std::make_shared<Token>(address),
+                                              newLine, errorStream,
+                                              std::move(expression));
 }
 
 std::shared_ptr<ASTNode> Parser::exprSingleStatement() {
@@ -448,19 +382,15 @@ std::shared_ptr<ASTNode> Parser::exprSingleStatement() {
     std::shared_ptr<ASTNode> stmt = this->statement();
 
     return std::make_shared<SingleStatementExpression>(
-        std::make_shared<Token>(address),
-        std::move(stmt)
-    );
+        std::make_shared<Token>(address), std::move(stmt));
 }
 
 std::shared_ptr<ASTNode> Parser::exprSize() {
     Token address = this->consume("size");
     std::shared_ptr<ASTNode> expression = this->expression();
 
-    return std::make_shared<SizeExpression>(
-        std::make_shared<Token>(address),
-        std::move(expression)
-    );
+    return std::make_shared<SizeExpression>(std::make_shared<Token>(address),
+                                            std::move(expression));
 }
 
 std::shared_ptr<ASTNode> Parser::exprLock() {
@@ -471,21 +401,17 @@ std::shared_ptr<ASTNode> Parser::exprLock() {
     this->consume(")");
 
     std::shared_ptr<ASTNode> expression = this->expression();
-    return std::make_shared<LockExpression>(
-        std::make_shared<Token>(address),
-        std::make_shared<Token>(variable),
-        std::move(expression)
-    );
+    return std::make_shared<LockExpression>(std::make_shared<Token>(address),
+                                            std::make_shared<Token>(variable),
+                                            std::move(expression));
 }
 
 std::shared_ptr<ASTNode> Parser::exprType() {
     Token address = this->consume("type");
     std::shared_ptr<ASTNode> expression = this->expression();
 
-    return std::make_shared<TypeExpression>(
-        std::make_shared<Token>(address),
-        std::move(expression)
-    );
+    return std::make_shared<TypeExpression>(std::make_shared<Token>(address),
+                                            std::move(expression));
 }
 
 std::shared_ptr<ASTNode> Parser::exprUnless() {
@@ -504,11 +430,8 @@ std::shared_ptr<ASTNode> Parser::exprUnless() {
     }
 
     return std::make_shared<UnlessExpression>(
-        std::make_shared<Token>(address),
-        std::move(condition),
-        std::move(thenExpr),
-        std::move(elseExpr)
-    );
+        std::make_shared<Token>(address), std::move(condition),
+        std::move(thenExpr), std::move(elseExpr));
 }
 
 std::shared_ptr<ASTNode> Parser::exprWhen() {
@@ -519,12 +442,12 @@ std::shared_ptr<ASTNode> Parser::exprWhen() {
     this->consume(")");
     this->consume("{");
 
-    std::vector<std::pair<std::shared_ptr<ASTNode>, std::shared_ptr<ASTNode>>> cases;
+    std::vector<std::pair<std::shared_ptr<ASTNode>, std::shared_ptr<ASTNode>>>
+        cases;
     std::shared_ptr<ASTNode> defaultCase = nullptr;
 
     while(!this->isNext("}", TokenCategory::OPERATOR)) {
-        if(!cases.empty())
-            this->consume(",");
+        if(!cases.empty()) this->consume(",");
 
         if(this->isNext("if", TokenCategory::KEYWORD)) {
             this->consume("if");
@@ -534,17 +457,13 @@ std::shared_ptr<ASTNode> Parser::exprWhen() {
             this->consume(")");
 
             std::shared_ptr<ASTNode> thenBlock = this->expression();
-            cases.push_back(std::make_pair(
-                std::move(caseExpr),
-                std::move(thenBlock)
-            ));
-        }
-        else if(this->isNext("else", TokenCategory::KEYWORD)) {
+            cases.push_back(
+                std::make_pair(std::move(caseExpr), std::move(thenBlock)));
+        } else if(this->isNext("else", TokenCategory::KEYWORD)) {
             if(defaultCase)
                 throw ParserException(
                     std::make_shared<Token>(address),
-                    "Cannot have more than one (1) else for when expression."
-                );
+                    "Cannot have more than one (1) else for when expression.");
 
             this->consume("else");
             defaultCase = this->expression();
@@ -553,11 +472,8 @@ std::shared_ptr<ASTNode> Parser::exprWhen() {
 
     this->consume("}");
     return std::make_shared<WhenExpression>(
-        std::make_shared<Token>(address),
-        std::move(expression),
-        std::move(cases),
-        std::move(defaultCase)
-    );
+        std::make_shared<Token>(address), std::move(expression),
+        std::move(cases), std::move(defaultCase));
 }
 
 std::shared_ptr<ASTNode> Parser::exprWhile() {
@@ -567,39 +483,30 @@ std::shared_ptr<ASTNode> Parser::exprWhile() {
     std::shared_ptr<ASTNode> condition = this->expression();
     this->consume(")");
 
-    return std::make_shared<WhileExpression>(
-        std::make_shared<Token>(address),
-        std::move(condition),
-        this->expression()
-    );
+    return std::make_shared<WhileExpression>(std::make_shared<Token>(address),
+                                             std::move(condition),
+                                             this->expression());
 }
 
 std::shared_ptr<ASTNode> Parser::exprPrimary() {
     std::shared_ptr<ASTNode> expression = nullptr;
 
     if(this->isNext("+", TokenCategory::OPERATOR) ||
-        this->isNext("-", TokenCategory::OPERATOR) ||
-        this->isNext("~", TokenCategory::OPERATOR) ||
-        this->isNext("!", TokenCategory::OPERATOR)
-    ) {
+       this->isNext("-", TokenCategory::OPERATOR) ||
+       this->isNext("~", TokenCategory::OPERATOR) ||
+       this->isNext("!", TokenCategory::OPERATOR)) {
         Token address = this->consume(TokenCategory::OPERATOR);
         expression = std::make_shared<UnaryExpression>(
-            std::make_shared<Token>(address),
-            std::string(address.getImage()),
-            this->expression()
-        );
-    }
-    else if(this->isNext("(", TokenCategory::OPERATOR)) {
+            std::make_shared<Token>(address), std::string(address.getImage()),
+            this->expression());
+    } else if(this->isNext("(", TokenCategory::OPERATOR)) {
         Token address = this->consume("(");
         std::shared_ptr<ASTNode> innerExpr = this->expression();
 
         expression = std::make_shared<GroupedExpression>(
-            std::make_shared<Token>(address),
-            std::move(innerExpr)
-        );
+            std::make_shared<Token>(address), std::move(innerExpr));
         this->consume(")");
-    }
-    else if(this->isNext("@", TokenCategory::OPERATOR))
+    } else if(this->isNext("@", TokenCategory::OPERATOR))
         expression = this->exprSingleStatement();
     else if(this->isNext("{", TokenCategory::OPERATOR))
         expression = this->exprBlock();
@@ -633,31 +540,29 @@ std::shared_ptr<ASTNode> Parser::exprPrimary() {
         expression = this->exprVal();
     else if(this->isNext("[", TokenCategory::OPERATOR))
         expression = this->exprArray();
-    else if(!this->isAtEnd() && this->peek().getType() == TokenCategory::IDENTIFIER)
+    else if(!this->isAtEnd() &&
+            this->peek().getType() == TokenCategory::IDENTIFIER)
         expression = std::make_shared<VariableAccessExpression>(
-            std::make_shared<Token>(this->getIdentifier())
-        );
-    else expression = this->exprLiteral();
+            std::make_shared<Token>(this->getIdentifier()));
+    else
+        expression = this->exprLiteral();
 
     while(this->isNext("(", TokenCategory::OPERATOR) ||
-        this->isNext("[", TokenCategory::OPERATOR)) {
+          this->isNext("[", TokenCategory::OPERATOR)) {
         while(this->isNext("(", TokenCategory::OPERATOR)) {
             Token address = this->consume("(");
             std::vector<std::shared_ptr<ASTNode>> arguments;
 
             while(!this->isNext(")", TokenCategory::OPERATOR)) {
-                if(!arguments.empty())
-                    this->consume(",");
+                if(!arguments.empty()) this->consume(",");
 
                 arguments.push_back(this->expression());
             }
 
             this->consume(")");
             expression = std::make_shared<FunctionCallExpression>(
-                std::move(expression->getAddress()),
-                std::move(expression),
-                std::move(arguments)
-            );
+                std::move(expression->getAddress()), std::move(expression),
+                std::move(arguments));
         }
 
         while(this->isNext("[", TokenCategory::OPERATOR)) {
@@ -666,10 +571,8 @@ std::shared_ptr<ASTNode> Parser::exprPrimary() {
 
             this->consume("]");
             expression = std::make_shared<ArrayAccessExpression>(
-                std::make_shared<Token>(address),
-                std::move(expression),
-                std::move(indexExpr)
-            );
+                std::make_shared<Token>(address), std::move(expression),
+                std::move(indexExpr));
         }
     }
 
@@ -682,11 +585,8 @@ std::shared_ptr<ASTNode> Parser::exprLogicOr() {
     while(this->isNext("||", TokenCategory::OPERATOR)) {
         Token address = this->consume("||");
         expression = std::make_shared<BinaryExpression>(
-            std::make_shared<Token>(address),
-            std::move(expression),
-            address.getImage(),
-            this->exprLogicAnd()
-        );
+            std::make_shared<Token>(address), std::move(expression),
+            address.getImage(), this->exprLogicAnd());
     }
 
     return expression;
@@ -698,11 +598,8 @@ std::shared_ptr<ASTNode> Parser::exprLogicAnd() {
     while(this->isNext("&&", TokenCategory::OPERATOR)) {
         Token address = this->consume("&&");
         expression = std::make_shared<BinaryExpression>(
-            std::make_shared<Token>(address),
-            std::move(expression),
-            address.getImage(),
-            this->exprBitwiseOr()
-        );
+            std::make_shared<Token>(address), std::move(expression),
+            address.getImage(), this->exprBitwiseOr());
     }
 
     return expression;
@@ -712,14 +609,11 @@ std::shared_ptr<ASTNode> Parser::exprBitwiseOr() {
     std::shared_ptr<ASTNode> expression = this->exprBitwiseXor();
 
     while(this->isNext("|", TokenCategory::OPERATOR) ||
-        this->isNext(".|", TokenCategory::OPERATOR)) {
+          this->isNext(".|", TokenCategory::OPERATOR)) {
         Token address = this->consume(TokenCategory::OPERATOR);
         expression = std::make_shared<BinaryExpression>(
-            std::make_shared<Token>(address),
-            std::move(expression),
-            address.getImage(),
-            this->exprBitwiseXor()
-        );
+            std::make_shared<Token>(address), std::move(expression),
+            address.getImage(), this->exprBitwiseXor());
     }
 
     return expression;
@@ -729,14 +623,11 @@ std::shared_ptr<ASTNode> Parser::exprBitwiseXor() {
     std::shared_ptr<ASTNode> expression = this->exprBitwiseAnd();
 
     while(this->isNext("^", TokenCategory::OPERATOR) ||
-        this->isNext(".^", TokenCategory::OPERATOR)) {
+          this->isNext(".^", TokenCategory::OPERATOR)) {
         Token address = this->consume(TokenCategory::OPERATOR);
         expression = std::make_shared<BinaryExpression>(
-            std::make_shared<Token>(address),
-            std::move(expression),
-            address.getImage(),
-            this->exprBitwiseAnd()
-        );
+            std::make_shared<Token>(address), std::move(expression),
+            address.getImage(), this->exprBitwiseAnd());
     }
 
     return expression;
@@ -746,14 +637,11 @@ std::shared_ptr<ASTNode> Parser::exprBitwiseAnd() {
     std::shared_ptr<ASTNode> expression = this->exprNilCoalescing();
 
     while(this->isNext("&", TokenCategory::OPERATOR) ||
-        this->isNext(".&", TokenCategory::OPERATOR)) {
+          this->isNext(".&", TokenCategory::OPERATOR)) {
         Token address = this->consume(TokenCategory::OPERATOR);
         expression = std::make_shared<BinaryExpression>(
-            std::make_shared<Token>(address),
-            std::move(expression),
-            address.getImage(),
-            this->exprNilCoalescing()
-        );
+            std::make_shared<Token>(address), std::move(expression),
+            address.getImage(), this->exprNilCoalescing());
     }
 
     return expression;
@@ -765,10 +653,8 @@ std::shared_ptr<ASTNode> Parser::exprNilCoalescing() {
     while(this->isNext("?", TokenCategory::OPERATOR)) {
         Token address = this->consume("?");
         expression = std::make_shared<NilCoalescingExpression>(
-            std::make_shared<Token>(address),
-            std::move(expression),
-            this->exprEquality()
-        );
+            std::make_shared<Token>(address), std::move(expression),
+            this->exprEquality());
     }
 
     return expression;
@@ -778,17 +664,14 @@ std::shared_ptr<ASTNode> Parser::exprEquality() {
     std::shared_ptr<ASTNode> expression = this->exprComparison();
 
     while(this->isNext("==", TokenCategory::OPERATOR) ||
-        this->isNext("!=", TokenCategory::OPERATOR) ||
-        this->isNext("=", TokenCategory::OPERATOR) ||
-        this->isNext("::", TokenCategory::OPERATOR) ||
-        this->isNext("!:", TokenCategory::OPERATOR)) {
+          this->isNext("!=", TokenCategory::OPERATOR) ||
+          this->isNext("=", TokenCategory::OPERATOR) ||
+          this->isNext("::", TokenCategory::OPERATOR) ||
+          this->isNext("!:", TokenCategory::OPERATOR)) {
         Token op = this->consume(TokenCategory::OPERATOR);
         expression = std::make_shared<BinaryExpression>(
-            std::make_shared<Token>(op),
-            std::move(expression),
-            op.getImage(),
-            this->exprComparison()
-        );
+            std::make_shared<Token>(op), std::move(expression), op.getImage(),
+            this->exprComparison());
     }
 
     return expression;
@@ -798,17 +681,13 @@ std::shared_ptr<ASTNode> Parser::exprComparison() {
     std::shared_ptr<ASTNode> expression = this->exprShift();
 
     while(this->isNext("<", TokenCategory::OPERATOR) ||
-        this->isNext("<=", TokenCategory::OPERATOR) ||
-        this->isNext(">", TokenCategory::OPERATOR) ||
-        this->isNext(">=", TokenCategory::OPERATOR)
-    ) {
+          this->isNext("<=", TokenCategory::OPERATOR) ||
+          this->isNext(">", TokenCategory::OPERATOR) ||
+          this->isNext(">=", TokenCategory::OPERATOR)) {
         Token op = this->consume(TokenCategory::OPERATOR);
         expression = std::make_shared<BinaryExpression>(
-            std::make_shared<Token>(op),
-            std::move(expression),
-            op.getImage(),
-            this->exprShift()
-        );
+            std::make_shared<Token>(op), std::move(expression), op.getImage(),
+            this->exprShift());
     }
 
     return expression;
@@ -818,16 +697,13 @@ std::shared_ptr<ASTNode> Parser::exprShift() {
     std::shared_ptr<ASTNode> expression = this->exprTerm();
 
     while(this->isNext("<<", TokenCategory::OPERATOR) ||
-        this->isNext(">>", TokenCategory::OPERATOR) ||
-        this->isNext(".<<", TokenCategory::OPERATOR) ||
-        this->isNext(".>>", TokenCategory::OPERATOR)) {
+          this->isNext(">>", TokenCategory::OPERATOR) ||
+          this->isNext(".<<", TokenCategory::OPERATOR) ||
+          this->isNext(".>>", TokenCategory::OPERATOR)) {
         Token op = this->consume(TokenCategory::OPERATOR);
         expression = std::make_shared<BinaryExpression>(
-            std::make_shared<Token>(op),
-            std::move(expression),
-            op.getImage(),
-            this->exprTerm()
-        );
+            std::make_shared<Token>(op), std::move(expression), op.getImage(),
+            this->exprTerm());
     }
 
     return expression;
@@ -837,16 +713,13 @@ std::shared_ptr<ASTNode> Parser::exprTerm() {
     std::shared_ptr<ASTNode> expression = this->exprFactor();
 
     while(this->isNext("+", TokenCategory::OPERATOR) ||
-        this->isNext("-", TokenCategory::OPERATOR) ||
-        this->isNext(".+", TokenCategory::OPERATOR) ||
-        this->isNext(".-", TokenCategory::OPERATOR)) {
+          this->isNext("-", TokenCategory::OPERATOR) ||
+          this->isNext(".+", TokenCategory::OPERATOR) ||
+          this->isNext(".-", TokenCategory::OPERATOR)) {
         Token op = this->consume(TokenCategory::OPERATOR);
         expression = std::make_shared<BinaryExpression>(
-            std::make_shared<Token>(op),
-            std::move(expression),
-            op.getImage(),
-            this->exprFactor()
-        );
+            std::make_shared<Token>(op), std::move(expression), op.getImage(),
+            this->exprFactor());
     }
 
     return expression;
@@ -856,19 +729,16 @@ std::shared_ptr<ASTNode> Parser::exprFactor() {
     std::shared_ptr<ASTNode> expression = this->exprPrimary();
 
     while(this->isNext("*", TokenCategory::OPERATOR) ||
-        this->isNext("/", TokenCategory::OPERATOR) ||
-        this->isNext("\\", TokenCategory::OPERATOR) ||
-        this->isNext("%", TokenCategory::OPERATOR) ||
-        this->isNext(".*", TokenCategory::OPERATOR) ||
-        this->isNext("./", TokenCategory::OPERATOR) ||
-        this->isNext(".%", TokenCategory::OPERATOR)) {
+          this->isNext("/", TokenCategory::OPERATOR) ||
+          this->isNext("\\", TokenCategory::OPERATOR) ||
+          this->isNext("%", TokenCategory::OPERATOR) ||
+          this->isNext(".*", TokenCategory::OPERATOR) ||
+          this->isNext("./", TokenCategory::OPERATOR) ||
+          this->isNext(".%", TokenCategory::OPERATOR)) {
         Token op = this->consume(TokenCategory::OPERATOR);
         expression = std::make_shared<BinaryExpression>(
-            std::make_shared<Token>(op),
-            std::move(expression),
-            op.getImage(),
-            this->exprPrimary()
-        );
+            std::make_shared<Token>(op), std::move(expression), op.getImage(),
+            this->exprPrimary());
     }
 
     return expression;
@@ -885,13 +755,9 @@ std::shared_ptr<ASTNode> Parser::exprVal() {
         this->consume(")");
     }
 
-    std::map<
-        Token,
-        std::pair<
-            std::vector<std::string>,
-            std::shared_ptr<ASTNode>
-        >
-    > declarations;
+    std::map<Token,
+             std::pair<std::vector<std::string>, std::shared_ptr<ASTNode>>>
+        declarations;
     std::vector<std::string> platform;
 
     if(this->isNext("[", TokenCategory::OPERATOR)) {
@@ -903,15 +769,15 @@ std::shared_ptr<ASTNode> Parser::exprVal() {
 
             if(!this->isNext("]", TokenCategory::OPERATOR))
                 this->consume(",");
-            else break;
+            else
+                break;
         }
 
         this->consume("]");
     }
 
     while(true) {
-        if(!declarations.empty())
-            this->consume(",");
+        if(!declarations.empty()) this->consume(",");
 
         std::shared_ptr<ASTNode> value;
         Token variable = this->getIdentifier();
@@ -919,28 +785,18 @@ std::shared_ptr<ASTNode> Parser::exprVal() {
         if(nativePath == "") {
             this->consume("=");
             value = this->expression();
-        }
-        else value = std::make_shared<NilLiteralExpression>(
-            std::make_shared<Token>(variable)
-        );
+        } else
+            value = std::make_shared<NilLiteralExpression>(
+                std::make_shared<Token>(variable));
 
-        declarations.insert({
-            variable,
-            std::make_pair(
-                platform,
-                std::move(value)
-            )
-        });
+        declarations.insert(
+            {variable, std::make_pair(platform, std::move(value))});
 
-        if(!this->isNext(",", TokenCategory::OPERATOR))
-            break;
+        if(!this->isNext(",", TokenCategory::OPERATOR)) break;
     }
 
     return std::make_shared<VariableDeclarationExpression>(
-        std::make_shared<Token>(address),
-        std::move(declarations),
-        nativePath
-    );
+        std::make_shared<Token>(address), std::move(declarations), nativePath);
 }
 
 std::shared_ptr<ASTNode> Parser::expression() {
@@ -950,90 +806,64 @@ std::shared_ptr<ASTNode> Parser::expression() {
 std::shared_ptr<ASTNode> Parser::stmtBreak() {
     Token address = this->consume("break");
 
-    if(this->isNext(";", TokenCategory::OPERATOR))
-        this->consume(";");
+    if(this->isNext(";", TokenCategory::OPERATOR)) this->consume(";");
 
-    return std::make_shared<BreakStatement>(
-        std::make_shared<Token>(address)
-    );
+    return std::make_shared<BreakStatement>(std::make_shared<Token>(address));
 }
 
 std::shared_ptr<ASTNode> Parser::stmtContinue() {
     Token address = this->consume("continue");
 
-    if(this->isNext(";", TokenCategory::OPERATOR))
-        this->consume(";");
+    if(this->isNext(";", TokenCategory::OPERATOR)) this->consume(";");
 
     return std::make_shared<ContinueStatement>(
-        std::make_shared<Token>(address)
-    );
+        std::make_shared<Token>(address));
 }
 
 std::shared_ptr<ASTNode> Parser::stmtDelete() {
     Token address = this->consume("delete");
     std::vector<std::shared_ptr<Token>> variables;
 
-    variables.push_back(
-        std::make_shared<Token>(
-            this->getIdentifier()
-        )
-    );
+    variables.push_back(std::make_shared<Token>(this->getIdentifier()));
 
     while(this->isNext(",", TokenCategory::OPERATOR)) {
         this->consume(",");
-        variables.push_back(
-            std::make_shared<Token>(
-                this->getIdentifier()
-            )
-        );
+        variables.push_back(std::make_shared<Token>(this->getIdentifier()));
     }
 
-    if(this->isNext(";", TokenCategory::OPERATOR))
-        this->consume(";");
+    if(this->isNext(";", TokenCategory::OPERATOR)) this->consume(";");
 
-    return std::make_shared<DeleteStatement>(
-        std::make_shared<Token>(address),
-        variables
-    );
+    return std::make_shared<DeleteStatement>(std::make_shared<Token>(address),
+                                             variables);
 }
 
 std::shared_ptr<ASTNode> Parser::stmtEnum() {
-    Token address = this->consume("enum"),
-        name = this->getIdentifier();
+    Token address = this->consume("enum"), name = this->getIdentifier();
     this->consume("{");
 
     std::map<std::shared_ptr<Token>, std::shared_ptr<ASTNode>> list;
     while(!this->isAtEnd() && !this->isNext("}", TokenCategory::OPERATOR)) {
-        if(!list.empty())
-            this->consume(",");
+        if(!list.empty()) this->consume(",");
 
         Token item = this->consume(TokenCategory::IDENTIFIER);
         this->consume("=");
 
         std::shared_ptr<ASTNode> expression = this->expression();
-        list.insert({
-            std::make_shared<Token>(item),
-            std::move(expression)
-        });
+        list.insert({std::make_shared<Token>(item), std::move(expression)});
     }
 
     this->consume("}");
-    return std::make_shared<EnumStatement>(
-        std::make_shared<Token>(address),
-        std::make_shared<Token>(name),
-        std::move(list)
-    );
+    return std::make_shared<EnumStatement>(std::make_shared<Token>(address),
+                                           std::make_shared<Token>(name),
+                                           std::move(list));
 }
 
 std::shared_ptr<ASTNode> Parser::stmtHalt() {
     Token address = this->consume("halt");
 
-    if(this->isNext(";", TokenCategory::OPERATOR))
-        this->consume(";");
+    if(this->isNext(";", TokenCategory::OPERATOR)) this->consume(";");
 
-    return std::make_shared<HaltStatement>(
-        std::make_shared<Token>(address)
-    );
+    return std::make_shared<HaltStatement>(std::make_shared<Token>(address));
 }
 
 std::shared_ptr<ASTNode> Parser::stmtImport() {
@@ -1043,13 +873,9 @@ std::shared_ptr<ASTNode> Parser::stmtImport() {
     if(this->peek().getType() == TokenCategory::IDENTIFIER)
         name = this->getIdentifier().getImage();
 
-    std::map<
-        Token,
-        std::pair<
-            std::vector<std::string>,
-            std::shared_ptr<ASTNode>
-        >
-    > declarations;
+    std::map<Token,
+             std::pair<std::vector<std::string>, std::shared_ptr<ASTNode>>>
+        declarations;
     std::vector<std::string> platform;
 
     if(this->isNext("[", TokenCategory::OPERATOR)) {
@@ -1061,7 +887,8 @@ std::shared_ptr<ASTNode> Parser::stmtImport() {
 
             if(!this->isNext("]", TokenCategory::OPERATOR))
                 this->consume(",");
-            else break;
+            else
+                break;
         }
 
         this->consume("]");
@@ -1071,8 +898,7 @@ std::shared_ptr<ASTNode> Parser::stmtImport() {
         this->consume("{");
 
         while(true) {
-            if(!declarations.empty())
-                this->consume(",");
+            if(!declarations.empty()) this->consume(",");
 
             Token variable = this->getIdentifier();
             variable.modifyImage(name + "." + variable.getImage());
@@ -1086,54 +912,41 @@ std::shared_ptr<ASTNode> Parser::stmtImport() {
 
                     if(!this->isNext("]", TokenCategory::OPERATOR))
                         this->consume(",");
-                    else break;
+                    else
+                        break;
                 }
 
                 this->consume("]");
             }
 
-            declarations.insert({
-                variable,
-                std::make_pair(
-                    platform,
-                    std::make_shared<NilLiteralExpression>(
-                        std::make_shared<Token>(variable)
-                    )
-                )
-            });
+            declarations.insert(
+                {variable,
+                 std::make_pair(platform,
+                                std::make_shared<NilLiteralExpression>(
+                                    std::make_shared<Token>(variable)))});
 
-            if(!this->isNext(",", TokenCategory::OPERATOR))
-                break;
+            if(!this->isNext(",", TokenCategory::OPERATOR)) break;
         }
 
         this->consume("}");
-    }
-    else {
+    } else {
         this->consume(":");
 
         Token variable = this->getIdentifier();
-        declarations.insert({
-            variable,
-            std::make_pair(
-                platform,
-                std::make_shared<NilLiteralExpression>(
-                    std::make_shared<Token>(variable)
-                )
-            )
-        });
+        declarations.insert(
+            {variable,
+             std::make_pair(platform, std::make_shared<NilLiteralExpression>(
+                                          std::make_shared<Token>(variable)))});
     }
 
     this->consume("from");
     return std::make_shared<VariableDeclarationExpression>(
-        std::make_shared<Token>(address),
-        std::move(declarations),
-        this->consume(TokenCategory::STRING).getImage()
-    );
+        std::make_shared<Token>(address), std::move(declarations),
+        this->consume(TokenCategory::STRING).getImage());
 }
 
 std::shared_ptr<ASTNode> Parser::stmtMod() {
-    Token address = this->consume("mod"),
-        name = this->getIdentifier();
+    Token address = this->consume("mod"), name = this->getIdentifier();
     this->consume("{");
 
     std::map<std::shared_ptr<Token>, std::shared_ptr<ASTNode>> list;
@@ -1142,44 +955,33 @@ std::shared_ptr<ASTNode> Parser::stmtMod() {
         this->consume(":");
 
         std::shared_ptr<ASTNode> expression = this->expression();
-        list.insert({
-            std::make_shared<Token>(item),
-            std::move(expression)
-        });
+        list.insert({std::make_shared<Token>(item), std::move(expression)});
     }
 
     this->consume("}");
-    return std::make_shared<ModStatement>(
-        std::make_shared<Token>(address),
-        std::make_shared<Token>(name),
-        std::move(list)
-    );
+    return std::make_shared<ModStatement>(std::make_shared<Token>(address),
+                                          std::make_shared<Token>(name),
+                                          std::move(list));
 }
 
 std::shared_ptr<ASTNode> Parser::stmtRet() {
     Token address = this->consume("ret");
     std::shared_ptr<ASTNode> expression = this->expression();
 
-    if(this->isNext(";", TokenCategory::OPERATOR))
-        this->consume(";");
+    if(this->isNext(";", TokenCategory::OPERATOR)) this->consume(";");
 
-    return std::make_shared<ReturnStatement>(
-        std::make_shared<Token>(address),
-        std::move(expression)
-    );        
+    return std::make_shared<ReturnStatement>(std::make_shared<Token>(address),
+                                             std::move(expression));
 }
 
 std::shared_ptr<ASTNode> Parser::stmtThrow() {
     Token address = this->consume("throw");
     std::shared_ptr<ASTNode> expression = this->expression();
 
-    if(this->isNext(";", TokenCategory::OPERATOR))
-        this->consume(";");
+    if(this->isNext(";", TokenCategory::OPERATOR)) this->consume(";");
 
-    return std::make_shared<ThrowStatement>(
-        std::make_shared<Token>(address),
-        std::move(expression)
-    );
+    return std::make_shared<ThrowStatement>(std::make_shared<Token>(address),
+                                            std::move(expression));
 }
 
 std::shared_ptr<ASTNode> Parser::stmtTest() {
@@ -1189,9 +991,9 @@ std::shared_ptr<ASTNode> Parser::stmtTest() {
     std::shared_ptr<ASTNode> testName = this->expression();
     this->consume(")");
 
-    std::shared_ptr<ASTNode> testAssert = std::make_shared<NilLiteralExpression>(
-        std::make_shared<Token>(address)
-    );
+    std::shared_ptr<ASTNode> testAssert =
+        std::make_shared<NilLiteralExpression>(
+            std::make_shared<Token>(address));
     if(this->isNext("if", TokenCategory::KEYWORD)) {
         this->consume("if");
         this->consume("(");
@@ -1202,55 +1004,40 @@ std::shared_ptr<ASTNode> Parser::stmtTest() {
 
     std::shared_ptr<ASTNode> testBody = this->expression();
 
-    if(this->isNext(";", TokenCategory::OPERATOR))
-        this->consume(";");
+    if(this->isNext(";", TokenCategory::OPERATOR)) this->consume(";");
 
     if(Runtime::isTestMode())
         return std::make_shared<TestStatement>(
-            std::make_shared<Token>(address),
-            std::move(testName),
-            std::move(testBody),
-            std::move(testAssert)
-        );
+            std::make_shared<Token>(address), std::move(testName),
+            std::move(testBody), std::move(testAssert));
 
-    return std::make_shared<EmptyStatement>(
-        std::make_shared<Token>(address)
-    );
+    return std::make_shared<EmptyStatement>(std::make_shared<Token>(address));
 }
 
 std::shared_ptr<ASTNode> Parser::stmtUse() {
     Token address = this->consume("use");
-    std::shared_ptr<ASTNode> libName = this->expression(),
-        libVersion = nullptr;
+    std::shared_ptr<ASTNode> libName = this->expression(), libVersion = nullptr;
 
     if(!this->isAtEnd() && this->peek().getImage() == "@") {
         this->consume("@");
         libVersion = this->expression();
-    }
-    else libVersion = std::make_shared<StringLiteralExpression>(
-        std::make_shared<Token>(address),
-        "1.0.0"
-    );
+    } else
+        libVersion = std::make_shared<StringLiteralExpression>(
+            std::make_shared<Token>(address), "1.0.0");
 
-    if(this->isNext(";", TokenCategory::OPERATOR))
-        this->consume(";");
+    if(this->isNext(";", TokenCategory::OPERATOR)) this->consume(";");
 
-    return std::make_shared<UseStatement>(
-        std::make_shared<Token>(address),
-        std::move(libName),
-        std::move(libVersion)
-    );
+    return std::make_shared<UseStatement>(std::make_shared<Token>(address),
+                                          std::move(libName),
+                                          std::move(libVersion));
 }
 
 std::shared_ptr<ASTNode> Parser::stmtWait() {
     Token address = this->consume("wait");
 
-    if(this->isNext(";", TokenCategory::OPERATOR))
-        this->consume(";");
+    if(this->isNext(";", TokenCategory::OPERATOR)) this->consume(";");
 
-    return std::make_shared<WaitStatement>(
-        std::make_shared<Token>(address)
-    );
+    return std::make_shared<WaitStatement>(std::make_shared<Token>(address));
 }
 
 std::shared_ptr<ASTNode> Parser::statement() {
@@ -1280,17 +1067,14 @@ std::shared_ptr<ASTNode> Parser::statement() {
         return this->stmtWait();
     else if(this->isNext(";", TokenCategory::OPERATOR))
         return std::make_shared<EmptyStatement>(
-            std::make_shared<Token>(this->consume(";"))
-        );
+            std::make_shared<Token>(this->consume(";")));
 
     std::shared_ptr<ASTNode> expr = this->expression();
-    if(this->isNext(";", TokenCategory::OPERATOR))
-        this->consume(";");
+    if(this->isNext(";", TokenCategory::OPERATOR)) this->consume(";");
 
     return expr;
 }
 
 void Parser::parse() {
-    while(!this->isAtEnd())
-        this->globalStatements.push_back(this->statement());
+    while(!this->isAtEnd()) this->globalStatements.push_back(this->statement());
 }

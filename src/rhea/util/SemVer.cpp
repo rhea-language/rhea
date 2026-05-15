@@ -1,24 +1,23 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
  * This file is part of Rhea.
- * 
+ *
  * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <rhea/util/SemVer.hpp>
-
 #include <regex>
+#include <rhea/util/SemVer.hpp>
 #include <sstream>
 
 namespace RheaUtil {
@@ -65,12 +64,9 @@ void SemVer::setBuildMetadata(const std::optional<std::string>& value) {
 
 std::string SemVer::toString() const {
     std::ostringstream oss;
-    oss << this->major << "."
-        << this->minor << "."
-        << this->patch;
+    oss << this->major << "." << this->minor << "." << this->patch;
 
-    if(this->preRelease.has_value())
-        oss << "-" << this->preRelease.value();
+    if(this->preRelease.has_value()) oss << "-" << this->preRelease.value();
     if(this->buildMetadata.has_value())
         oss << "+" << this->buildMetadata.value();
 
@@ -78,12 +74,10 @@ std::string SemVer::toString() const {
 }
 
 std::optional<SemVer> SemVer::parse(const std::string& version) {
-    if(!SemVer::validateSemVer(version))
-        return std::nullopt;
+    if(!SemVer::validateSemVer(version)) return std::nullopt;
 
     std::regex semverRegex(
-        R"(^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z\-\.]+))?(?:\+([0-9A-Za-z\-\.]+))?$)"
-    );
+        R"(^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z\-\.]+))?(?:\+([0-9A-Za-z\-\.]+))?$)");
     std::smatch match;
 
     if(std::regex_match(version, match, semverRegex)) {
@@ -92,13 +86,11 @@ std::optional<SemVer> SemVer::parse(const std::string& version) {
         int patch = std::stoi(match[3]);
 
         std::optional<std::string> preRelease =
-            match[4].matched ?
-                std::optional<std::string>(match[4]) :
-                std::nullopt;
+            match[4].matched ? std::optional<std::string>(match[4])
+                             : std::nullopt;
         std::optional<std::string> buildMetadata =
-            match[5].matched ?
-                std::optional<std::string>(match[5]) :
-                std::nullopt;
+            match[5].matched ? std::optional<std::string>(match[5])
+                             : std::nullopt;
 
         return SemVer(major, minor, patch, preRelease, buildMetadata);
     }
@@ -107,9 +99,10 @@ std::optional<SemVer> SemVer::parse(const std::string& version) {
 }
 
 bool SemVer::validateSemVer(const std::string& version) {
-    return std::regex_match(version, std::regex(
-        R"(^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z\-\.]+))?(?:\+([0-9A-Za-z\-\.]+))?$)"
-    ));
+    return std::regex_match(
+        version,
+        std::regex(
+            R"(^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z\-\.]+))?(?:\+([0-9A-Za-z\-\.]+))?$)"));
 }
 
-}
+}  // namespace RheaUtil

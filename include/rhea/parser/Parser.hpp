@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
  * This file is part of Rhea.
- * 
+ *
  * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -19,16 +19,15 @@
 #ifndef RHEA_PARSER_HPP
 #define RHEA_PARSER_HPP
 
+#include <memory>
 #include <rhea/ast/ASTNode.hpp>
 #include <rhea/core/SymbolTable.hpp>
 #include <rhea/parser/Token.hpp>
 #include <rhea/parser/TokenCategory.hpp>
-
-#include <memory>
 #include <vector>
 
 class Parser final {
-private:
+   private:
     std::vector<std::shared_ptr<ASTNode>> globalStatements;
     std::vector<Token> tokens;
     int length;
@@ -93,11 +92,12 @@ private:
     bool isAtEnd() const;
     bool isNext(const std::string& image, TokenCategory type);
 
-public:
-    Parser(const std::vector<Token>& _tokens) :
-        globalStatements{},
-        tokens(_tokens),
-        length(static_cast<int>(_tokens.size())) {}
+   public:
+    Parser(const std::vector<Token>& _tokens)
+        : globalStatements{},
+          tokens(_tokens),
+          length(static_cast<int>(_tokens.size())) {
+    }
 
     const std::vector<std::shared_ptr<ASTNode>>& getGlobalStatements() const;
     void parse();

@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
  * This file is part of Rhea.
- * 
+ *
  * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -19,8 +19,6 @@
 #include "rhea-std/IO.hpp"
 
 #include <Rhea.hpp>
-#include <rhea/ast/TerminativeSignal.hpp>
-
 #include <chrono>
 #include <exception>
 #include <filesystem>
@@ -28,18 +26,21 @@
 #include <iomanip>
 #include <iostream>
 #include <iterator>
+#include <mutex>
+#include <rhea/ast/TerminativeSignal.hpp>
 #include <vector>
 
+static std::mutex ioMtx;
+
 #ifdef _WIN32
-#   include <windows.h>
+#include <windows.h>
 #else
-#   include <sys/stat.h>
-#   include <fcntl.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 #endif
 
 RHEA_FUNC(io_print) {
-    if(args.size() == 0)
-        return {};
+    if(args.size() == 0) return {};
 
     for(size_t i = 0; i < args.size(); i++) {
         DynamicObject arg = args.at(i);
@@ -50,11 +51,11 @@ RHEA_FUNC(io_print) {
 }
 
 RHEA_FUNC(io_printLine) {
-    if(args.size() == 0)
-        return {};
+    if(args.size() == 0) return {};
 
     parsync(size_t i = 0; i < args.size(); i++) {
         DynamicObject arg = args.at(i);
+        std::lock_guard<std::mutex> lock(ioMtx);
         std::cout << arg.toString() << std::endl;
     }
 
@@ -72,7 +73,11 @@ RHEA_FUNC(io_readNumber) {
     std::string str;
     std::getline(std::cin, str);
 
-    return DynamicObject(::atof(str.c_str()));
+    try {
+        return DynamicObject(std::stod(str));
+    } catch(...) {
+        return DynamicObject(0.0);
+    }
 }
 
 RHEA_FUNC(io_readBoolean) {
@@ -80,19 +85,17 @@ RHEA_FUNC(io_readBoolean) {
     std::getline(std::cin, str);
 
     bool boolVal = false;
-    if(str == "true")
-        boolVal = true;
+    if(str == "true") boolVal = true;
 
     return DynamicObject(boolVal);
 }
 
 RHEA_FUNC(io_fileRead) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject fileName = args.at(0);
     std::ifstream file(fileName.toString());
@@ -100,46 +103,44 @@ RHEA_FUNC(io_fileRead) {
 
     if(!file) {
         returnValues.push_back(DynamicObject());
-        returnValues.push_back(
-            DynamicObject("Error: Could not open the file " + fileName.toString())
-        );
+        returnValues.push_back(DynamicObject("Error: Could not open the file " +
+                                             fileName.toString()));
 
-        return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+        return DynamicObject(
+            std::make_shared<std::vector<DynamicObject>>(returnValues));
     }
 
-    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    std::string content((std::istreambuf_iterator<char>(file)),
+                        std::istreambuf_iterator<char>());
     returnValues.push_back(content);
     returnValues.push_back(DynamicObject());
 
-    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
 RHEA_FUNC(io_fileWrite) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject fileName = args.at(0),
-        fileContent = args.at(1);
+    DynamicObject fileName = args.at(0), fileContent = args.at(1);
 
     std::ofstream file(fileName.toString());
-    if(!file)
-        return DynamicObject(false);
+    if(!file) return DynamicObject(false);
 
     file << fileContent.toString();
     return DynamicObject(true);
 }
 
 RHEA_FUNC(io_fileSize) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject fileName = args.at(0);
     std::ifstream file(fileName.toString(), std::ios::binary | std::ios::ate);
@@ -149,50 +150,52 @@ RHEA_FUNC(io_fileSize) {
         returnValues.push_back(DynamicObject(0.0));
         returnValues.push_back(DynamicObject(false));
 
-        return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+        return DynamicObject(
+            std::make_shared<std::vector<DynamicObject>>(returnValues));
     }
 
-    returnValues.push_back(DynamicObject(
-        static_cast<double>(file.tellg())
-    ));
+    returnValues.push_back(DynamicObject(static_cast<double>(file.tellg())));
     returnValues.push_back(DynamicObject(true));
-    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
 RHEA_FUNC(io_filePerms) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject fileName = args.at(0);
     std::vector<DynamicObject> returnValues;
 
-    #ifdef _WIN32
+#ifdef _WIN32
 
     DWORD attributes = GetFileAttributes(fileName.toString().c_str());
     if(attributes == INVALID_FILE_ATTRIBUTES) {
         returnValues.push_back(DynamicObject(0.0));
         returnValues.push_back(DynamicObject("Could not get file attributes"));
 
-        return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+        return DynamicObject(
+            std::make_shared<std::vector<DynamicObject>>(returnValues));
     }
 
     unsigned int permissions = 0;
     if(attributes & FILE_ATTRIBUTE_READONLY)
         permissions |= 0x01;
-    else permissions |= 0x02;
+    else
+        permissions |= 0x02;
 
-    #else
+#else
 
     struct stat fileStat;
     if(stat(fileName.toString().c_str(), &fileStat) != 0) {
         returnValues.push_back(DynamicObject(0.0));
         returnValues.push_back(DynamicObject("Could not get file status"));
 
-        return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+        return DynamicObject(
+            std::make_shared<std::vector<DynamicObject>>(returnValues));
     }
 
     unsigned int permissions = 0;
@@ -206,21 +209,21 @@ RHEA_FUNC(io_filePerms) {
     permissions |= (fileStat.st_mode & S_IWOTH) ? 0x0002 : 0;
     permissions |= (fileStat.st_mode & S_IXOTH) ? 0x0004 : 0;
 
-    #endif
+#endif
 
     returnValues.push_back(DynamicObject(static_cast<double>(permissions)));
     returnValues.push_back(DynamicObject());
 
-    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
 RHEA_FUNC(io_fileCreationDate) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject fileName = args.at(0);
     std::vector<DynamicObject> returnValues;
@@ -229,78 +232,70 @@ RHEA_FUNC(io_fileCreationDate) {
     if(!std::filesystem::exists(filePath)) {
         returnValues.push_back(DynamicObject(0.0));
         returnValues.push_back(DynamicObject("File does not exist"));
-    }
-    else {
+    } else {
         auto creationTime = std::filesystem::last_write_time(filePath);
-        auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(
-            creationTime - std::filesystem::file_time_type::clock::now() + 
-            std::chrono::system_clock::now()
-        );
+        auto sctp =
+            std::chrono::time_point_cast<std::chrono::system_clock::duration>(
+                creationTime - std::filesystem::file_time_type::clock::now() +
+                std::chrono::system_clock::now());
         auto ctime = std::chrono::system_clock::to_time_t(sctp);
 
         returnValues.push_back(DynamicObject(0.0));
-        returnValues.push_back(DynamicObject(
-            static_cast<double>(ctime)
-        ));
+        returnValues.push_back(DynamicObject(static_cast<double>(ctime)));
     }
 
-    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(
-        returnValues
-    ));
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
 RHEA_FUNC(io_fileDelete) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject fileName = args.at(0);
     std::vector<DynamicObject> returnValues;
 
-    #ifdef _WIN32
+#ifdef _WIN32
 
     if(DeleteFile(fileName.toString().c_str())) {
         returnValues.push_back(DynamicObject(true));
         returnValues.push_back(DynamicObject());
-    }
-    else {
+    } else {
         returnValues.push_back(DynamicObject(false));
         returnValues.push_back(DynamicObject("Could not delete file"));
     }
 
-    #else
+#else
 
     struct stat buffer;
     if(stat(fileName.toString().c_str(), &buffer) == 0) {
         if(remove(fileName.toString().c_str()) == 0) {
             returnValues.push_back(DynamicObject(true));
             returnValues.push_back(DynamicObject());
-        }
-        else {
+        } else {
             returnValues.push_back(DynamicObject(false));
             returnValues.push_back(DynamicObject("Could not delete file"));
         }
-    }
-    else {
+    } else {
         returnValues.push_back(DynamicObject(false));
         returnValues.push_back(DynamicObject("File does not exist"));
     }
 
-    #endif
+#endif
 
-    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
 RHEA_FUNC(io_folderCreate) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject folderName = args.at(0);
     std::vector<DynamicObject> returnValues;
@@ -310,29 +305,31 @@ RHEA_FUNC(io_folderCreate) {
         returnValues.push_back(DynamicObject(false));
         returnValues.push_back(DynamicObject("Folder already exists"));
 
-        return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+        return DynamicObject(
+            std::make_shared<std::vector<DynamicObject>>(returnValues));
     }
 
     if(std::filesystem::create_directory(folderPath)) {
         returnValues.push_back(DynamicObject(true));
         returnValues.push_back(DynamicObject());
 
-        return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+        return DynamicObject(
+            std::make_shared<std::vector<DynamicObject>>(returnValues));
     }
 
     returnValues.push_back(DynamicObject(false));
     returnValues.push_back(DynamicObject("Could not create folder"));
 
-    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
 RHEA_FUNC(io_folderSize) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject folderName = args.at(0);
     std::vector<DynamicObject> returnValues;
@@ -342,10 +339,10 @@ RHEA_FUNC(io_folderSize) {
     if(!std::filesystem::exists(path) || !std::filesystem::is_directory(path)) {
         returnValues.push_back(DynamicObject(0.0));
         returnValues.push_back(DynamicObject(
-            "Provided path is not a directory or does not exist"
-        ));
+            "Provided path is not a directory or does not exist"));
 
-        return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+        return DynamicObject(
+            std::make_shared<std::vector<DynamicObject>>(returnValues));
     }
 
     for(const auto& entry : std::filesystem::recursive_directory_iterator(path))
@@ -355,16 +352,16 @@ RHEA_FUNC(io_folderSize) {
     returnValues.push_back(DynamicObject(static_cast<double>(totalSize)));
     returnValues.push_back(DynamicObject());
 
-    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
 RHEA_FUNC(io_folderCreationDate) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject folderName = args.at(0);
     std::vector<DynamicObject> returnValues;
@@ -373,31 +370,28 @@ RHEA_FUNC(io_folderCreationDate) {
     if(!std::filesystem::exists(filePath)) {
         returnValues.push_back(DynamicObject(0.0));
         returnValues.push_back(DynamicObject("File does not exist"));
-    }
-    else {
+    } else {
         auto creationTime = std::filesystem::last_write_time(filePath);
-        auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(
-            creationTime - std::filesystem::file_time_type::clock::now() + 
-            std::chrono::system_clock::now()
-        );
+        auto sctp =
+            std::chrono::time_point_cast<std::chrono::system_clock::duration>(
+                creationTime - std::filesystem::file_time_type::clock::now() +
+                std::chrono::system_clock::now());
         auto ctime = std::chrono::system_clock::to_time_t(sctp);
 
         returnValues.push_back(DynamicObject(0.0));
-        returnValues.push_back(DynamicObject(
-            static_cast<double>(ctime)
-        ));
+        returnValues.push_back(DynamicObject(static_cast<double>(ctime)));
     }
 
-    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
 RHEA_FUNC(io_folderDelete) {
-    if(args.empty() || args.size() >= 2)
+    RHEA_FUNC_REQUIRE_UNSAFE
+    if(args.empty() || args.size() > 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 or 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 or 2 argument, got " + std::to_string(args.size()));
 
     DynamicObject folderName = args.at(0);
     std::vector<DynamicObject> returnValues;
@@ -409,83 +403,75 @@ RHEA_FUNC(io_folderDelete) {
         isRecursize = recArg.booleanEquivalent();
     }
 
-    if(!std::filesystem::exists(filePath) || !std::filesystem::is_directory(filePath))
+    if(!std::filesystem::exists(filePath) ||
+       !std::filesystem::is_directory(filePath))
         return DynamicObject(false);
 
     if(isRecursize)
         std::filesystem::remove_all(filePath);
-    else std::filesystem::remove(filePath);
+    else
+        std::filesystem::remove(filePath);
 
     return DynamicObject(true);
 }
 
 RHEA_FUNC(io_isFile) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject fileName = args.at(0);
     std::filesystem::path filePath(fileName.toString().c_str());
 
-    return DynamicObject(
-        std::filesystem::exists(filePath) &&
-            std::filesystem::is_regular_file(filePath)
-    );
+    return DynamicObject(std::filesystem::exists(filePath) &&
+                         std::filesystem::is_regular_file(filePath));
 }
 
 RHEA_FUNC(io_isFolder) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject fileName = args.at(0);
     std::filesystem::path filePath(fileName.toString().c_str());
 
-    return DynamicObject(
-        std::filesystem::exists(filePath) &&
-            std::filesystem::is_directory(filePath)
-    );
+    return DynamicObject(std::filesystem::exists(filePath) &&
+                         std::filesystem::is_directory(filePath));
 }
 
 RHEA_FUNC(io_listAllFiles) {
+    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject fileName = args.at(0);
     std::filesystem::path dirPath(fileName.toString().c_str());
     std::vector<DynamicObject> returnValues;
 
-    if(!std::filesystem::exists(dirPath) || !std::filesystem::is_directory(dirPath))
+    if(!std::filesystem::exists(dirPath) ||
+       !std::filesystem::is_directory(dirPath))
         return {};
 
     for(const auto& entry : std::filesystem::directory_iterator(dirPath))
-        returnValues.push_back(DynamicObject(
-            entry.path().filename().string()
-        ));
+        returnValues.push_back(DynamicObject(entry.path().filename().string()));
 
-    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(returnValues));
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(returnValues));
 }
 
 RHEA_FUNC(io_exit) {
-    if(args.size() == 0)
-        exit(0);
+    if(args.size() == 0) exit(0);
 
     DynamicObject exitCode = args.at(0);
     if(!exitCode.isNumber())
-        throw TerminativeThrowSignal(
-            std::move(address),
-            "Exit code is not a number."
-        );
+        throw TerminativeThrowSignal(std::move(address),
+                                     "Exit code is not a number.");
 
     exit(static_cast<int>(exitCode.getNumber()));
     return {};

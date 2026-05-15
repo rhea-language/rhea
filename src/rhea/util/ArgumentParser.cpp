@@ -1,26 +1,25 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
  * This file is part of Rhea.
- * 
+ *
  * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include <Rhea.hpp>
-#include <rhea/util/ArgumentParser.hpp>
-
 #include <algorithm>
 #include <iostream>
+#include <rhea/util/ArgumentParser.hpp>
 
 namespace RheaUtil {
 
@@ -35,33 +34,27 @@ ArgumentParser& ArgumentParser::operator=(const ArgumentParser& other) {
     return *this;
 }
 
-void ArgumentParser::defineParameter(
-    const std::string& paramShort,
-    const std::string& paramLong,
-    const std::string& description
-) {
+void ArgumentParser::defineParameter(const std::string& paramShort,
+                                     const std::string& paramLong,
+                                     const std::string& description) {
     this->parameters[paramShort] = paramLong;
     this->descriptions[paramShort] = description;
     this->descriptions[paramLong] = description;
 }
 
 void ArgumentParser::printAllParamWithDesc() const {
-    std::cout << std::endl
-        << "\u001b[32mArguments\u001b[0m: "
-        << std::endl;
+    std::cout << std::endl << "\u001b[32mArguments\u001b[0m: " << std::endl;
 
     for(const auto& entry : parameters)
-        std::cout << "  -" << entry.first
-            << ", --" << entry.second
-            << ": " << this->descriptions.at(entry.first)
-            << std::endl;
+        std::cout << "  -" << entry.first << ", --" << entry.second << ": "
+                  << this->descriptions.at(entry.first) << std::endl;
 }
 
 bool ArgumentParser::hasParameter(const std::string& paramShort) const {
     std::string paramLong = this->parameters.at(paramShort);
     return std::any_of(argValues, argValues + argCount, [&](const char* arg) {
         return arg == std::string("-" + paramShort) ||
-            arg == std::string("--" + paramLong);
+               arg == std::string("--" + paramLong);
     });
 }
 
@@ -78,17 +71,12 @@ std::vector<std::string> ArgumentParser::getInputFiles() const {
         if(arg.rfind("--", 0) == 0) {
             std::string paramLong = arg.substr(2);
             if(std::any_of(
-                this->parameters.begin(),
-                this->parameters.end(), 
-                [&](const auto& pair) {
-                    return pair.second == paramLong;
-                }
-            )) continue;
-        }
-        else if(arg[0] == '-') {
-            std::string paramShort = arg.substr(1);
-            if(this->parameters.count(paramShort) == 1)
+                   this->parameters.begin(), this->parameters.end(),
+                   [&](const auto& pair) { return pair.second == paramLong; }))
                 continue;
+        } else if(arg[0] == '-') {
+            std::string paramShort = arg.substr(1);
+            if(this->parameters.count(paramShort) == 1) continue;
         }
 
         inputFiles.push_back(arg);
@@ -97,4 +85,4 @@ std::vector<std::string> ArgumentParser::getInputFiles() const {
     return inputFiles;
 }
 
-}
+}  // namespace RheaUtil

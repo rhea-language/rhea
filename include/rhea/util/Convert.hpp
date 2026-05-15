@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
  * This file is part of Rhea.
- * 
+ *
  * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -29,13 +29,13 @@
 namespace RheaUtil {
 
 class Convert final {
-public:
+   public:
     static double toDouble(const unsigned char* bytes, size_t length);
     static std::vector<unsigned char> toBytes(double number);
 
     static double translateDigit(const std::string& image);
 
-private:
+   private:
     static void reverse(unsigned char* array, size_t length);
 
     static double parseBinary(const std::string& str);
@@ -44,6 +44,6 @@ private:
     static double parseHex(const std::string& str);
 };
 
-};
+};  // namespace RheaUtil
 
 #endif

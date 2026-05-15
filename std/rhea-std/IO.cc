@@ -91,7 +91,6 @@ RHEA_FUNC(io_readBoolean) {
 }
 
 RHEA_FUNC(io_fileRead) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -120,7 +119,6 @@ RHEA_FUNC(io_fileRead) {
 }
 
 RHEA_FUNC(io_fileWrite) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -136,7 +134,6 @@ RHEA_FUNC(io_fileWrite) {
 }
 
 RHEA_FUNC(io_fileSize) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -161,7 +158,6 @@ RHEA_FUNC(io_fileSize) {
 }
 
 RHEA_FUNC(io_filePerms) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -219,7 +215,6 @@ RHEA_FUNC(io_filePerms) {
 }
 
 RHEA_FUNC(io_fileCreationDate) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -249,7 +244,6 @@ RHEA_FUNC(io_fileCreationDate) {
 }
 
 RHEA_FUNC(io_fileDelete) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -291,7 +285,6 @@ RHEA_FUNC(io_fileDelete) {
 }
 
 RHEA_FUNC(io_folderCreate) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -325,7 +318,6 @@ RHEA_FUNC(io_folderCreate) {
 }
 
 RHEA_FUNC(io_folderSize) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -357,7 +349,6 @@ RHEA_FUNC(io_folderSize) {
 }
 
 RHEA_FUNC(io_folderCreationDate) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -387,7 +378,6 @@ RHEA_FUNC(io_folderCreationDate) {
 }
 
 RHEA_FUNC(io_folderDelete) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.empty() || args.size() > 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -416,7 +406,6 @@ RHEA_FUNC(io_folderDelete) {
 }
 
 RHEA_FUNC(io_isFile) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -430,7 +419,6 @@ RHEA_FUNC(io_isFile) {
 }
 
 RHEA_FUNC(io_isFolder) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -444,7 +432,6 @@ RHEA_FUNC(io_isFolder) {
 }
 
 RHEA_FUNC(io_listAllFiles) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),

@@ -107,19 +107,16 @@ std::pair<bool, std::vector<std::string>> objectArray1DToMap(
 }
 
 RHEA_FUNC(net_init) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     quoneq_net::init();
     return {};
 }
 
 RHEA_FUNC(net_deinit) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     quoneq_net::cleanup();
     return {};
 }
 
 RHEA_FUNC(net_setCaCert) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -130,12 +127,10 @@ RHEA_FUNC(net_setCaCert) {
 }
 
 RHEA_FUNC(net_getCaCert) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     return DynamicObject(quoneq_net::get_ca_cert());
 }
 
 RHEA_FUNC(net_http_get) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() < 1 || args.size() > 6)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -174,7 +169,6 @@ RHEA_FUNC(net_http_get) {
 }
 
 RHEA_FUNC(net_http_post) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() < 1 || args.size() > 8)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -235,7 +229,6 @@ RHEA_FUNC(net_http_post) {
 }
 
 RHEA_FUNC(net_http_ping) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() < 1 || args.size() > 4)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -253,7 +246,6 @@ RHEA_FUNC(net_http_ping) {
 }
 
 RHEA_FUNC(net_http_downloadFile) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() < 2 || args.size() > 9)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -314,7 +306,6 @@ RHEA_FUNC(net_http_downloadFile) {
 }
 
 RHEA_FUNC(net_tor_get) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() < 1 || args.size() > 5)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -352,7 +343,6 @@ RHEA_FUNC(net_tor_get) {
 }
 
 RHEA_FUNC(net_tor_post) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() < 1 || args.size() > 6)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -412,7 +402,6 @@ RHEA_FUNC(net_tor_post) {
 }
 
 RHEA_FUNC(net_tor_ping) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() < 1 || args.size() > 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -429,7 +418,6 @@ RHEA_FUNC(net_tor_ping) {
 }
 
 RHEA_FUNC(net_tor_downloadFile) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() < 2 || args.size() > 8)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -489,7 +477,6 @@ RHEA_FUNC(net_tor_downloadFile) {
 }
 
 RHEA_FUNC(net_tor_isRunning) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 0)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -499,7 +486,6 @@ RHEA_FUNC(net_tor_isRunning) {
 }
 
 RHEA_FUNC(net_smtp_sendMail) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 7)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -525,7 +511,6 @@ RHEA_FUNC(net_smtp_sendMail) {
 }
 
 RHEA_FUNC(net_smtp_sendMailHtml) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 7)
         throw TerminativeThrowSignal(
             std::move(address),

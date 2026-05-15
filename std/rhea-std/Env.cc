@@ -22,7 +22,6 @@
 #include <rhea/ast/TerminativeSignal.hpp>
 
 RHEA_FUNC(env_get) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -34,7 +33,6 @@ RHEA_FUNC(env_get) {
 }
 
 RHEA_FUNC(env_set) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),

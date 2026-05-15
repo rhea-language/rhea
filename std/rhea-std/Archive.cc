@@ -24,7 +24,6 @@
 static std::mutex zipMtx;
 
 RHEA_FUNC(archive_zip_open) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -63,7 +62,6 @@ RHEA_FUNC(archive_zip_open) {
 }
 
 RHEA_FUNC(archive_zip_close) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -88,7 +86,6 @@ RHEA_FUNC(archive_zip_close) {
 }
 
 RHEA_FUNC(archive_zip_compressionMethod) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -114,7 +111,6 @@ RHEA_FUNC(archive_zip_compressionMethod) {
 }
 
 RHEA_FUNC(archive_zip_setPassword) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -133,7 +129,6 @@ RHEA_FUNC(archive_zip_setPassword) {
 }
 
 RHEA_FUNC(archive_zip_setEncryption) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 4)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -169,7 +164,6 @@ RHEA_FUNC(archive_zip_setEncryption) {
 }
 
 RHEA_FUNC(archive_zip_addFromData) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 5)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -259,7 +253,6 @@ RHEA_FUNC(archive_zip_addFromData) {
 }
 
 RHEA_FUNC(archive_zip_addFromFile) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 5)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -327,7 +320,6 @@ RHEA_FUNC(archive_zip_addFromFile) {
 }
 
 RHEA_FUNC(archive_zip_addFromString) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 5)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -405,7 +397,6 @@ RHEA_FUNC(archive_zip_addFromString) {
 }
 
 RHEA_FUNC(archive_zip_deleteFile) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -430,7 +421,6 @@ RHEA_FUNC(archive_zip_deleteFile) {
 }
 
 RHEA_FUNC(archive_zip_deleteDir) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -462,7 +452,6 @@ RHEA_FUNC(archive_zip_deleteDir) {
 }
 
 RHEA_FUNC(archive_zip_getIndex) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -492,7 +481,6 @@ RHEA_FUNC(archive_zip_getIndex) {
 }
 
 RHEA_FUNC(archive_zip_hasFile) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -523,7 +511,6 @@ RHEA_FUNC(archive_zip_hasFile) {
 }
 
 RHEA_FUNC(archive_zip_renameFile) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 4)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -561,7 +548,6 @@ RHEA_FUNC(archive_zip_renameFile) {
 }
 
 RHEA_FUNC(archive_zip_entryCount) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -590,7 +576,6 @@ RHEA_FUNC(archive_zip_entryCount) {
 }
 
 RHEA_FUNC(archive_zip_listEntries) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -631,7 +616,6 @@ RHEA_FUNC(archive_zip_listEntries) {
 }
 
 RHEA_FUNC(archive_zip_setComment) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -655,7 +639,6 @@ RHEA_FUNC(archive_zip_setComment) {
 }
 
 RHEA_FUNC(archive_zip_getComment) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -685,7 +668,6 @@ RHEA_FUNC(archive_zip_getComment) {
 }
 
 RHEA_FUNC(archive_zip_getFileComment) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -722,7 +704,6 @@ RHEA_FUNC(archive_zip_getFileComment) {
 }
 
 RHEA_FUNC(archive_zip_setFileComment) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -753,7 +734,6 @@ RHEA_FUNC(archive_zip_setFileComment) {
 }
 
 RHEA_FUNC(archive_zip_fileDosTime) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 5)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -804,7 +784,6 @@ RHEA_FUNC(archive_zip_fileDosTime) {
 }
 
 RHEA_FUNC(archive_zip_discard) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -827,7 +806,6 @@ RHEA_FUNC(archive_zip_discard) {
 }
 
 RHEA_FUNC(archive_zip_registerProgressCallback) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -881,7 +859,6 @@ RHEA_FUNC(archive_zip_registerProgressCallback) {
 }
 
 RHEA_FUNC(archive_zip_registerCancelCallback) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -926,7 +903,6 @@ RHEA_FUNC(archive_zip_registerCancelCallback) {
 }
 
 RHEA_FUNC(archive_zip_readAsData) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -996,7 +972,6 @@ RHEA_FUNC(archive_zip_readAsData) {
 }
 
 RHEA_FUNC(archive_zip_readAsString) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1060,7 +1035,6 @@ RHEA_FUNC(archive_zip_readAsString) {
 }
 
 RHEA_FUNC(archive_zip_fetchInfo) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1107,7 +1081,6 @@ RHEA_FUNC(archive_zip_fetchInfo) {
 }
 
 RHEA_FUNC(archive_zip_unchange) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1139,7 +1112,6 @@ RHEA_FUNC(archive_zip_unchange) {
 }
 
 RHEA_FUNC(archive_zip_unchangeAll) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
@@ -1161,7 +1133,6 @@ RHEA_FUNC(archive_zip_unchangeAll) {
 }
 
 RHEA_FUNC(archive_zip_unchangeArchive) {
-    RHEA_FUNC_REQUIRE_UNSAFE
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),

@@ -486,7 +486,8 @@ def build_proc():
                     '-Istd', '-shared', '-o', OUTPUT_LIBRARY + '.dylib',
                     '-Wno-deprecated-declarations', '-DGL_SILENCE_DEPRECATION',
                     '-L/opt/homebrew/lib', '-L/opt/homebrew/opt/openssl@3/lib',
-                    '-std=c++23', '-Wno-deprecated-declarations'
+                    '-std=c++23', '-Wno-deprecated-declarations',
+                    '-install_name', '@rpath/core.dylib'
                 ] + ext_instructions + lib_headers + lib_source_files + cpp_files + cc_files + [
                     '-framework', 'OpenGL'
                 ] + linkable_libs

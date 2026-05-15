@@ -1,0 +1,7 @@
+dist/
+lib/
+*.deb
+*.so
+*.dll
+*.dylib
+*.exe

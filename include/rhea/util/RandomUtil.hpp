@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
  * This file is part of Rhea.
- * 
+ *
  * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -22,7 +22,7 @@
 #include <random>
 
 #if defined(__RDRND__) && defined(__RDSEED__)
-#   include <immintrin.h>
+#include <immintrin.h>
 #endif
 
 namespace RheaUtil {
@@ -32,7 +32,7 @@ inline static bool randomBoolValue() {
     thread_local std::mt19937 gen(rd());
     std::uniform_int_distribution<> distrib(0, 1);
 
-    #if defined(__RDRND__) && defined(__RDSEED__)
+#if defined(__RDRND__) && defined(__RDSEED__)
     uint32_t rand, seed, genSeed;
 
     while(_rdrand32_step(&rand) == 0);
@@ -40,7 +40,7 @@ inline static bool randomBoolValue() {
     while(_rdrand32_step(&genSeed) == 0);
 
     gen.seed(genSeed);
-    #endif
+#endif
 
     return distrib(gen) == 1;
 }
@@ -55,11 +55,9 @@ inline static std::string uniqueKey() {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<uint32_t> dis(
-        static_cast<uint32_t>(0),
-        static_cast<uint32_t>(characters.size() - 1)
-    );
+        static_cast<uint32_t>(0), static_cast<uint32_t>(characters.size() - 1));
 
-    #if defined(__RDRND__) && defined(__RDSEED__)
+#if defined(__RDRND__) && defined(__RDSEED__)
     uint32_t rand, seed, genSeed;
 
     while(_rdrand32_step(&rand) == 0);
@@ -67,17 +65,15 @@ inline static std::string uniqueKey() {
     while(_rdrand32_step(&genSeed) == 0);
 
     gen.seed(genSeed);
-    #endif
+#endif
 
-    #pragma omp parallel for
+#pragma omp parallel for
     for(size_t i = 0; i < 8; ++i)
-        randomString += characters[
-            static_cast<uint32_t>(dis(gen))
-        ];
+        randomString += characters[static_cast<uint32_t>(dis(gen))];
 
     return randomString;
 }
 
-};
+};  // namespace RheaUtil
 
 #endif

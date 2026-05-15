@@ -253,7 +253,7 @@ jobs:
           cd rhea
           pwd
           where g++
-          python build.py
+          python tools/build.py
 
       - name: Build WiX project
         shell: pwsh

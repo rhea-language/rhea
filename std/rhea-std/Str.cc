@@ -1,37 +1,33 @@
 /*
  * Copyright (c) 2025 - Nathanne Isip
  * This file is part of Rhea.
- * 
+ *
  * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "rhea-std/Str.hpp"
 
-#include <rhea/ast/TerminativeSignal.hpp>
-
 #include <cstdlib>
+#include <rhea/ast/TerminativeSignal.hpp>
 
 RHEA_FUNC(str_append) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject x = args.at(0),
-        y = args.at(1);
+    DynamicObject x = args.at(0), y = args.at(1);
     return DynamicObject(x.toString() + y.toString());
 }
 
@@ -39,76 +35,57 @@ RHEA_FUNC(str_at) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject value = args.at(0),
-        index = args.at(1);
+    DynamicObject value = args.at(0), index = args.at(1);
     if(!index.isNumber())
-        throw TerminativeThrowSignal(
-            std::move(address),
-            "Index parameter must be a number"
-        );
-    
-    return DynamicObject(std::string(1, value.toString().at(
-        static_cast<size_t>(index.getNumber())
-    )));
+        throw TerminativeThrowSignal(std::move(address),
+                                     "Index parameter must be a number");
+
+    return DynamicObject(std::string(
+        1, value.toString().at(static_cast<size_t>(index.getNumber()))));
 }
 
 RHEA_FUNC(str_contains) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject value = args.at(0),
-        substr = args.at(1);
-    return DynamicObject(
-        value.toString().find(substr.toString()) !=
-            std::string::npos
-    );
+    DynamicObject value = args.at(0), substr = args.at(1);
+    return DynamicObject(value.toString().find(substr.toString()) !=
+                         std::string::npos);
 }
 
 RHEA_FUNC(str_find) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject source = args.at(0),
-        str = args.at(1);
-    return DynamicObject(static_cast<double>(
-        source.toString().find(str.toString())
-    ));
+    DynamicObject source = args.at(0), str = args.at(1);
+    return DynamicObject(
+        static_cast<double>(source.toString().find(str.toString())));
 }
 
 RHEA_FUNC(str_fromBuffer) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject obj = args.at(0);
     if(!obj.isArray())
         throw TerminativeThrowSignal(
             std::move(address),
-            "Buffer parameter must be of number array type"
-        );
+            "Buffer parameter must be of number array type");
 
     std::string stream;
     for(const DynamicObject& object : *obj.getArray()) {
         if(!object.isNumber())
             throw TerminativeThrowSignal(
                 std::move(address),
-                "One of the buffer item array is not a number"
-            );
+                "One of the buffer item array is not a number");
 
         stream += '0' + static_cast<int>(object.getNumber());
     }
@@ -120,14 +97,10 @@ RHEA_FUNC(str_occurence) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject source = args.at(0),
-        str = args.at(1);
-    std::string sourceStr = source.toString(),
-        substr = str.toString();
+    DynamicObject source = args.at(0), str = args.at(1);
+    std::string sourceStr = source.toString(), substr = str.toString();
 
     int count = 0;
     size_t pos = 0;
@@ -144,9 +117,7 @@ RHEA_FUNC(str_pop) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject source = args.at(0);
     std::string str = source.toString();
@@ -159,16 +130,11 @@ RHEA_FUNC(str_replace) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 3 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 3 argument, got " + std::to_string(args.size()));
 
-    DynamicObject source = args.at(0),
-        x = args.at(1),
-        y = args.at(2);
-    std::string sourceStr = source.toString(),
-        oldStr = x.toString(),
-        newStr = y.toString();
+    DynamicObject source = args.at(0), x = args.at(1), y = args.at(2);
+    std::string sourceStr = source.toString(), oldStr = x.toString(),
+                newStr = y.toString();
 
     size_t pos = sourceStr.find(oldStr);
     if(pos != std::string::npos)
@@ -180,16 +146,11 @@ RHEA_FUNC(str_replaceAll) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 3 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 3 argument, got " + std::to_string(args.size()));
 
-    DynamicObject source = args.at(0),
-        x = args.at(1),
-        y = args.at(2);
-    std::string sourceStr = source.toString(),
-        oldStr = x.toString(),
-        newStr = y.toString();
+    DynamicObject source = args.at(0), x = args.at(1), y = args.at(2);
+    std::string sourceStr = source.toString(), oldStr = x.toString(),
+                newStr = y.toString();
 
     size_t pos = 0;
     while((pos = sourceStr.find(oldStr, pos)) != std::string::npos) {
@@ -204,14 +165,10 @@ RHEA_FUNC(str_split) {
     if(args.size() != 2)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 2 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 2 argument, got " + std::to_string(args.size()));
 
-    DynamicObject source = args.at(0),
-        delim = args.at(1);
-    std::string sourceStr = source.toString(),
-        delimStr = delim.toString();
+    DynamicObject source = args.at(0), delim = args.at(1);
+    std::string sourceStr = source.toString(), delimStr = delim.toString();
 
     std::vector<DynamicObject> result;
     size_t start = 0, end = 0;
@@ -222,103 +179,77 @@ RHEA_FUNC(str_split) {
     }
 
     result.push_back(DynamicObject(sourceStr.substr(start)));
-    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(
-        result
-    ));
+    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(result));
 }
 
 RHEA_FUNC(str_substring) {
     if(args.size() != 3)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 3 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 3 argument, got " + std::to_string(args.size()));
 
-    DynamicObject source = args.at(0),
-        start = args.at(1),
-        end = args.at(2);
+    DynamicObject source = args.at(0), start = args.at(1), end = args.at(2);
 
     if(!start.isNumber())
-        throw TerminativeThrowSignal(
-            std::move(address),
-            "Start parameter must be of number type."
-        );
+        throw TerminativeThrowSignal(std::move(address),
+                                     "Start parameter must be of number type.");
 
     if(!end.isNumber())
-        throw TerminativeThrowSignal(
-            std::move(address),
-            "End parameter must be of number type."
-        );
+        throw TerminativeThrowSignal(std::move(address),
+                                     "End parameter must be of number type.");
 
     return DynamicObject(
-        source.toString().substr(
-            static_cast<size_t>(start.getNumber()),
-            static_cast<size_t>(end.getNumber())
-        )
-    );
+        source.toString().substr(static_cast<size_t>(start.getNumber()),
+                                 static_cast<size_t>(end.getNumber())));
 }
 
 RHEA_FUNC(str_toArray) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject source = args.at(0);
     std::string str = source.toString();
     std::vector<DynamicObject> contents;
 
     for(const char& character : str)
-        contents.emplace_back(DynamicObject(
-            std::string(1, character)
-        ));
+        contents.emplace_back(DynamicObject(std::string(1, character)));
 
-    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(
-        contents
-    ));
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(contents));
 }
 
 RHEA_FUNC(str_toBytes) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject source = args.at(0);
     std::string str = source.toString();
     std::vector<DynamicObject> contents;
 
     for(const char& character : str)
-        contents.emplace_back(DynamicObject(
-            static_cast<double>(character)
-        ));
+        contents.emplace_back(DynamicObject(static_cast<double>(character)));
 
-    return DynamicObject(std::make_shared<std::vector<DynamicObject>>(
-        contents
-    ));
+    return DynamicObject(
+        std::make_shared<std::vector<DynamicObject>>(contents));
 }
 
 RHEA_FUNC(str_trim) {
     if(args.size() != 1)
         throw TerminativeThrowSignal(
             std::move(address),
-            "Expecting 1 argument, got " +
-                std::to_string(args.size())
-        );
+            "Expecting 1 argument, got " + std::to_string(args.size()));
 
     DynamicObject source = args.at(0);
     std::string str = source.toString();
 
     const auto strBegin = str.find_first_not_of(" \t");
-    if(strBegin == std::string::npos)
-        return DynamicObject("");
+    if(strBegin == std::string::npos) return DynamicObject("");
 
     const auto strEnd = str.find_last_not_of(" \t"),
-        strRange = strEnd - strBegin + 1;
+               strRange = strEnd - strBegin + 1;
     return str.substr(strBegin, strRange);
 }

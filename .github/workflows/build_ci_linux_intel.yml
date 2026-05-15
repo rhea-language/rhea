@@ -35,7 +35,7 @@ jobs:
       - name: Build Rhea
         run: |
           python -m pip install py-cpuinfo
-          python build.py
+          python tools/build.py
 
       - name: Set Environment Path
         run: |

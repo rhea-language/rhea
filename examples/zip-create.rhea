@@ -87,5 +87,3 @@ render! "---------------------------"
 render! "Reading zip file..."
 readZipFile()
 render! "---------------------------"
-
-io.fileDelete("hello.zip")

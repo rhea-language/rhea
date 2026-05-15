@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
  * This file is part of Rhea.
- * 
+ *
  * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -21,59 +21,61 @@
 
 #include <rhea/core/DynamicObject.hpp>
 #include <rhea/parser/Token.hpp>
-
 #include <stdexcept>
 
 class TerminativeBreakSignal : public std::exception {
-private:
+   private:
     Token origin;
 
-public:
-    TerminativeBreakSignal(Token _origin) :
-        origin(std::move(_origin)) {}
+   public:
+    TerminativeBreakSignal(Token _origin) : origin(std::move(_origin)) {
+    }
 
     Token getAddress() const;
 };
 
 class TerminativeContinueSignal : public std::exception {
-private:
+   private:
     Token origin;
 
-public:
-    TerminativeContinueSignal(Token _origin) :
-        origin(std::move(_origin)) {}
+   public:
+    TerminativeContinueSignal(Token _origin) : origin(std::move(_origin)) {
+    }
 
     Token getAddress() const;
 };
 
 class TerminativeReturnSignal : public std::exception {
-private:
+   private:
     DynamicObject value;
 
-public:
-    TerminativeReturnSignal(DynamicObject _value) :
-        value(std::move(_value)) {}
+   public:
+    TerminativeReturnSignal(DynamicObject _value) : value(std::move(_value)) {
+    }
 
     DynamicObject getObject() const;
 };
 
 class TerminativeThrowSignal : public std::exception {
-private:
+   private:
     std::shared_ptr<Token> address;
     DynamicObject value;
 
-public:
-    TerminativeThrowSignal(std::shared_ptr<Token> _address, DynamicObject _value) :
-        address(std::move(_address)),
-        value(std::move(_value)) {}
+   public:
+    TerminativeThrowSignal(std::shared_ptr<Token> _address,
+                           DynamicObject _value)
+        : address(std::move(_address)), value(std::move(_value)) {
+    }
 
-    TerminativeThrowSignal(std::shared_ptr<Token> _address, std::string _value) :
-        address(std::move(_address)),
-        value(std::move(DynamicObject(_value))) {}
+    TerminativeThrowSignal(std::shared_ptr<Token> _address, std::string _value)
+        : address(std::move(_address)),
+          value(std::move(DynamicObject(_value))) {
+    }
 
-    TerminativeThrowSignal(std::shared_ptr<Token> _address, const char* _value) :
-        address(std::move(_address)),
-        value(std::move(DynamicObject(std::string(_value)))) {}
+    TerminativeThrowSignal(std::shared_ptr<Token> _address, const char* _value)
+        : address(std::move(_address)),
+          value(std::move(DynamicObject(std::string(_value)))) {
+    }
 
     Token* getAddress() const;
     DynamicObject getObject() const;

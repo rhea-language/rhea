@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2024 - Nathanne Isip
  * This file is part of Rhea.
- * 
+ *
  * Rhea is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Rhea is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Rhea. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -21,35 +21,36 @@
 
 namespace RheaUtil {
 
-InputHighlighter& InputHighlighter::operator=(const RheaUtil::InputHighlighter& other) {
+InputHighlighter& InputHighlighter::operator=(
+    const RheaUtil::InputHighlighter& other) {
     if(this != &other) {
         this->prompt = other.prompt;
         this->keywords = other.keywords;
         this->history = other.history;
         this->history_index = other.history_index;
 
-        #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+#if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
         this->handle_console = other.handle_console;
         this->csbi = other.csbi;
         this->original_mode = other.original_mode;
 
-        #elif defined(__linux__) || defined(__APPLE__)
+#elif defined(__linux__) || defined(__APPLE__)
 
         this->original_termios = other.original_termios;
 
-        #endif
+#endif
     }
 
     return *this;
 }
 
 InputHighlighter::~InputHighlighter() {
-    #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+#if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
     SetConsoleMode(this->handle_console, this->original_mode);
-    #elif defined(__linux__) || defined(__APPLE__)
+#elif defined(__linux__) || defined(__APPLE__)
     tcsetattr(STDIN_FILENO, TCSANOW, &this->original_termios);
-    #endif
+#endif
 }
 
 std::string InputHighlighter::colorizeInput(const std::string& input) {
@@ -65,8 +66,7 @@ std::string InputHighlighter::colorizeInput(const std::string& input) {
                 inQuote = true;
                 quoteChar = c;
                 result += TERMINAL_STRING;
-            }
-            else if(c == quoteChar) {
+            } else if(c == quoteChar) {
                 inQuote = false;
                 result += TERMINAL_STRING;
             }
@@ -79,78 +79,61 @@ std::string InputHighlighter::colorizeInput(const std::string& input) {
                 if(this->isKeyword(currentWord))
                     result += TERMINAL_KEYWORD + currentWord + TERMINAL_DEFAULT;
                 else if(c != '"' && c != '\'')
-                    result += TERMINAL_IDENTIFIER + currentWord + TERMINAL_DEFAULT;
+                    result +=
+                        TERMINAL_IDENTIFIER + currentWord + TERMINAL_DEFAULT;
 
                 currentWord.clear();
                 result += c;
-            }
-            else currentWord += c;
+            } else
+                currentWord += c;
 
-            if(c == '"' || c == '\'')
-                result += TERMINAL_DEFAULT;
+            if(c == '"' || c == '\'') result += TERMINAL_DEFAULT;
         }
     }
 
     if(!currentWord.empty()) {
         if(this->isKeyword(currentWord))
             result += TERMINAL_KEYWORD + currentWord + TERMINAL_DEFAULT;
-        else result += TERMINAL_IDENTIFIER + currentWord + TERMINAL_DEFAULT;
+        else
+            result += TERMINAL_IDENTIFIER + currentWord + TERMINAL_DEFAULT;
     }
 
     return result;
 }
 
 bool InputHighlighter::isKeyword(const std::string& word) {
-    return std::find(
-        keywords.begin(),
-        keywords.end(),
-        word
-    ) != keywords.end();
+    return std::find(keywords.begin(), keywords.end(), word) != keywords.end();
 }
 
 void InputHighlighter::clearLine() {
-    #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+#if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
-    GetConsoleScreenBufferInfo(
-        GetStdHandle(STD_OUTPUT_HANDLE),
-        &this->csbi
-    );
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &this->csbi);
 
     DWORD written;
     COORD coordScreen = {0, this->csbi.dwCursorPosition.Y};
 
-    FillConsoleOutputCharacter(
-        GetStdHandle(STD_OUTPUT_HANDLE),
-        ' ', 
-        this->csbi.dwSize.X,
-        coordScreen,
-        &written
-    );
+    FillConsoleOutputCharacter(GetStdHandle(STD_OUTPUT_HANDLE), ' ',
+                               this->csbi.dwSize.X, coordScreen, &written);
 
-    SetConsoleCursorPosition(
-        GetStdHandle(STD_OUTPUT_HANDLE),
-        coordScreen
-    );
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordScreen);
 
-    #else
+#else
 
     std::cout << "\u001b[K";
 
-    #endif
+#endif
 }
 
 std::string InputHighlighter::readInput() {
-    #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+#if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 
     GetConsoleMode(this->handle_console, &this->original_mode);
-    SetConsoleMode(
-        this->handle_console,
-        ENABLE_PROCESSED_INPUT  |
-        ENABLE_MOUSE_INPUT      |
-        ENABLE_EXTENDED_FLAGS
-    );
+    SetConsoleMode(this->handle_console, ENABLE_PROCESSED_INPUT |
+                                             ENABLE_MOUSE_INPUT |
+                                             ENABLE_EXTENDED_FLAGS);
 
-    #elif defined(__linux__) || defined(__APPLE__)
+#elif defined(__linux__) || defined(__APPLE__)
 
     tcgetattr(STDIN_FILENO, &this->original_termios);
 
@@ -158,14 +141,12 @@ std::string InputHighlighter::readInput() {
     raw.c_lflag &= static_cast<tcflag_t>(~(ICANON | ECHO));
     tcsetattr(STDIN_FILENO, TCSANOW, &raw);
 
-    #endif
+#endif
 
     std::string input;
     size_t cursor_pos = 0;
 
-    std::cout << "\u001b[0m"
-        << this->prompt
-        << std::flush;
+    std::cout << "\u001b[0m" << this->prompt << std::flush;
 
     this->history_index = this->history.size();
     while(true) {
@@ -174,16 +155,13 @@ std::string InputHighlighter::readInput() {
             case 127:
             case '\b':
                 if(!input.empty() && cursor_pos > 0) {
-                    input.erase(
-                        input.begin() +
-                            static_cast<long>(cursor_pos - 1)
-                    );
+                    input.erase(input.begin() +
+                                static_cast<long>(cursor_pos - 1));
                     cursor_pos--;
                     this->clearLine();
 
-                    std::cout << "\r\u001b[0m"
-                        << this->prompt
-                        << this->colorizeInput(input);
+                    std::cout << "\r\u001b[0m" << this->prompt
+                              << this->colorizeInput(input);
 
                     for(size_t i = input.length(); i > cursor_pos; --i)
                         std::cout << std::string("\u001b[D");
@@ -193,31 +171,27 @@ std::string InputHighlighter::readInput() {
 
             case '\n':
             case '\r':
-                if(!input.empty())
-                    this->history.push_back(input);
+                if(!input.empty()) this->history.push_back(input);
 
-                #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+#if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
                 SetConsoleMode(this->handle_console, this->original_mode);
-                #elif defined(__linux__) || defined(__APPLE__)
+#elif defined(__linux__) || defined(__APPLE__)
                 tcsetattr(STDIN_FILENO, TCSANOW, &this->original_termios);
-                #endif
+#endif
 
                 std::cout << TERMINAL_DEFAULT << std::endl;
                 return input;
 
             default:
                 if(std::isprint(c)) {
-                    input.insert(
-                        input.begin() + static_cast<long>(cursor_pos),
-                        static_cast<char>(c)
-                    );
+                    input.insert(input.begin() + static_cast<long>(cursor_pos),
+                                 static_cast<char>(c));
 
                     cursor_pos++;
                     this->clearLine();
 
-                    std::cout << "\r\u001b[0m"
-                        << this->prompt
-                        << this->colorizeInput(input);
+                    std::cout << "\r\u001b[0m" << this->prompt
+                              << this->colorizeInput(input);
 
                     for(size_t i = input.length(); i > cursor_pos; --i)
                         std::cout << std::string("\u001b[D");
@@ -226,7 +200,7 @@ std::string InputHighlighter::readInput() {
         }
 
         if(c == '\u001b') {
-            (void) getchar();
+            (void)getchar();
 
             switch(getchar()) {
                 case 'A':
@@ -237,10 +211,8 @@ std::string InputHighlighter::readInput() {
                         cursor_pos = input.length();
                         this->clearLine();
 
-                        std::cout << "\r\u001b[0m"
-                            << this->prompt 
-                            << this->colorizeInput(input)
-                            << std::flush;
+                        std::cout << "\r\u001b[0m" << this->prompt
+                                  << this->colorizeInput(input) << std::flush;
                     }
                     break;
 
@@ -252,19 +224,15 @@ std::string InputHighlighter::readInput() {
                         cursor_pos = input.length();
                         this->clearLine();
 
-                        std::cout << "\r\u001b[0m"
-                            << this->prompt
-                            << this->colorizeInput(input)
-                            << std::flush;
-                    }
-                    else if(this->history_index == this->history.size() - 1) {
+                        std::cout << "\r\u001b[0m" << this->prompt
+                                  << this->colorizeInput(input) << std::flush;
+                    } else if(this->history_index == this->history.size() - 1) {
                         input.clear();
                         cursor_pos = 0;
                         this->clearLine();
 
-                        std::cout << "\r\u001b[0m"
-                            << this->prompt
-                            << std::flush;
+                        std::cout << "\r\u001b[0m" << this->prompt
+                                  << std::flush;
                     }
                     break;
 
@@ -273,9 +241,8 @@ std::string InputHighlighter::readInput() {
                         cursor_pos++;
                         this->clearLine();
 
-                        std::cout << "\r\u001b[0m"
-                            << this->prompt
-                            << this->colorizeInput(input);
+                        std::cout << "\r\u001b[0m" << this->prompt
+                                  << this->colorizeInput(input);
 
                         for(size_t i = input.length(); i > cursor_pos; --i)
                             std::cout << std::string("\u001b[D");
@@ -288,9 +255,8 @@ std::string InputHighlighter::readInput() {
                         cursor_pos--;
                         this->clearLine();
 
-                        std::cout << "\r\u001b[0m"
-                            << this->prompt
-                            << this->colorizeInput(input);
+                        std::cout << "\r\u001b[0m" << this->prompt
+                                  << this->colorizeInput(input);
 
                         for(size_t i = input.length(); i > cursor_pos; --i)
                             std::cout << std::string("\u001b[D");
@@ -307,4 +273,4 @@ std::string InputHighlighter::readInput() {
     }
 }
 
-}
+}  // namespace RheaUtil

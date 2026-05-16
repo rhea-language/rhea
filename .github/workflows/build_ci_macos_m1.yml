@@ -72,6 +72,7 @@ jobs:
           ./dist/rhea-lang/bin/rhea ./examples/hello.rhea
           ./dist/rhea-lang/bin/rhea ./examples/http-get.rhea
           ./dist/rhea-lang/bin/rhea ./examples/logic-gate-ai.rhea
+          ./dist/rhea-lang/bin/rhea ./examples/thread.rhea
           ./dist/rhea-lang/bin/rhea ./examples/zip-create.rhea
 
       - name: Upload dist folder

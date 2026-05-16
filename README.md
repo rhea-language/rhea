@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-    <img alt="Build CI for MacOS Intel" src="https://github.com/rhea-language/rhea/actions/workflows/build_ci_macos_intel.yml/badge.svg" />
+    <img alt="Build CI for MacOS Intel" src="https://github.com/rhea-language/rhea/actions/workflows/build_ci_macos_m1.yml/badge.svg" />
     <img alt="Build CI for MacOS M1" src="https://github.com/rhea-language/rhea/actions/workflows/build_ci_macos_m1.yml/badge.svg" />
 </p>
 

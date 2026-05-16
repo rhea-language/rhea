@@ -4,6 +4,8 @@
   "description": "Rhea Programming Language",
   "scripts": {
     "format": "python3 tools/format.py",
-    "build": "python3 tools/build.py"
+    "build": "python3 tools/build.py",
+    "build:core": "python3 tools/build.py --no-stdlib",
+    "build:lib": "python3 tools/build.py --no-core"
   }
 }

@@ -1,0 +1,26 @@
+#!/usr/bin/rhea
+
+use "core"
+
+render! "Thread library example"
+render! "Creating threads..."
+
+thread1 = thread.create()
+thread2 = thread.create()
+
+render! "Thread 1 ID: " + thread.id(thread1)
+render! "Thread 2 ID: " + thread.id(thread2)
+
+render! "Sleeping for 500ms..."
+thread.sleep(500)
+
+render! "Yielding thread..."
+thread.yield()
+
+render! "Detaching thread 1..."
+thread.detach(thread1)
+
+render! "Joining thread 2..."
+thread.join(thread2)
+
+render! "Thread example completed!"

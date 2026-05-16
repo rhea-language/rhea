@@ -19,11 +19,20 @@ parallel {
     }
 
     gl.makeContextCurrent(window)
+
+    time = 0.0
     while(!gl.shouldCloseWindow(window)) {
         gl.clear(0x00004000)
-        gl.clearColor(0.2, 0.3, 0.3, 1.0)
+        
+        red = (math.sin(time) + 1) / 2
+        green = (math.sin(time + 2.094) + 1) / 2
+        blue = (math.sin(time + 4.188) + 1) / 2
+        
+        gl.clearColor(red, green, blue, 1.0)
         gl.swapBuffers(window)
         gl.pollEvents()
+        
+        time = time + 0.01
     }
 
     gl.destroyWindow(window)
